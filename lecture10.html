@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<!--
+    Middleware and Web Services, CTU course slides
+    (cc) 2010-2011 Tomas Vitvar, http://vitvar.com
+    written for Humla, an open source HTML5 presentation environment
+-->
+<html>  
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> 
+        <meta name="course"   content="Middleware and Web Services"/>
+        <meta name="lecture"  content="Lecture 11"/>
+        <meta name="keywords" content="IaaS, PaaS, SaaS, load balancing, message queue, publish/subscribe, scalability"/>
+           
+        <link type="text/css" rel="stylesheet" href="css/meta.css"></link>   
+        <link type="text/css" rel="stylesheet" href="css/ctu-fit.css"></link>   
+        <link type="text/css" rel="stylesheet" href="humla/lib/core/humla.css"></link>   
+
+        <script type="text/javascript" src="humla/lib/humla.js"></script>
+        <title>Cloud Computing Concepts</title>
+    </head>
+    
+    <body>
+        <footer>
+            <p><b>#META_LECTURE#: #TITLE#</b>,&nbsp;<span class="meta_semester"/>,&nbsp;
+            <span class="meta_twitter"/></p>
+            <p><b>&#8210; #SLIDE_NO# &#8210;</b></p>
+        </footer>
+
+        <div class="slide intro">
+            <hgroup>
+                <h1><span class="meta_course"/></h1>
+                <h2>#META_LECTURE#: #TITLE#</h2>
+            </hgroup>
+            <div class="author">
+                <p class="meta_author"/>
+                <p><span class="meta_email"/> &bull; <span class="meta_twitter"/> &bull; 
+                <span class="meta_web"/></p>
+            </div>
+            <center><div class="meta_logo"></div></center>
+            <div class="org">
+                <p class="meta_org"/>
+                <p><span class="meta_orgfac"/> &bull; <span class="meta_field"/> 
+                &bull; <span class="meta_orgweb"/></p>
+            </div>
+            <div class="etc">
+                <div class="text-info">
+                    Modified: #LAST_MODIFIED#<br/>
+                    Humla v#HUMLA_VERSION#
+                </div>
+                <a href="http://creativecommons.org/licenses/by-sa/3.0/"><div class="license"></div></a>
+                <div class="oppa"></div>
+            </div>
+        </div>
+
+        <div class="slide outline"></div>
+        
+		<section>
+			<header>Cloud Computing</header>
+			
+            <div class="slide">
+                <hgroup>
+    				<h1>Traditional Solution to Infrastructure</h1>
+    			</hgroup>
+                <ul class="small">
+                    <li>Traditional hardware model</li>
+                    <ul>
+                        <li>Up-front hardware investments</li>
+                        <li>Hardware not optimally utilized</li>
+                    </ul>
+                </ul>
+                <div class="h-drawing" style="height: 350px; margin-left: -10px" 
+                    id="17jEYye-th5U5T-N-iE1gR7f_k5Bwrk9P7z9yYC4EZlw" alt="Traditional Hardware Model"></div>
+            </div>
+
+            <div class="slide">
+                <hgroup>
+    				<h1>Cloud Solution to Infrastructure</h1>
+    			</hgroup>
+                <ul class="small">
+                    <li>Cloud computing model</li>
+                    <ul>
+                        <li>No up-front hardware investments</li>
+                        <li>Hardware optimally utilized</li>
+                    </ul>
+                </ul>
+                <div class="h-drawing" style="height: 350px; margin-left: -10px" 
+                    id="1yeHPc2AqDeXanOV0Zi8MirHApMjf1Sa_2UCOt_9Avds" alt="Cloud Computing Solution"></div>
+            </div>
+
+			<div class="slide">
+				<hgroup>
+					<h1>Cloud Computing</h1>
+				</hgroup>
+				<ul class="small">
+					<li>Outsourcing of application infrastructure</li>
+					<ul>
+						<li>Reliability and availability</li>
+						<li>Low costs &ndash; pay-as-you-go</li>
+						<li>Elasticity &ndash; can dynamically grow with your apps</li>
+					</ul>
+					<li>Different way of thinking</li>
+					<ul>
+						<li>Got your grand mum's savings under your pillow?</li>
+                        <ul>
+						    <li>probably not, you better have them in your bank</li>
+                        </ul>
+						<li>Data is your major asset</li>
+						    <li>you better have them in a "bank" too</li>
+						    <li>Someone can abuse your data?<br/>
+						    <li>banks bankrupt too, sometimes &ndash; it is a risk you take</li>
+						    <li>there is a market and a competition</li>
+                        </li>
+					</ul>
+				</ul>
+			</div>
+
+    		<div class="slide">
+				<hgroup>
+					<h1>What is a Cloud?</h1>
+				</hgroup>
+				<ul class="small">
+					<li>Any app you access over the web?</li>
+					<li>A datacenter?</li>
+                    <ul>
+                        <li>Offers virtualization</li>
+                        <li>Any company having a datacenter wants to move to</li>
+                    </ul>
+					<li>Three layers: IaaS, PaaS, SaaS</li>
+                    <ul>
+						<li>access programmatically, pay-as-you-go, low up-front costs, 
+					    initial version for free, micro payments etc.</li>
+                    </ul>
+                    <li>Cloud computing offers services</li>
+                    <ul>
+                        <li>scalability, storage</li>
+                        <li>Possible to configure programmatically</li>
+                        <ul>
+                            <li>integration to enterprise administration processes</li>
+                            <li>usually REST interface</li>
+                        </ul>
+                    </ul>
+				</ul>
+			</div>            
+            
+            <div class="slide outline"></div>
+            
+            <section>
+                <header>Cloud Layers</header>            
+
+    			<div class="slide">
+    				<hgroup>
+    					<h1>Web 2.0 App Architecture</h1>
+    				</hgroup>
+    				<div class="h-drawing" id="1ccBEavZAFztUkrueXOCaw0snMwN80v2cGazOPwk96hE"
+    						style="height: 420px"></div>
+    			</div>
+    	
+    			<div class="slide">
+    				<hgroup>
+    					<h1>Move to the Cloud: IaaS</h1>
+    				</hgroup>
+    				<ul>
+    					<li>Infrastructure as a Service</li>
+    					<ul>
+    						<li>Services for application providers</li>
+    					</ul>
+    				</ul>
+    				<div class="h-drawing" id="17oG3SEPjVlNbYIBXBd3Vdf8Cr-ekCYrg39_8mW91t0Q"
+    						style="height: 470px; zoom: 0.8"></div>
+    			</div>
+    	
+    			<div class="slide">
+    				<hgroup>
+    					<h1>Move to the Cloud: PaaS</h1>
+    				</hgroup>
+    				<ul>
+    					<li>Platform as a Service</li>
+    					<ul>
+    						<li>Services for application providers</li>
+    					</ul>
+    				</ul>
+    				<div class="h-drawing" id="12goj7Bf4nJewEMwGp7zHDpXqsWdrAp6lyNf3aSwetGo"
+    						style="height: 470px; zoom: 0.8"></div>
+    			</div>
+    	
+    			<div class="slide">
+    				<hgroup>
+    					<h1>Move to the Cloud: SaaS</h1>
+    				</hgroup>
+    				<ul>
+    					<li>Software as a Service</li>
+    					<ul>
+    						<li>Services for end-users</li>
+    					</ul>
+    				</ul>
+    				<div class="h-drawing" id="1f-OuzqNyxWAAbFRGTgPn_-OeibCSqPOFO8uiUgQkNO8"
+    						style="height: 470px; zoom: 0.8"></div>
+    			</div>
+    			
+    			<div class="slide">
+    				<hgroup>
+    					<h1>Cloud Computing Services</h1>
+    				</hgroup>	
+    				<div class="h-drawing" style="height: 450px; margin-top: 30px; margin-bottom: 20px" 
+    					id="1viinJDuQRPPKiEJce7FbsxlQI5nJ8_Cl53QNfw3stJc"></div>
+    			</div>	
+            </section>
+		</section>
+
+        <div class="slide outline"></div>
+
+		<section>
+			<header>Service Performance</header>
+			
+			<div class="slide">
+				<hgroup>
+					<h1>Good Performance</h1>
+				</hgroup>
+				<ul class="small">
+					<li>Scalability</li>
+					<ul>
+						<li>server scalability</li>
+                        <ul>
+						    <li>ability of a server to react on changes in loads</li>
+						    <li>a user should not feel the change in loads</li>
+						    <li>horizontal and vertical scaling</li>
+                        </ul>
+						<li>network traffic</li>
+                        <ul>
+						    <li>not all about network bandwidth capacity</li>
+						    <li>service needs to limit the network traffic through caching</li>
+                        </ul>
+					</ul>
+					<li>Availability</li>
+					<ul>
+						<li>probability that a service is operational at a particular time</li>
+						<ul>
+                            <li>e.g., 99.9987% availability &ndash; downtime ~44 seconds/year</li>
+                        </ul>
+					</ul>
+					<li>Metrics</li>
+					<ul>
+						<li>Latency</li>
+						<li>Queries per Second (QPS)</li>
+					</ul>					
+				</ul>
+			</div>
+	
+			<div class="slide">
+				<hgroup>
+					<h1>Latency</h1>
+				</hgroup>
+				<div class="h-drawing" style="height: 300px" id="1rgjQBi7cWEbNSjNYmnhaFTqcoXNi6JbLaGmNajArRUY"></div>
+				<ul class="xx-small">
+					<li>High latency influenced by</li>
+					<ul>
+						<li>CPU intensive service or a bad implementation of a service</li>
+                        <ul>
+						    <li>consider asynchronous processing when CPU intensive</li>
+                        </ul>
+						<li>Writing to a data store</li>
+						<li>No or bad caching mechanism</li>
+                        <ul>
+						    <li>even if data changes often, with high QPS caching improves a lot</li>
+						    <li>stateful service implementation may have influence too</li>
+                        </ul>
+					</ul>
+				</ul>
+			</div>
+	
+			<div class="slide">
+				<hgroup>
+					<h1>CPU Time</h1>
+				</hgroup>
+				<ul class="small">
+					<li>The time a CPU spends on executing a service</li>
+					<li>CPU Time influences</li>
+					<ul>
+						<li>latency of your service</li>
+						<li>your bills you pay for running the service</li>
+					</ul>
+					<li>Reference CPU</li>
+					<ul>
+						<li>system's infrastructures are complex, times may vary</li>
+						<li>all times calculated wrt this CPU</li>
+						<li>billing on a reference CPU in the cloud</li>
+						<li>Example in GAE:<br/>
+                        1.2GHz CPU, 3600 MIPS (3 instructions per cycle)</li> 
+					</ul>
+					<li>How to determine CPU time</li>
+					<ul>
+						<li>profiling (depends on programming environment)</li>
+						<li>analysis of service's computational complexity</li>
+					</ul>
+				</ul>
+			</div>						
+
+			<!-- /SLIDE -->					
+			<div class="slide">
+				<hgroup>
+					<h1>Profiling in GAE</h1>
+				</hgroup>
+				<ul class="x-small">
+					<li>Example profiling code</li>
+                    <pre class="brush: java; class-name: 'tight'">
+					// QuotaService gives us an access to CPU cycles 
+					QuotaService qs = QuotaServiceFactory.getQuotaService();
+
+					// initialization
+					// 10000 numbers; worst-case scenario - in reverse order
+					int[] A = new int[10000];
+					for (int i = 0; i < A.length; i++)
+						A[i] = A.length - i;
+
+					// current number of cycles 
+					long start = qs.getCpuTimeInMegaCycles();
+
+					// insertion sort
+					insertionSort(A);
+	
+					// current number of cycles
+					long end = qs.getCpuTimeInMegaCycles();
+					</pre>							
+					<li>Analysis</li>
+					<ul>
+						<li>Number of CPU mega cycles <span class="h-latex">c=\mathit{end}-\mathit{start} \approx 400</span>
+						<li><span class="h-latex">c</span> is in mega cycles, 1200 mega cycles is 1 CPU second</li>
+						<li>Total CPU seconds for the insertion sort
+						<span class="h-latex xx-lower">T'_\mathit{cpu}=c/1200=0.35</span></li>
+						<!--<li>Instructions per operation: 
+						<span class="h-latex xx-lower">k_1=(400 \cdot 10^6 \cdot 3) / (10^8) = 12</span><br/>
+						(<span class="h-latex">3</span> instructions per cycle)-->
+					</ul>
+				</ul>
+			</div>
+
+			<!-- /SLIDE -->					
+			<div class="slide">
+				<hgroup>
+					<h1>Service Analysis</h1>
+				</hgroup>
+				<ul>
+					<li>Running time</li>
+					<ul>
+						<div class="h-latex" style="zoom: 0.8">
+							T(n) = k_1 \cdot g(n) + k_2 
+						</div>
+						<li><span class="h-latex lower">k_1, k_2</span> 
+							are constant factors (independent on <span class="h-latex" style="zoom:0.8">n</span>)</li>
+						<li>for functions with <span class="h-latex x-lower">O(g(n))</span> complexity, 
+							<span class="h-latex x-lower">T(n)</span> describes worst-case running time</li>
+						<li>CPU-intensive functions: large <span class="h-latex">n</span></li> 
+					</ul>
+					<li>Constant factors</li>
+					<ul>
+						<li>overhead costs when running the function:<br/>
+						(a) <span class="h-latex lower">k_1</span> denotes efficiency of 
+							function's algorithm implementation,<br/>
+						(b) <span class="h-latex lower">k_2</span> denotes one-time costs such as
+						reading, writing, serializing data, simple calculations</li>
+					</ul>
+				</ul>
+			</div>
+
+			<!-- /SLIDE -->					
+			<div class="slide">
+				<hgroup>
+					<h1>CPU Seconds</h1>
+				</hgroup>
+				<ul class="x-small">
+					<li>Running time in CPU seconds</li>
+					<ul>
+						<div class="h-latex" style="zoom: 0.8">
+							\begin{math}
+								T_\mathit{cpu}(n) = \frac{k_1 \cdot g(n) + k_2}{\mathit{c}_m}}
+							\end{math}
+						</div>
+						<ul>
+							<li class="no-bullet">where <span class="h-latex">c_m</span> is a CPU's Million Instructions 
+								per Second (MIPS)</li>
+						</ul>
+					</ul>
+					<li>Example (function analysis)</li>
+					<ul>
+						<li>sort 10,000 items using insertion sort on a 1.2 GHz x86 CPU
+						with 3 instructions per clock cycle (~ 3600 MIPS)</li>
+						<li>insertion sort complexity is <span class="h-latex x-lower">O(n^2)</span></li>
+						<li><span class="h-latex lower">k_1=12</span> (~12 instructions per operation in avarage),
+						<br/><span class="h-latex lower">k_2=0</span> (no additional costs)
+						<br/><span class="h-latex lower">c_m=1200 \cdot 3 = 3600</span></li>
+						<li class="space-before">CPU Time in seconds:</li>
+						<div class="h-latex" style="zoom: 0.7;margin-top: 0px; margin-left: 50px">
+							\begin{math}
+								T_\mathit{cpu}(10^4) = \frac{12 \cdot (10^4)^2}{3600 \cdot 10^{6}} 
+								\approx 0.33
+							\end{math}
+						</div>
+					</ul>							
+				</ul>
+			</div>
+
+		</section>
+
+        <div class="slide outline"></div>
+        
+		<section>
+			<header>Load Balancer</header>
+			
+			<div class="slide">
+				<hgroup>
+					<h1>Load Balancer</h1>
+				</hgroup>
+				<ul>
+					<li>Distributes the load to multiple app instances</li>
+					<ul>
+						<li>App instances run on different machines</li>
+						<li>Load sharing: equal or with preferences</li>
+						<li>Health checks</li>
+					</ul>
+					<li>Types</li>
+					<ul>
+						<li>DNS-based load balancer</li>
+                        <ul>
+						    <li>DNS Round Robin</li>
+                        </ul>
+						<li>NAT-based load balancer</li>
+						<ul>   
+                            <li>app protocol layer</li>
+                        </ul>
+						<li>HTTP Sticky-sessions</li>
+					</ul>
+				</ul>
+			</div>
+
+            <div class="slide">
+				<hgroup>
+					<h1>DNS-based Load Balancer</h1>
+				</hgroup>
+				<ul class="x-small">
+					<li>DNS Round Robin</li>
+					<ul>
+						<li>Very first load balancing mechanism</li>
+						<li>A DNS record has multiple assigned IP addresses</li>
+						<li>DNS system delivers different IP addresses from the list</li>
+						<li>Example DNS A Record:<br/>
+                        <code>moon.com A 147.32.100.71 147.32.100.72 147.32.100.73</code></li>
+					</ul>
+					<li>Advantages</li>
+					<ul>
+						<li>Very simple, easy to implement</li>
+					</ul>
+					<li>Disadvantages</li>
+					<ul>
+						<li>IP address in cache, could take hours to re-assign</li>
+						<li>No information about servers' loads and health</li>
+					</ul>
+					<li>Variation of DNS Round robin</li>
+					<ul>
+						<li>a load balancer assigns domain names</li>
+                        <ul>
+                            <li>each domain has a different IP in DNS</li>
+                        </ul>
+						<li>a health-check is possible, IP re-assignment problem remains</li> 
+					</ul>
+				</ul>
+			</div>
+
+			<div class="slide">
+				<hgroup>
+					<h1>NAT-based Load Balancer</h1>
+				</hgroup>
+				<div class="h-drawing" style="height: 450px" 
+				  id="1gW_gyxsc7c5uZflzfyVt26gZ0V1RzyD5RfSXrP07Nkg"></div>
+			</div>
+
+			<div class="slide">
+				<hgroup>
+					<h1>Load Balancer Configuration API</h1>
+				</hgroup>
+				<ul class="xx-small">
+					<li><code>CreateLoadBalancer</code></li>
+					<ul>
+						<li><code>LoadBalancerName</code> &ndash; unique name of the load balancer</li>
+						<li><code>Protocol</code> &ndash; protocol such as HTTP</li>
+						<li><code>LoadBalancerPort</code> &ndash; port on which LB listens for incoming requests</li>
+						<li><code>InstancePort</code> &ndash; app instance TCP port such as 8080</li>
+					</ul>
+					<li><code>ConfigureHealthCheck</code></li>
+					<ul>
+						<li><code>LoadBalancerName</code> &ndash; name of existing LB</li>
+						<li><code>Target</code> &ndash; in a form of <code>HTTP:port/PathToPing</code></li>
+						<li><code>Interval</code> &ndash; amount of seconds to perform health checks</li>
+						<li><code>Timeout</code> &ndash; amount of seconds when no response to health check endpoint means unhealthy app instance</li>
+						<li><code>HealthyThreshold</code> &ndash; number of successful health checks that will mark the app instance as healthy</li>
+						<li><code>UnhealthyThreshold</code> &ndash; number of unsuccessful health checks that mark the app instance as unhealthy</li>
+					</ul>
+					<li><code>RegisterInstancesWithLoadBalancer</code></li>
+					<ul>
+						<li><code>LoadBalancerName</code> &ndash; name of existing LB</li>
+						<li><code>Instances</code>&ndash; app instances to put to the pool</li>
+					</ul>
+				</ul>
+			</div>
+
+			<div class="slide">
+				<hgroup>
+					<h1>App Instance Usage</h1>
+				</hgroup>
+				<ul class="x-small">
+					<li>Sticky sessions</li>
+					<ul>
+						<li>Identified by cookies created by the load balancer</li>
+						<li>Information in the request about the app instance</li>
+					</ul>
+					<li>Steps to chose an app instance to serve the request</li>
+					<ul>
+						<li><b>if a sticky session exists to an app instance</b></li>
+						<li>always use that app instance</li>
+						
+						<li class="space-before"><b>if a sticky session does not exist</b></li>
+						<li>Use round robin for the next app instance</li>
+
+						<li class="space-before"><b>health check</b></li>
+						<li>if a number of health checks exceeds the unhealthy threshold</li>
+                        <ul>
+						    <li>discard the app from the list</li>
+                        </ul>
+						<li>if an app was unhealthy and a number of health checks exceeds the healthy threshold</li>
+						<ul>
+                            <li>add the app to the list</li>
+                        </ul>
+					</ul>
+				</ul>
+			</div>
+			
+			<div class="slide">
+				<hgroup>
+					<h1>Scalability</h1>
+				</hgroup>
+				<ul>
+					<li>Scaling Up</li>
+					<ul>
+						<li>Number of users increases, need for more resources</li>
+						<li>Replication of app instances</li>
+					</ul>
+				</ul>
+				<div class="h-drawing" id="1Csit0_kjH9X8Tlr7XbS-Qvs1nDXWTAlLSAHS8lNhK9o"
+					style="height: 320px"></div>
+			</div>
+
+			<div class="slide">
+				<hgroup>
+					<h1>Scalability</h1>
+				</hgroup>
+				<ul>
+					<li>Scaling Down</li>
+					<ul>
+						<li>Number of users decreases, no need for many resources</li>
+						<li>Deleting app instances</li>
+					</ul>
+				</ul>
+				<div class="h-drawing" id="1E9aA0HP279klNZ3JSUjkVAgdr9Am9DoAMTojjDoyxeY"
+					style="height: 320px"></div>
+			</div>
+
+			<div class="slide">
+				<hgroup>
+					<h1>Scaling Down Issues</h1>
+				</hgroup>
+				<ul>
+					<li>Session in a persistent storage</li>
+					<ul>
+						<li>Stateful server</li>
+						<li>No sticky sessions &ndash; auto scaling</li>
+					</ul>
+					<li>GAE implementation</li>
+					<ul>
+						<li>New or updated session data<br/>
+						&rarr; written to BigTable and the memcache</li>
+						<li>Reading the data</li>
+						<ul>
+							<li>only from the cache, is fast</li>
+						</ul>
+					</ul>
+					<li>Limitations on data writing</li>
+					<ul>
+						<li>GAE allows to update a single entity 5 times/sec.</li>
+						<li>When QPS > 5 (GAE scales up to 500 QPS)</li>
+                        <ul>
+                            <li>the latency grows</li>
+                        </ul>
+					</ul>
+				</ul>
+			</div>
+            
+            <div class="slide">
+    			<hgroup>
+					<h1>Example Application Scalability</h1>
+				</hgroup>
+                <ul class="x-small">
+                    <li>Response times &times; QPS for reading (R) and writing (W)</li>
+                    <ul>    
+                        <li>Writing scales well up to 5 QPS</li>
+                        <li>Reading scales well for all QPS</li>
+                    </ul>
+                </ul>
+                <img src="img/GAE-scaling-example.png" style="height: 350px"></img>
+            </div>
+			
+		</section>
+        
+        <div class="slide outline"></div>
+		
+		<section>
+			<header>Messaging Systems</header>
+
+			<div class="slide">
+				<hgroup>
+					<h1>Messaging Systems</h1>
+				</hgroup>
+				<ul class="small">
+					<li>Messaging Middleware</li>
+					<ul>
+						<li>aka Message-Oriented Middleware (MOM)</li>
+						<li>Message consumer and message producer</li>
+						<li>asynchronous communication</li>
+						<li>"anonymity" between producers and consumers</li>
+    					<ul>
+                            <li>no matter who, where, when a msg was produced</li>
+                        </ul>
+						<li>Ensures reliability, scalability</li>
+					</ul>
+					<li>Loose coupling of applications</li>
+					<ul>
+						<li>a kind of "peer-to-peer" relationship between applications</li>
+					</ul>
+					<li>Two types (Messaging Domains)</li>
+					<ul>
+						<li>Point-to-Point (message queue &mdash; MQ)</li>
+						<li>Publish/Subscribe (event-based)</li>
+					</ul>
+				</ul>
+			</div>
+            
+            <section>
+                <header>Message Queues</header>
+
+    			<div class="slide">
+    				<hgroup>
+    					<h1>MQ System</h1>
+    				</hgroup>
+    				<div class="h-drawing" style="height: 300px" 
+                        id="14mdNb1lSNLcI5zvnJe28kJpkZ7alzH3OZjL-saFGCO8"></div>
+    				<ul class="x-small">
+    					<ul>
+    						<li>a "1 : 1" relationship between producer and consumer<br/>
+    						&rarr; <b>one message must be processed by one consumer</b></li>
+    						<li><b>no time-dependency</b> between message producer and consumer<br/>
+    						&rarr; consumer does not need to exist when producer sends a message</li>
+    						<li>Message exists in the queue until it is used by a consumer</li>
+    						<li>message consumers take as many messages as they are able to serve</li>
+    					</ul>
+    				</ul>
+    			</div>
+    
+    			<div class="slide">
+    				<hgroup>
+    					<h1>MQ API</h1>
+    				</hgroup>
+    				<ul class="small">
+    					<li><code>createQueue</code></li>
+    					<ul>
+    						<li>creates a queue in the MQ system</li>
+    						<li>called by the message producer</li>
+    					</ul>
+    					<li><code>sendMessage</code></li>
+    					<ul>
+    						<li>send a message to the queue</li>
+    						<li>called by the message producer</li>
+    					</ul>
+    					<li><code>receiveMessage</code></li>
+    					<ul>
+    						<li>request to receive (read) a message from the queue</li>
+    						<li>called by the message consumer</li>
+    					</ul>
+    					<li><code>deleteMessage</code></li>
+    					<ul>
+    						<li>deletes a message from the queue</li>
+    						<li>called by the message consumer when the message is successfully processed</li>
+    					</ul>
+    				</ul>
+    			</div>
+    
+    			<div class="slide">
+    				<hgroup>
+    					<h1>Message Consumption from the Queue</h1>
+    				</hgroup>
+    				<div class="h-drawing" style="height: 340px" 
+                        id="1FsBqFbspb4xyX-lZLQo7AiiADFphEybTrmn8UzNUSUU"></div>
+    				<ul class="x-small">
+    					<ul>
+    						<li>Amazon Simple Queue System (SQS), part of EC2</li>
+    						<li>message consumers may fail anytime</li>
+    						<li>multiple instances of message consumers increases reliability</li>
+    						<li><b>visibility timeout</b> &ndash; time during which the message exist in the queue,
+    						and need to be deleted by the consumer (~ 30 seconds in SQS)</li>
+    					</ul>
+    				</ul>
+    			</div>
+            </section>
+            
+            <div class="slide outline"></div>
+            
+            <section>
+                <header>Publish/Subscribe</header>
+
+    			<div class="slide">
+    				<hgroup>
+    					<h1>Publish/Subscribe System</h1>
+    				</hgroup>
+    				<div class="h-drawing" style="height: 290px" 
+                        id="1VjuiJ0LVcDFJgmcNfP7wq10-bDJy6m0IHs6SgxD1kvY"></div>
+    				<ul class="x-small">
+    					<ul>
+    						<li>occurrence of a message = event that triggers one or more processes</li>
+    						<li>a "1 : N" relationship between producer and consumer<br/>
+    						&rarr; <b>one message can be processed by many different subscribers</b></li>
+    						<li><b>time-dependency</b> between publisher and subscriber<br/>
+    						&rarr; subscriber must first subscribe to a topic and then publisher can publish a message under that topic</li>
+    						<li>a message is deleted when all its subscribers consume it</li>
+    					</ul>
+    				</ul>
+    			</div>
+    
+    			<div class="slide">
+    				<hgroup>
+    					<h1>Publish/Subscribe API</h1>
+    				</hgroup>
+    				<ul class="small">
+    					<li><code>lookupTopic</code></li>
+    					<ul>
+    						<li>lookups or creates a topic</li>
+    						<li>called by the subscriber first and then by the publisher</li>
+    					</ul>
+    					<li><code>receiveMessage</code></li>
+    					<ul>
+    						<li>request to receive (read) a message under the topic</li>
+    						<li>called by the subscriber</li>
+    						<li>Implementation specific:</li>
+                            <ul>
+    						    <li>synchronous &ndash; blocking, with timeout</li>
+    						    <li>asynchronous &ndash; through event listener</li>
+                            </ul>
+    					</ul>
+    					<li><code>publishMessage</code></li>
+    					<ul>
+    						<li>publishes a message under the topic</li>
+    						<li>called by the publisher</li>
+    					</ul>
+    				</ul>					
+    			</div>
+    
+    			<div class="slide">
+    				<hgroup>
+    					<h1>Event-driven Communication</h1>
+    				</hgroup>
+    				<ul>
+    					<li>Event</li>
+    					<ul>
+    						<li>Occurrence of a message with certain topic</li>
+    					</ul>
+    					<li>Event-driven Process</li>
+    					<ul>
+    						<li>events trigger actions</li>
+    						<li>one event may trigger more actions</li>
+    						<li>loose coupling &ndash; not all actions need to be known at design time</li>
+    					</ul>
+    					<li>Service Oriented Architectures (SOA)</li>
+    					<ul>
+    						<li>Event-Driven Architectures (EDA) &ndash; new trends in realization of SOA</li>
+    					</ul>
+    				</ul>
+    				</div>
+    			</div>
+    
+    			<div class="slide">
+    				<hgroup>
+    					<h1>Event-driven Process Example</h1>
+    				</hgroup>
+    				<ul class="x-small">
+    					<li>Conceptual process</li>
+    					<div class="h-drawing" style="margin-top: -20px; margin-bottom: 10px; height: 100px" 
+                            id="1IUZaGiPpxb20-q8pBRzmhUCjJH1Ociy2sSnhSYH8guM"></div>
+    					<li>Event-driven process implementation</li>
+    					<div class="h-drawing" style="height: 320px" id="1M_yG2aVhSbWJ1iQ3iBuvRNQLg3-QGMDuwshrNj7R9oM"></div>
+    				</ul>
+    				</div>
+    			</div>
+    
+            </section>
+			
+		</section>
+        
+    </body>
+</html>
