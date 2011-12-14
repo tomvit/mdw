@@ -4,6 +4,3 @@
 [submodule "humla"]
 	path = humla
 	url = git@github.com:tomvit/humla.git
-[submodule "lib/feed-tables"]
-	path = lib/feed-tables
-	url = git@github.com:tomvit/Feed-Tables.git
