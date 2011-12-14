@@ -1,9 +1,0 @@
-[submodule "examples"]
-	path = examples
-	url = https://github.com/tomvit/mdw-examples.git
-[submodule "humla"]
-        path = humla
-        url = https://github.com/tomvit/humla.git
-[submodule "feed-tables"]
-        path = lib/feed-tables
-        url = https://github.com/tomvit/feed-tables.git
