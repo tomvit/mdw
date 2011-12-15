@@ -18,6 +18,7 @@ There are 11 lectures each with around 30 slides:
   * Lecture 8: HATEOAS, Scalability and Description 
   * Lecture 9: SOAP and WSDL
   * Lecture 10: Cloud Computing Concepts
+  * Lecture 11: Oracle SOA Technologies and Products (n/a in HTML)
 
 You can also find these slides at http://vitvar.com/courses/mdw/slides/lecture1.html.
 
