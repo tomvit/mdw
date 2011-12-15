@@ -7,6 +7,7 @@ presentation envrionment. If you want to display the slides in your host, you ne
 install humla and other submodules by running `bin/install-submodules.sh`.
 
 There are 11 lectures each with around 30 slides:
+
   * Lecture 1: Motivation and Course Overview
   * Lecture 2: Introduction to Architectures
   * Lecture 3: Application Server 
