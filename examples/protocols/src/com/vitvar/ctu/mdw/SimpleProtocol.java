@@ -21,8 +21,6 @@ public class SimpleProtocol {
 				
 		// listen on port 8080
 		ServerSocket serverSocket = new ServerSocket(8080);
-		
-		// create a client socket when client connects
 		Socket clientSocket = serverSocket.accept();
 		
 		// create reader and writer to read from and write to the socket
