@@ -1,0 +1,41 @@
+package com.vitvar.ctu.mdw;
+
+import java.io.*;
+import java.net.*;
+import java.util.regex.*;
+
+public class SimpleProtocol {
+
+	public static void main(String[] args) throws IOException {
+		// initialization
+		System.out.println("Listening on port 8080...");
+		
+		Pattern m = Pattern.compile("^add ([0-9]+) ([0-9]+)$");
+		
+		// listen on port 8080
+		ServerSocket serverSocket = new ServerSocket(8080);
+		
+		// create a client socket when client connects
+		Socket clientSocket = serverSocket.accept();
+		
+		// create reader and writer to read from and write to the socket
+		PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+		BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+		String message;
+		
+		// print information to the client
+		out.println("verbs: add a b, bye.");
+		
+		// read input from client and process the input
+		while ((message = in.readLine()) != null) {   
+			if (message.matches("^add ([0-9]+) ([0-9]+)$"))
+				
+				
+			
+		    out.println("> " + inputLine);
+		    if (inputLine.equals("Bye."))
+		    break;
+		}						
+	}
+	
+}

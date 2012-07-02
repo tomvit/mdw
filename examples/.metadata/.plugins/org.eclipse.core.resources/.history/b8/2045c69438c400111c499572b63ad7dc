@@ -1,0 +1,15 @@
+package com.vitvar.ctu.mdw;
+
+import java.io.*;
+import java.net.*;
+
+public class SimpleProtocol {
+
+	public static void main(String[] args) throws IOException {
+		ServerSocket socket = new ServerSocket(8080);
+		
+		
+		
+	}
+	
+}
