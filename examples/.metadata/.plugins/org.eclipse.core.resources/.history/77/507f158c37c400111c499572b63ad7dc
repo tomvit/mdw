@@ -1,9 +1,0 @@
-package com.vitvar.ctu.mdw;
-
-public class SimpleProtocol {
-
-	public static void main(String[] args) {
-		
-	}
-	
-}
