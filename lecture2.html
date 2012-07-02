@@ -111,7 +111,7 @@
         
         		<div class="slide">
     				<hgroup>
-    					<h1>Enterprise Architecture</h1>
+    					<h1>Enterprise Architecture Levels</h1>
     				</hgroup>
     				<ul class="x-small">
     					<li>Defines a structure of an enterprise system</li>
@@ -124,13 +124,13 @@
                             </ul>
                             <li>applications correspond to <b>domains</b> such as sales, finance, procurement, production, etc.</li>
     					</ul>
-    					<li>Enterprise architecture representation &#150; pyramid</li>
+    					<li>Enterprise architecture levels</li>
     					<ul>
     						<li>Operational Support Systems (OSS)</li> 
-                            <li>Management Information System (MIS)</li>
+                            <li>Business Information System (BIS)</li>
                             <li>Executive Information Systems (EIS)</li> 
     						<li class="space-before">Office Information Systems (OIS)</li>
-                            <li class="space-before">Integration</li>
+                            <li>Integration</li>
                             <ul>
                                 <li>Business-to-Business (B2B)</li>
                                 <li>Enterprise Application Integration (EAI)</li>
@@ -166,31 +166,70 @@
     						id="1JRgVTqa43jbpGM6PYgGQQFk3mBFHqwWu_SGZHbd0fsY"></div>
     				</ul>
     			</div>			                        
-            </section>
             
-    		<div class="slide">
-				<hgroup>
-					<h1>Organization Types</h1>
-				</hgroup>
-				<ul class="spacing">
-					<li>Customer</li>
-					<ul>
-						<li>user needs: support for business processes</li>
-						<li>defines business requirements</li>
-						<li>roles: enterprise architect, (developers), admins, users</li>
-					</ul>
-					<li>Supplier (enterprise system/application provider)</li>
-					<ul>
-						<li>technology customization according to requirements</li>
-						<li>roles: solution architects, developers, admins</li>  
-					</ul>
-					<li>Vendor (technology provider)</li>
-					<ul>
-						<li>technology development according to market needs</li>
-						<li>roles: principal architect, developers, admins, reference users</li>						
-					</ul>
-				</ul>  
-			</div>
+	    		<div class="slide">
+					<hgroup>
+						<h1>Organization Types</h1>
+					</hgroup>
+					<ul class="spacing">
+						<li>Customer</li>
+						<ul>
+							<li>user needs: support for business processes</li>
+							<li>defines business requirements</li>
+							<li>roles: enterprise architect, developers, admins, users</li>
+						</ul>
+						<li>Supplier (enterprise system/application provider)</li>
+						<ul>
+							<li>solutions and customization according to requirements</li>
+							<li>roles: technical and solution architects, developers, admins</li>  
+						</ul>
+						<li>Vendor (technology provider)</li>
+						<ul>
+							<li>product development according to market needs</li>
+							<li>roles: product managers, developers, reference users</li>						
+						</ul>
+					</ul>  
+				</div>
+
+	    		<div class="slide">
+					<hgroup>
+						<h1>Architect Roles</h1>
+					</hgroup>
+					<ul class="spacing small">
+						<li>Technical Architect</li>
+						<ul>
+							<li>Technical architecture design</li>
+							<li>technology configurations, performance</li>
+						</ul>
+						<li>Solution Architect</li>
+						<ul>
+							<li>Requirements gathering, analysis</li>
+							<li>Solution design (data, functions, process)</li>
+						</ul>
+						<li>Enterprise Architect</li>
+						<ul>
+							<li>High-level enterprise architecture design</li>
+							<ul>
+								<li>Applications, processes, data models</li>
+							</ul>
+							<li>Should be aligned with industry standards</li>
+							<ul>
+								<li>APQC &ndash; American Productivity &amp; Quality Center (Process Classification Framework)</li>
+								<li>TM Forum &ndash; eTOM &ndash; Enahnced Telekom Operations Map (Business Process Framework)</li>																
+							</ul>
+						</ul>
+					</ul>  
+				</div>
+				
+	    		<div class="slide">
+					<hgroup>
+						<h1>Process Classification Framework</h1>
+					</hgroup>
+					<div class="h-drawing" id="1ou4lOAvwaFP2MJo1RQbJOTF-DavfYjcUF6MELE6cWws"></div>
+				</div>
+				
+				
+			</section>
             
             <div class="slide outline">
             </div>
@@ -205,13 +244,13 @@
     				<ul class="small">
     					<li>Enterprise Application Integration (EAI)</li>
     					<ul>
-    						<li>applications operate in a particular domain</li>
+    						<li>applications operate in a domain</li>
     						<li>functions and data often overlap across domains</li>
     						<li>need to integrate them</li>
                             <ul>
                                 <li>applications can share data</li>
                                 <li>applications can share functionalities</li>
-                                <li>applications can communicate &#150; result of one process may trigger another one</li>
+                                <li>applications can communicate &#150; a result of one process may trigger another one</li>
                             </ul>
     					</ul>
     					<li>Business-to-Business Integration (B2B)</li>
@@ -261,7 +300,7 @@
                         <li>Functions and processes</li>
                         <ul>
                             <li>how to consume apps' functionalities, protocols, naming issues</li>
-                            <li>services have big potential to solve the problem</li>
+                            <li>A concept of a service should solve the problems</li>
                         </ul>
     				</ul>				
     			</div>
@@ -318,11 +357,11 @@
 					<h1>Example Data Syntax and Semantics</h1>
 				</hgroup>                
                 <ul class="x-small">
-                    <li>Requirement (~ conceptual level)</li>
+                    <li>Requirement (conceptual level)</li>
                     <pre class="brush: plain">
                         Tomas Vitvar works at Oracle as an Architect.
                     </pre>
-                    <li>Syntax and semantics (~ logical/physical Level)</li>
+                    <li>Syntax and semantics (physical Level)</li>
                     <ul>
                         <li>XML representation:</li>
                         <div class="columns-2" style="margin-left: -20px; width: 90%">
@@ -367,13 +406,13 @@
     				<h1>Example Functions Syntax and Semantics</h1>
 				</hgroup>                
                 <ul class="x-small">
-                    <li>Requirement (~ conceptual level)</li>
+                    <li>Requirement (conceptual level)</li>
                     <pre class="brush: plain">
                         Users provide data for new orders in the system.
                     </pre>
-                    <li>Syntax and semantics (~ logical/physical Level)</li>
+                    <li>Syntax and semantics (physical Level)</li>
                     <ul>
-                        <li>Java Class representation:</li>
+                        <li>Java representation:</li>
                         <div class="columns-2" style="margin-left: -20px; width: 90%">
                             <pre class="brush: java; first-line: 1">
                                 class Order {
@@ -412,12 +451,35 @@
                 </ul>
             </div>
 
-            <!--<div class="slide">
+            <div class="slide">
                 <hgroup>
-        			<h1>Process and Application State</h1>
-				</hgroup>
-                <p>TODO</p>
-            </ul>-->
+    				<h1>Example Process</h1>
+				</hgroup>                
+                <ul class="x-small">
+                    <li>Requirement (conceptual level)</li>
+                    <pre class="brush: plain; class-name: 'tight'">
+                        When a customer is eligible for a discount, a sales person must approve it. 
+                    </pre>
+                    <li>Syntax and semantics (physical Level)</li>
+                    <ul>
+                        <li>Java representation:</li>
+                        <div style="margin-left: -20px; width: 90%">
+                            <pre class="brush: java; first-line: 1; class-name: 'tight'">
+									// implementation of addOrder method
+                                    public createOrder(data) {
+										if (data.customer.revenue > 10000)
+											if (Sales.approveDiscount(data))
+												// offer a discount to the customer
+										}
+										//...further order processing
+                                    }
+                            </pre>
+                        </div>
+                        <li>BPMN representation:</li>
+						<div id="1sGsBROkCtdhOkhYTiyNIIHj7YUsxl6qXL9dhJytbD8Q" class="h-drawing" style="width:350px"></div>	
+                    </ul>
+                </ul>
+            </div>
 
         </section>
             

@@ -16,7 +16,7 @@
         <link type="text/css" rel="stylesheet" href="humla/lib/core/humla.css"></link>   
 
         <script type="text/javascript" src="humla/lib/humla.js"></script>
-        <title>Application Server</title>
+        <title>Application Protocols</title>
 	</head>
 	
 	<body>
@@ -51,210 +51,11 @@
 				<div class="oppa"></div>
 			</div>
 		</div>
-        
-        <div class="slide">
-            <hgroup>
-                <h1>Application Server</h1>
-            </hgroup>  
-            <ul class="small">
-                <li>Environment that runs an application logic</li>
-                <ul>
-                    <li>Client communicates with AS via an application protocol</li>
-                </ul>
-                <li>Terminology</li>
-                <ul>
-                    <li>Application Server &times; Web Server &times; HTTP Server</li>
-                    <ul>
-                        <li>AS is a modular environment; provides technology to realize enterprise systems</li>
-                        <li>AS contains a Web server/HTTP server</li>
-                    </ul>
-                    <li>We will use AS, Web/HTTP server interchangeably</li>
-                </ul>
-                <li>Two major models to realize AS</li>
-                <ul>
-                    <li>Blocking I/O (also called synchronous I/O)</li>
-                    <li>Non-blocking I/O (also called asynchronous I/O)</li>
-                </ul>
-                <li>Two technologies we will look at</li>
-                <ul>
-                    <li>Node.js &ndash; runs server-side Javascript</li>
-                    <li>Java Enterprise Edition (JEE) &ndash; servlet technology</li>
-                </ul>
-            </ul>                
-        </div>
-
-        <div class="slide outline"></div>
-
-        <section>
-            <header>Blocking and Non-Blocking I/O</header>        
-
-            <div class="slide"> 
-				<hgroup> 
-					<h1>Blocking I/O Model</h1> 
-				</hgroup> 
-				<ul class="small">
-					<li>The server creates a thread for every connection</li>
-                    <ul>                    
-                        <li>For example, 1K connections = 1K threads, big overhead</li>
-                    </ul>
-                </ul>
-    			<div id="1QP7gZSS1WS3YquzLekSgdZfcmi4BYArm-K9tuWrULQs" class="h-drawing" style="height: 220px"></div>
-                <ul class="small">
-                    <li>Characteristics</li>
-                    <ul>
-    					<li>the thread is reserved for the connection</li>
-					<li>When processing of the request requires other interactions with DB/FS or network 
-						communication is slow</li>
-                    <ul>
-                        <li>scales very bad as the thread's execution is "blocked"</li>
-                    </ul>
-				</ul>
-			</div>
-
-            <div class="slide"> 
-    			<hgroup> 
-					<h1>Non-Blocking I/O Model</h1> 
-				</hgroup> 
-				<ul class="small">
-					<li>Connections maintained by the OS, not the Web app</li>
-                    <ul>                    
-                        <li>The Web app registers events, OS triggers events when occur</li>
-                    </ul>
-                </ul>
-    			<div id="1kxkFc3Chl4qFXxH_4f2seuNbpBdENMyZWMRUmxd1p28" class="h-drawing" style="height: 220px"></div>
-                <ul class="small">
-					<li>Characteristics</li>
-                    <ul>
-                        <li>Event examples: new connection, read, write, closed</li>
-					    <li>The app may create working threads, but controls the number!</li>
-                        <ul>
-					        <li>much less number of working threads as opposed to blocking I/O</li>
-                        </ul>
-                    </ul>
-				</ul>
-			</div>
-
-			<div class="slide"> 
-				<hgroup> 
-					<h1>Node.js</h1> 
-				</hgroup>
-				<ul class="x-small">
-					<li><span id="nodejs" class="h-ref">Node.js</span></li>
-					<ul>
-					    <li>Emerging Web server technology, very efficient and fast!</li>
-                        <li>Event-driven I/O framework, based on JavaScript V8 engine</li>
-                        <li>Only one worker thread</li>
-    					<li>Open sourced, <span id="nodejs-github" class="h-ref">@GitHub</span>, many <span id="nodejs-libs" class="h-ref">libraries</span></li>
-                        <li>Future platform for Web 2.0 apps</li>
-                    </ul>
-					<li>Every I/O as an event</li>
-                    <ul>
-                        <li>reading and writing from/to files</li>
-                        <li>reading and writing from/to sockets</li>
-						<pre class="brush: js; class-name: ''">
-    						// pseudo code; ask for the last edited time of a file
-    						stat( 'somefile', function( result ) {
-    						  // use the result here
-    						} );
-                            </pre>
-                    </ul>
-                    <li>We will use it throughout the course for examples</li>
-                    <ul>
-                        <li>good to demonstrate underlying Web services concepts</li>
-                    </ul>
-				</ul>
-			</div>
-
-    		<div class="slide"> 
-				<hgroup> 
-					<h1>Quick JavaScript Intro</h1> 
-				</hgroup>
-				<ul class="xx-small">
-                    <li>Objects and Arrays (~ JSON)</li>
-    				<pre class="brush: js; class-name: 'tight'">
-                        // objects - key/value pairs
-                        var obj = { name: "Tomas", main-city : "Innsbruck", value : 3 };
-                        obj.name = "Peter"; // assign the name property another value
-                        obj["main-city"] = "Prague"; // another way to access object's values; it's not an array!
-                        
-                        // arrays
-                        var a = ["Tomas", "Peter", "Alice"];
-                        for (var i = 0; i < a.length; i++)
-                            // do something with a[i]
-                            
-                        // combinations of arrays and objects
-                        var obj_a = [ 
-                            { name: "Tomas", city: "Innsbruck" }, 
-                            { name : "Peter", city : "Prague" }, 
-                            { name : "Alice", cities : ["Prague", "Brno"] } ];
-                            
-                        for (var i = 0; i < obj_a.length; i++)
-                            // do something with obj_a[i].name, ...
-                    </pre>                                                            
-                    <li>Functions</li>
-    				<pre class="brush: js; class-name: 'tight'">
-                        // assign a function to a variable
-                        var minus = function(a, b) {
-                            return a - b;
-                        }
-                        
-                        // call the function; 
-                        // now you can pass 'minus' as a parameter to another function
-                        var r2 = minus(6, 4);                        
-                    </pre>                    
-                    
-				</ul>
-			</div>
-            
-        	<div class="slide"> 
-				<hgroup> 
-					<h1>Quick JavaScript Intro (Cont.)</h1> 
-				</hgroup>
-				<ul class="xx-small">
-                    <li>Function Callbacks</li>
-                    <ul>    
-                        <li>You can use them to handle asynchronous events occurrences</li>                        
-                    </ul>
-    				<pre class="brush: js; class-name: 'tight'">
-                        // function returns the result through a callback, not directly; 
-                        // this is not a non-blocking I/O, just demonstration of the callback
-                        function add(a, b, callback) {
-                            callback(a + b);
-                        }
-                        
-                        // assign the callback to a variable
-                        var print = function(result) {
-                            console.log(result);
-                        };
-                        
-                        // call the function with callback as a parameter
-                        add(7, 8, print);
-                    </pre>  
-                    <li>Functions as values in object</li>
-        			<pre class="brush: js; class-name: 'tight'">
-                        var obj = {
-                            data : [2, 3, "Tomas", "Alice", 4 ],
-                            
-                            getIndexdOf : function(val) {
-                                for (var i = 0; i < this.data.length; i++)
-                                    if (data[i] == val)
-                                        return i;
-                                return -1;
-                            }                            
-                        }
-                        
-                        obj.getIndexOf(3); // will return 2
-                    </pre>  
-				</ul>
-			</div>
-            
-            
-        </section>
 
         <div class="slide outline"></div>
         
         <section>
-            <header>Application Protocols</header>
+            <header>Introduction to Application Protocols</header>
             
             <div class="slide">
                 <hgroup>
@@ -413,6 +214,28 @@
                         </ul>
                     </ul>
                 </div>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>Virtual Private Network</li>
+                    </hgroup>
+                    <div class="h-drawing" id="1Ny_2ymBwHb45xibAqrUFE_1iW-K8in05CbI5bIiY5XE" 
+                        style="height: 270px"></div>
+                    <ul class="xx-small">
+                        <li>VPN = Virtual Private Network</li>
+                        <ul>
+                            <li>an overlay network between a client and a server</li>
+                            <li>the network spans accross underlying network elements</li>
+                            <li>Example:</li>
+                            <ul>
+                                <li>VPN client starts a VPN connection with the VPN server via network interfaces</li>
+                                <li>VPN server assigns an IP address to the VPN client from the server's subnet</li> 
+                                <li>Packets in VPN communication are encrypted and sent out in an outer VPN packet, e.g. IPSec packet</li>
+                            </ul>
+                        </ul>
+                    </ul>
+                </div>
+
             </section>
             
             <div class="slide outline"></div>
@@ -430,7 +253,8 @@
                         </li>
                         <ul>
                             <li>functions (verbs): <code>add</code> and <code>bye</code></li>
-                            <li>data syntax: <code>add</code> <code>"^[0-9]+ [0-9]+$"</code>, <code>bye</code> <code>"^$"</code> (regular grammars)</li>
+                            <li>data syntax: <code>add</code> <code>"^[0-9]+ [0-9]+$"</code>, <code>bye</code> <code>"^$"</code> 
+								(regular grammars)</li>
                             <li>data semantics: <code>add</code> decimal numbers, <code>bye</code> none</li> 
                             <li>process: transitions <code>S1&#151;add&#151;S1</code>, <code>S1&#151;bye&#151;S0</code>, 
                                 where <code>S0</code>, <code>S1</code> are states such that<br/>
@@ -583,8 +407,8 @@
                         GET /orders HTTP/1.1
                         Host: company.cz
                         </pre>
-                        <li>Web server passes the request to the web application <code>company.cz</code> which serves <code>GET orders</code> and 
-                            that writes a response back to the socket.</li>                    
+                        <li>Web server passes the request to the web application <code>company.cz</code> which serves 
+							<code>GET orders</code> and that writes a response back to the socket.</li>                    
                     </ol>
                 </ul>
 			</div>
@@ -890,185 +714,6 @@
     			</div>                                    
                 
             </section>
-
-        </section>
-        
-        <div class="slide outline">
-        </div>
-        
-        <section>
-            <header>Introduction to JEE</header>
-            
-            <div class="slide">
-    			<hgroup>
-    				<h1>JEE</h1>
-    			</hgroup>
-                <ul class="small">
-                    <li>Part of Java Platform, Enterprise Edition (JEE)</li>
-                    <ul>
-                        <li>Collection of technologies for server programming</li>
-                        <li>Major technologies</li>
-                        <ul>                        
-                            <li>servlet technology</li>
-                            <li>Java Server Pages (JSP)</li>
-                            <li>Java Messaging System (JMS)</li>
-                            <li>Remote Method Invocation (RMI)</li>
-                            <li>Enterprise Java Beans (EJB)</li>
-                        </ul>
-                    </ul>
-                    <li>Basis for many application servers such as</li>
-                    <ul>
-                        <li>Oracle WebLogic</li>
-                        <li>Google AppEngine (Java)</li>
-                        <li>JBoss</li>
-                        <li>GlassFish</li>
-                        <li>IBM WebSphere</li>
-                    </ul>
-                </ul>
-            </div>
-            
-            <div class="slide">
-        		<hgroup>
-    				<h1>Basic Directory Structure</h1>
-    			</hgroup>
-                <ul class="x-small">
-                    <li>Your application</li>
-                    <ul>
-                        <li>collection of documents and libraries your application requires</li>
-                        <li>packaged in <code>war</code> archive</li>
-                        <ul>
-                            <li>JAR that includes not only java classes but also additional resources such as 
-                            <code>.xml</code>, <code>.html</code>, <code>.js</code>, <code>.css</code>, <code>.jpg</code> files.</li>
-                        </ul>
-                    </ul>
-                    <li>Content of <code>war</code> package</li>
-                    <pre class="brush: bash; gutter: false; class-name: ''">
-                        # web archive root
-                        war
-                         |   # directories and documents accessible through the app root /
-                         |   # such as img, css, js, ...
-                         |-- (public-directory | public-document)*
-                         |   # directories and documents internal to your application
-                         |-- WEB-INF
-                                |-- (private-directory | private-document)*
-                                |   # compiled java classes of your application
-                                |-- classes
-                                |   # all java libraries your application requires
-                                |-- lib
-                                |   # configuration of your application
-                                |-- web.xml
-                                |-- # other platform-specific configurations 
-                                    # such as app-engineweb.xml for GAE
-                    </pre>
-                </ul>
-            </div>
-
-            <div class="slide">
-                <hgroup>
-    				<h1>Configuration in web.xml</h1>
-    			</hgroup>
-                <ul class="x-small">
-                    <li><code>web.xml</code> defines configuration for</li>
-                    <ul>
-                        <li>list of servlets, mapping of servlets to URL paths, welcome files, filters, EJB references, 
-                        authentication mechanism, etc.</li>
-                        <li>basic configuration example:</li>
-                    </ul>
-                    <pre class="brush: xml">
-                        &lt;?xml version="1.0" encoding="utf-8"?>
-                        &lt;web-app 
-                            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                            xmlns="http://java.sun.com/xml/ns/javaee">
-                        
-                            &lt;servlet>
-                        		&lt;servlet-name>main&lt;/servlet-name>
-                        		&lt;servlet-class>com.vitvar.mdw.main&lt;/servlet-class>
-                        	&lt;/servlet>
-                        
-                        	&lt;servlet-mapping>
-                        		&lt;servlet-name>main&lt;/servlet-name>
-                        		&lt;url-pattern>/&lt;/url-pattern>
-                        	&lt;/servlet-mapping>
-                        
-                        	&lt;welcome-file-list>
-                        		&lt;welcome-file>index.jsp&lt;/welcome-file>
-                        	&lt;/welcome-file-list>
-                        &lt;/web-app>
-                    </pre>
-                </ul>
-            </div>
-
-            <div class="slide">
-            	<hgroup>
-    				<h1>Handling HTTP Requests</h1>
-    			</hgroup>
-                <ul class="x-small">
-                    <li>HTTP Servlets</li>
-                    <ul>
-                        <li>Servlet is a class that extends capabilities of application servers 
-                        via a request-response programming model</li>
-                        <li>HTTP servlets are classes that extend <code>HTTPServlet</code> abstract class</li> 
-                        <li>Example:</li>
-                    </ul>
-                    <pre class="brush: java">
-                        package com.vitvar.mdw;
-                        
-                        import javax.servlet.http.HttpServlet;
-                        import javax.servlet.http.HttpServletRequest;
-                        import javax.servlet.http.HttpServletResponse;
-                        
-                        public class Main extends HttpServlet {
-                            public doGet(HttpServletRequest request, HttpServletResponse response) {
-                                // GET method implementation here
-                            }
-
-                            public doPut(HttpServletRequest request, HttpServletResponse response) {
-                                // PUT method implementation here
-                            }
-                            
-                            // other methods such as doPost, doDelete, doOptions
-                        }
-                    </pre>
-                </ul>
-            </div>
-
-            <div class="slide">
-                <hgroup>
-    				<h1>Support for Sessions</h1>
-    			</hgroup>
-                <ul class="x-small">
-                    <li><code>HttpSession</code> interface</li>
-                    <ul>
-                        <li>Allows to store session data in the memory</li>
-                        <li>Java API for <a href="#/state-management">HTTP State Management</a></li>
-                        <ul>
-                            <li>Hides details to developers</li>
-                        </ul>
-                        <li>Enable sessions in GAE by setting <code>&ltsessions-enabled></code> to <code>true</code> 
-                            in <code>appengine-web.xml</code> (disabled by default)</li>
-                    </ul>
-                    <pre class="brush: java;">
-                        // method doGet in a servlet
-                        public doGet(HttpServletRequest request, HttpServletResponse response) {
-                            // access the session object through the request
-                            HttpSession session = request.getSession();
-                            
-                            // unique identification of the session, the value used for the cookie
-                            String id = session.getId();
-                            
-                            // get the value of the attribute
-                            Object value = session.getAttribute("data");
-
-                            // set the value of the attribute
-                            session.setAttribute("data", new String("some data"));
-                                                        
-                            // this will set a max-age of the session cookie 
-                            session.setMaxInactiveInterval(3600);
-                        }
-                    </pre>
-                </ul>
-            </div>
-
 
         </section>
 
