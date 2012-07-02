@@ -248,8 +248,7 @@
                         <h1>ASCII Communication</h1>
                     </hgroup>
                     <ul class="xx-small">
-                        <li>Example simple TCP Socket protocol in NodeJS<a rel="code" 
-                            href="https://github.com/tomvit/mdw-examples/blob/master/stateful-server/simple-server.js">&nbsp;</a>
+                        <li>Example simple TCP Socket protocol in Java<a rel="code"                             href="https://github.com/tomvit/mdw/blob/master/examples/protocols/src/com/vitvar/ctu/mdw/SimpleProtocol.java">&nbsp;</a>
                         </li>
                         <ul>
                             <li>functions (verbs): <code>add</code> and <code>bye</code></li>
@@ -260,28 +259,8 @@
                                 where <code>S0</code>, <code>S1</code> are states such that<br/>
                                 <code>S1=connection established</code>, <code>S0=connection closed</code>.</li>
                         </ul>
-                        <pre class="brush: js; toolbar: true">
-                            var net = require('net');
-                            
-                            // creates the server and waits for incoming connection
-                            var server = net.createServer(function (stream) {
-                                stream.write('Verbs: add a b, bye.\r\n');
-                             
-                                // event when new data in the socket is available
-                                stream.on('data', function (data) {
-                                    // converts buffer to string, strip out the \r\n chars
-                                    var message = new String(data.slice(0, data.length - 2));
-                                    
-                                    // checks for the correct format of the add message
-                                    if (n = message.match("^add ([0-9]+) ([0-9]+)$"))
-                                        stream.write("The result is: " + 
-                                            (parseInt(n[1]) + parseInt(n[2])) + "\r\n");
-                                    else
-                                        if (message.match("^bye$")) stream.end("Goodbye!\r\n");
-                                            else stream.write("Do not understand: " + message + "\r\n");    
-                                });
-                            }).listen(9900, '0.0.0.0');                
-                        </pre>
+						<div class="h-github" name="examples/protocols/src/com/vitvar/ctu/mdw/SimpleProtocol.java" 
+							lines="22-50" cid="master"></div></div>	
                     </ul>
                 </div>    
                 

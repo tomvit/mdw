@@ -28,14 +28,13 @@ public class SimpleProtocol {
 		// create reader and writer to read from and write to the socket
 		PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
 		BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-		String message;
 		
 		// print information to the client
 		out.println("verbs: add a b, bye");
 		
 		// grammar definition
 		Pattern p = Pattern.compile("^add ([0-9]+) ([0-9]+)$");
-		Matcher m;		
+		Matcher m; String message;		
 		
 		// read input from the client and process the input
 		while ((message = in.readLine()) != null) {   
