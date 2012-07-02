@@ -270,11 +270,10 @@
                     </hgroup>
 					<ul class="xx-small">
 					<div class="h-github" name="examples/protocols/src/com/vitvar/ctu/mdw/SimpleProtocol.java" 
-						lines="22-47" cid="master"></div></div>
+						lines="22-52" cid="master"></div></div>
 					</ul>	
                 </div>    
 
-                
                 <div class="slide">
                     <hgroup>
                         <h1>Testing</h1>
@@ -291,10 +290,14 @@
                         </ul>
                         <li>Testing our protocol</li>
                         <pre class="brush: bash; class-name='xx-small'">
-                            # open the socket using telnet but first dig for DNS lookup
-                            telnet $(dig vitvar.com +short) 9900
-                            Trying 79.125.47.64...
-                            Connected to ec2-79-125-47-64.eu-west-1.compute.amazonaws.com.
+							# 1. run the listener
+							bin/simple_protocol.sh
+							Listening on port 8080...
+							
+                            # 2. open the socket using telnet but first dig for DNS lookup							
+                            telnet 127.0.0.1 8080
+                            Trying 127.0.0.1...
+                            Connected to localhost.
                             Escape character is '^]'.
                             Verbs: add a b, bye.
                             add 3 4
