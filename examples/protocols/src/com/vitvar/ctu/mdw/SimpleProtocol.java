@@ -48,5 +48,4 @@ public class SimpleProtocol {
 					out.println("Do not understand: " + message);
 		}
 	}
-	
 }
