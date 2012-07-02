@@ -408,28 +408,27 @@
 
             <div class="slide">
 				<hgroup>
-					<h1>HTTP Server in Node.js</h1>
+					<h1>HTTP Listener</h1>
 				</hgroup>
-                <ul class="x-small">
+                <ul class="xx-small">
                     <li>HTTP Server implementation</li>
                     <ul>
-                        <li>server running at <code>138.232.189.127</code>, port <code>8080</code>.</li>
-                        <pre class="brush: js; class-name: ''">
-                            // http library
-                            var http = require("http");
-                            
-                            http.createServer(function(req, res) {
-                                // check the value of host header
-                                if (req.headers.host == "company.cz") {
-                                    res.writeHead(201, "Content-Type: text/plain");
-                                    res.end("This is the response...");
-                                } else ;
-                                    // handle enterprise.com app logic...
-                            }).listen('0.0.0.0', 8080);
-                        </pre>  
-                        <li>Test it using Telnet</li>
+						<li>Server implemented using Jetty 7, running at <code>127.0.0.1</code>, port <code>8080</code>.</li>
+						<div class="h-github" name="examples/protocols/src/com/vitvar/ctu/mdw/HttpListener.java"
+							lines="12-38"></div>
+                    </ul>
+                </ul>
+			</div>
+
+            <div class="slide">
+				<hgroup>
+					<h1>HTTP Listener (Cont.)</h1>
+				</hgroup>
+                <ul class="xx-small">
+                    <li>Test it using Telnet</li>
+                    <ul>
                         <pre class="brush: bash; class-name: ''">
-                            telnet 138.232.189.127 8080
+                            telnet 127.0.0.1 8080
                             # ...lines omitted due to brevity
                             GET /orders HTTP/1.1
                             Host: company.cz

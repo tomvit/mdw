@@ -1,6 +1,8 @@
 
 od=$(pwd)
 nd=$(dirname $0)/../libs
+
+mkdir -p $nd
 cd $nd
 
 echo "Downloading jetty v7.0.2..."

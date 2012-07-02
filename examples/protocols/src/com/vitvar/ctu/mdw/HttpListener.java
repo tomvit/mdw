@@ -11,18 +11,17 @@ import org.eclipse.jetty.server.handler.AbstractHandler;
 
 public class HttpListener extends AbstractHandler {
 
-	/* starts the jetty http listener on port 8080 */
+	/** starts the jetty http listener on port 8080 **/
 	public static void main(String[] args) throws Exception {
     	Server server = new Server();
     	SocketConnector connector = new SocketConnector();
     	connector.setPort(8080);   	
         server.addConnector(connector);
         server.setHandler(new HttpListener());
-        server.start();
-        server.join();
+        server.start(); server.join();
 	}
 	 
-	/* handles the request when client connects */
+	/** handles the request when client connects **/
 	public void handle(String target, Request baseRequest, HttpServletRequest request, 
 			HttpServletResponse response) throws IOException, ServletException {
 		
