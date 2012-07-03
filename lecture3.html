@@ -648,9 +648,9 @@
                         </ul>
                         <pre class="brush: bash">
                             # run curl for the first time
-                            curl -v ec2.vitvar.com:9900
+                            curl -v 127.0.0.1:8080
                             > GET / HTTP/1.1
-                            > Host: ec2.vitvar.com:9900
+                            > Host: 127.0.0.1:8080
                             > Cookie: session-id=3a9c3cdc5ff36434aa1ba860727ca401
                             > 
                             &lt; HTTP/1.1 200 OK
@@ -659,9 +659,9 @@
                             Number of hits from you: 1
 
                             # copy the cookie session-id from previous response
-                            curl -v -b session-id=3a9c3cdc5ff36434aa1ba860727ca401 ec2.vitvar.com:9900
+                            curl -v -b session-id=3a9c3cdc5ff36434aa1ba860727ca401 127.0.0.1:8080
                             > GET / HTTP/1.1
-                            > Host: ec2.vitvar.com:9900
+                            > Host: 127.0.0.1:9900
                             > Cookie: session-id=3a9c3cdc5ff36434aa1ba860727ca401
                             > 
                             &lt; HTTP/1.1 200 OK
