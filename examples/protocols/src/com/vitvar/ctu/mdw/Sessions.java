@@ -21,8 +21,7 @@ public class Sessions<E> {
 		if (request.getHeader("cookie") != null) {
 			Pattern p = Pattern.compile(".*session-id=([a-zA-Z0-9]+).*");
 			Matcher m = p.matcher(request.getHeader("cookie"));
-			if (m.matches())
-				sid = m.group(1);
+			if (m.matches()) sid = m.group(1);
 		}
 		
 		// create the session id md5 hash; max 1000 connections per IP 
@@ -32,7 +31,6 @@ public class Sessions<E> {
 				Math.floor(Math.random()*999)).getBytes());
 			sid = Utils.toHexString(md.digest());
 		}
-		
 		return sid;
 	}
 	
