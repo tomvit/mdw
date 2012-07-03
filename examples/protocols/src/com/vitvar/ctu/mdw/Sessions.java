@@ -16,7 +16,7 @@ public class Sessions<E> {
 	/** Returns session id based on the information in the http request **/
 	public String getSessionID(HttpServletRequest request) throws Exception {
 		String sid = null;
-
+		
 		// extract the session id from the cookie
 		if (request.getHeader("cookie") != null) {
 			Pattern p = Pattern.compile(".*session-id=([a-zA-Z0-9]+).*");
@@ -25,9 +25,8 @@ public class Sessions<E> {
 				sid = m.group(1);
 		}
 		
-		// create a new session id if none exists 
+		// create the session id md5 hash; max 1000 connections per IP 
 		if (sid == null || sessions.get(sid) == null) {
-			// create the session id md5 hash; max 1000 connections per IP 
 			MessageDigest md = MessageDigest.getInstance("MD5");
 			md.update(new String(request.getRemoteAddr() + 
 				Math.floor(Math.random()*999)).getBytes());
