@@ -413,7 +413,7 @@
                 <ul class="xx-small">
                     <li>HTTP Server implementation</li>
                     <ul>
-						<li>Server implemented using Jetty 7, running at <code>127.0.0.1</code>, port <code>8080</code>.</li>
+						<li>Server is implemented using Jetty 7, running at <code>127.0.0.1</code>, port <code>8080</code>.</li>
 						<div class="h-github" name="examples/protocols/src/com/vitvar/ctu/mdw/HttpListener.java"
 							lines="12-38"></div>
                     </ul>
@@ -424,21 +424,62 @@
 				<hgroup>
 					<h1>HTTP Listener (Cont.)</h1>
 				</hgroup>
-                <ul class="xx-small">
+                <ul class="x-small">
+                    <li>Comments on the server implementation</li>
+					<ul>
+						<li>Server listens on port <code>8080</code></li>
+						<li>Jetty parses HTTP request data into <code>HttpServletRequest</code> object. 
+						<li>When a client connects, the method <code>handle</code> is called</li>
+						<li>The method tests the value of the <code>host</code> header and responds back if the header
+							matches <code>company.cz</code> value.</li>
+							
+					</ul>
+	
                     <li>Test it using Telnet</li>
-                    <ul>
-                        <pre class="brush: bash; class-name: ''">
-                            telnet 127.0.0.1 8080
-                            # ...lines omitted due to brevity
-                            GET /orders HTTP/1.1
-                            Host: company.cz
-                            
-                            HTTP/1.1 201 OK
-                            Content-Type: plain/text
-                            
-                            This is the response...
-                        </pre>  
-                    </ul>
+                    <pre class="brush: bash; class-name: ''">
+                        telnet 127.0.0.1 8080
+                        # ...lines omitted due to brevity
+                        GET /orders HTTP/1.1
+                        Host: company.cz
+                        
+                        HTTP/1.1 201 OK
+                        Content-Type: plain/text
+                        
+                        This is the response...
+                    </pre>  
+                </ul>
+			</div>
+
+            <div class="slide">
+				<hgroup>
+					<h1>Virtual Web Server</h1>
+				</hgroup>
+                <ul class="x-small">
+					<li>Virtual server</li>
+					<ul>
+						<li>Configuration of a named virtual web server</li>
+						<li>Web server uses host request header to distinguish among multiple virtual 
+							web servers on a single physical host.</li>
+					</ul>
+                    <li>Apache virtual Web server configuration</li>
+					<ul class="x-small">
+						<li>Two virtual servers hosted on a single physical host</li>
+						<pre class="brush:plain; class-name: 'tight'">
+							# all IP addresses will be used for named virtual hosts
+							NameVirtualHost *:80
+							
+							&lt;VirtualHost *:80>
+							        ServerName company.com
+							        ServerAdmin admin@company.com
+							        DocumentRoot /var/www/apache/company.com
+							&lt;/VirtualHost>
+							
+							&lt;VirtualHost *:80>
+							        ServerName firm.cz
+							        ServerAdmin admin@firm.cz
+							        DocumentRoot /var/www/apache/firm.cz
+							&lt;/VirtualHost></pre>
+					</ul>
                 </ul>
 			</div>
             
@@ -459,11 +500,11 @@
                     </pre>                        
                     <li>Example</li>
                     <pre class="brush: plain; class-name: 'tight'">
-                        curl -v -H "Host: company.cz"  138.232.189.127
+                        curl -v -H "Host: company.cz"  127.0.0.1:8080
                         
-                        * About to connect() to 138.232.189.127 port 80 
-                        *   Trying 138.232.189.127... connected
-                        * Connected to 138.232.189.127 port 80 
+                        * About to connect() to 127.0.0.1 port 8080 
+                        *   Trying 127.0.0.1... connected
+                        * Connected to 127.0.0.1 port 8080 
                         &gt; GET / HTTP/1.1
                         &gt; User-Agent: curl/7.20.0 (i386-apple-darwin10.3.2) libcurl/7.20.0 OpenSSL/0.9.8n
                         &gt; Accept: */*
@@ -676,6 +717,19 @@
                     </ul>
     			</div>
 
+            </section>
+
+            <div class="slide outline"></div>
+
+            <section>
+                <header>Authentication</header>
+                
+        		<div class="slide">
+    				<hgroup>
+    					<h1>Authentication</h1>
+    				</hgroup>
+    			</div>                                    
+                
             </section>
 
             <div class="slide outline"></div>
