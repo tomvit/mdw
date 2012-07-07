@@ -410,13 +410,18 @@
 				<hgroup>
 					<h1>HTTP Listener</h1>
 				</hgroup>
-                <ul class="xx-small">
-                    <li>HTTP Server implementation</li>
+                <ul class="x-small">
+                    <li>HTTP listener implementation in Java using Jetty<a rel="code" 
+             href="https://github.com/tomvit/mdw/blob/master/examples/protocols/src/com/vitvar/ctu/mdw/HttpListener.java">&nbsp;</a></li>
                     <ul>
-						<li>Server is implemented using Jetty 7, running at <code>127.0.0.1</code>, port <code>8080</code>.</li>
-						<div class="h-github" name="examples/protocols/src/com/vitvar/ctu/mdw/HttpListener.java"
-							lines="12-38"></div>
+						<li>Server listens on port <code>8080</code></li>
+						<li>Jetty parses HTTP request data into <code>HttpServletRequest</code> object. 
+						<li>When a client connects, the method <code>handleRequest</code> is called</li>
+						<li>The method tests the value of the <code>host</code> header and responds back if the header
+							matches <code>company.cz</code> value.</li>					
                     </ul>
+					<div class="h-github" name="examples/protocols/src/com/vitvar/ctu/mdw/HttpListener.java"
+						lines="15-26"></div>
                 </ul>
 			</div>
 
@@ -424,19 +429,9 @@
 				<hgroup>
 					<h1>HTTP Listener (Cont.)</h1>
 				</hgroup>
-                <ul class="x-small">
-                    <li>Comments on the server implementation</li>
-					<ul>
-						<li>Server listens on port <code>8080</code></li>
-						<li>Jetty parses HTTP request data into <code>HttpServletRequest</code> object. 
-						<li>When a client connects, the method <code>handle</code> is called</li>
-						<li>The method tests the value of the <code>host</code> header and responds back if the header
-							matches <code>company.cz</code> value.</li>
-							
-					</ul>
-	
+                <ul class="xx-small">
                     <li>Test it using Telnet</li>
-                    <pre class="brush: bash; class-name: ''">
+                    <pre class="brush: bash; class-name: 'tight'">
                         telnet 127.0.0.1 8080
                         # ...lines omitted due to brevity
                         GET /orders HTTP/1.1
@@ -447,6 +442,24 @@
                         
                         This is the response...
                     </pre>  
+					<li>HTTP listener in bash</li>
+					<ul>
+						<li>Use it to test incomming HTTP connections quickly</li>
+						<li>Uses <code>nc</code> utility (netcat)</li>
+					</ul>
+					<pre class="brush: bash; class-name: 'tight'">
+						# ctrl-c to stop http listener
+						control_c() {
+						  echo -en "\n* Exiting\n"
+						  exit $?
+						}
+						trap control_c SIGINT
+
+						for (( ; ; ))
+						do
+						        echo -e "\n\n* Listening on port $1..."
+						        echo -e "\nHTTP/1.0 204 No Content\n\n" | nc -l $port
+						done</pre>
                 </ul>
 			</div>
 
@@ -677,13 +690,204 @@
             <div class="slide outline"></div>
 
             <section>
-                <header>Authentication</header>
+                <header>Authentication and Authorization</header>
                 
         		<div class="slide">
     				<hgroup>
-    					<h1>Authentication</h1>
+    					<h1>Authentication and Authorization</h1>
     				</hgroup>
+					<ul class="small">
+						<li>Authentication</li>
+						<ul>
+							<li>verification of user's identity</li>
+						</ul>
+						<li>Authorization</li>
+						<ul>
+							<li>verification that a user has rights to access a resource</li>
+						</ul>
+						<li>Standard: HTTP authentication</li>
+						<ul>
+							<li>HTTP defines two options</li>
+							<ul>
+								<li>Basic Access Authentication</li>
+								<li>Digest Access Authentication</li>
+							</ul>
+							<li>They are defined in</li>
+							<ul>
+								<li><span class="h-ref" id="rfc-2616">RFC 2616: Hypertext 
+								Transfer Protocol &ndash; HTTP/1.1</span></li>
+								<li><span class="h-ref" id="rfc-2617">RFC 2617: 
+								HTTP Authentication: Basic and Digest Access Authentication</span></li> 
+							</ul>
+						</ul>
+						<li>Custom/proprietary: use of cookies</li>
+					</ul>
     			</div>                                    
+
+        		<div class="slide">
+    				<hgroup>
+    					<h1>Basic Access Authentication</h1>
+    				</hgroup>
+					<div class="h-drawing" style="height: 280px" id="1OYyQduAQYodoiQ48uYTCB1iVn6UHcCcdDocjLOA9b9Y"></div>
+					<ul class="x-small">
+						<li>Realm</li>
+						<ul>
+							<li>an identifier of the space on the server (~ a collection of resources and their sub-resources)</li>
+							<li>client may associate a valid credentials with realms such that it copies authorization information 
+								in requests for which server requires authentication (by <code>WWW-Authenticate</code> header)</li>
+					</ul>
+    			</div>                                    
+
+        		<div class="slide">
+    				<hgroup>
+    					<h1>Basic Access Authentication &ndash; Credentials</h1>
+    				</hgroup>
+					<ul class="small">
+						<li>Credentials</li>
+						<ul>
+							<li>credentials are base64 encoded</li>
+							<li>the format is: <code>username:password</code></li>
+						</ul>
+						<pre class="brush: bash">
+							# to encode in linux
+							echo "novak:heslo" | base64
+							> bm92YWs6aGVzbG8K
+								
+							# and to decode
+							echo "bm92YWs6aGVzbG8K" | base64 -d # use capital "D" in OS X
+							> novak:heslo</pre>
+								
+						<li>Comments</li>
+						<ul class="x-small">
+							<li>It is not secure, the password travels over the network and can be read!</li>
+							<li>the purpose is to encode and send non-ASCII characters</li>
+						</ul>
+					</ul>
+					
+    			</div>                                    
+
+        		<div class="slide">
+    				<hgroup>
+    					<h1>Digest Access Authentication</h1>
+    				</hgroup>
+					<ul class="xx-small">
+						<li>RFC 2617 &ndash; Basic and Digest Access Authentication</li>
+						<ul>
+							<li>No password between a client and a server but a hash value</li>
+							<li>Simple and advanced mechanisms (only server-generated nonce value &ndash; replay-attacks or 
+								with client-generated nonce value &ndash; chosen-plaintext attacks)</li>
+						</ul>							
+						<li>Basic Steps</li>
+						<ol>
+							<li>Client accesses a protected area</li>
+							<pre class="brush:bash; class-name: 'tight'">
+								> GET / HTTP/1.1</pre>
+							<li>Server requests authentication with <code>WWW-Authenticate</code></li>
+								<pre class="brush:bash; class-name: 'tight'">
+									&lt; HTTP/1.1 401 Unauthorized
+									&lt; WWW-Authenticate: Digest realm="ProtectedArea", 
+									  nonce="BbdQof3DBAA=a293ff3d724989371610f03015f2d23f3cd2c045", 
+									  algorithm=MD5, domain="/", qop="auth"</pre>
+							<li>Client calculates a response hash by using the realm, his/her username, the password, and the 
+								quality of protection (QoP) and requests the resource with <code>authorization</code> header</li>
+								<pre class="brush:bash; class-name: 'tight'">
+									> GET / HTTP/1.1
+									> Authorization: Digest username="novak", realm="ProtectedArea",
+									  nonce="BbdQof3DBAA=a293ff3d724989371610f03015f2d23f3cd2c045", uri="/", 
+									  algorithm=MD5, response="c4ea2293aeb318826d1e533f363efd90", qop=auth, 
+									  nc=00000001, cnonce="531ee8ba7f2a8fd1"</pre>								
+						</ol>
+					</ul>
+    			</div>                                    
+
+        		<div class="slide">
+    				<hgroup>
+    					<h1>Nonce and QoP</h1>
+    				</hgroup>
+					<ul class="small">
+						<li>Nonce</li>
+						<ul>
+							<li>A value to identify an interaction that should occur only once</li>
+							<li><code>nonce</code> &ndash; generated by the server</li>
+							<ul>
+								<li>may have a time period for which the nonce is valid</li>
+								<li>may be computed using client IP, ETag of the resource, etc.</li>
+								<li>this limits chances for the replay attack.</li>
+							</ul>
+							<li><code>cnonce</code> &ndash; generated by the client</li>
+						</ul>
+						<li>QoP &ndash; quality of protection</li>
+						<ul>
+							<li>Further improvements to prevent replay attacks and chosen-plaintext 
+								attacks and enables non-repudiation</li>
+						</ul>
+					</ul>
+    			</div>  
+
+        		<div class="slide">
+    				<hgroup>
+    					<h1>Algorithms</h1>
+    				</hgroup>
+					<ul class="small">
+						<li>Algorithm for <code>response</code> value of <code>authorization</code> header</li>
+						<ul>
+							<li>No quality of protection (<code>qop</code> is missing or <code>qop=none</code>)</li>
+							<ul>
+								<li>prevents replay-attacks</li>
+							</ul>
+							<pre class="brush: bash; class-name: 'tight'">
+								HA1 = MD5(username:realm:password)
+								HA2 = MD5(method:digestURI)
+								response = MD5(HA1:nonce:HA2)</pre>
+							<li>with quality of protection (<code>qop=auth</code>)</li>
+							<ul>
+								<li>prevents chosen-plaintext attacks</li>
+							</ul>
+							<pre class="brush: bash; class-name: 'tight'">
+								HA1 = MD5(username:realm:password)
+								HA2 = MD5(method:digestURI)
+								response = MD5(HA1:nonce:nonceCount:cnonce:qop:HA2)</pre>				
+								<li>with quality of protection for message integrity (<code>qop=auth-int</code>)</li>
+								<ul>
+									<li>enables non-repudiation (i.e., proof of integrity and origin of data)</li>
+								</ul>
+								<pre class="brush: bash; class-name: 'tight'">
+									HA1 = MD5(username:realm:password)
+									HA2 = MD5(method:digestURI:MD5(payload))
+									response = MD5(HA1:nonce:nonceCount:cnonce:qop:HA2)</pre>											
+						</ul>
+						
+					</ul>
+    			</div>  
+
+        		<div class="slide">
+    				<hgroup>
+    					<h1>Replay Attack</h1>
+    				</hgroup>
+					<ul class="xx-small">
+						<li>Replay Attack Scenario (quality of protection is <code>none</code>)</li>
+						<ul>
+							<li>The communication is not encrypted (i.e., no use of HTTPS)</li>
+							<li>Eve listens to the Alice's communication (e.g. on a proxy server)</li>
+							<li>Eve resends requests with headers from Alice's requests</li>
+						</ul>
+					</ul>
+					<div class="h-drawing" id="1gQvg53vE3p9o_YRI3zYx3uBEfiT6YjiuznHN0A8O2QA" style="height: 380px"></div>
+				</div>                                  
+
+        		<div class="slide">
+    				<hgroup>
+    					<h1>Replay Attack (Cont.)</h1>
+    				</hgroup>
+					<ul class="xx-small">
+						<li>Replay Attack Scenario (quality of protection is <code>auth</code> or <code>auth-int</code>)</li>
+						<ul>
+							<li><code>nonceCount</code> should be incremented in every request to a response of the nonce 
+								value from the server</li>
+						</ul>
+					</ul>
+					<div class="h-drawing" id="1Jto8zZvp-q7IANoQ0lckKsPHP1e5LetG7nJs8jI3Xyg" style="height: 380px"></div>
+				</div>                                  
                 
             </section>
 

@@ -1,5 +1,5 @@
 #!/bin/sh
-# Simple protocol example
+# Simple protocol start up script
 
 # set the base path
 EXAMPLES_HOME="$(dirname $0)/../protocols"

@@ -1,5 +1,5 @@
 #!/bin/sh
-# http listener example using jetty
+# counter start up script
 
 # set the base path
 EXAMPLES_HOME="$(dirname $0)/.."
