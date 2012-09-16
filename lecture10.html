@@ -8,22 +8,23 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> 
         <meta name="course"   content="Middleware and Web Services"/>
-        <meta name="lecture"  content="Lecture 11"/>
-        <meta name="keywords" content="IaaS, PaaS, SaaS, load balancing, message queue, publish/subscribe, scalability"/>
+        <meta name="lecture"  content="Lecture 7"/>
+        <meta name="keywords" content="service usage processes, interoperability, discovery, 
+		service contract, enterprise repository, UDDI"/>
            
         <link type="text/css" rel="stylesheet" href="css/meta.css"></link>   
         <link type="text/css" rel="stylesheet" href="css/ctu-fit.css"></link>   
         <link type="text/css" rel="stylesheet" href="humla/lib/core/humla.css"></link>   
 
         <script type="text/javascript" src="humla/lib/humla.js"></script>
-        <title>Cloud Computing Concepts</title>
+        <title>SOA Governance</title>
     </head>
     
     <body>
         <footer>
-        <p><b>#META_LECTURE#: #TITLE#</b>,&nbsp;<span class="meta_semester"/>,&nbsp;
-        <span class="meta_twitter"/></p>
-        <p><b>&#8210; #SLIDE_NO# &#8210;</b></p>
+            <p><b>#META_LECTURE#: #TITLE#</b>,&nbsp;<span class="meta_semester"/>,&nbsp;
+            <span class="meta_twitter"/></p>
+            <p><b>&#8210; #SLIDE_NO# &#8210;</b></p>
         </footer>
 
         <div class="slide intro">
@@ -51,755 +52,672 @@
                 <div class="oppa"></div>
             </div>
         </div>
-
-        <div class="slide outline"></div>
         
-		<section>
-			<header>Cloud Computing</header>
-			
-            <div class="slide">
-                <hgroup>
-    				<h1>Traditional Solution to Infrastructure</h1>
-    			</hgroup>
-                <ul class="small">
-                    <li>Traditional hardware model</li>
-                    <ul>
-                        <li>Up-front hardware investments</li>
-                        <li>Hardware not optimally utilized</li>
-                    </ul>
-                </ul>
-                <div class="h-drawing" style="height: 350px; margin-left: -10px" 
-                    id="17jEYye-th5U5T-N-iE1gR7f_k5Bwrk9P7z9yYC4EZlw" alt="Traditional Hardware Model"></div>
-            </div>
+        <section>
+            <header>Service Usage Process</header>
 
             <div class="slide">
                 <hgroup>
-    				<h1>Cloud Solution to Infrastructure</h1>
-    			</hgroup>
+                    <h1>Goal and Service Use Tasks</h1>
+                </hgroup>
                 <ul class="small">
-                    <li>Cloud computing model</li>
+                    <li>Goal (represents a requester entity)</li>
                     <ul>
-                        <li>No up-front hardware investments</li>
-                        <li>Hardware optimally utilized</li>
+                        <li>a requester's desired state (described by an effect)</li>
+                        <ul>
+                            <li>functional: to buy and deliver a book</li>
+                            <li>non-functional (preferences): price; quality</li> 
+                            <li>behavioral: (public process) provides instance data<br/>e.g., a Harry Potter book; Innsbruck, AT</li>
+                        </ul>
+                    </ul>
+                    <li>Service Use Tasks</li>
+                    <ul>
+                        <li>investigate whether and how to use services to fulfill the goal</li>
+                        <li><b>discovery</b>: a service that matches an abstract goal</li>
+                        <li><b>negotiation</b>: the service hat can fulfill a goal instance</li>
+                        <li><b>selection</b>: the service that satisfies user's preferences</li>
+                        <li><b>composition</b>: composes services into a process</li>
+                        <li><b>mediation</b>: data and process interoperability</li>
+                        <li><b>invocation</b>: invokes the service</li>
                     </ul>
                 </ul>
-                <div class="h-drawing" style="height: 350px; margin-left: -10px" 
-                    id="1yeHPc2AqDeXanOV0Zi8MirHApMjf1Sa_2UCOt_9Avds" alt="Cloud Computing Solution"></div>
-            </div>
+            </div>                  
 
-			<div class="slide">
-				<hgroup>
-					<h1>Cloud Computing</h1>
-				</hgroup>
-				<ul class="small">
-					<li>Outsourcing of application infrastructure</li>
-					<ul>
-						<li>Reliability and availability</li>
-						<li>Low costs &ndash; pay-as-you-go</li>
-						<li>Elasticity &ndash; can dynamically grow with your apps</li>
-					</ul>
-					<li>Different way of thinking</li>
-					<ul>
-						<li>Got your grand mum's savings under your pillow?</li>
-                        <ul>
-						    <li>probably not, you better have them in your bank</li>
-                        </ul>
-						<li>Data is your major asset</li>
-						    <li>you better have them in a "bank" too</li>
-						    <li>Someone can abuse your data?<br/>
-						    <li>banks bankrupt too, sometimes &ndash; it is a risk you take</li>
-						    <li>there is a market and a competition</li>
-                        </li>
-					</ul>
-				</ul>
-			</div>
+            <div class="slide">
+                <hgroup>
+                    <h1>Usage Process</h1>
+                </hgroup>
+                <div class="h-drawing" id="1kaSQ40qUYfO7401uqULfsOqejgftfe4dZqAcXuFP7lI"
+                  style="height: 450px"></div>
+            </div>                  
 
-    		<div class="slide">
-				<hgroup>
-					<h1>What is a Cloud?</h1>
-				</hgroup>
-				<ul class="small">
-					<li>Any app you access over the web?</li>
-					<li>A datacenter?</li>
+            <div class="slide">
+                <hgroup>
+                    <h1>Usage Process Implementations</h1>
+                </hgroup>
+                <ul>
+                    <li>Manual</li>
                     <ul>
-                        <li>Offers virtualization</li>
-                        <li>Any company having a datacenter wants to move to</li>
+                        <li>Handful number of services</li>
+                        <li>binding usually manual (~ design time)</li>
+                        <ul>
+                            <li>tool support for individual tasks (such as discovery)</li>
+                        </ul>
+                        <li>Execution</li>
                     </ul>
-					<li>Three layers: IaaS, PaaS, SaaS</li>
+                    <li>Automated</li>
                     <ul>
-						<li>access programmatically, pay-as-you-go, low up-front costs, 
-					    initial version for free, micro payments etc.</li>
+                        <li>intelligent services &ndash; large number of services</li>
+                        <li>binding = late-binding (~ runtime)</li>
+                        <li>need for formal descriptions with high expressivity</li>
+                        <ul>
+                            <li>logic-based descriptions, Semantic Web</li>
+                            <li>balance between manual and automated tasks</li>
+                        </ul>
+                        <li>user should always be in the loop to approve, relax requirements, etc.</li>
                     </ul>
-                    <li>Cloud computing offers services</li>
+                </ul>
+            </div>                  
+
+            <div class="slide">
+                <hgroup>
+                    <h1>Service Description and Use Tasks</h1>
+                </hgroup>
+                <div class="h-drawing" id="1YRZJ5cJ61TwW_MiORNE1i7Zt_6EGuvRhZIpxuX95iZw"
+                  style="height: 465px; margin-top: 20px"></div>
+            </div>                  
+
+            <div class="slide">
+                <hgroup>
+                    <h1>Types of Services</h1>
+                </hgroup>
+                <ul>
+                    <li>End-user services</li>
                     <ul>
-                        <li>scalability, storage</li>
-                        <li>Possible to configure programmatically</li>
-                        <ul>
-                            <li>integration to enterprise administration processes</li>
-                            <li>usually REST interface</li>
-                        </ul>
+                        <li>by service we mean end-user service by default</li>
+                        <li>they bring some business value to their users</li>
+                        <li>also called business services</li>
+                        <li>composed into business processes</li>
                     </ul>
-				</ul>
-			</div>            
-            
-            <div class="slide outline"></div>
-            
-            <section>
-                <header>Cloud Layers</header>            
-
-    			<div class="slide">
-    				<hgroup>
-    					<h1>Web 2.0 App Architecture</h1>
-    				</hgroup>
-    				<div class="h-drawing" id="1ccBEavZAFztUkrueXOCaw0snMwN80v2cGazOPwk96hE"
-    						style="height: 420px"></div>
-    			</div>
-    	
-    			<div class="slide">
-    				<hgroup>
-    					<h1>Move to the Cloud: IaaS</h1>
-    				</hgroup>
-    				<ul>
-    					<li>Infrastructure as a Service</li>
-    					<ul>
-    						<li>Services for application providers</li>
-    					</ul>
-    				</ul>
-    				<div class="h-drawing" id="17oG3SEPjVlNbYIBXBd3Vdf8Cr-ekCYrg39_8mW91t0Q"
-    						style="height: 470px; zoom: 0.8"></div>
-    			</div>
-    	
-    			<div class="slide">
-    				<hgroup>
-    					<h1>Move to the Cloud: PaaS</h1>
-    				</hgroup>
-    				<ul>
-    					<li>Platform as a Service</li>
-    					<ul>
-    						<li>Services for application providers</li>
-    					</ul>
-    				</ul>
-    				<div class="h-drawing" id="12goj7Bf4nJewEMwGp7zHDpXqsWdrAp6lyNf3aSwetGo"
-    						style="height: 470px; zoom: 0.8"></div>
-    			</div>
-    	
-    			<div class="slide">
-    				<hgroup>
-    					<h1>Move to the Cloud: SaaS</h1>
-    				</hgroup>
-    				<ul>
-    					<li>Software as a Service</li>
-    					<ul>
-    						<li>Services for end-users</li>
-    					</ul>
-    				</ul>
-    				<div class="h-drawing" id="1f-OuzqNyxWAAbFRGTgPn_-OeibCSqPOFO8uiUgQkNO8"
-    						style="height: 470px; zoom: 0.8"></div>
-    			</div>
-    			
-    			<div class="slide">
-    				<hgroup>
-    					<h1>Cloud Computing Services</h1>
-    				</hgroup>	
-    				<div class="h-drawing" style="height: 450px; margin-top: 30px; margin-bottom: 20px" 
-    					id="1viinJDuQRPPKiEJce7FbsxlQI5nJ8_Cl53QNfw3stJc"></div>
-    			</div>	
-            </section>
-		</section>
-
-        <div class="slide outline"></div>
-
-		<section>
-			<header>Service Performance</header>
-			
-			<div class="slide">
-				<hgroup>
-					<h1>Good Performance</h1>
-				</hgroup>
-				<ul class="small">
-					<li>Scalability</li>
-					<ul>
-						<li>server scalability</li>
-                        <ul>
-						    <li>ability of a server to react on changes in loads</li>
-						    <li>a user should not feel the change in loads</li>
-						    <li>horizontal and vertical scaling</li>
-                        </ul>
-						<li>network traffic</li>
-                        <ul>
-						    <li>not all about network bandwidth capacity</li>
-						    <li>service needs to limit the network traffic through caching</li>
-                        </ul>
-					</ul>
-					<li>Availability</li>
-					<ul>
-						<li>probability that a service is operational at a particular time</li>
-						<ul>
-                            <li>e.g., 99.9987% availability &ndash; downtime ~44 seconds/year</li>
-                        </ul>
-					</ul>
-					<li>Metrics</li>
-					<ul>
-						<li>Latency</li>
-						<li>Queries per Second (QPS)</li>
-					</ul>					
-				</ul>
-			</div>
-	
-			<div class="slide">
-				<hgroup>
-					<h1>Latency</h1>
-				</hgroup>
-				<div class="h-drawing" style="height: 300px" id="1rgjQBi7cWEbNSjNYmnhaFTqcoXNi6JbLaGmNajArRUY"></div>
-				<ul class="xx-small">
-					<li>High latency influenced by</li>
-					<ul>
-						<li>CPU intensive service or a bad implementation of a service</li>
-                        <ul>
-						    <li>consider asynchronous processing when CPU intensive</li>
-                        </ul>
-						<li>Writing to a data store</li>
-						<li>No or bad caching mechanism</li>
-                        <ul>
-						    <li>even if data changes often, with high QPS caching improves a lot</li>
-						    <li>stateful service implementation may have influence too</li>
-                        </ul>
-					</ul>
-				</ul>
-			</div>
-	
-			<div class="slide">
-				<hgroup>
-					<h1>CPU Time</h1>
-				</hgroup>
-				<ul class="small">
-					<li>The time a CPU spends on executing a service</li>
-					<li>CPU Time influences</li>
-					<ul>
-						<li>latency of your service</li>
-						<li>your bills you pay for running the service</li>
-					</ul>
-					<li>Reference CPU</li>
-					<ul>
-						<li>system's infrastructures are complex, times may vary</li>
-						<li>all times calculated wrt this CPU</li>
-						<li>billing on a reference CPU in the cloud</li>
-						<li>Example in GAE:<br/>
-                        1.2GHz CPU, 3600 MIPS (3 instructions per cycle)</li> 
-					</ul>
-					<li>How to determine CPU time</li>
-					<ul>
-						<li>profiling (depends on programming environment)</li>
-						<li>analysis of service's computational complexity</li>
-					</ul>
-				</ul>
-			</div>						
-
-			<!-- /SLIDE -->					
-			<div class="slide">
-				<hgroup>
-					<h1>Profiling in GAE</h1>
-				</hgroup>
-				<ul class="x-small">
-					<li>Example profiling code</li>
-                    <pre class="brush: java; class-name: 'tight'">
-					// QuotaService gives us an access to CPU cycles 
-					QuotaService qs = QuotaServiceFactory.getQuotaService();
-
-					// initialization
-					// 10000 numbers; worst-case scenario - in reverse order
-					int[] A = new int[10000];
-					for (int i = 0; i < A.length; i++)
-						A[i] = A.length - i;
-
-					// current number of cycles 
-					long start = qs.getCpuTimeInMegaCycles();
-
-					// insertion sort
-					insertionSort(A);
-	
-					// current number of cycles
-					long end = qs.getCpuTimeInMegaCycles();
-					</pre>							
-					<li>Analysis</li>
-					<ul>
-						<li>Number of CPU mega cycles <span class="h-latex">c=\mathit{end}-\mathit{start} \approx 400</span>
-						<li><span class="h-latex">c</span> is in mega cycles, 1200 mega cycles is 1 CPU second</li>
-						<li>Total CPU seconds for the insertion sort
-						<span class="h-latex xx-lower">T'_\mathit{cpu}=c/1200=0.35</span></li>
-						<!--<li>Instructions per operation: 
-						<span class="h-latex xx-lower">k_1=(400 \cdot 10^6 \cdot 3) / (10^8) = 12</span><br/>
-						(<span class="h-latex">3</span> instructions per cycle)-->
-					</ul>
-				</ul>
-			</div>
-
-			<!-- /SLIDE -->					
-			<div class="slide">
-				<hgroup>
-					<h1>Service Analysis</h1>
-				</hgroup>
-				<ul>
-					<li>Running time</li>
-					<ul>
-						<div class="h-latex" style="zoom: 0.8">
-							T(n) = k_1 \cdot g(n) + k_2 
-						</div>
-						<li><span class="h-latex lower">k_1, k_2</span> 
-							are constant factors (independent on <span class="h-latex" style="zoom:0.8">n</span>)</li>
-						<li>for functions with <span class="h-latex x-lower">O(g(n))</span> complexity, 
-							<span class="h-latex x-lower">T(n)</span> describes worst-case running time</li>
-						<li>CPU-intensive functions: large <span class="h-latex">n</span></li> 
-					</ul>
-					<li>Constant factors</li>
-					<ul>
-						<li>overhead costs when running the function:<br/>
-						(a) <span class="h-latex lower">k_1</span> denotes efficiency of 
-							function's algorithm implementation,<br/>
-						(b) <span class="h-latex lower">k_2</span> denotes one-time costs such as
-						reading, writing, serializing data, simple calculations</li>
-					</ul>
-				</ul>
-			</div>
-
-			<!-- /SLIDE -->					
-			<div class="slide">
-				<hgroup>
-					<h1>CPU Seconds</h1>
-				</hgroup>
-				<ul class="x-small">
-					<li>Running time in CPU seconds</li>
-					<ul>
-						<div class="h-latex" style="zoom: 0.8">
-							\begin{math}
-								T_\mathit{cpu}(n) = \frac{k_1 \cdot g(n) + k_2}{\mathit{c}_m}}
-							\end{math}
-						</div>
-						<ul>
-							<li class="no-bullet">where <span class="h-latex">c_m</span> is a CPU's Million Instructions 
-								per Second (MIPS)</li>
-						</ul>
-					</ul>
-					<li>Example (function analysis)</li>
-					<ul>
-						<li>sort 10,000 items using insertion sort on a 1.2 GHz x86 CPU
-						with 3 instructions per clock cycle (~ 3600 MIPS)</li>
-						<li>insertion sort complexity is <span class="h-latex x-lower">O(n^2)</span></li>
-						<li><span class="h-latex lower">k_1=12</span> (~12 instructions per operation in avarage),
-						<br/><span class="h-latex lower">k_2=0</span> (no additional costs)
-						<br/><span class="h-latex lower">c_m=1200 \cdot 3 = 3600</span></li>
-						<li class="space-before">CPU Time in seconds:</li>
-						<div class="h-latex" style="zoom: 0.7;margin-top: 0px; margin-left: 50px">
-							\begin{math}
-								T_\mathit{cpu}(10^4) = \frac{12 \cdot (10^4)^2}{3600 \cdot 10^{6}} 
-								\approx 0.33
-							\end{math}
-						</div>
-					</ul>							
-				</ul>
-			</div>
-
-		</section>
+                    <li>Middleware Services</li>
+                    <ul>
+                        <li>they facilitate end-user service usage process</li>
+                        <li>also called platform services</li>
+                        <li>composed into middleware processes<br/>
+                        &rarr; late-binding, execution</li>
+                    </ul>
+                </ul>
+            </div>                  
+        </section>
 
         <div class="slide outline"></div>
         
-		<section>
-			<header>Load Balancer</header>
-			
-			<div class="slide">
-				<hgroup>
-					<h1>Load Balancer</h1>
-				</hgroup>
-				<ul>
-					<li>Distributes the load to multiple app instances</li>
-					<ul>
-						<li>App instances run on different machines</li>
-						<li>Load sharing: equal or with preferences</li>
-						<li>Health checks</li>
-					</ul>
-					<li>Types</li>
-					<ul>
-						<li>DNS-based load balancer</li>
-                        <ul>
-						    <li>DNS Round Robin</li>
-                        </ul>
-						<li>NAT-based load balancer</li>
-						<ul>   
-                            <li>app protocol layer</li>
-                        </ul>
-						<li>HTTP Sticky-sessions</li>
-					</ul>
-				</ul>
-			</div>
+        <section>
+            <header>Goal and Services Binding</header>
 
-            <div class="slide">
-				<hgroup>
-					<h1>DNS-based Load Balancer</h1>
-				</hgroup>
-				<ul class="x-small">
-					<li>DNS Round Robin</li>
-					<ul>
-						<li>Very first load balancing mechanism</li>
-						<li>A DNS record has multiple assigned IP addresses</li>
-						<li>DNS system delivers different IP addresses from the list</li>
-						<li>Example DNS A Record:<br/>
-                        <code>moon.com A 147.32.100.71 147.32.100.72 147.32.100.73</code></li>
-					</ul>
-					<li>Advantages</li>
-					<ul>
-						<li>Very simple, easy to implement</li>
-					</ul>
-					<li>Disadvantages</li>
-					<ul>
-						<li>IP address in cache, could take hours to re-assign</li>
-						<li>No information about servers' loads and health</li>
-					</ul>
-					<li>Variation of DNS Round robin</li>
-					<ul>
-						<li>a load balancer assigns domain names</li>
-                        <ul>
-                            <li>each domain has a different IP in DNS</li>
-                        </ul>
-						<li>a health-check is possible, IP re-assignment problem remains</li> 
-					</ul>
-				</ul>
-			</div>
-
-			<div class="slide">
-				<hgroup>
-					<h1>NAT-based Load Balancer</h1>
-				</hgroup>
-				<div class="h-drawing" style="height: 450px" 
-				  id="1gW_gyxsc7c5uZflzfyVt26gZ0V1RzyD5RfSXrP07Nkg"></div>
-			</div>
-
-			<div class="slide">
-				<hgroup>
-					<h1>Load Balancer Configuration API</h1>
-				</hgroup>
-				<ul class="xx-small">
-					<li><code>CreateLoadBalancer</code></li>
-					<ul>
-						<li><code>LoadBalancerName</code> &ndash; unique name of the load balancer</li>
-						<li><code>Protocol</code> &ndash; protocol such as HTTP</li>
-						<li><code>LoadBalancerPort</code> &ndash; port on which LB listens for incoming requests</li>
-						<li><code>InstancePort</code> &ndash; app instance TCP port such as 8080</li>
-					</ul>
-					<li><code>ConfigureHealthCheck</code></li>
-					<ul>
-						<li><code>LoadBalancerName</code> &ndash; name of existing LB</li>
-						<li><code>Target</code> &ndash; in a form of <code>HTTP:port/PathToPing</code></li>
-						<li><code>Interval</code> &ndash; amount of seconds to perform health checks</li>
-						<li><code>Timeout</code> &ndash; amount of seconds when no response to health check endpoint means unhealthy app instance</li>
-						<li><code>HealthyThreshold</code> &ndash; number of successful health checks that will mark the app instance as healthy</li>
-						<li><code>UnhealthyThreshold</code> &ndash; number of unsuccessful health checks that mark the app instance as unhealthy</li>
-					</ul>
-					<li><code>RegisterInstancesWithLoadBalancer</code></li>
-					<ul>
-						<li><code>LoadBalancerName</code> &ndash; name of existing LB</li>
-						<li><code>Instances</code>&ndash; app instances to put to the pool</li>
-					</ul>
-				</ul>
-			</div>
-
-			<div class="slide">
-				<hgroup>
-					<h1>App Instance Usage</h1>
-				</hgroup>
-				<ul class="x-small">
-					<li>Sticky sessions</li>
-					<ul>
-						<li>Identified by cookies created by the load balancer</li>
-						<li>Information in the request about the app instance</li>
-					</ul>
-					<li>Steps to chose an app instance to serve the request</li>
-					<ul>
-						<li><b>if a sticky session exists to an app instance</b></li>
-						<li>always use that app instance</li>
-						
-						<li class="space-before"><b>if a sticky session does not exist</b></li>
-						<li>Use round robin for the next app instance</li>
-
-						<li class="space-before"><b>health check</b></li>
-						<li>if a number of health checks exceeds the unhealthy threshold</li>
-                        <ul>
-						    <li>discard the app from the list</li>
-                        </ul>
-						<li>if an app was unhealthy and a number of health checks exceeds the healthy threshold</li>
-						<ul>
-                            <li>add the app to the list</li>
-                        </ul>
-					</ul>
-				</ul>
-			</div>
-			
-			<div class="slide">
-				<hgroup>
-					<h1>Scalability</h1>
-				</hgroup>
-				<ul>
-					<li>Scaling Up</li>
-					<ul>
-						<li>Number of users increases, need for more resources</li>
-						<li>Replication of app instances</li>
-					</ul>
-				</ul>
-				<div class="h-drawing" id="1Csit0_kjH9X8Tlr7XbS-Qvs1nDXWTAlLSAHS8lNhK9o"
-					style="height: 320px"></div>
-			</div>
-
-			<div class="slide">
-				<hgroup>
-					<h1>Scalability</h1>
-				</hgroup>
-				<ul>
-					<li>Scaling Down</li>
-					<ul>
-						<li>Number of users decreases, no need for many resources</li>
-						<li>Deleting app instances</li>
-					</ul>
-				</ul>
-				<div class="h-drawing" id="1E9aA0HP279klNZ3JSUjkVAgdr9Am9DoAMTojjDoyxeY"
-					style="height: 320px"></div>
-			</div>
-
-			<div class="slide">
-				<hgroup>
-					<h1>Scaling Down Issues</h1>
-				</hgroup>
-				<ul>
-					<li>Session in a persistent storage</li>
-					<ul>
-						<li>Stateful server</li>
-						<li>No sticky sessions &ndash; auto scaling</li>
-					</ul>
-					<li>GAE implementation</li>
-					<ul>
-						<li>New or updated session data<br/>
-						&rarr; written to BigTable and the memcache</li>
-						<li>Reading the data</li>
-						<ul>
-							<li>only from the cache, is fast</li>
-						</ul>
-					</ul>
-					<li>Limitations on data writing</li>
-					<ul>
-						<li>GAE allows to update a single entity 5 times/sec.</li>
-						<li>When QPS > 5 (GAE scales up to 500 QPS)</li>
-                        <ul>
-                            <li>the latency grows</li>
-                        </ul>
-					</ul>
-				</ul>
-			</div>
-            
-            <div class="slide">
-    			<hgroup>
-					<h1>Example Application Scalability</h1>
-				</hgroup>
-                <ul class="x-small">
-                    <li>Response times &times; QPS for reading (R) and writing (W)</li>
-                    <ul>    
-                        <li>Writing scales well up to 5 QPS</li>
-                        <li>Reading scales well for all QPS</li>
-                    </ul>
-                </ul>
-                <img src="img/GAE-scaling-example.png" style="height: 350px"></img>
-            </div>
-			
-		</section>
-        
-        <div class="slide outline"></div>
-		
-		<section>
-			<header>Messaging Systems</header>
-
-			<div class="slide">
-				<hgroup>
-					<h1>Messaging Systems</h1>
-				</hgroup>
-				<ul class="small">
-					<li>Messaging Middleware</li>
-					<ul>
-						<li>aka Message-Oriented Middleware (MOM)</li>
-						<li>Message consumer and message producer</li>
-						<li>asynchronous communication</li>
-						<li>"anonymity" between producers and consumers</li>
-    					<ul>
-                            <li>no matter who, where, when a msg was produced</li>
-                        </ul>
-						<li>Ensures reliability, scalability</li>
-					</ul>
-					<li>Loose coupling of applications</li>
-					<ul>
-						<li>a kind of "peer-to-peer" relationship between applications</li>
-					</ul>
-					<li>Two types (Messaging Domains)</li>
-					<ul>
-						<li>Point-to-Point (message queue &mdash; MQ)</li>
-						<li>Publish/Subscribe (event-based)</li>
-					</ul>
-				</ul>
-			</div>
-            
             <section>
-                <header>Message Queues</header>
-
-    			<div class="slide">
-    				<hgroup>
-    					<h1>MQ System</h1>
-    				</hgroup>
-    				<div class="h-drawing" style="height: 300px" 
-                        id="14mdNb1lSNLcI5zvnJe28kJpkZ7alzH3OZjL-saFGCO8"></div>
-    				<ul class="x-small">
-    					<ul>
-    						<li>a "1 : 1" relationship between producer and consumer<br/>
-    						&rarr; <b>one message must be processed by one consumer</b></li>
-    						<li><b>no time-dependency</b> between message producer and consumer<br/>
-    						&rarr; consumer does not need to exist when producer sends a message</li>
-    						<li>Message exists in the queue until it is used by a consumer</li>
-    						<li>message consumers take as many messages as they are able to serve</li>
-    					</ul>
-    				</ul>
-    			</div>
-    
-    			<div class="slide">
-    				<hgroup>
-    					<h1>MQ API</h1>
-    				</hgroup>
-    				<ul class="small">
-    					<li><code>createQueue</code></li>
-    					<ul>
-    						<li>creates a queue in the MQ system</li>
-    						<li>called by the message producer</li>
-    					</ul>
-    					<li><code>sendMessage</code></li>
-    					<ul>
-    						<li>send a message to the queue</li>
-    						<li>called by the message producer</li>
-    					</ul>
-    					<li><code>receiveMessage</code></li>
-    					<ul>
-    						<li>request to receive (read) a message from the queue</li>
-    						<li>called by the message consumer</li>
-    					</ul>
-    					<li><code>deleteMessage</code></li>
-    					<ul>
-    						<li>deletes a message from the queue</li>
-    						<li>called by the message consumer when the message is successfully processed</li>
-    					</ul>
-    				</ul>
-    			</div>
-    
-    			<div class="slide">
-    				<hgroup>
-    					<h1>Message Consumption from the Queue</h1>
-    				</hgroup>
-    				<div class="h-drawing" style="height: 340px" 
-                        id="1FsBqFbspb4xyX-lZLQo7AiiADFphEybTrmn8UzNUSUU"></div>
-    				<ul class="x-small">
-    					<ul>
-    						<li>Amazon Simple Queue System (SQS), part of EC2</li>
-    						<li>message consumers may fail anytime</li>
-    						<li>multiple instances of message consumers increases reliability</li>
-    						<li><b>visibility timeout</b> &ndash; time during which the message exist in the queue,
-    						and need to be deleted by the consumer (~ 30 seconds in SQS)</li>
-    					</ul>
-    				</ul>
-    			</div>
-            </section>
-            
-            <div class="slide outline"></div>
-            
-            <section>
-                <header>Publish/Subscribe</header>
-
-    			<div class="slide">
-    				<hgroup>
-    					<h1>Publish/Subscribe System</h1>
-    				</hgroup>
-    				<div class="h-drawing" style="height: 290px" 
-                        id="1VjuiJ0LVcDFJgmcNfP7wq10-bDJy6m0IHs6SgxD1kvY"></div>
-    				<ul class="x-small">
-    					<ul>
-    						<li>occurrence of a message = event that triggers one or more processes</li>
-    						<li>a "1 : N" relationship between producer and consumer<br/>
-    						&rarr; <b>one message can be processed by many different subscribers</b></li>
-    						<li><b>time-dependency</b> between publisher and subscriber<br/>
-    						&rarr; subscriber must first subscribe to a topic and then publisher can publish a message under that topic</li>
-    						<li>a message is deleted when all its subscribers consume it</li>
-    					</ul>
-    				</ul>
-    			</div>
-    
-    			<div class="slide">
-    				<hgroup>
-    					<h1>Publish/Subscribe API</h1>
-    				</hgroup>
-    				<ul class="small">
-    					<li><code>lookupTopic</code></li>
-    					<ul>
-    						<li>lookups or creates a topic</li>
-    						<li>called by the subscriber first and then by the publisher</li>
-    					</ul>
-    					<li><code>receiveMessage</code></li>
-    					<ul>
-    						<li>request to receive (read) a message under the topic</li>
-    						<li>called by the subscriber</li>
-    						<li>Implementation specific:</li>
+                <header>Discovery</header>
+                
+                <div class="slide">
+                    <hgroup>
+                        <h1>Discovery Types</h1>
+                    </hgroup>
+                    <ul class="x-small ">
+                        <li>Discovery by types of service descriptions</li>
+                        <ul>
+                            <li>Non-functional descriptions</li>
                             <ul>
-    						    <li>synchronous &ndash; blocking, with timeout</li>
-    						    <li>asynchronous &ndash; through event listener</li>
+                                <li>To discover services by name, author, description, price, etc.</li>
                             </ul>
-    					</ul>
-    					<li><code>publishMessage</code></li>
-    					<ul>
-    						<li>publishes a message under the topic</li>
-    						<li>called by the publisher</li>
-    					</ul>
-    				</ul>					
-    			</div>
-    
-    			<div class="slide">
-    				<hgroup>
-    					<h1>Event-driven Communication</h1>
-    				</hgroup>
-    				<ul>
-    					<li>Event</li>
-    					<ul>
-    						<li>Occurrence of a message with certain topic</li>
-    					</ul>
-    					<li>Event-driven Process</li>
-    					<ul>
-    						<li>events trigger actions</li>
-    						<li>one event may trigger more actions</li>
-    						<li>loose coupling &ndash; not all actions need to be known at design time</li>
-    					</ul>
-    					<li>Service Oriented Architectures (SOA)</li>
-    					<ul>
-    						<li>Event-Driven Architectures (EDA) &ndash; new trends in realization of SOA</li>
-    					</ul>
-    				</ul>
-    				</div>
-    			</div>
-    
-    			<div class="slide">
-    				<hgroup>
-    					<h1>Event-driven Process Example</h1>
-    				</hgroup>
-    				<ul class="x-small">
-    					<li>Conceptual process</li>
-    					<div class="h-drawing" style="margin-top: -20px; margin-bottom: 10px; height: 100px" 
-                            id="1IUZaGiPpxb20-q8pBRzmhUCjJH1Ociy2sSnhSYH8guM"></div>
-    					<li>Event-driven process implementation</li>
-    					<div class="h-drawing" style="height: 320px" id="1M_yG2aVhSbWJ1iQ3iBuvRNQLg3-QGMDuwshrNj7R9oM"></div>
-    				</ul>
-    				</div>
-    			</div>
-    
+                            <li>Functional descriptions &ndash; capability</li>
+                            <ul>
+                                <li>To discover services that match requested capability, that 
+                                    is preconditions and effects from the Goal</li>
+                                <li>This requires a logical system (to evaluate logical conditions)</li>
+                            </ul>
+                            <li>Functional descriptions &ndash; functional category</li>
+                            <ul>
+                                <li>To discover services that match a requested functional category</li>
+                            </ul>
+                        </ul>
+                        <li>Terminology in the research community</li>
+                        <ul>
+                            <li>Not a common agreement on terms</li>
+                            <li>Sometimes discovery ~ abstract discovery + negotiation + selection</li>
+                            <ul>
+                                <li>Abstract discovery only operates on abstract descriptions</li>
+                                <li>negotiation ~ instance discovery (negotiation implies more sophistication)</li>
+                            </ul>
+                        </ul>
+                    </ul>
+                </div>              
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>Functional Category Discovery</h1>
+                    </hgroup>
+                    <ul class="x-small">
+                        <li>Taxonomy</li>
+                        <ul>
+                            <li>A tree where nodes are categories and edges <code>sub-class-of</code> relations.</li>
+                        </ul>
+                        <li>Discovery on functional category</li>
+                        <ul>
+                            <li>To test whether a service category belongs to a sub-tree</li>
+                            <li>The sub-tree is defined by a goal category</li>
+                        </ul>
+                        <li>Example taxonomy in xml</li>
+                        <ul>
+                            <li>cf. <a href="lecture4.html#/functional-category">functional category</a> in Lecture 4</li>
+                        </ul>
+                        <div class="h-github" cid="032b992" 
+                            name="discovery/taxonomy.xml" lines="1-14"></div>                        
+                    </ul>
+                </div>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>Service Taxonomy and Discovery Illustration</h1>
+                    </hgroup>
+                    <div class="h-drawing" style="height: 350px" id="1CLc67RhKk0W-YPqEp8HpYPByy5jw-WZ5YcAMRvCB4bM"></div>
+                    <ul class="small">
+                        <li>Discovery task</li>
+                        <ul>
+                            <li>Return all services from a service <code>directory</code> that belong to a goal category <code>goal_cat</code> 
+                            from some service <code>taxonomy</code>.</li>
+                        </ul>
+                    </ul>
+                </div>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>Example Functional Category Discovery</h1>
+                    </hgroup>
+                    <ul class="small">
+                        <li>Interfaces</li>
+                        <div class="h-github" cid="032b992" name="discovery/category-discovery.js" 
+                            brush="js" lines="15-32"></div>                       
+                    </ul>
+                </div>
+                
+                <div class="slide">
+                    <hgroup>
+                        <h1>Algorithm</h1>
+                    </hgroup>
+                    <ul class="x-small">
+                        <li>Function <code>discover</code></li>
+                        <div class="h-github" cid="032b992" name="discovery/category-discovery.js" 
+                            brush="js" lines="54-77"></div>                        
+                    </ul>
+                </div>                
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>Algorithm (Cont.)</h1>
+                    </hgroup>
+                    <ul class="x-small">
+                        <li>Function <code>findTaxonomyElement</code></li>
+                        <div class="h-github" cid="032b992" name="discovery/category-discovery.js" 
+                            brush="js" lines="34-52"></div>                        
+                        <li class="task">Tasks</li>
+                        <ul>
+                            <li>Test the code<a rel="code" 
+                                href="https://github.com/tomvit/mdw-examples/blob/master/discovery/category-discovery.js">&nbsp;</a></li>
+                            <li>Alter the implementation to access the <code>discover</code> function as a service.</li>
+                        </ul>
+                    </ul>
+                </div>
+                
+                <div class="slide">
+                    <hgroup>
+                        <h1>Relaxing and Restricting Goal Requirements</h1>
+                    </hgroup>
+                    <div class="h-drawing" style="height: 350px" id="1YNEdp7eEgjQFID8xt5pr7rpTH6xl4NkACvylnOPGb-c"></div>
+                    <ul class="x-small">
+                        <li>Relaxation vs. restriction</li>
+                        <ul>
+                            <li>Relaxation &ndash; discovery finds more services with general functionality.</li>
+                            <li>Restriction &ndash; discovery finds less services with specific functionality.</li>
+                        </ul>
+                    </ul>
+                </div>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>Relaxed/Restricted Discovery</h1>
+                    </hgroup>
+                    <ul class="x-small">
+                        <li class="task">Task</li>
+                        <ul>
+                            <li>Change the algorithm so that based on the first discovery result,
+                            it returns the new result when performing relaxation or restriction.</li>
+                        </ul>
+                        <li>Description of a solution</li>
+                        <ul class="no-bullet">
+                            <li>Let:</li>
+                            <ul class="no-bullet">
+                                <li><span class="h-latex">D</span> be a set of services in a directory</li>
+                                <li><span class="h-latex">t</span> be a service taxonomy root</li>
+                                <li><span class="h-latex">\math{goal}</span> be a goal category</li>
+                                <li><span class="h-latex">R</span> be a set of discovered services such that 
+                                <span class="h-latex x-lower">R = \mathit{discover}(\mathit{goal}, D, t)</span></li>
+                                <li><span class="h-latex">\math{goal_1}</span> be a goal category that is a relaxation or a 
+                                    restriction of <span class="h-latex">\mathit{goal}</span></li>
+                            </ul>
+                            <li>Relaxation</li>
+                            <ul class="no-bullet">
+                                <li><span class="h-latex">\mathit{goal}_1 \supset \mathit{goal}\Rightarrow R_1 = \mathit{discover}(\mathit{goal}_1, D-R, t) \cup R</span></li>
+                            </ul>
+                            <li>Restriction</li>
+                            <ul class="no-bullet">
+                                <li><span class="h-latex">\mathit{goal}_1 \subset \mathit{goal}\Rightarrow R_2 = \mathit{discover}(\mathit{goal}_1, R, t)</span></li>
+                            </ul>
+                            
+                        </ul>
+                    </ul>
+                </div>
             </section>
-			
-		</section>
+            
+            <div class="slide outline"></div>
+    
+            <section>
+                <header>Mediation</header>
+
+				<div class="slide">
+					<hgroup>
+						<h1>Interoperability and Mediation</h1>
+					</hgroup>	
+					<ul class="small">
+						<li>Interoperability = ability of two or more services to communicate</li>
+						<ul>
+							<li>Data interoperability</li>
+                            <ul>
+							    <li>data syntax (encoding, representations), semantics</li>
+                            </ul>
+							<li>Operations/functions and process interoperability</li>
+                            <ul>
+                                <li>operations and public processes</li>
+                            </ul>
+    						<li>Technical interoperability</li>
+                            <ul>
+							    <li>application protocols, technical aspects</li>
+                            </ul>
+						</ul>
+						<li>Solutions for interoperability</li>
+						<ul>
+							<li>Common interface</li>
+                            <ul>
+							    <li>services agree on an interface they will use</li>
+                            </ul>
+							<li>Mediation</li>
+                            <ul>
+                                <li>data mediator &ndash; transformation of data</li>
+                                <li>process mediator &ndash; adjustment of services' public process</li>
+                            </ul>
+						</ul>
+					</ul>
+				</div>
+	
+        		<div class="slide">
+					<hgroup>
+						<h1>Solutions for Interoperability</h1>
+					</hgroup>
+					<div class="h-drawing" style="height: 470px" 
+					   id="1iPp711U51wId0i30osKy8CbS_DELsdwFAKInQnHJdWo"></div>
+				</div>				
+
+				<div class="slide">
+					<hgroup>
+						<h1>Examples Standard Common Interface</h1>
+					</hgroup>
+					<ul class="small">
+						<li>Data</li>
+						<ul>
+							<li>Encodings such as UTF-8</li>
+							<li>Representations such as XML and JSON</li> 
+							<li>Structure (semantics) such as XML Schema</li>
+                            <li>Challenges:</li>
+                            <ul>
+    						    <li>Domain specific semantics</li>
+                                <li>Attempts to standardize such as RosettaNet</li>
+                                <li>single vendor solution</li>
+                            </ul>
+						</ul>
+						<li>Operations</li>
+						<ul>
+                            <li>message-oriented view (~SOAP): domain-specific names</li>
+                            <ul>
+                                <li>For example <code>getOrder</code>, <code>openOrder</code></li>
+                                <li>May add additional complexity to mediation</li>
+                            </ul>
+                            <li>resource-oriented view (~REST): standard CRUD names</li>
+                            <ul>
+                                <li>For example <code>GET {order-id}</code></li>
+                            </ul>
+                        </ul>
+					</ul>
+				</div>				
+
+    			<div class="slide">
+					<hgroup>
+						<h1>Examples Standard Common Interface (Cont.)</h1>
+					</hgroup>
+					<ul class="small">
+                        <li>Processes</li>
+                        <ul>
+                            <li>domain-specific</li>
+                            <li>Attempt to standardize by RosettaNet (Partner Interface Processes &ndash; PIP), 
+                                single vendor solution</li>
+                        </ul>
+    					<li>Technical</li>
+						<ul>
+                            <li>TCP/IP is the common technical interface</li>
+							<li>Standard application protocol is today HTTP</li>
+                            <ul>
+                                <li>At the bottom of many protocols</li>
+                            </ul>
+                            <li>Challenges</li>
+                            <ul>
+                                <li>Many application protocols such as XML-RPC, RMI</li>
+                                <li>SOAP is an attempt to build a common technical interface for communication 
+                                    at the services layer</li>
+                            </ul>
+						</ul>
+					</ul>
+				</div>				
+
+			<div class="slide">
+				<hgroup>
+                                	<h1>SOA Development Efficiency</h1>
+                                </hgroup>
+				<div class="h-drawing" style="height: 350px" id="18C4GfhZ9O7WWqpS9Ly1vK8sHhvqlxS-rCpDEohWiomc"></div>
+                                <ul class="xx-small">
+					<li>Legend</li>
+					<ul>
+						<li>green (A): custom development</li>
+						<li>blue (B): pre-build standards-based Common Data Model</li>
+						<li>red (C): pre-build Common Data Model and Process Integration Packs</li>
+						<li>md: man-days, Rx: release where x is a release number</li>
+					</ul>
+				</ul>
+			</div>
+
+
+				<div class="slide">
+					<hgroup>
+						<h1>Data Mediation (structure/semantics)</h1>
+					</hgroup>
+                    <ul class="small">
+                        <li>There are two phases</li>
+                        <li>Definition of mappings (design-time)</li>
+                        <ul>
+                            <li>A mapping associates one data structure to another data structure 
+                                and defines a conversion between them.</li>
+                            <li>Mapping languages</li>
+                            <ul>
+                                <li>declarative/graphical</li>
+                                <li>procedural &ndash; XSLT, XQuery or 3rd gen. languages (Java, JavaScript, ...)</li>                                    
+                            </ul>
+                        </ul>
+                        <li>Execution of mappings (runtime)</li>
+                        <ul>
+                            <li>application of mappings to instance data</li>
+                        </ul>
+                    </ul>
+                </div>
+                
+                <div class="slide">
+                    <hgroup>
+                        <h1>Entities and Properties</h1>
+                    </hgroup>
+                    <ul class="x-small">
+                        <li>Entities and properties</li>
+                        <ul>
+                            <li>Data entity is a set of properties</li>
+                            <li>Example: <code>employee</code> is an entity with properties <code>name, salary</code></li>
+                            <ul>
+                                <li><code>employee(name, salary)</code></li>
+                                <li><code>employee.name, employee.salary</code></li>
+                            </ul>
+                        </ul>
+                        <li>Implicit and explicit context</li>
+                        <ul>
+                            <li>example explicit context:</li>
+                            <ul>
+                                <li>currency part of a salary property such as <code>salary_usd</code> or</li>
+                                <li>part of a salary entity such as <code>salary(currency, value)</code></li>
+                            </ul>
+                            <li>example implicit context: currency part of a salary property <code>salary</code>.</li>
+                            <ul>
+                                <li>A human must provide the implicit context during the definition of mappings.</li>                   
+                            </ul>
+                        </ul>
+                        <li>Types of mappings</li>
+                        <ol>
+                            <li>property-property</li>
+                            <li>entity-entity</li>
+                            <li>entity-property and property-entity</li>
+                        </ol>
+                    </ul>
+                </div>
+                
+                <div class="slide">
+                    <hgroup>
+                        <h1>Property&ndash;property mapping</h1>
+                    </hgroup>
+                    <ul class="x-small">
+                        <li>Let</li>
+                        <ul class="no-bullet">
+                            <li><span class="h-latex lower">A, B, C</span>  be three properties and 
+                                <span class="h-latex lower">a \in A, b \in B, c \in C</span> be their values.</li>
+                        </ul>
+                        
+                        <li>Property&ndash;property mappings</li>
+                        <ul class="no-bullet">
+                            <li>1. <span class="h-latex lower">\mathit{pp}_{A \to B}(a) = b</span> is a simple mapping.</li>
+                            <li>2. <span class="h-latex lower">\mathit{pp}_{AB \to C}(\{a,b\}) = c, \mathit{pp}_{A \to BC}({a}) = \{b,c\}</span> are composed mappings.</li> 
+                            <li>3. <span class="h-latex lower">\mathit{pp}_{A \to B}(a,k) = b</span> is a form of a simple mapping called conversion where 
+                            <span class="h-latex">k</span> is a conversion value.</li>      
+                            <li>Example:</li>
+                            <pre class="brush:plain; gutter: 'false'; class-name: 'tight'">
+                                simple:     nickname --> alias, rank --> rank
+                                composed:   address --> { street, city }, { street, city } --> address
+                                conversion: currency_pounds --> currency_usd, salary --> salary_eur
+                            </pre>
+                        </ul>
+                            
+                        <li>Idempotent mapping</li>
+                        <ul class="no-bullet xx-small">
+                            <li>A mapping applied on the same values has always the same result.</li>
+                            <li>&rarr; Simple mappings should always be idempotent</li>
+                        </ul>
+                        <li>Non-idempotent mapping</li>
+                        <ul class="no-bullet xx-small">
+                            <li>A result of a mapping applied on the same input changes over time.</li>
+                            <li>&rarr; currency conversion can be non-idempotent</li>
+                        </ul>
+                    </ul>
+                </div>
+                
+                <div class="slide">
+                    <hgroup>
+                        <h1>Property&ndash;property mapping (Cont.)</h1>
+                    </hgroup>
+                    <ul class="x-small">
+                        <li>Decomposition of mappings</li>
+                        <ul class="no-bullet">
+                            <li><span class="h-latex lower">\mathit{pp}_{A \to BC}(a) = \mathit{pp}_{A \to B}(a) \cup \mathit{pp}_{A \to C}(a)</span>
+                            <li>Example</li>
+                            <pre class="brush:plain; gutter: 'false'; class-name: 'tight'">
+                                address --> { street, city } => address --> street, address --> city
+                            </pre>            
+                            <li>But <span class="h-latex lower">\mathit{pp}_{AB \to C}(a,b) \neq 
+                                \mathit{pp}_{A \to C}(a) \cup \mathit{pp}_{B \to C}(b)</span> (would lose a context).
+                            <li>Example</li>
+                            <pre class="brush:plain; gutter: 'false'; class-name: 'tight'">
+                                { street, city } --> address => { street } --> address, { city } --> address
+                            </pre>            
+                            
+                        </ul>
+
+                        <li>Non-loss mapping</li>
+                        <ul class="no-bullet">
+                            <li>For two mappings <span class="h-latex lower">\mathit{pp}_{A \to B}</span> and 
+                            <span class="h-latex lower">\mathit{pp}_{B \to A}</span> it holds that <span class="h-latex lower">\mathit{pp}_{B \to A}(\mathit{pp}_{A \to B}(a)) = a</span></li>
+                            <li>&rarr; Simple mappings should always be non-loss</li>
+                        </ul>
+                        
+                        <li>Loss mapping</li>
+                        <ul class="no-bullet">
+                            <li>For two mappings <span class="h-latex lower">\mathit{pp}_{A \to B}</span> and 
+                            <span class="h-latex lower">\mathit{pp}_{B \to A}</span> it holds that <span class="h-latex lower">\mathit{pp}_{B \to A}(\mathit{pp}_{A \to B}(a)) \neq a</span></li>
+                            <li>&rarr; Conversion mapping can be loss, such as currency conversion</li>
+                        </ul>
+                    </ul>
+                </div>
+                
+                <div class="slide">
+                    <hgroup>
+                        <h1>Entity&ndash;entity mapping</h1>
+                    </hgroup>
+                    <ul class="x-small">
+                        <li>Let</li>
+                        <ul class="no-bullet">
+                            <li><span class="h-latex lower">X, Y, Z</span> be three entities and 
+                                <span class="h-latex lower">x \in X, y \in Y, z \in Z</span> be their properties.</li>
+                        </ul>
+                        
+                        <li>Entity&ndash;entity mappings</li>
+                        <ul class="no-bullet">
+                            <li>4. <span class="h-latex lower">\mathit{ee}_{X \to Y} : \forall y \in 
+                                Y \; \exists x \in X \; \mathit{pp}_{x \to y}</span> is a simple mapping</li>
+                            <li>5. <span class="h-latex lower">\mathit{ee}_{X \to \mathit{YZ}} : \forall y \in 
+                                Y \land \forall z \in Z \; \exists x \in X \; \mathit{pp}_{x \to \mathit{yz}}</span><br/>
+                                &nbsp;&nbsp;&nbsp;&nbsp;<span class="h-latex lower">\mathit{ee}_{\mathit{XY} \to Z} : \forall z \in 
+                                Z \; \exists w \in \{X \cup Y\} \; \mathit{pp}_{w \to \mathit{z}}</span><br/>
+                                &nbsp;&nbsp;&nbsp;&nbsp;are composed mappings</li>
+                            <li>Examples:</li>
+                            <pre class="brush:plain; gutter: 'false'; class-name: 'tight'">
+                                simple:     
+                                    employee(name, id, address) --> staff(fname, staffid)
+                                        employee.name    --> staff.fname
+                                        employee.id      --> staff.staffid
+                                
+                                composed:
+                                    employee(name, id, address) --> { staff(fname, staffid), addr(staffid, str) }
+                                        employee.name    --> staff.fname
+                                        employee.id      --> staff.staffid
+                                        employee.id      --> addr.staffid                                        
+                                        employee.address --> addr.str
+                            </pre>
+                        </ul>
+                    </ul>
+                </div>                
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>Entity&ndash;entity mapping (Cont.)</h1>
+                    </hgroup>
+                    <ul class="x-small">
+                        <li>Idempotent and non-idempotent mapping</li>
+                        <ul>
+                            <li>An entity-entity mapping is idempotent if all its property-property mappings are idempotent . Otherwise it is a non-idempotent mapping.</li>
+                        </ul>
+                        <li>Decomposition of mappings</li>
+                        <ul>
+                            <li>Analogical to decomposition of property-property mappings</li>
+                        </ul>
+                        <li>Non-loss and loss mappings</li>
+                        <ul>
+                            <li>An entity-entity mapping is non-loss if all its property-property mappings are non-loss. Otherwise it is a loss mapping.</li>
+                        </ul>
+                    </ul>
+                </div>                
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>Property&ndash;entity/entity&ndash;property mapping</h1>
+                    </hgroup>
+                    <ul class="x-small">
+                        <li>Let</li>
+                        <ul class="no-bullet">
+                            <li><span class="h-latex lower">X, Y</span> be two entities and <span class="h-latex lower">A, B</span> two properties 
+                            such that <span class="h-latex lower">A \notin X,A \notin Y,B \notin X,B \notin Y</span>.</li>
+                        </ul>
+                        
+                        <li>Property&ndash;entity/entity&ndash;property mappings</li>
+                        <ul class="no-bullet">
+                            <li>6. <span class="h-latex lower">\mathit{pe}_{A \to X} : \forall x \in 
+                                X \; \mathit{pp}_{A \to x}</span> is a simple property&ndash;entity mapping</li>
+                            <li>7. <span class="h-latex lower">\mathit{ep}_{X \to A} : \exists x \in 
+                                X \; \mathit{pp}_{x \to A}</span> is a simple entity&ndash;property mapping</li>
+                            <li>8. <span class="h-latex lower">\mathit{pe}_{A \to \mathit{XY}} : \forall w \in 
+                                \{X \cup Y\} \; \mathit{pp}_{A \to w}</span> is a comp. property&ndash;entity mapping</li>
+                            <li>9. <span class="h-latex lower">\mathit{ep}_{X \to \math{AB}} : \exists x \in 
+                                X \; \mathit{pp}_{x \to A} \land \mathit{pp}_{x \to B}</span> is a comp. entity&ndash;property mapping</li>
+                                
+                            <li>Examples:</li>
+                            <pre class="brush:plain; gutter: 'false'; class-name: 'tight'">
+                                simple property-entity and entity-property:     
+                                    address --> addr(street, city)
+                                        address    --> addr.street
+                                        address    --> addr.city
+
+                                    address(street, city) --> city
+                                        address.street    --> city
+                            </pre>
+                        </ul>
+                        <li>Idempotence and loss/non-loss mappings</li>
+                        <ul>
+                            <li>They are analogical with entity-entity/property-property mappings</li>
+                        </ul>
+                    </ul>
+                </div>                
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>Mapping Example</h1>
+                    </hgroup>
+                    <div class="h-drawing" style="height: 450px" id="1ZNUsWEFmNxPWQrmWTX0cszmKVbLWTRW7AtnPsSF2Sw8"></div>
+                </div>
+	
+				<div class="slide">
+					<hgroup>
+						<h1>Process Mediation</h1>
+					</hgroup>	
+					<ul class="small">
+						<li>Public process</li>
+						<ul>
+							<li>Process mediation patterns</li>
+						</ul>
+					</ul>
+					<div class="h-drawing" style="height:300px" id="1s97ZnVmXWafNd6pp7El3Z4-wtLvWLyq39nzezifVVnw"></div>
+					<ul class="small">
+						<li>PM includes data mediation</li>
+						<ul>
+							<li>combining a message and splitting a message is a composed entity-entity mapping def. (5)</li>
+						</ul>
+					</ul>
+				</div>
+
+				<div class="slide">
+					<hgroup>
+						<h1>Integration Process</h1>
+					</hgroup>	
+                    <ul class="xx-small">
+                        <li>Integration logic with data and process mediation</li>
+                        <ul>
+                            <li>The most obvious solution to interoperability</li>
+                        </ul>
+                    </ul>
+					<div class="h-drawing" style="height: 420px" 
+                        id="1SjAxeq7BSpHqio5msc-REi2F9_xuS8zJUG71Owh5ess"></div>
+				</div>
+                
+            </section>
+            
+        </section>
+        
         
     </body>
 </html>
