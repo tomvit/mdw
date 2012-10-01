@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <!--
     Middleware and Web Services, CTU course slides
-    (cc) 2010-2011 Tomas Vitvar, http://vitvar.com
+    (cc) 2010-2012 Tomas Vitvar, http://vitvar.com
     written for Humla, an open source HTML5 presentation environment
 -->
 <html>  
@@ -9,7 +9,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> 
         <meta name="course"   content="Middleware and Web Services"/>
 		<meta name="lecture"  content="Lecture 3"/>
-   		<meta name="keywords" content="HTTP, Web Server, Synchronous, Asynchronous, Statelessness"/>
+   		<meta name="keywords" content="HTTP, Web Server, Synchronous, Asynchronous, RMI"/>
            
         <link type="text/css" rel="stylesheet" href="css/meta.css"></link>   
         <link type="text/css" rel="stylesheet" href="css/ctu-fit.css"></link>   
@@ -643,7 +643,7 @@
 							config="class-name: 'xx-small'"></div>
                         <li class="task">Task</li>
                         <ul>
-                            <li>When server restarts, the counter will reset.</li>                    
+                            <li>What happens when the server restarts?</li>                    
                             <li>How do you change the code to count requests from all clients?</li>
                         </ul>
                     </ul>
@@ -690,210 +690,6 @@
             <div class="slide outline"></div>
 
             <section>
-                <header>Authentication and Authorization</header>
-                
-        		<div class="slide">
-    				<hgroup>
-    					<h1>Authentication and Authorization</h1>
-    				</hgroup>
-					<ul class="small">
-						<li>Authentication</li>
-						<ul>
-							<li>verification of user's identity</li>
-						</ul>
-						<li>Authorization</li>
-						<ul>
-							<li>verification that a user has rights to access a resource</li>
-						</ul>
-						<li>Standard: HTTP authentication</li>
-						<ul>
-							<li>HTTP defines two options</li>
-							<ul>
-								<li>Basic Access Authentication</li>
-								<li>Digest Access Authentication</li>
-							</ul>
-							<li>They are defined in</li>
-							<ul>
-								<li><span class="h-ref" id="rfc-2616">RFC 2616: Hypertext 
-								Transfer Protocol &ndash; HTTP/1.1</span></li>
-								<li><span class="h-ref" id="rfc-2617">RFC 2617: 
-								HTTP Authentication: Basic and Digest Access Authentication</span></li> 
-							</ul>
-						</ul>
-						<li>Custom/proprietary: use of cookies</li>
-					</ul>
-    			</div>                                    
-
-        		<div class="slide">
-    				<hgroup>
-    					<h1>Basic Access Authentication</h1>
-    				</hgroup>
-					<div class="h-drawing" style="height: 280px" id="1OYyQduAQYodoiQ48uYTCB1iVn6UHcCcdDocjLOA9b9Y"></div>
-					<ul class="x-small">
-						<li>Realm</li>
-						<ul>
-							<li>an identifier of the space on the server (~ a collection of resources and their sub-resources)</li>
-							<li>client may associate a valid credentials with realms such that it copies authorization information 
-								in requests for which server requires authentication (by <code>WWW-Authenticate</code> header)</li>
-					</ul>
-    			</div>                                    
-
-        		<div class="slide">
-    				<hgroup>
-    					<h1>Basic Access Authentication &ndash; Credentials</h1>
-    				</hgroup>
-					<ul class="small">
-						<li>Credentials</li>
-						<ul>
-							<li>credentials are base64 encoded</li>
-							<li>the format is: <code>username:password</code></li>
-						</ul>
-						<pre class="brush: bash">
-							# to encode in linux
-							echo "novak:heslo" | base64
-							> bm92YWs6aGVzbG8K
-								
-							# and to decode
-							echo "bm92YWs6aGVzbG8K" | base64 -d # use capital "D" in OS X
-							> novak:heslo</pre>
-								
-						<li>Comments</li>
-						<ul class="x-small">
-							<li>It is not secure, the password travels over the network and can be read!</li>
-							<li>the purpose is to encode and send non-ASCII characters</li>
-						</ul>
-					</ul>
-					
-    			</div>                                    
-
-        		<div class="slide">
-    				<hgroup>
-    					<h1>Digest Access Authentication</h1>
-    				</hgroup>
-					<ul class="xx-small">
-						<li>RFC 2617 &ndash; Basic and Digest Access Authentication</li>
-						<ul>
-							<li>No password between a client and a server but a hash value</li>
-							<li>Simple and advanced mechanisms (only server-generated nonce value &ndash; replay-attacks or 
-								with client-generated nonce value &ndash; chosen-plaintext attacks)</li>
-						</ul>							
-						<li>Basic Steps</li>
-						<ol>
-							<li>Client accesses a protected area</li>
-							<pre class="brush:bash; class-name: 'tight'">
-								> GET / HTTP/1.1</pre>
-							<li>Server requests authentication with <code>WWW-Authenticate</code></li>
-								<pre class="brush:bash; class-name: 'tight'">
-									&lt; HTTP/1.1 401 Unauthorized
-									&lt; WWW-Authenticate: Digest realm="ProtectedArea", 
-									  nonce="BbdQof3DBAA=a293ff3d724989371610f03015f2d23f3cd2c045", 
-									  algorithm=MD5, domain="/", qop="auth"</pre>
-							<li>Client calculates a response hash by using the realm, his/her username, the password, and the 
-								quality of protection (QoP) and requests the resource with <code>authorization</code> header</li>
-								<pre class="brush:bash; class-name: 'tight'">
-									> GET / HTTP/1.1
-									> Authorization: Digest username="novak", realm="ProtectedArea",
-									  nonce="BbdQof3DBAA=a293ff3d724989371610f03015f2d23f3cd2c045", uri="/", 
-									  algorithm=MD5, response="c4ea2293aeb318826d1e533f363efd90", qop=auth, 
-									  nc=00000001, cnonce="531ee8ba7f2a8fd1"</pre>								
-						</ol>
-					</ul>
-    			</div>                                    
-
-        		<div class="slide">
-    				<hgroup>
-    					<h1>Nonce and QoP</h1>
-    				</hgroup>
-					<ul class="small">
-						<li>Nonce</li>
-						<ul>
-							<li>A value to identify an interaction that should occur only once</li>
-							<li><code>nonce</code> &ndash; generated by the server</li>
-							<ul>
-								<li>may have a time period for which the nonce is valid</li>
-								<li>may be computed using client IP, ETag of the resource, etc.</li>
-								<li>this limits chances for the replay attack.</li>
-							</ul>
-							<li><code>cnonce</code> &ndash; generated by the client</li>
-						</ul>
-						<li>QoP &ndash; quality of protection</li>
-						<ul>
-							<li>Further improvements to prevent replay attacks and chosen-plaintext 
-								attacks and enables non-repudiation</li>
-						</ul>
-					</ul>
-    			</div>  
-
-        		<div class="slide">
-    				<hgroup>
-    					<h1>Algorithms</h1>
-    				</hgroup>
-					<ul class="small">
-						<li>Algorithm for <code>response</code> value of <code>authorization</code> header</li>
-						<ul>
-							<li>No quality of protection (<code>qop</code> is missing or <code>qop=none</code>)</li>
-							<ul>
-								<li>prevents replay-attacks</li>
-							</ul>
-							<pre class="brush: bash; class-name: 'tight'">
-								HA1 = MD5(username:realm:password)
-								HA2 = MD5(method:digestURI)
-								response = MD5(HA1:nonce:HA2)</pre>
-							<li>with quality of protection (<code>qop=auth</code>)</li>
-							<ul>
-								<li>prevents chosen-plaintext attacks</li>
-							</ul>
-							<pre class="brush: bash; class-name: 'tight'">
-								HA1 = MD5(username:realm:password)
-								HA2 = MD5(method:digestURI)
-								response = MD5(HA1:nonce:nonceCount:cnonce:qop:HA2)</pre>				
-								<li>with quality of protection for message integrity (<code>qop=auth-int</code>)</li>
-								<ul>
-									<li>enables non-repudiation (i.e., proof of integrity and origin of data)</li>
-								</ul>
-								<pre class="brush: bash; class-name: 'tight'">
-									HA1 = MD5(username:realm:password)
-									HA2 = MD5(method:digestURI:MD5(payload))
-									response = MD5(HA1:nonce:nonceCount:cnonce:qop:HA2)</pre>											
-						</ul>
-						
-					</ul>
-    			</div>  
-
-        		<div class="slide">
-    				<hgroup>
-    					<h1>Replay Attack</h1>
-    				</hgroup>
-					<ul class="xx-small">
-						<li>Replay Attack Scenario (quality of protection is <code>none</code>)</li>
-						<ul>
-							<li>The communication is not encrypted (i.e., no use of HTTPS)</li>
-							<li>Eve listens to the Alice's communication (e.g. on a proxy server)</li>
-							<li>Eve resends requests with headers from Alice's requests</li>
-						</ul>
-					</ul>
-					<div class="h-drawing" id="1gQvg53vE3p9o_YRI3zYx3uBEfiT6YjiuznHN0A8O2QA" style="height: 380px"></div>
-				</div>                                  
-
-        		<div class="slide">
-    				<hgroup>
-    					<h1>Replay Attack (Cont.)</h1>
-    				</hgroup>
-					<ul class="xx-small">
-						<li>Replay Attack Scenario (quality of protection is <code>auth</code> or <code>auth-int</code>)</li>
-						<ul>
-							<li><code>nonceCount</code> should be incremented in every request to a response of the nonce 
-								value from the server</li>
-						</ul>
-					</ul>
-					<div class="h-drawing" id="1Jto8zZvp-q7IANoQ0lckKsPHP1e5LetG7nJs8jI3Xyg" style="height: 380px"></div>
-				</div>                                  
-                
-            </section>
-
-            <div class="slide outline"></div>
-
-            <section>
                 <header>Persistent Communication and Pipelining</header>
                 
         		<div class="slide">
@@ -922,6 +718,139 @@
 
         </section>
 
+            <div class="slide outline"></div>
+
+            <section>
+                <header>Remote Method Invocation</header>
+                
+        		<div class="slide">
+    				<hgroup>
+    					<h1>Overview</h1>
+    				</hgroup>
+    				<ul class="small">
+    					<li>Communication among Java-based applications</li>
+    					<ul>
+    						<li>Methods of one Java class can be invoked by other Java class remotely.</li>
+    						<li>Uses Java Remote Method Protocol (JRMP)</li>
+    						<ul>
+    							<li>Java-specific application protocol over TCP/IP</li>
+    						</ul>
+    						<li>Basis for JEE technologies, such as JMS</li>
+    					</ul>
+    					<li>Terminology</li>
+    					<ul class="x-small">
+    						<li><b>Client</b> &ndash; a program that invokes a remote method</li>
+    						<li><b>Server</b> &ndash; a program that exports a remote object</li>
+    						<li><b>Stub</b> &ndash; a representation of the client-side object for communication</li>
+    						<li><b>Skeleton</b> &ndash; a representation of the server-side object for communication</li>
+    						<li><b>Registry</b> &ndash; a component that holds a stub</li>
+    						<li><b>Marshalling/Unmarshalling</b> &ndash; a process of transforming memory representation 
+    						of the object to a form suitable for network transmittion and vice-cersa</li>
+    					</ul>
+    				</ul>
+    			</div>
+    			
+        		<div class="slide">
+    				<hgroup>
+    					<h1>Architecture</h1>
+    				</hgroup>
+    				<ul class="small">
+    					<div id="115uOEKHVTxYVXJbYfivieQ7qMcpF2jqpMYqmbxpKbVM" style="height: 470px" class="h-drawing"></div>
+    				</ul>
+    			</div>
+
+        		<div class="slide">
+    				<hgroup>
+    					<h1>Example RMI Implementation &ndash; Interface</h1>
+    				</hgroup>
+    				<ul class="x-small">
+    					<li>Shared interface</li>
+    					<pre class="brush: java">
+							import java.rmi.Remote;
+							import java.rmi.RemoteException;
+							
+							// shared interface between a client and a server to
+							// invoke methods on the remote object
+							public interface HelloRMIInterface extends Remote {
+							    public String calculate(int a, int b) throws RemoteException;
+							}</pre>
+    					<li>RMI Server</li>
+    					<pre class="brush: java">
+						// import java.rmi classes (Naming, RemoteException, …)
+						 
+						public class Server extends UnicastRemoteObject implements HelloRMIInterface {
+							
+							private static final long serialVersionUID = 1L;
+						 
+						    public Server() throws RemoteException {
+						    }
+						
+						    // implementation of the interface method
+						    public int calculate(int a, int b) throws RemoteException {
+						    	return a+b;
+						    }</pre>	
+    				</ul>
+    			</div>
+    			
+        		<div class="slide">
+    				<hgroup>
+    					<h1>Example RMI Implementation &ndash; Server</h1>
+    				</hgroup>
+    				<ul class="x-small">
+    					<li>RMI Server (cont.)</li>
+    					<pre class="brush: java; highlight : [11,14,18]">						 
+					        // start the server and register the object in the rmi registry
+						    public static void main(String args[]) { 
+						    	try {
+							        // install a security manager (uses a security policy)
+							        if (System.getSecurityManager() == null) {
+							        	RMISecurityManager sm = new RMISecurityManager();
+							            System.setSecurityManager(sm);
+							        }
+							
+							        // create rmi registry
+							        LocateRegistry.createRegistry(1099); 
+							 
+							        // create remote object
+							        Server obj = new Server();
+							 
+							        // Bind the object instance to the name "HelloRMI"
+							        // 0.0.0.0 denotes the service will listen on all network interfaces
+							        Naming.rebind("//0.0.0.0/HelloRMI", obj);
+							        
+							        System.out.println("RMI server started, " + 
+							        	"listening to incoming requests...");
+						    	} catch (Exception e) {
+						    		System.out.println("Error occurred: " + e.getLocalizedMessage());
+						    	}
+						    }</pre>
+    				</ul>
+    			</div>
+
+        		<div class="slide">
+    				<hgroup>
+    					<h1>Example RMI Implementation &ndash; Client</h1>
+    				</hgroup>
+    				<ul class="x-small">
+    					<li>RMI Client</li>
+    					<pre class="brush: java">
+    					import java.rmi.Naming;
+    					
+						public class Client { 
+							
+						    public static void main(String args[]) throws Exception {
+						    	// get a reference to the remote object
+						    	// assuming the server is running on the localhost
+						        HelloRMIInterface o = (HelloRMIInterface)
+						        	Naming.lookup("//localhost/HelloRMI");
+						        	
+						        // call the object method
+						        System.out.println(o.calculate(3, 4));
+						    }
+						}</pre>
+    				</ul>
+    			</div>
+   
 
     </body>
 </html>
