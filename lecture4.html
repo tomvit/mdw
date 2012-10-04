@@ -378,7 +378,7 @@
 						<li>Common access mechanisms such as to a database</li>
 						<li>Mechanisms to distribute objects among application servers</li>
 					</ul>
-					<li>Two major specifications</li>
+					<li>Three major technologies</li>
 					<ul>
 						<li>JNDI &ndash; Java Naming and Directory Interface</li>
 						<li>JDBC &ndash; Java Database Connectivity</li>
@@ -402,101 +402,143 @@
 						<h1>Overview</h1>
 					</hgroup>
                     <ul class="small">
-                        <li>Discovery and look up data and objects</li>
+                    	<li>Objectives</li>
+                    	<ul>
+                    		<li>Allows to access objects by names in various directory systems and their attributes</li>
+                    		<li>Independent of any specific directory service implementation</li>
+                    		<li>Enables to distribute Java objects across various systems in the environment</li>
+                    	</ul>
+                    	<li>Terminology</li>
+                    	<ul>
+                    		<li>Binding &ndash; association between a name and a object</li>
+                    		<li>Context &ndash; a set of bindings</li>
+                    	</ul>
+                        <li>JNDI Provides:</li>
                         <ul>
-                            <li>Independent of any specific directory service implementation.</li>
-                            <li>Mechanism to bind an object to a name.</li>
-                            <li>Provides directory look up interface.</li>
-                            <li>Pluggable service provider interface (SPI)
-                                <ul>
-                                    <li>any directory service implmentation can be plugged in.</li>
-                                </ul>
-                                </ul>
-                        <li>JNDI packages</li>
-                        <ul class="x-small">
-                            <li><b>Naming</b> &ndash; classes and interfaces for accessing named services.</li>
-                            <li><b>Naming Directory</b> &ndash; extends the Naming package. Functionality for accessing directory services (retrieve and search for objects).</li>
-                            <li><b>LDAP</b> &ndash; classes and interfaces for accessing LDAP feature that are not included in the Naming Directory package.</li>
-                            <li><b>Event</b> &ndash; classes and interfaces for supporting event notification in naming and directory services.</li>
-                            <li><b>Service Provider (SPI)</b> &ndash; allows other naming and directory services to be plugged in.</li>
+                            <li>a mechanism to bind an object to a name.</li>
+                            <li>a directory look up interface</li>
+                            <li>a pluggable service provider interface (SPI) (any directory service implmentation can be plugged in.</li>
                         </ul>
                     </ul>
 				</div>
 			</section>
+                        
+            <div class="slide">
+            	<hgroup>
+            		<h1>JNDI Packages</h1>
+            	</hgroup>
+            	<ul class="small">
+            		<li>Naming Package</li>
+            		<ul>
+            			<li>interfaces to access naming services</li>
+            			<li>Context: looking up, binding/unbinding, renaming, objects</li>
+            		</ul>
+            		<li>Directory Package</li>
+            		<ul>
+            			<li>allows to retrieve attributes of objects, and to search for objects</li>
+            		</ul>
+            		<li>Event Package</li>
+            		<ul>
+            			<li>allows for event notification in naming and directory services</li>
+            			<li>For example, object was added, object changed, etc.</li>
+            		</ul>
+            		<li>Other packages</li>
+            		<ul>
+            			<li>LDAP &ndash; allows to access LDAP services</li>
+            			<li>Service Provider Interface &ndash; allows to develop different naming/directory services</li>
+            		</ul>
+            	</ul>
+            </div>
             
             <div class="slide">
                 <hgroup>
                     <h1>JNDI Architecture</h1>
                 </hgroup>
-                <ul class="small">
-                    <div id="18cgG0VTcXUUhMnKbKqx-x0NsvyLxs__Pe4f1ysdzmK0" style="height: 330px" class="h-drawing"></div>
-                </ul>
-            </div>
+                <div id="163CemeUk7U2cG2qMeRHEQ0VAloGmIkRwbdkVH_tYe9o" style="height: 480px" class="h-drawing"></div>
+            </div>           
+            
+            <div class="slide">
+            	<hgroup>
+            		<h1>JNDI Example</h1>
+            	</hgroup>
+            	<ul class="small">
+            		<li>Distribution of objects</li>
+            		<ul>
+            			<li>Clients store and retrieve objects to the central directory</li>
+            			<li>Benefits</li>
+            			<ul>
+            				<li>replication of objects across clients</li>
+            				<li>central configuration of objects' parameters</li>
+            			</ul>
+            		</ul>
+            	</ul>
+            	<div id="1jr8rdcF7wUNkylyT-QgBpeRaUnIfwf0Be2vW2M25URw" style="height: 180px; margin-top: 50px" class="h-drawing"></div>
+            </div> 
             
             <div class="slide">
                 <hgroup>
-                    <h1>Example JNDI Usage</h1>
+                    <h1>JNDI Example Implementation</h1>
                 </hgroup>
                 <ul class="x-small">
-                    <li>Binding object in WebLogic Servlet</li>
-                    <pre class="brush: java; highlight : [11,14,15,19]">
+                    <li>Binding an object to the WebLogic server's directory</li>
+                    <pre class="brush: java;">
                         import java.util.Properties;
-                        import javax.naming.*;
-                        import javax.servlet.http.*;
+                        import javax.naming.InitialContext;
                         
-                        public class BindServlet extends HttpServlet {
-                            protected void doGet(HttpServletRequest request,
-                                    HttpServletResponse response) {
+                        ...                        
                         
-                                Properties p = new Properties();
-                                // configure the service provider url: "t3://localhost:7001"
-                                p.put(Context.PROVIDER_URL,"t3://localhost:7001");
-                                // configure the initial context factory.
-                                // we use WebLogic context factory
-                                p.put(Context.INITIAL_CONTEXT_FACTORY,
-                                            "weblogic.jndi.WLInitialContextFactory");
-                                try {
-                                    InitialContext ctx = new InitialContext(p);
-                                    // bind object "MyBean" with name "MyCleverBean"
-                                    ctx.rebind("MyCleverBean", new MyBean());
-                                } catch (NamingException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }
-                    </pre>
-                </ul>
-            </div>
-            
-            <div class="slide">
-                <hgroup>
-                    <h1>Example JNDI Usage</h1>
-                </hgroup>
-                <ul class="x-small">
-                    <li>Lookup for bound object</li>
-                    <pre class="brush: java; highlight : [10,14,15,18]">
-                        import javax.naming.*;
-                        import java.util.*;
-                        import cz.ctu.fit.w2e.mdw.*;
-                        
-                        ...
+                        public static void main(String[] args) {
                         
                             Properties p = new Properties();
-                            
-                            // configure the service provider url: "t3://localhost:7001"
+                        
+                            // directory provider is running on localhost (weblogic server)
                             p.put(Context.PROVIDER_URL,"t3://localhost:7001");
                         
                             // configure the initial context factory.
                             // we use WebLogic context factory
                             p.put(Context.INITIAL_CONTEXT_FACTORY,
-                                    "weblogic.jndi.WLInitialContextFactory");
-                            InitialContext ctx = new InitialContext(p);
+                                "weblogic.jndi.WLInitialContextFactory");
+                            
+                            try {
+                                InitialContext ctx = new InitialContext(p);
+                            
+                                // bind object to name
+                                ctx.rebind("food/fruit/banana", new MyBanana());
+                            } catch (NamingException e) {
+                                e.printStackTrace();
+                            }
+                        }</pre>
+                </ul>
+            </div>
+            
+            <div class="slide">
+                <hgroup>
+                    <h1>Example JNDI Implementation</h1>
+                </hgroup>
+                <ul class="x-small">
+                    <li>Lookup for bound object</li>
+                    <pre class="brush: java; highlight : [10,14,15,18]">
+                        import javax.naming.InitialContext;
+                        import java.util.*;
                         
-                            // lookup for object instance bound as "MyCleverBean"
-                            MyBean beanRef = (MyBean)ctx.lookup("MyCleverBean");
+                        ...
                         
-                            // invoke object method
-                            System.out.println(beanRef.greetMe());
+                        Properties p = new Properties();
+                            
+                        // configure the service provider url: "t3://localhost:7001"
+                        p.put(Context.PROVIDER_URL,"t3://localhost:7001");
+                        
+                        // configure the initial context factory.
+                        // we use WebLogic context factory
+                        p.put(Context.INITIAL_CONTEXT_FACTORY,
+                                "weblogic.jndi.WLInitialContextFactory");
+                        InitialContext ctx = new InitialContext(p);
+                        
+                        // lookup the object instance
+                        MyBanana banana = (MyBean)ctx.lookup("food/fruit/banana");
+                        
+                        // invoke the object method
+                        System.out.println(banana.name());
                     </pre>
                 </ul>
             </div>
@@ -519,9 +561,11 @@
                         </ul>
                         <li>JDBC components</li>
                         <ul class="x-small">
-                            <li><b>JDBC API</b> &ndash; provides programmatic access to relation data. Execute statements, retrieve results, do changes to the underlying data source.</li>
+                            <li><b>JDBC API</b> &ndash; provides programmatic access to relation data. Execute statements, 
+                            retrieve results, do changes to the underlying data source.</li>
                             <li><b>Driver Manager</b> &ndash; defines objects which can connect Java applications to a JDBC driver.</li>
-                            <li><b>JDBC-ODBC Bridge</b> &ndash; software bridge which provides access via ODBC drivers. It is required to load the ODBC driver on each client machine.
+                            <li><b>JDBC-ODBC Bridge</b> &ndash; software bridge which provides access via ODBC drivers. It 
+                            is required to load the ODBC driver on each client machine.
                             </li>
                             <ul>
                                 <li>
@@ -538,11 +582,11 @@
                 <hgroup>
                     <h1>JDBC Architecture</h1>
                 </hgroup>
-                <ul class="x-small">
-                    <div id="10PigICKx61cQVyU8G11TahfCUNKz8M9ySmIMErL8S8Q" style="height: 370px" class="h-drawing"></div>
+                <div id="10PigICKx61cQVyU8G11TahfCUNKz8M9ySmIMErL8S8Q" style="height: 370px" class="h-drawing"></div>
+                <ul class="small"><ul>
                     <li>Each DBMS requires own driver.</li>
                     <li>The Driver Manager manages the selection of a driver and creating a connection.</li>
-                </ul>
+                </ul></ul>
             </div>
             
             <div class="slide">
@@ -586,7 +630,7 @@
                 </hgroup>
                 <ul class="x-small">
                     <li>JDBC Client (cont.)</li>
-                    <pre class="brush: java; highlight : []">
+                    <pre class="brush: java; highlight : []; first-line: 25">
                             // Loop and extract received data
                             while (rs.next()) {
                                 int id  = rs.getInt("id");
