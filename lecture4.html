@@ -692,17 +692,7 @@
                     </ul>
                     
 				</div>
-                
-                <div class="slide">
-                    <hgroup>
-                        <h1>Two-phase Commit</h1>
-                    </hgroup>
-                    <ul class="small">
-                        <li>Two-phase commit scenario</li>
-                        <div id="1kfDa725ldvDg0xwr3EryplwU1gZm_hgaNxfRkmCsN0E" style="height: 400px" class="h-drawing"></div>
-                    </ul>
-                </div>
-                
+                                
                 <div class="slide">
                     <hgroup>
                         <h1> X/Open &ndash; eXtended Architecture (XA)</h1>
@@ -727,7 +717,108 @@
                         </ul>
                     </ul>
                 </div>
-			</section>			
+                
+                <div class="slide">
+                    <hgroup>
+                        <h1>Two-phase Commit</h1>
+                    </hgroup>
+                    <ul class="small">
+                        <li>Two-phase commit scenario</li>
+                        <div id="1kfDa725ldvDg0xwr3EryplwU1gZm_hgaNxfRkmCsN0E" style="height: 400px" class="h-drawing"></div>
+                    </ul>
+                </div>
+                <div class="slide">
+                    <hgroup>
+                        <h1>Example XA Usage</h1>
+                    </hgroup>
+                    <ul class="x-small">
+                        <li>Distributed Transaction</li>
+                        <pre class="brush: java; highlight : [18,19,23];">
+                            import java.sql.*;
+                            import javax.sql.*;
+                            import javax.naming.*;
+                            import java.util.*;
+                            
+                            public class Server {
+                            
+                                public static void main(String args[]) {
+                            
+                                // Initialize context
+                                Hashtable parms = new Hashtable();
+                                parms.put(Context.INITIAL_CONTEXT_FACTORY,
+                                        "weblogic.jndi.WLInitialContextFactory");
+                                hashtable.put(Context.PROVIDER_URL, "t3://localhost:7001");
+                                InitialContext ctx = new InitialContext(parms);
+                            
+                                // Perform a naming service lookup to get UserTransaction object
+                                javax,transaction.UserTransaction usertx;
+                                usertx = (UserTransaction) ctx.lookup("java:comp/UserTransaction");
+                            
+                                try {
+                                    //Start a new user transaction.
+                                    usertx.begin();
+                        </pre>
+                    </ul>
+                </div>
+                <div class="slide">
+                    <hgroup>
+                        <h1>Example XA Usage</h1>
+                    </hgroup>
+                    <ul class="x-small">
+                        <li>Distributed Transaction (cont.)</li>
+                        <pre class="brush: java; highlight : [26,31,36,37,41]; first-line: 24">
+                            // Establish a connection with the first database
+                            javax.sql.DataSource data1;
+                            data1=(javax.sql.DataSource)ctx.lookup("java:comp/env/jdbc/DataBase1");
+                            java.sql.Connection conn1 = data1.getConnection();
+                            java.sql.Statement stat1 = conn1.getStatement();
+                            // Establish a connection with the second database
+                            javax.sql.DataSource data2;
+                            data2=(javax.sql.DataSource)ctx.lookup("java:comp/env/jdbc/DataBase2");
+                            java.sql.Connection conn2 = data2.getConnection();
+                            java.sql.Statement stat2 = conn2.getStatement();
+                            
+                            // Execute update query to both databases
+                            stat1.executeUpdate(...);
+                            stat2.executeUpdate(...);
+                            
+                            // Commit the transaction
+                            // Apply the changes to the participating databases
+                            usertx.commit();
+                            
+                            //Release all connections and statements.
+                            stat1.close();
+                            stat2.close();
+                            conn1.close();
+                            conn2.close();
+                        </pre>
+                    </ul>
+                </div>
+                <div class="slide">
+                    <hgroup>
+                        <h1>Example XA Usage</h1>
+                    </hgroup>
+                    <ul class="x-small">
+                        <li>Distributed Transaction (cont.)</li>
+                        <pre class="brush: java; highlight : [54]; first-line: 48">
+                            // Catch any type of exception
+                            catch (java.lang.Exception e) {
+                                try {
+                                    e.printStackTrace();
+                            
+                                    // Rollback the transaction
+                                    utx.rollback();
+                                    System.out.println("The transaction is rolled back.");
+                                } catch(java.lang.Exception ex) {
+                                    e.printStackTrace();
+                                    System.out.println("Exception is caught. Check stack trace.");
+                                }
+                            }
+                        }
+                        </pre>
+                    </ul>
+                </div>                
+			</section>
 			
 		</section>
 		
