@@ -517,7 +517,7 @@
                 </hgroup>
                 <ul class="x-small">
                     <li>Lookup for bound object</li>
-                    <pre class="brush: java; highlight : [10,14,15,18]">
+                    <pre class="brush: java; highlight : [15,18]">
                         import javax.naming.InitialContext;
                         import java.util.*;
                         
@@ -680,9 +680,11 @@
                         </ul>
                         <li>Terminology</li>
                         <ul class="x-small">
-                            <li><b>Transaction Manager</b> &ndash; manage transactions, coordinate the decision to commit them or roll them back, and coordinate failure recovery.</li>
+                            <li><b>Transaction Manager</b> &ndash; manage transactions, coordinate the decision to commit them or 
+                            roll them back, and coordinate failure recovery.</li>
                             <li><b>Resource Manager</b> &ndash; certain part of the computer’s shared resources. Examples: DBMS, JMS, etc.</li>
-                            <li><b>Agreement</b> &ndash; agreement message send by a Resource Manager, whather the operation was processed successfuly. Yes / No message.
+                            <li><b>Agreement</b> &ndash; agreement message send by a Resource Manager, whather the operation was 
+                            processed successfuly. Yes / No message.
                             </li>
                             <li><b>Acknowledgment</b> &ndash; message holding information about the status of the operation execution.
                             </li>
@@ -707,11 +709,14 @@
                             <li>Defines interface between the coordinator and each system node.
                             </li>
                             <li>Single transaction access to multiple resources (e.g. message queues, databases, etc.)</li>
-                            <li>Defined in the <a class="ext-link ref" title="XA Specification" href="http://pubs.opengroup.org/onlinepubs/009680699/toc.pdf">eXtended Architecture Specification</a></li>
+                            <li>Defined in the <a class="ext-link ref" title="XA Specification" 
+                            href="http://pubs.opengroup.org/onlinepubs/009680699/toc.pdf">eXtended Architecture Specification</a></li>
                         </ul>
                         <li>Wide technological support</li>
                         <ul>
-                            <li><a class="ext-link ref" title="Java Transaction API" href="http://www.oracle.com/technetwork/java/javaee/jta/index.html">Java Transaction API</a> &ndash; distributed transactions in a Java environment.</li>
+                            <li><a class="ext-link ref" title="Java Transaction API" 
+                            href="http://www.oracle.com/technetwork/java/javaee/jta/index.html">Java Transaction API</a> &ndash; 
+                            distributed transactions in a Java environment.</li>
                             <li>Supported in the Oracle Service Bus through a JMS queue.</li>
                             <li>MySQL Relational Database Management System (since v5.0)</li>
                         </ul>
@@ -743,20 +748,20 @@
                             
                                 public static void main(String args[]) {
                             
-                                // Initialize context
-                                Hashtable parms = new Hashtable();
-                                parms.put(Context.INITIAL_CONTEXT_FACTORY,
+                                	// Initialize context
+                                	Hashtable parms = new Hashtable();
+                                	parms.put(Context.INITIAL_CONTEXT_FACTORY,
                                         "weblogic.jndi.WLInitialContextFactory");
-                                hashtable.put(Context.PROVIDER_URL, "t3://localhost:7001");
-                                InitialContext ctx = new InitialContext(parms);
+                                	hashtable.put(Context.PROVIDER_URL, "t3://localhost:7001");
+                                	InitialContext ctx = new InitialContext(parms);
                             
-                                // Perform a naming service lookup to get UserTransaction object
-                                javax,transaction.UserTransaction usertx;
-                                usertx = (UserTransaction) ctx.lookup("java:comp/UserTransaction");
+                                	// Perform a naming service lookup to get UserTransaction object
+                                	javax.transaction.UserTransaction usertx;
+                                	usertx = (UserTransaction) ctx.lookup("java:comp/UserTransaction");
                             
-                                try {
-                                    //Start a new user transaction.
-                                    usertx.begin();
+                                	try {
+                                    	//Start a new user transaction.
+                                    	usertx.begin();
                         </pre>
                     </ul>
                 </div>

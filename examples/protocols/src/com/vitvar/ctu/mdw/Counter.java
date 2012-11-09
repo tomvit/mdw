@@ -3,6 +3,9 @@ package com.vitvar.ctu.mdw;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.vitvar.ctu.mdw.commons.AbstractHttpListener;
+import com.vitvar.ctu.mdw.commons.Sessions;
+
 public class Counter extends AbstractHttpListener {
 
 	private static Sessions<Integer> sessions = new Sessions<Integer>();
