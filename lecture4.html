@@ -752,7 +752,7 @@
                                 	Hashtable parms = new Hashtable();
                                 	parms.put(Context.INITIAL_CONTEXT_FACTORY,
                                         "weblogic.jndi.WLInitialContextFactory");
-                                	hashtable.put(Context.PROVIDER_URL, "t3://localhost:7001");
+                                	parms.put(Context.PROVIDER_URL, "t3://localhost:7001");
                                 	InitialContext ctx = new InitialContext(parms);
                             
                                 	// Perform a naming service lookup to get UserTransaction object
