@@ -157,12 +157,12 @@
 					<li>Purpose</li>
 					<ul>
 						<li>Adapters for various back-end technologies</li>
-						<li>Connectivty to legacy applications</li>
+						<li>Connectivity to legacy applications</li>
 						<li>No business logic, Usually stateless, ESB internal</li>
 					</ul>
 					<li>Example</li>
 					<ul>
-						<li>Database adatpers</li>
+						<li>Database adapters</li>
 						<ul>
 							<li>SQL statement:</li>
 							<pre class="brush: plain">
@@ -551,19 +551,19 @@
 	        	
 	    		<div class="slide">
 					<hgroup>
-						<h1>Throtling</h1>
+						<h1>Throttling</h1>
 					</hgroup>
 					<ul class="small">
-					<li>Throtling</li>
+					<li>Throttling</li>
 					<ul>
 						<li>There may be multiple instances of processes running in the middleware</li>
 						<li>Business service can be invoked concurrently</li>
-						<li>Not to overload a back-end service, throtling enables a control on a number of concurrent invocations</li>
+						<li>Not to overload a back-end service, throttling enables a control on a number of concurrent invocations</li>
 					</ul>
 					<li>Parameters</li>
 					<ul>
 						<li><b>Maximum concurrency</b> &ndash; a maximum number of concurrent invocations of a service</li>
-						<li><b>Throtling queue</b> &ndash; a queue for requests that cannot be sent due to maximum concurrency limit</li>
+						<li><b>Throttling queue</b> &ndash; a queue for requests that cannot be sent due to maximum concurrency limit</li>
 						<li><b>Message expiration</b> &ndash; a maximum time that a message can spent in the queue</li>
 					</ul>
 	        	</div>        	        
@@ -592,7 +592,7 @@
 	        	
 	    		<div class="slide">
 					<hgroup>
-						<h1>Asynchornous Communication</h1>
+						<h1>Asynchronous Communication</h1>
 					</hgroup>
 					<ul class="small">
 					<li>Implementation</li>
@@ -600,7 +600,7 @@
 						<li>Via a third-party message queue</li>
 						<ul>
 							<li>client and server do not communicate directly</li>
-							<li>enables lose coupling</li>
+							<li>enables loose coupling</li>
 							<li>Messaging system</li>
 						</ul>
 						<li>By using WS-Addressing</li>
