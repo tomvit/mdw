@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<!--
+    Middleware and Web Services, CTU course slides
+    (cc) 2010-2011 Tomas Vitvar, http://vitvar.com
+    written for Humla, an open source HTML5 presentation environment
+-->
+<html>  
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> 
+        <meta name="course"   content="Middleware and Web Services"/>
+        <meta name="lecture"  content="Lecture 11"/>
+        <meta name="keywords" content="SOA Governance"/>
+           
+        <link type="text/css" rel="stylesheet" href="css/meta.css"></link>   
+        <link type="text/css" rel="stylesheet" href="css/ctu-fit.css"></link>   
+        <link type="text/css" rel="stylesheet" href="humla/lib/core/humla.css"></link>   
+
+        <script type="text/javascript" src="humla/lib/humla.js"></script>
+        <title>SOA Governance</title>
+    </head>
+    
+    <body>
+        <footer>
+            <p><b>#META_LECTURE#: #TITLE#</b>,&nbsp;<span class="meta_semester"/>,&nbsp;
+            <span class="meta_twitter"/></p>
+            <p><b>&#8210; #SLIDE_NO# &#8210;</b></p>
+        </footer>
+
+        <div class="slide intro">
+            <hgroup>
+                <h1><span class="meta_course"/></h1>
+                <h2>#META_LECTURE#: #TITLE#</h2>
+            </hgroup>
+            <div class="author">
+                <p class="meta_author"/>
+                <p><span class="meta_email"/> &bull; <span class="meta_twitter"/> &bull; 
+                <span class="meta_web"/></p>
+            </div>
+            <center><div class="meta_logo"></div></center>
+            <div class="org">
+                <p class="meta_org"/>
+                <p><span class="meta_orgfac"/> &bull; <span class="meta_field"/> 
+                &bull; <span class="meta_orgweb"/></p>
+            </div>
+            <div class="etc">
+                <div class="text-info">
+                    Modified: #LAST_MODIFIED#<br/>
+                    Humla v#HUMLA_VERSION#
+                </div>
+                <a href="http://creativecommons.org/licenses/by-sa/3.0/"><div class="license"></div></a>
+                <div class="oppa"></div>
+            </div>
+        </div>
+        
+        <div class="slide outline"></div>
+        
+        <section>
+            <header>Introduction</header>
+            
+    		<div class="slide">
+				<hgroup>
+					<h1>SOA</h1>
+				</hgroup>
+				<ul class="">
+					<li>Challenges</li>
+					<ul>
+						<li>Facilitate and maximize reuse</li>
+						<li>Control and track reuse</li>
+						<li>Measure the business value of SOA and reuse</li>
+						<li>Provide visibility throughout a service's entire lifecycle</li>
+						<li>Ensure compliance with IT policies and best practices</li>
+						<li>Manage dependencies and determine the impact of change</li>
+					</ul>
+					<li>Advantages</li>					
+					<ul>
+						<li>Business agility/reduced time to market</li>
+						<li>Reduced costs</li>
+						<li>Improved reuse of services</li>
+						<li>Improved software quality</li>
+						<li>Better interoperability</li>
+					</ul>
+				</ul>
+			</div>
+
+			<div class="slide" id="spaghetti">
+            	<hgroup>
+    				<h1>Spaghetti Architecture</h1>
+    			</hgroup>
+                <ul class="small">
+                    <li>Need for the integration</li>
+                    <ul>
+                        <li>One-to-one integration</li>
+                        <li>Hard to maintain, vendor interoperability problem</li>
+                    </ul>
+                    <div class="h-drawing" style="height: 350px" id="123tDQFo3Zq0LEzzhquKp1xJX4YZ6YiWC0GDNGGK1UA0"
+                        alt="Spaghetti Integration"></div>
+                </ul>               
+            </div>
+
+			
+			<div class="slide">
+				<hgroup>
+					<h1>Real point-to-point integration</h1>
+				</hgroup>				
+				<ul class="xx-small">
+					<li>Graph generated from repository database and visualized using Gephi</li>
+				</ul>
+				<div class="h-drawing" style="height: 700px" id="1a5do-aYyS0Sv2iEwRSlzfPwBfORQdswTB0Di1QAqXCA" format="png"></div>				
+
+			</div>			
+
+			<div class="slide">
+				<hgroup>
+					<h1>Reference Architecture and Governance</h1>
+				</hgroup>
+				<ul class="x-small">					
+				</ul>
+				<div class="h-drawing" id="1kkAbxSpbfXTQ4m2IDR8RjcUGyL08BaFknwylIVwRfxY" style="height: 400px"></div>				
+			</div>
+            
+        </section>
+
+        <div class="slide outline"></div>
+
+        <section>
+            <header>SOA Reference Architecture</header>
+
+            <div class="slide">
+				<hgroup>
+					<h1>SOA Reference Architecture</h1>
+				</hgroup>
+				<ul class="x-small">					
+					<li>Abstract realization of SOA, focusing on the elements and their relationships</li>
+					<ul>
+						<li>key to constructing a roadmap from the current state to the target state</li>
+					</ul>
+					<li>Views/Layers:</li>
+					<ul>
+						<li>Integration layer</li>
+						<li>QoS layer</li>
+						<li>Information Architecture layer</li>
+						<li>Governance layer</li>
+					</ul>
+					<li>Components:</li>
+					<ul>
+						<li>Logical/Technical Architecture</li>					
+						<li>Security, IDM</li>
+						<li>Common Data Model (CDM)</li>
+						<li>Conventions</li>
+						<li>Design patterns</li>
+						<li>Service Contracts</li>
+					</ul>					
+				</ul>
+			</div>
+
+			<div class="slide">
+				<hgroup>
+					<h1>Policies</h1>
+				</hgroup>
+				<ul class="x-small	">
+					<li>Policy</li> 					
+					<ul>
+						<li>defined by OASIS in SOA Reference Model</li>
+						<li>consists of three parts: the policy assertion, the policy owner, and policy enforcement</li>
+						<li>maintained by commercial tools, shared Word document, Wiki, ...</li>	
+					</ul>
+					<!--
+					<li>WS-Policy</li>
+					<ul>
+						<li>allows consumers and providers to specify the requirements and capabilities of their services in WSDL</li>
+						<li>allows automatic enforcement</li>
+					</ul>	
+					-->
+					<li>Examples:</li>				
+					<ul>
+						<li>Basic design-time policies</li>
+						<ul>
+							<li>No duplicate services - can save duplicate work</li>
+							<li>Technology standardization - public service must follow REST</li>
+							<li>Validate message content - messages are validated using schema</li>
+						</ul>
+						<li>Basic runtime policies</li>
+						<ul>
+							<li>Services should be available from 9 a.m. to 5 p.m.</li>
+							<li>Services calls should be made over a secure channel</li>
+							<li>Services should be self-describing</li>
+						</ul>
+					</ul>
+				</ul>
+			</div>
+
+			<div class="slide">
+				<hgroup>
+					<h1>Policies (cont.)</h1>
+				</hgroup>
+				<ul class="x-small">					
+					<li>Design and documentation policies</li>
+					<ul>
+						<li>Create self-documenting services</li>
+						<li>Reuse existing message standards</li>
+						<li>Design for reusability</li>
+						<li>Support multiple versions of services</li>
+					</ul>
+					<li>Security policies</li>
+					<ul>
+						<li>Encrypt a communications channel for sensitive data</li>
+						<li>Validate message integrity and non-repudiation</li>
+						<li>Use a centralized identity system for authentication</li>
+						<li>Use a centralized identity system for authorization</li>
+					</ul>
+					<li>Testing and performance policies</li>
+					<ul>
+						<li>Process messages within 10 ms</li>
+						<li>Monitor services in real time</li>
+						<li>Provide a flexible view for how services are used</li>
+						<li>Run services in the cloud</li>
+						<li>Enforce code quality and test coverage</li>
+					</ul>					
+				</ul>
+			</div>
+
+			<div class="slide">
+				<hgroup>
+					<h1>Example</h1>
+				</hgroup>
+				<ul class="xx-small">
+					<li>Design time - service versioning</li>
+					<ul>
+						<li>support for new and outdated services</li>						
+					</ul>
+					<li>WSDL best-practice</li>
+					<ul>
+						<li>Insert major and minor version into the WSDL file name</li>
+						<li>Insert major version into the targetNamespace</li>
+						<li>Insert major and minor version into the portType element</li>
+						<li>Insert major and minor version into the service element</li>
+						<li>Insert major version into the endpoint</li>
+					</ul>
+					<pre class="brush: xml">	                	
+						&lt;?xml version="1.0" encoding="UTF-8"?>
+						&lt;definitions  targetNamespace="http://example.com/ws/ExampleService-v0"
+						  xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+						  xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+						  &lt;types>
+						    &lt;xsd:schema targetNamespace="http://example.com/ws/ExampleService-v0">...&lt;/xsd:schema>
+						  &lt;/types>
+						  ...
+						  &lt;portType name="ExampleServicePort-v0.1">...&lt;/portType>
+						  ...
+						  &lt;service name="ExampleService-v0.1">
+						    &lt;port binding="ExampleServiceSOAP" name="ExampleServiceSOAP">
+						      &lt;soap:address location="http://example.com/ExampleService/v0"/>
+						    &lt;/port>
+						  &lt;/service>
+						&lt;/definitions></pre>
+				</ul>				
+			</div>
+
+		</section>     
+
+		<div class="slide outline"></div>       
+
+        <section>
+            <header>SOA Governance</header>
+            
+    		<div class="slide">
+				<hgroup>
+					<h1>SOA Governance</h1>
+				</hgroup>
+				<ul class="xx-small">
+					<li>The goal is to get the most out of your SOA</li>
+					<!--
+					<li>Supports following steps:</li>
+					<ol>
+						<li>Define the policies you want to apply</li>						
+						<li>Apply during design time</li>
+						<li>Monitor and enforce during runtime</li>						
+					</ol>
+					-->
+					<li>SOA governance is the combination of people, policies, and processes</li>
+					<li>3P</li>
+					<ul>
+						<li>People</li>
+						<ul>
+							<li>Who are the business owners, who is using, why are used, who is technically responsible</li>
+						</ul>
+						<li>Processes</li>
+						<ul>
+							<li>What processes are in place to define your services, what processes depend on your service, is there a process to determine service lifecycle</li>
+						</ul>
+						<li>Policies</li>
+						<ul>
+							<li>What policies are defined for your service, how are applied during design and runtime</li>
+						</ul>
+					</ul>					
+					<li>Supports following steps:</li>
+					<ol>
+						<li>Define the policies you want to apply (Reference Architecture)</li>						
+						<li>Apply during design time</li>
+						<li>Monitor and enforce during runtime</li>						
+					</ol>
+				</ul>
+			</div>
+
+			<!--<section>
+	            <header>Structures and processes</header>	
+	        -->
+
+            <div class="slide">
+				<hgroup>
+					<h1>Structures and Processes</h1>
+				</hgroup>
+				<ul class="">		
+					<li>Organizational structures/Departments</li>
+					<ul>
+						<li>Business Analysis - Business Analyst</li>
+						<li>Solution Architecture - Solution Architect</li>
+						<li>Integration Architecture - Integration Architect</li>						
+						<li>Testing and Deployment - Tester</li>
+						<li>Enterprise Architecture</li>
+					</ul>					
+					<li>Processes</li>					
+					<ul>
+						<li>Service Development Process</li>
+						<li>Service Lifecycle Process</li>
+						<li>Operational Monitoring</li>
+						<li>Management Process</li>
+					</ul>
+					
+				</ul>
+			</div>
+						
+			<!--
+	        </section>
+	    	-->
+
+			<div class="slide outline"></div>  
+
+			<section>
+	            <header>Service Lifecycle</header>
+	            
+	    		<div class="slide">
+					<hgroup>
+						<h1>Service Lifecycle</h1>
+					</hgroup>
+					<ul class="x-small">
+						<li>Lifecycle</li>
+						<ul>
+							<li>helps to identify which services need to be created or updated</li>
+							<li>helps to check steps before a service is put in production, retired</li>
+							<li>to determine which policies need to be complied with in each stage</li>
+						</ul>
+						<li>Standard Phases</li>
+						<ul>
+							<li>Model - business requirements, business services, ...</li>
+							<li>Assemble - define the contract, create and test</li>
+							<li>Deploy - deployed, integrated and made available</li>
+							<li>Manage - runtime monitoring </li>
+						</ul>
+						<li>Adopted Phases</li>
+						<ul>
+							<li>Initial</li>
+							<li>Development</li>
+							<li>In Test</li>
+							<li>Available</li>
+							<li>Deprecated</li>
+							<li>Retired</li>
+						</ul>
+
+					</ul>
+				</div>
+
+				<div class="slide">
+					<hgroup>
+						<h1>Development Process</h1>
+					</hgroup>									
+					<div class="h-drawing" style="height: 500px" id="1tMIilwv3pGb2Bdw8daynwrVQAo0NKuVyx-3sZ0UUeyg" format="png"></div>	
+				</div>
+
+				<div class="slide">
+					<hgroup>
+						<h1>Service Lifecycle and Development Process</h1>
+					</hgroup>									
+					<div class="h-drawing" style="height: 500px" id="1f60jdW7RN0XE2UVVdd0bnu-PAFAPkTG61t_TT99ob2k" format="png"></div>	
+				</div>	
+	            
+	        </section>
+            
+        </section>     
+
+        <div class="slide outline"></div>  
+
+        <section>
+            <header>Tools</header>
+
+            <div class="slide">
+					<hgroup>
+						<h1>Architecture</h1>
+					</hgroup>					
+					<div class="h-drawing" id="1FEYIrF2NRZdL9-ZqMSHEYSpqDkF7mZo7Xzr4sxJXpC8" style="height: 450px"></div>
+					
+				</div>
+
+            <section>
+	            <header>Overview</header>
+
+				<div class="slide">
+					<hgroup>
+						<h1>Governance Objectives</h1>
+					</hgroup>
+					<ul class="">
+						<li>Goals of an SOA governance framework may include</li>
+						<ul>
+							<li>Centralized asset management</li>
+							<li>Adherence to reference architecture</li>
+							<li>Standard asset lifecycle</li>
+							<li>Enterprise visibility</li>
+							<li>Prescribed reuse</li>						
+							<li>Usage detection</li>
+							<li>Asset compliance</li>
+							<li>Impact analysis</li>
+							<li>Endpoint metrics</li>
+							<li>Policy enforcement</li>
+						</ul>
+					</ul>				
+				</div>
+
+				<div class="slide">
+					<hgroup>
+						<h1>Enterprise Assets</h1>
+					</hgroup>
+					<ul class="x-small">
+						<li>An asset:</li>					
+						<ul>
+							<li>Describes some type of structured information related to an IT project</li>
+							<li>Is typically associated with one or more files (documents, source, binary, and so on)</li>
+							<li>Includes other metadata to help qualify, classify, and categorize it</li>
+						</ul>
+						<li>to Support Design and Development</li>
+						<ul>
+							<li>Enterprise architectures, Project blueprints, Design patterns, Service definitions, Schemas, Frameworks, Procedures and policies, Sandbox service endpoints, Sandbox environments</li>
+						</ul>
+						<li>to Support Run Time</li>
+						<ul>
+							<li>Deployed service endpoints, Deployed service policies, Service-level agreements (SLAs), Staging and production environments</li>
+						</ul>
+					</ul>				
+				</div>
+
+				<div class="slide">
+					<hgroup>
+						<h1>Enterprise Assets</h1>
+					</hgroup>
+					<ul class="small">
+						<li>Centralized Asset Management</li>
+						<ul>
+							<li>central repository</li>
+						</ul>
+						<!--<li>Produced and Consumed Assets</li>-->
+						<li>Asset Taxonomies</li>
+						<ul>
+							<li>naming guidelines, classification schemes</li>
+						</ul>
+						<li>Asset Harvesting</li>
+						<ul>
+							<li>automate the registration</li>
+						</ul>	
+						<li>Usage Detection</li>	
+						<ul>
+							<li>integration with development process and tools</li>
+						</ul>					
+						<li>Asset Prescription</li>
+						<ul>
+							<li>reusing of assets</li>
+						</ul>
+						<!--
+						<li>Asset Compliance</li>
+						<li>Asset Promotion</li>
+						-->
+						<li>SOA Monitoring and Management</li>
+					</ul>				
+				</div>
+	            
+	        </section>
+
+	        <!--
+	        <div class="slide outline"></div>
+
+	        <section>
+	            <header>Enterprise Repository</header>
+	            
+	    		<div class="slide">
+					<hgroup>
+						<h1>Enterprise Repository</h1>
+					</hgroup>
+					<ul class="x-small">
+						
+					</ul>
+				</div>
+	            
+	        </section>
+	    	-->
+
+	        <div class="slide outline"></div>  
+
+	        <section>
+	            <header>UDDI Registry</header>
+	            
+	    		<div class="slide">
+					<hgroup>
+						<h1>UDDI Registry</h1>
+					</hgroup>
+					<ul class="x-small">
+						<li>Universal Description Discovery and Integration</li>
+						<ul>
+							<li>Is an open specification from OASIS</li>
+							<li>XML-based registry</li>							
+							<li>Describes a standard interface for a service registry</li>
+							<li>Defines services that can be used to publish, classify, and find other services</li>
+							<li>Acts like a phone book for applications to look up services</li>
+							<li>Helps decouple service producers from consumers</li>
+							<li>Promotes service visibility and reuse</li>
+							<li>Two parts</li>
+							<ul>
+								<li>registry of all a web service's metadata including a pointer to the WSDL description</li>
+								<li>set of WSDL port type definitions for manipulating and searching that registry</li>
+							</ul>
+						</ul>					
+					</ul>
+				</div>
+
+				<div class="slide">
+					<hgroup>
+						<h1>Using UDDI Registry</h1>
+					</hgroup>				
+					<div class="h-drawing" id="1Fufk37zyJV7kKQwrmPRS1SCe5whpaNuN21r7V9jm5z0" style="height: 270px"></div>	
+					<ul class="xx-small">
+						<li>Steps:</li>
+						<ol>			
+							<li>Provider publishes the WDSL URL</li>
+							<li>Client looks up and receive WSDL location, adds itself as subscriber</li>
+							<li>Client invokes the service</li>
+							<li>Provider performs the update</li>
+							<li>Registry notifies client</li>
+							<li>Client invokes the updated service</li>
+						</ol>
+					</ul>
+				</div>
+
+				<div class="slide">
+					<hgroup>
+						<h1>UDDI Service Model</h1>
+					</hgroup>						
+					<div class="h-drawing" id="1KVHrjWxWBMX_pgcrbqBDlWnaHnOf4P6iGls6x32UmMY" style="height: 450px"></div>			
+					<ul class="x-small">			
+						
+					</ul>
+				</div>
+
+				<!--
+				<div class="slide">
+					<hgroup>
+						<h1>UDDI Example</h1>
+					</hgroup>								
+					<ul class="x-small">			
+						<li>Creating Registry</li>
+						<pre class="brush: xml">
+							POST /save_business HTTP/1.1
+							Host: www.XYZ.com
+							Content-Type: text/xml; charset="utf-8"
+							Content-Length: nnnn
+							SOAPAction: "save_business"
+							&lt;?xml version="1.0" encoding="UTF-8" ?>
+							&lt;Envelope xmlns="http://schemas/xmlsoap.org/soap/envelope/">
+							      &lt;Body>
+							         &lt;save_business generic="2.0" xmlns="urn:uddi-org:api_v2">
+							         &lt;businessKey="">
+							         &lt;/businessKey>
+							         &lt;name>
+							         XYZ, Pvt Ltd.
+							         &lt;/name>
+							         &lt;description>
+							             Company is involved in giving Stat-of-the-art....
+							         &lt;/description>
+							         &lt;identifierBag> ... &lt;/identifierBag>
+							         ...
+							         &lt;/save_business>
+							      &lt;/Body>
+							&lt;/Envelope>
+						</pre>
+					</ul>
+				</div>
+
+				<div class="slide">
+					<hgroup>
+						<h1>UDDI Example (cont.)</h1>
+					</hgroup>								
+					<ul class="x-small">			
+						<li>Retrieving Information</li>
+						<pre class="brush: xml">
+							POST /get_businessDetail HTTP/1.1
+							Host: www.XYZ.com
+							Content-Type: text/xml; charset="utf-8"
+							Content-Length: nnnn
+							SOAPAction: "get_businessDetail"
+							&lt;?xml version="1.0" encoding="UTF-8" ?>
+							&lt;Envelope xmlns="http://schemas/xmlsoap.org/soap/envelope/">
+							   &lt;Body>
+							      &lt;get_businessDetail generic="2.0" xmlns="urn:uddi-org:api_v2">
+							          &lt;businessKey="C90D731D-772HSH-4130-9DE3-5303371170C2">
+							      &lt;/businessKey>
+							      &lt;/get_businessDetail>
+							   &lt;/Body>
+							&lt;/Envelope>
+						</pre>
+						<pre class="brush: xml">
+							&lt;?xml version="1.0" encoding="UTF-8"?>
+							&lt;Envelope xmlns="http://schemas.xmlsoap.org/soap/envelope/">
+							  &lt;Body>
+							    &lt;find_service businessKey="*" generic="1.0" xmlns="urn:uddi-org:api">
+							      &lt;name>delayed stock quotes&lt;/name>
+							    &lt;/find_service>
+							  &lt;/Body>
+							&lt;/Envelope>
+						</pre>
+					</ul>
+				</div>
+				-->
+	            
+	        </section>
+
+	        <div class="slide outline"></div>
+
+	        <section>
+	            <header>Monitoring and Management</header>
+	            
+	    		<div class="slide">
+					<hgroup>
+						<h1>Monitoring</h1>
+					</hgroup>
+					<ul class="">
+						<li>The operations team has additional governance needs for deployed, run-time assets such as service endpoints:</li>
+						<ul>
+							<li>Enforcing security, quality-of-service (QoS), and other policies at run time</li>
+							<li>Enforcing contracts and SLAs for different service consumers</li>
+							<li>Gathering metrics and trigger alerts</li>
+							<li>Reporting data to the repository to support decision making</li>
+							<li>Detecting services that are not in the repository</li>
+						</ul>
+					</ul>
+				</div>
+
+				<div class="slide">
+					<hgroup>
+						<h1>Measuring Success Through Reuse</h1>
+					</hgroup>
+					<ul class="x-small">
+						<li>The organizations typically focus on one main goal of SOA - Reuse</li>
+						<li>Reuse</li>
+						<ul>
+							<li>avoids the costs of repeatedly developing the same functionality</li>
+							<li>avoids the costs of maintaining different implementations of the same functionality</li>
+							<li>consolidates functionality and reduces redundancy</li>
+							<li>the more that reuse occurs, the greater the savings</li>
+						</ul>						
+						<li>Cost of Reuse</li>
+						<ul>
+							<li>The governance workflow (taxonomies, approvals, registration, metrics, and so on)</li>
+							<li>Proper asset documentation, samples, and so on</li>
+							<li>Learning to use an existing asset</li>
+							<li>Integrating an existing asset into a project</li>
+						</ul>
+					</ul>
+				</div>
+
+				<div class="slide">
+					<hgroup>
+						<h1>Cost of reuse</h1>
+					</hgroup>
+					<ul class="x-small">
+						<li>Production factor</li>						
+						<ul>
+							<li>amount of time to make an asset reusable</li>
+							<li>reusable asset typically takes more time than single use asset</li>
+						</ul>
+						<li>Consumption factor</li>						
+						<ul>
+							<li>amount of time required to reuse an asset</li>
+							<li>time to evaluate and reuse</li>
+						</ul>
+						<li>Burden rate</li>						
+						<ul>
+							<li>cost associated with this SOA overhead</li>
+						</ul>
+						<li>Example:</li>
+						<ul>
+							<li>Time to develop reusable asset: <span class="h-latex">\mathit{200 hrs}</span></li>
+							<li>Production factor: <span class="h-latex">\mathit{125 \%}</span></li>
+							<li>Consumption factor: <span class="h-latex">\mathit{20 \%}</span></li>
+							<li>Burden rate: <span class="h-latex lower">\mathit{\$150/hr}</span></li>
+							<li><span class="h-latex lower">\mathit{200 hrs / 125 \% = 160 hrs}</span> &rarr; time to develop non-reusable </li>
+							<li><span class="h-latex lower">\mathit{160 hrs * 20 \% = 32 hrs}</span> &rarr; time to reuse</li>
+							<li><span class="h-latex lower">\mathit{32 hrs * \$150/hr = \$4800}</span> &rarr; cost to reuse</li>
+						</ul>
+					</ul>
+				</div>
+
+				<div class="slide">
+					<hgroup>
+						<h1>Predicting reuse savings</h1>
+					</hgroup>
+					<ul class="small">
+						<li>Predicted total time: <span class="h-latex">\mathit{400 hrs}</span></li>
+						<li>Production factor: <span class="h-latex">\mathit{160 \%}</span></li>
+						<li>Consumption factor: <span class="h-latex">\mathit{20 \%}</span></li>
+						<li>Burden rate: <span class="h-latex lower">\mathit{\$60/hr}</span></li>
+						<li>Predicted number of reuse: <span class="h-latex">\mathit{5}</span></li>
+						<li><span class="h-latex lower">\mathit{400 hrs / 160 \% = 250 hrs}</span> &rarr; predicted time for non-reusable</li>
+						<li><span class="h-latex">\mathit{250 hrs * 20 \% = 50 hrs}</span> &rarr; predicted time to reuse</li>
+						<li><span class="h-latex">\mathit{250 hrs - 50 hrs = 200 hrs}</span> &rarr; predicted time saved</li>
+						<li><span class="h-latex lower">\mathit{200 hrs * \$60/hr * 5 = \$60,000}</span> &rarr; predicted total cost savings</li>
+					</ul>
+				</div>
+	            
+	        </section>
+        </section>
+        
+    </body>
+</html>

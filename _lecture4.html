@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<!--
+    Middleware and Web Services, CTU course slides
+    (cc) 2010-2012 Tomas Vitvar, http://vitvar.com
+    written for Humla, an open source HTML5 presentation environment
+-->
+<html>  
+    <head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> 
+        <meta name="course"   content="Middleware and Web Services"/>
+		<meta name="lecture"  content="Lecture 4"/>
+   		<meta name="keywords" content="Web Server, Application Server, JEE"/>
+           
+        <link type="text/css" rel="stylesheet" href="css/meta.css"></link>   
+        <link type="text/css" rel="stylesheet" href="css/ctu-fit.css"></link>   
+        <link type="text/css" rel="stylesheet" href="humla/lib/core/humla.css"></link>   
+
+        <script type="text/javascript" src="humla/lib/humla.js"></script>
+        <title>Application Server</title>
+	</head>
+	
+	<body>
+		<footer>
+			<p><b>#META_LECTURE#: #TITLE#</b>,&nbsp;<span class="meta_semester"/>,&nbsp;
+			<span class="meta_twitter"/></p>
+			<p><b>&#8210; #SLIDE_NO# &#8210;</b></p>
+		</footer>
+
+    	<div class="slide intro">
+			<hgroup>
+				<h1><span class="meta_course"/></h1>
+ 				<h2>#META_LECTURE#: #TITLE#</h2>
+			</hgroup>
+			<div class="author">
+				<p class="meta_author"/>
+				<p><span class="meta_email"/> &bull; <span class="meta_twitter"/> &bull; 
+				<span class="meta_web"/></p>
+			</div>
+			<center><div class="meta_logo"></div></center>
+			<div class="org">
+				<p class="meta_org"/>
+				<p><span class="meta_orgfac"/> &bull; <span class="meta_field"/> 
+				&bull; <span class="meta_orgweb"/></p>
+			</div>
+			<div class="etc">
+        		<div class="text-info">
+    				Modified: #LAST_MODIFIED#<br/>
+					Humla v#HUMLA_VERSION#
+				</div>
+				<a href="http://creativecommons.org/licenses/by-sa/3.0/"><div class="license"></div></a>
+				<div class="oppa"></div>
+			</div>
+		</div>
+		
+        <div class="slide outline"></div>
+        
+        <section>
+            <header>Introduction</header>
+            
+	        <div class="slide">
+	            <hgroup>
+	                <h1>Application Server Overview</h1>
+	            </hgroup>  
+	            <ul class="x-small">
+	                <li>Environment that runs an application logic</li>
+	                <ul>
+	                    <li>Client communicates with AS via an application protocol</li>
+	                </ul>
+	                <li>Application Server</li>
+                 	<ul>
+                        <li>A modular environment</li>
+						<ul>
+							<li>provides technology to realize enterprise systems</li>
+						</ul>
+						<li>Provides services such as naming and directory, performance, failover</li>
+						<li>Supports a variety of objects such as JSP, EJB, Servlets, RMI</li>
+                        <li>Contains a Web server/HTTP server</li>
+						<li>Can be a single server or multiple servers on a network</li>
+					</ul>
+	                <li>Web Server/HTTP Server</li>
+					<ul>
+						<li>Web Server deals with HTTP only</li>
+						<li>HTTP request/response, security, proxy, caching</li>
+					</ul>
+	                <li>Two major models to realize communication</li>
+	                <ul>
+	                    <li>Blocking I/O (also called synchronous I/O)</li>
+	                    <li>Non-blocking I/O (also called asynchronous I/O)</li>
+	                </ul>
+	            </ul>                
+	        </div>
+
+            <div class="slide">
+    			<hgroup>
+    				<h1>Java Enterprise Edition &ndash; JEE</h1>
+    			</hgroup>
+                <ul class="small">
+                    <li>Java Enterprise Edition (JEE)</li>
+                    <ul>
+                        <li>Collection of technologies for server-side programming</li>
+						<li>Programming of application components</li>
+                        <li>Major technologies</li>
+                        <ul>                        
+                            <li>Servlet technology</li>
+                            <li>Java Server Pages (JSP)</li>
+                            <li>Java Messaging System (JMS)</li>
+                            <li>Remote Method Invocation (RMI)</li>
+                            <li>Enterprise Java Beans (EJB)</li>
+                        </ul>
+                    </ul>
+                    <li>Basis for many application servers such as</li>
+                    <ul class="x-small">
+                        <li>Oracle WebLogic</li>
+                        <li>Google AppEngine (Java)</li>
+                        <li>JBoss</li>
+                        <li>GlassFish</li>
+                        <li>IBM WebSphere</li>
+                    </ul>
+                </ul>
+            </div>
+
+            <div class="slide">
+        		<hgroup>
+    				<h1>Overall Application Server Architecture</h1>
+    			</hgroup>
+				<div class="h-drawing" id="18vW_i7-8GeUHUdE9q9dccbAvDbA5b1fuQ-qAovzabTc" style="height: 450px"></div>
+			</div>	
+
+            <div class="slide">
+        		<hgroup>
+    				<h1>Main Concepts</h1>
+    			</hgroup>
+				<ul class="x-small">
+					<li>Domain</li>
+					<ul>
+						<li>A group of servers with specific configuration of applications and objects</li>
+					</ul>
+					<li>Administration Server</li>
+					<ul>
+						<li>An instance of application server that manages the domain</li>
+					</ul>
+					<li>Managed Server</li>
+					<ul>
+						<li>Application server running an instance of an application and objects</li>
+					</ul>
+					<li>Cluster</li>
+					<ul>
+						<li>A group of application servers; they contain the same copy of applications and objects</li>
+					</ul>
+					<li>Machine</li>	
+					<ul>
+						<li>A physical machine and OS running one or more application servers</li>
+					</ul>
+					<li>Load Balancer</li>
+					<ul>
+						<li>A network element that distributes client requests to managed servers based on a specific algorithm</li>
+					</ul>
+				</ul>
+			</div>	
+			
+	        <div class="slide outline"></div>
+			
+			<section>
+				<header>Example Project Configuration and Implementation</header>
+            
+	            <div class="slide">
+	        		<hgroup>
+	    				<h1>Directory Structure</h1>
+	    			</hgroup>
+	                <ul class="x-small">
+	                    <li>Your application</li>
+	                    <ul>
+	                        <li>collection of documents and libraries your application requires</li>
+	                        <li>packaged in <code>war</code> or <code>ear</code> archive</li>
+	                        <ul>
+	                            <li>JAR that includes not only java classes but also additional resources such as 
+	                            <code>.xml</code>, <code>.html</code>, <code>.js</code>, <code>.css</code>, <code>.jpg</code> files.</li>
+	                        </ul>
+	                    </ul>
+	                    <li>Content of <code>war</code> package</li>
+	                    <pre class="brush: bash; gutter: false; class-name: ''">
+	                        # web archive root
+	                        war
+	                         |   # directories and documents accessible through the app root /
+	                         |   # such as img, css, js, ...
+	                         |-- (public-directory | public-document)*
+	                         |   # directories and documents internal to your application
+	                         |-- WEB-INF
+	                                |-- (private-directory | private-document)*
+	                                |   # compiled java classes of your application
+	                                |-- classes
+	                                |   # all java libraries your application requires
+	                                |-- lib
+	                                |   # configuration of your application
+	                                |-- web.xml
+	                                |-- # other platform-specific configurations 
+	                                    # such as app-engineweb.xml for GAE
+	                    </pre>
+	                </ul>
+	            </div>
+
+	            <div class="slide">
+	                <hgroup>
+	    				<h1>Configuration in web.xml</h1>
+	    			</hgroup>
+	                <ul class="x-small">
+	                    <li><code>web.xml</code> defines configuration for</li>
+	                    <ul>
+	                        <li>list of servlets, mapping of servlets to URL paths, welcome files, filters, EJB references, 
+	                        authentication mechanism, etc.</li>
+	                        <li>basic configuration example:</li>
+	                    </ul>
+	                    <pre class="brush: xml">
+	                        &lt;?xml version="1.0" encoding="utf-8"?>
+	                        &lt;web-app 
+	                            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	                            xmlns="http://java.sun.com/xml/ns/javaee">
+                        
+	                            &lt;servlet>
+	                        		&lt;servlet-name>main&lt;/servlet-name>
+	                        		&lt;servlet-class>com.vitvar.mdw.main&lt;/servlet-class>
+	                        	&lt;/servlet>
+                        
+	                        	&lt;servlet-mapping>
+	                        		&lt;servlet-name>main&lt;/servlet-name>
+	                        		&lt;url-pattern>/&lt;/url-pattern>
+	                        	&lt;/servlet-mapping>
+                        
+	                        	&lt;welcome-file-list>
+	                        		&lt;welcome-file>index.jsp&lt;/welcome-file>
+	                        	&lt;/welcome-file-list>
+	                        &lt;/web-app>
+	                    </pre>
+	                </ul>
+	            </div>
+
+	            <div class="slide">
+	            	<hgroup>
+	    				<h1>Handling HTTP Requests</h1>
+	    			</hgroup>
+	                <ul class="x-small">
+	                    <li>HTTP Servlets</li>
+	                    <ul>
+	                        <li>Servlet is a class that extends capabilities of application servers 
+	                        via a request-response programming model</li>
+	                        <li>HTTP servlets are classes that extend <code>HTTPServlet</code> abstract class</li> 
+	                        <li>Example:</li>
+	                    </ul>
+	                    <pre class="brush: java">
+	                        package com.vitvar.mdw;
+                        
+	                        import javax.servlet.http.HttpServlet;
+	                        import javax.servlet.http.HttpServletRequest;
+	                        import javax.servlet.http.HttpServletResponse;
+                        
+	                        public class Main extends HttpServlet {
+	                            public doGet(HttpServletRequest request, HttpServletResponse response) {
+	                                // GET method implementation here
+	                            }
+
+	                            public doPut(HttpServletRequest request, HttpServletResponse response) {
+	                                // PUT method implementation here
+	                            }
+                            
+	                            // other methods such as doPost, doDelete, doOptions
+	                        }
+	                    </pre>
+	                </ul>
+	            </div>
+
+	            <div class="slide">
+	                <hgroup>
+	    				<h1>Support for Sessions</h1>
+	    			</hgroup>
+	                <ul class="x-small">
+	                    <li><code>HttpSession</code> interface</li>
+	                    <ul>
+	                        <li>Allows to store session data in the memory</li>
+	                        <li>Java API for <a href="#/state-management">HTTP State Management</a></li>
+	                        <ul>
+	                            <li>Hides details from developers</li>
+	                        </ul>
+	                        <li>Enable sessions in GAE by setting <code>&ltsessions-enabled></code> to <code>true</code> 
+	                            in <code>appengine-web.xml</code> (disabled by default)</li>
+	                    </ul>
+	                    <pre class="brush: java;">
+	                        // method doGet in a servlet
+	                        public doGet(HttpServletRequest request, HttpServletResponse response) {
+	                            // access the session object through the request
+	                            HttpSession session = request.getSession();
+                            
+	                            // unique identification of the session, the value used for the cookie
+	                            String id = session.getId();
+                            
+	                            // get the value of the attribute
+	                            Object value = session.getAttribute("data");
+
+	                            // set the value of the attribute
+	                            session.setAttribute("data", new String("some data"));
+                                                        
+	                            // this will set a max-age of the session cookie 
+	                            session.setMaxInactiveInterval(3600);
+	                        }
+	                    </pre>
+	                </ul>
+	            </div>
+			</section>
+
+        </section>		
+        
+        <div class="slide outline"></div>
+		
+		<section>
+			<header>Blocking and Non-Blocking Communication</header>
+
+	        <div class="slide"> 
+				<hgroup> 
+					<h1>Blocking I/O Model</h1> 
+				</hgroup> 
+				<ul class="small">
+					<li>The server creates a thread for every connection</li>
+	                   <ul>                    
+	                       <li>For example, 1K connections = 1K threads, big overhead</li>
+	                   </ul>
+	               </ul>
+	   			<div id="1QP7gZSS1WS3YquzLekSgdZfcmi4BYArm-K9tuWrULQs" class="h-drawing" style="height: 220px"></div>
+	               <ul class="small">
+	                   <li>Characteristics</li>
+	                   <ul>
+	   					<li>the thread is reserved for the connection</li>
+					<li>When processing of the request requires other interactions with DB/FS or network 
+						communication is slow</li>
+	                   <ul>
+	                       <li>scales very bad as the thread's execution is "blocked"</li>
+	                   </ul>
+				</ul>
+			</div>
+
+	        <div class="slide"> 
+	   			<hgroup> 
+					<h1>Non-Blocking I/O Model</h1> 
+				</hgroup> 
+				<ul class="small">
+					<li>Connections maintained by the OS, not the Web app</li>
+	                   <ul>                    
+	                       <li>The Web app registers events, OS triggers events when occur</li>
+	                   </ul>
+	               </ul>
+	   			<div id="1kxkFc3Chl4qFXxH_4f2seuNbpBdENMyZWMRUmxd1p28" class="h-drawing" style="height: 220px"></div>
+	               <ul class="small">
+					<li>Characteristics</li>
+	                   <ul>
+	                       <li>Event examples: new connection, read, write, closed</li>
+					    <li>The app may create working threads, but controls the number!</li>
+	                       <ul>
+					        <li>much less number of working threads as opposed to blocking I/O</li>
+	                       </ul>
+	                   </ul>
+				</ul>
+			</div>
+		</section>
+        
+        <div class="slide outline"></div>
+
+		<section>
+			<header>Application Server Services</header>
+
+	        <div class="slide"> 
+				<hgroup> 
+					<h1>Overview</h1> 
+				</hgroup> 
+				<ul class="small">
+					<li>Application Server Services</li>
+					<ul>
+						<li>Not a business service!</li>
+						<li>Services to facilitate operation of application server</li>
+						<li>Inter-application server communication (e.g., in a cluster)</li>
+						<li>Common access mechanisms such as to a database</li>
+						<li>Mechanisms to distribute objects among application servers</li>
+					</ul>
+					<li>Three major technologies</li>
+					<ul>
+						<li>JNDI &ndash; Java Naming and Directory Interface</li>
+						<li>JDBC &ndash; Java Database Connectivity</li>
+						<li>2PC &ndash; Two-phase Commit</li>
+						
+					</ul>
+					<li>See also</li>
+					<ul>
+						<li><a href="lecture5.html#/service-definition">Definition of a service from a SOA point of view</a></li>
+					</ul>
+				</ul>
+			</div>
+						
+	        <div class="slide outline"></div>
+			
+			<section>
+				<header>Java Naming and Directory Interface Services</header>
+                
+		        <div class="slide">
+					<hgroup>
+						<h1>Overview</h1>
+					</hgroup>
+                    <ul class="small">
+                    	<li>Objectives</li>
+                    	<ul>
+                    		<li>Allows to access objects by names in various directory systems and their attributes</li>
+                    		<li>Independent of any specific directory service implementation</li>
+                    		<li>Enables to distribute Java objects across various systems in the environment</li>
+                    	</ul>
+                    	<li>Terminology</li>
+                    	<ul>
+                    		<li>Binding &ndash; association between a name and a object</li>
+                    		<li>Context &ndash; a set of bindings</li>
+                    	</ul>
+                        <li>JNDI Provides:</li>
+                        <ul>
+                            <li>a mechanism to bind an object to a name.</li>
+                            <li>a directory look up interface</li>
+                            <li>a pluggable service provider interface (SPI) (any directory service implmentation can be plugged in.</li>
+                        </ul>
+                    </ul>
+				</div>
+			</section>
+                        
+            <div class="slide">
+            	<hgroup>
+            		<h1>JNDI Packages</h1>
+            	</hgroup>
+            	<ul class="small">
+            		<li>Naming Package</li>
+            		<ul>
+            			<li>interfaces to access naming services</li>
+            			<li>Context: looking up, binding/unbinding, renaming, objects</li>
+            		</ul>
+            		<li>Directory Package</li>
+            		<ul>
+            			<li>allows to retrieve attributes of objects, and to search for objects</li>
+            		</ul>
+            		<li>Event Package</li>
+            		<ul>
+            			<li>allows for event notification in naming and directory services</li>
+            			<li>For example, object was added, object changed, etc.</li>
+            		</ul>
+            		<li>Other packages</li>
+            		<ul>
+            			<li>LDAP &ndash; allows to access LDAP services</li>
+            			<li>Service Provider Interface &ndash; allows to develop different naming/directory services</li>
+            		</ul>
+            	</ul>
+            </div>
+            
+            <div class="slide">
+                <hgroup>
+                    <h1>JNDI Architecture</h1>
+                </hgroup>
+                <div id="163CemeUk7U2cG2qMeRHEQ0VAloGmIkRwbdkVH_tYe9o" style="height: 480px" class="h-drawing"></div>
+            </div>           
+            
+            <div class="slide">
+            	<hgroup>
+            		<h1>JNDI Example</h1>
+            	</hgroup>
+            	<ul class="small">
+            		<li>Distribution of objects</li>
+            		<ul>
+            			<li>Clients store and retrieve objects to the central directory</li>
+            			<li>Benefits</li>
+            			<ul>
+            				<li>replication of objects across clients</li>
+            				<li>central configuration of objects' parameters</li>
+            			</ul>
+            		</ul>
+            	</ul>
+            	<div id="1jr8rdcF7wUNkylyT-QgBpeRaUnIfwf0Be2vW2M25URw" style="height: 180px; margin-top: 50px" class="h-drawing"></div>
+            </div> 
+            
+            <div class="slide">
+                <hgroup>
+                    <h1>JNDI Example Implementation</h1>
+                </hgroup>
+                <ul class="x-small">
+                    <li>Binding an object to the WebLogic server's directory</li>
+                    <pre class="brush: java;">
+                        import java.util.Properties;
+                        import javax.naming.InitialContext;
+                        
+                        ...                        
+                        
+                        public static void main(String[] args) {
+                        
+                            Properties p = new Properties();
+                        
+                            // directory provider is running on localhost (weblogic server)
+                            p.put(Context.PROVIDER_URL,"t3://localhost:7001");
+                        
+                            // configure the initial context factory.
+                            // we use WebLogic context factory
+                            p.put(Context.INITIAL_CONTEXT_FACTORY,
+                                "weblogic.jndi.WLInitialContextFactory");
+                            
+                            try {
+                                InitialContext ctx = new InitialContext(p);
+                            
+                                // bind object to name
+                                ctx.rebind("food/fruit/banana", new MyBanana());
+                            } catch (NamingException e) {
+                                e.printStackTrace();
+                            }
+                        }</pre>
+                </ul>
+            </div>
+            
+            <div class="slide">
+                <hgroup>
+                    <h1>Example JNDI Implementation</h1>
+                </hgroup>
+                <ul class="x-small">
+                    <li>Lookup for bound object</li>
+                    <pre class="brush: java; highlight : [15,18]">
+                        import javax.naming.InitialContext;
+                        import java.util.*;
+                        
+                        ...
+                        
+                        Properties p = new Properties();
+                            
+                        // configure the service provider url: "t3://localhost:7001"
+                        p.put(Context.PROVIDER_URL,"t3://localhost:7001");
+                        
+                        // configure the initial context factory.
+                        // we use WebLogic context factory
+                        p.put(Context.INITIAL_CONTEXT_FACTORY,
+                                "weblogic.jndi.WLInitialContextFactory");
+                        InitialContext ctx = new InitialContext(p);
+                        
+                        // lookup the object instance
+                        MyBanana banana = (MyBean)ctx.lookup("food/fruit/banana");
+                        
+                        // invoke the object method
+                        System.out.println(banana.name());
+                    </pre>
+                </ul>
+            </div>
+            
+	        <div class="slide outline"></div>
+			
+			<section>
+				<header>Java Database Connectivity Services</header>
+                
+		        <div class="slide">
+					<hgroup>
+						<h1>Overview</h1>
+					</hgroup>
+                    <ul class="small">
+                        <li>Simple access to any kind of tabular data</li>
+                        <ul>
+                            <li>Easy connection to a data source, as it is a database.</li>
+                            <li>Run queries and update statements to a database.</li>
+                            <li>Retrieve and process results recieved from the query.</li>
+                        </ul>
+                        <li>JDBC components</li>
+                        <ul class="x-small">
+                            <li><b>JDBC API</b> &ndash; provides programmatic access to relation data. Execute statements, 
+                            retrieve results, do changes to the underlying data source.</li>
+                            <li><b>Driver Manager</b> &ndash; defines objects which can connect Java applications to a JDBC driver.</li>
+                            <li><b>JDBC-ODBC Bridge</b> &ndash; software bridge which provides access via ODBC drivers. It 
+                            is required to load the ODBC driver on each client machine.
+                            </li>
+                            <ul>
+                                <li>
+                                    ODBC &ndash; API written in C for accessing DBMS.
+                                </li>
+                            </ul>
+                            <li><b>Test Suite</b> &ndash; use it to determine wheather the JDBC drivers will run the program .</li>
+                        </ul>
+                    </ul>
+				</div>
+			</section>
+            
+            <div class="slide">
+                <hgroup>
+                    <h1>JDBC Architecture</h1>
+                </hgroup>
+                <div id="10PigICKx61cQVyU8G11TahfCUNKz8M9ySmIMErL8S8Q" style="height: 370px" class="h-drawing"></div>
+                <ul class="small"><ul>
+                    <li>Each DBMS requires own driver.</li>
+                    <li>The Driver Manager manages the selection of a driver and creating a connection.</li>
+                </ul></ul>
+            </div>
+            
+            <div class="slide">
+                <hgroup>
+                    <h1>Example JDBC Usage</h1>
+                </hgroup>
+                <ul class="x-small">
+                    <li>JDBC Client</li>
+                    <pre class="brush: java; highlight : [15, 18, 19, 22, 24]">
+                        import java.sql.*;
+                        
+                        public class JDBCClient {
+                        
+                            public static void main(String args[]){
+                            // database url
+                            String db_url = "jdbc:mysql://localhost/database-name";
+                        
+                            // username and password
+                            String username = "myUsername";
+                            String password = "myPassword";
+                        
+                            try {
+                                // Register JDBC driver (MySql driver)
+                                Class.forName("com.mysql.jdbc.Driver");
+                        
+                                // Open a connection
+                                Connection con = DriverManager.getConnection(
+                                db_url, username, password);
+                        
+                                // Create and execute query statement
+                                Statement stmt = con.createStatement();
+                                String sql = "SELECT id, first, last, age FROM Employees";
+                                ResultSet rs = stmt.executeQuery(sql);
+                    </pre>
+                </ul>
+            </div>
+            
+            <div class="slide">
+                <hgroup>
+                    <h1>Example JDBC Usage</h1>
+                </hgroup>
+                <ul class="x-small">
+                    <li>JDBC Client (cont.)</li>
+                    <pre class="brush: java; highlight : []; first-line: 25">
+                            // Loop and extract received data
+                            while (rs.next()) {
+                                int id  = rs.getInt("id");
+                                int age = rs.getInt("age");
+                                String first = rs.getString("first");
+                                String last = rs.getString("last");
+                            }
+                        
+                            // Release the connections
+                            rs.close();
+                            stmt.close();
+                            conn.close();
+                        }catch(SQLException se){
+                        
+                            //Handle errors for JDBC
+                            se.printStackTrace();
+                        }catch(Exception e){
+                        
+                            //Handle errors for Class.forName
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                    </pre>
+                </ul>
+            </div>
+            
+        	<div class="slide outline"></div>
+            
+			<section>
+				<header>Two-phase Commit</header>
+		        <div class="slide">
+					<hgroup>
+						<h1>Overview</h1>
+                    </hgroup>
+                    
+                    <ul class="small">
+                        <li>Coordinating processes in distributed atomic transaction</li>
+                        <ul>
+                            <li>All transaction operations are completed; or any.</li>
+                            <li>Protocol based on logging operations.</li>
+                            <li>Handles different types of failures.</li>
+                            <ul>
+                                <li>process, network node, communication, etc. failures.
+                                </li>
+                            </ul>
+                        </ul>
+                        <li>Terminology</li>
+                        <ul class="x-small">
+                            <li><b>Transaction Manager</b> &ndash; manage transactions, coordinate the decision to commit them or 
+                            roll them back, and coordinate failure recovery.</li>
+                            <li><b>Resource Manager</b> &ndash; certain part of the computer’s shared resources. Examples: DBMS, JMS, etc.</li>
+                            <li><b>Agreement</b> &ndash; agreement message send by a Resource Manager, whether the operation was 
+                            processed successfuly. Yes / No message.
+                            </li>
+                            <li><b>Acknowledgment</b> &ndash; message holding information about the status of the operation execution.
+                            </li>
+                            <li><b>Rollback</b> &ndash; operation which returns the Resource Manager state to its pre-transaction state.
+                            </li>
+                        </ul>
+                    </ul>
+                    
+				</div>
+                                
+                <div class="slide">
+                    <hgroup>
+                        <h1> X/Open &ndash; eXtended Architecture (XA)</h1>
+                    </hgroup>
+                    <ul class="small">
+                        <li>Standard for executing distrubuted transactions</li>
+                        <ul>
+                            <li>Specifies how the coordinator will roll up the transaction against involved different systems.
+                            </li>
+                            <li>Based on the Two-phase Commit protocol.
+                            </li>
+                            <li>Defines interface between the coordinator and each system node.
+                            </li>
+                            <li>Single transaction access to multiple resources (e.g. message queues, databases, etc.)</li>
+                            <li>Defined in the <a class="ext-link ref" title="XA Specification" 
+                            href="http://pubs.opengroup.org/onlinepubs/009680699/toc.pdf">eXtended Architecture Specification</a></li>
+                        </ul>
+                        <li>Wide technological support</li>
+                        <ul>
+                            <li><a class="ext-link ref" title="Java Transaction API" 
+                            href="http://www.oracle.com/technetwork/java/javaee/jta/index.html">Java Transaction API</a> &ndash; 
+                            distributed transactions in a Java environment.</li>
+                            <li>Supported in the Oracle Service Bus through a JMS queue.</li>
+                            <li>MySQL Relational Database Management System (since v5.0)</li>
+                        </ul>
+                    </ul>
+                </div>
+                
+                <div class="slide">
+                    <hgroup>
+                        <h1>Two-phase Commit</h1>
+                    </hgroup>
+                    <ul class="small">
+                        <li>Two-phase commit scenario</li>
+                        <div id="1kfDa725ldvDg0xwr3EryplwU1gZm_hgaNxfRkmCsN0E" style="height: 400px" class="h-drawing"></div>
+                    </ul>
+                </div>
+                <div class="slide">
+                    <hgroup>
+                        <h1>Example XA Usage</h1>
+                    </hgroup>
+                    <ul class="x-small">
+                        <li>Distributed Transaction</li>
+                        <pre class="brush: java; highlight : [18,19,23];">
+                            import java.sql.*;
+                            import javax.sql.*;
+                            import javax.naming.*;
+                            import java.util.*;
+                            
+                            public class Server {
+                            
+                                public static void main(String args[]) {
+                            
+                                	// Initialize context
+                                	Hashtable parms = new Hashtable();
+                                	parms.put(Context.INITIAL_CONTEXT_FACTORY,
+                                        "weblogic.jndi.WLInitialContextFactory");
+                                	parms.put(Context.PROVIDER_URL, "t3://localhost:7001");
+                                	InitialContext ctx = new InitialContext(parms);
+                            
+                                	// Perform a naming service lookup to get UserTransaction object
+                                	javax.transaction.UserTransaction usertx;
+                                	usertx = (UserTransaction) ctx.lookup("java:comp/UserTransaction");
+                            
+                                	try {
+                                    	//Start a new user transaction.
+                                    	usertx.begin();
+                        </pre>
+                    </ul>
+                </div>
+                <div class="slide">
+                    <hgroup>
+                        <h1>Example XA Usage</h1>
+                    </hgroup>
+                    <ul class="x-small">
+                        <li>Distributed Transaction (cont.)</li>
+                        <pre class="brush: java; highlight : [26,31,36,37,41]; first-line: 24">
+                            // Establish a connection with the first database
+                            javax.sql.DataSource data1;
+                            data1=(javax.sql.DataSource)ctx.lookup("java:comp/env/jdbc/DataBase1");
+                            java.sql.Connection conn1 = data1.getConnection();
+                            java.sql.Statement stat1 = conn1.getStatement();
+                            // Establish a connection with the second database
+                            javax.sql.DataSource data2;
+                            data2=(javax.sql.DataSource)ctx.lookup("java:comp/env/jdbc/DataBase2");
+                            java.sql.Connection conn2 = data2.getConnection();
+                            java.sql.Statement stat2 = conn2.getStatement();
+                            
+                            // Execute update query to both databases
+                            stat1.executeUpdate(...);
+                            stat2.executeUpdate(...);
+                            
+                            // Commit the transaction
+                            // Apply the changes to the participating databases
+                            usertx.commit();
+                            
+                            //Release all connections and statements.
+                            stat1.close();
+                            stat2.close();
+                            conn1.close();
+                            conn2.close();
+                        </pre>
+                    </ul>
+                </div>
+                <div class="slide">
+                    <hgroup>
+                        <h1>Example XA Usage</h1>
+                    </hgroup>
+                    <ul class="x-small">
+                        <li>Distributed Transaction (cont.)</li>
+                        <pre class="brush: java; highlight : [54]; first-line: 48">
+                            // Catch any type of exception
+                            catch (java.lang.Exception e) {
+                                try {
+                                    e.printStackTrace();
+                            
+                                    // Rollback the transaction
+                                    utx.rollback();
+                                    System.out.println("The transaction is rolled back.");
+                                } catch(java.lang.Exception ex) {
+                                    e.printStackTrace();
+                                    System.out.println("Exception is caught. Check stack trace.");
+                                }
+                            }
+                        }
+                        </pre>
+                    </ul>
+                </div>                
+			</section>
+			
+		</section>
+		
+    </body>
+</html>
+
+

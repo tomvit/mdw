@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<!--
+    Middleware and Web Services, CTU course slides
+    (cc) 2010-2011 Tomas Vitvar, http://vitvar.com
+    written for Humla, an open source HTML5 presentation environment
+-->
+<html>  
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> 
+        <meta name="course"   content="Middleware and Web Services"/>
+        <meta name="lecture"  content="Lecture 8"/>
+        <meta name="keywords" content="High Availability, Load Balancer, Replication"/>
+           
+        <link type="text/css" rel="stylesheet" href="css/meta.css"></link>   
+        <link type="text/css" rel="stylesheet" href="css/ctu-fit.css"></link>   
+        <link type="text/css" rel="stylesheet" href="humla/lib/core/humla.css"></link>   
+
+        <script type="text/javascript" src="humla/lib/humla.js"></script>
+        <title>High Availability and Performance</title>
+    </head>
+    
+    <body>
+        <footer>
+            <p><b>#META_LECTURE#: #TITLE#</b>,&nbsp;<span class="meta_semester"/>,&nbsp;
+            <span class="meta_twitter"/></p>
+            <p><b>&#8210; #SLIDE_NO# &#8210;</b></p>
+        </footer>
+
+        <div class="slide intro">
+            <hgroup>
+                <h1><span class="meta_course"/></h1>
+                <h2>#META_LECTURE#: #TITLE#</h2>
+            </hgroup>
+            <div class="author">
+                <p class="meta_author"/>
+                <p><span class="meta_email"/> &bull; <span class="meta_twitter"/> &bull; 
+                <span class="meta_web"/></p>
+            </div>
+            <center><div class="meta_logo"></div></center>
+            <div class="org">
+                <p class="meta_org"/>
+                <p><span class="meta_orgfac"/> &bull; <span class="meta_field"/> 
+                &bull; <span class="meta_orgweb"/></p>
+            </div>
+            <div class="etc">
+                <div class="text-info">
+                    Modified: #LAST_MODIFIED#<br/>
+                    Humla v#HUMLA_VERSION#
+                </div>
+                <a href="http://creativecommons.org/licenses/by-sa/3.0/"><div class="license"></div></a>
+                <div class="oppa"></div>
+            </div>
+        </div>
+
+		<div class="slide">
+			<hgroup>
+				<h1>Good Performance</h1>
+			</hgroup>
+			<ul class="small">
+				<li>What influences good performance</li>
+				<ul>
+					<li>Number of users and concurrent connections</li>
+					<li>Number of messages and messages' sizes</li>
+					<li>Number of services</li>
+				</ul>
+				<li>How we can achieve good performance</li>
+				<ul>
+					<li>Infrastructure</li>
+					<ul>
+						<li>Scalability, Cluster Architectures</li>
+					</ul>
+					<li>Performance tuning</li>
+					<ul>
+						<li>Application Server, JVM memory, OS-level tuning, Work managers configuration</li>
+					</ul>
+					<li>Service configuration</li>
+					<ul>
+						<li>Parallel processing, process optimization</li>
+					</ul>
+				</ul>
+			</ul>
+		</div>					
+        
+        <div class="slide outline"></div>
+
+		<section>
+			<header>Infrastructure</header>
+			
+			<div class="slide">
+				<hgroup>
+					<h1>Definitions</h1>
+				</hgroup>
+				<ul class="x-small">
+					<li>Scalability</li>
+					<ul>
+						<li>server scalability</li>
+                        <ul>
+						    <li>ability to react to changes in loads such that users should not feel changes in loads</li>
+						    <li><b>horizontal scaling</b></li>
+						    <ul>
+						    	<li>adding new server instances</li>
+						    </ul>
+						    <li><b>vertical scaling</b></li>
+						    <ul>
+						    	<li>adding new resources (CPU, memory) to a server instance</li>
+						    </ul>
+                        </ul>
+						<li>network traffic</li>
+                        <ul>
+						    <li>bandwidth capacity influences performance too</li>
+						    <li>service should limit the network traffic through caching</li>
+                        </ul>
+					</ul>
+					<li>Availability</li>
+					<ul>
+						<li>probability that a service is operational at a particular time</li>
+						<ul>
+                            <li>e.g., 99.9987% availability &ndash; downtime ~44 seconds/year</li>
+                        </ul>
+					</ul>
+				</ul>
+			</div>
+
+			<div class="slide">
+				<hgroup>
+					<h1>Definitions (Cont.)</h1>
+				</hgroup>
+				<ul class="x-small">
+					<li>High Availability</li>
+					<ul>
+						<li>When a server instance fails, operation of the application can continue</li>
+						<li>Failures should affect application availability and performance as little as possible</li>
+					</ul>
+					<li>Application Failover</li>
+					<ul>
+						<li>When an application component performing a job becomes unavailable, 
+						a copy of the failed object finishes the job.</li>
+						<li>Issues</li>
+						<ul>
+							<li>A copy of the failed object must be available</li>
+							<li>A location and operational status of available objects must be available</li>
+							<li>A processing state must be replicated</li>
+						</ul>
+					</ul>
+					<li>Load Balancing</li>
+					<ul>
+						<li>Distribution of jobs across computing and networking resources</li>
+					</ul>					
+				</ul>
+			</div>
+			
+	
+			<div class="slide">
+				<hgroup>
+					<h1>Performance Metrics</h1>
+				</hgroup>
+				<ul class="x-small">
+					<li>Latency</li>
+					<ul>
+						<li>A client-side metric</li>
+					</ul>
+					<div class="h-drawing" style="height: 300px" id="1rgjQBi7cWEbNSjNYmnhaFTqcoXNi6JbLaGmNajArRUY"></div>
+				</ul>
+				<ul class="xx-small">
+					<ul>
+						<li>CPU intensive service or a bad configuration of a service</li>
+                        <ul>
+						    <li>consider asynchronous processing when CPU intensive</li>
+                        </ul>
+						<li>Writing to a data store</li>
+					</ul>
+				</ul>
+			</div>
+
+			<div class="slide">
+				<hgroup>
+					<h1>Performance Metrics</h1>
+				</hgroup>
+				<ul class="x-small">
+					<li>Queries/Requests per Second (QPS)</li>
+					<ul>
+						<li>A server-side metric</li>
+					</ul>
+					<div class="h-drawing" style="height: 300px" id="1BhopVXexuS5coYLBbcrBi1SiUY3YNcr-K4usFXU6IwM"></div>
+				</ul>
+				<ul class="xx-small">
+					<ul>
+						<li>Caching may improve performance</li>
+                        <ul>
+						    <li>even if data changes often, with high QPS caching improves a lot</li>
+                        </ul>
+					</ul>
+				</ul>
+			</div>
+
+			<div class="slide">
+				<hgroup>
+					<h1>Infrastructure Configuration Example</h1>
+				</hgroup>
+				<ul class="xx-small">
+					<li>Domain configuration</li>
+					<ul>
+						<li>Each server is running on a separated JVM</li>
+						<li>Load Balancers are external, software or hardware</li>
+						<li>A domain can have clustered or unclustered servers</li>
+						<li>A physical machine may run one or more servers</li>
+					</ul>
+				</ul>
+				<div class="h-drawing" style="height: 350px" id="1l-XAD0UrR_T582EqNxmcZbmZhno8L8rTMv8zzEYdVUo"></div>
+			</div>
+			
+			<div class="slide outline"></div>
+			
+			<section>
+			
+				<header>Load Balancers</header>
+				
+				<div class="slide">
+					<hgroup>
+						<h1>Load Balancing</h1>
+					</hgroup>
+					<ul>
+						<li>Distributes load to multiple app instances</li>
+						<ul>
+							<li>App instances run on different machines</li>
+							<li>Load sharing: equal or with preferences</li>
+							<li>Health checks</li>
+						</ul>
+						<li>Topics</li>
+						<ul>
+							<li>DNS-based load balancer</li>
+	                        <ul>
+							    <li>DNS Round Robin</li>
+	                        </ul>
+							<li>NAT-based load balancer</li>
+							<ul>   
+	                            <li>app protocol layer</li>
+								<li>Sticky sessions</li>
+	                        </ul>
+						</ul>
+					</ul>
+				</div>
+	
+	            <div class="slide">
+					<hgroup>
+						<h1>DNS-based Load Balancer</h1>
+					</hgroup>
+					<ul class="x-small">
+						<li>DNS Round Robin</li>
+						<ul>
+							<li>A DNS record has multiple assigned IP addresses</li>
+							<li>DNS system delivers different IP addresses from the list</li>
+							<li>Example DNS A Record:<br/>
+	                        <code>company.com A 147.32.100.71 147.32.100.72 147.32.100.73</code></li>
+						</ul>
+						<li>Advantages</li>
+						<ul>
+							<li>Very simple, easy to implement</li>
+						</ul>
+						<li>Disadvantages</li>
+						<ul>
+							<li>IP address in cache, could take hours to re-assign</li>
+							<li>No information about servers' loads and health</li>
+						</ul>
+						<!--<li>Variation of DNS Round robin</li>
+						<ul>
+							<li>a load balancer assigns domain names</li>
+	                        <ul>
+	                            <li>each domain has a different IP in DNS</li>
+	                        </ul>
+							<li>a health-check is possible, IP re-assignment problem remains</li> 
+						</ul>-->
+					</ul>
+				</div>
+	
+				<div class="slide">
+					<hgroup>
+						<h1>NAT-based Load Balancer</h1>
+					</hgroup>
+					<div class="h-drawing" style="margin-top: 40px; height: 450px" 
+					  id="1QtCAcD0R571rYmeP1hrofveZ3x6F7P61rfUpEswxOl0"></div>
+				</div>
+				
+				<div class="slide">
+					<hgroup>
+						<h1>HTTP Sticky Sessions Example</h1>
+					</hgroup>
+					<div class="h-drawing" id="1hzFB_41gJmkKQHpcSODvengGnHW98UYv1x1xZHt4XMA"
+						style="height: 320px; margin: 20px"></div>
+					<ul class="x-small">
+						<li>How to identify a server that hosts the session state</li>
+						<ul>
+							<li>Passive cookie persistence &ndash; LB uses a cookie from the app server</li>
+							<ul>
+								<li>For example, <code>sessionid!server_id</code></li>
+							</ul>
+							<li>Active cookie persistence &ndash; LB adds its own cookie</li>
+						</ul>
+					</ul>
+				</div>
+				
+				<div class="slide">
+					<hgroup>
+						<h1>Session State Persistence and Replication</h1>
+					</hgroup>
+					<ul class="xx-small">
+						<div class="h-drawing" style="height: 300px" id="1PiI-1CeVkQTYUgOPHyk3wqJufQl9cYQz5vlNziERE74"></div>
+						<li>JDBC-based persistence</li>
+						<ul>
+							<li>Session information is maintained in the database</li>
+						</ul>
+						<li>In-memory replication</li>
+						<ul>
+							<li>A <b>primary server</b> holds a session state that served the request, the <b>secondary server</b>
+							holds the replica of the session state</li>
+							<li>Can be configured in clustered environments</li>
+						</ul>
+						
+					</ul>
+				</div>
+				
+				<div class="slide">
+					<hgroup>
+						<h1>Round-Robin Algorithm with Health Check</h1>
+					</hgroup>
+					<ul class="x-small">
+						<li>Uses</li>
+						<ul>
+							<li>request &ndash; client request with or without a cookie information</li>
+							<li>server list &ndash; a list of servers that can process the request</li>
+							<li>unhealthy treshhold &ndash; a number of negative consecutive health checks 
+							before moving the server to the "unhealthy" state.</li>
+						</ul>
+						<li>Steps</li>
+						<ul>
+							<li><b>if a cookie exist in the request that identifies a server</b></li>
+							<li>always use that server</li>
+
+							<li class="space-before"><b>health check</b></li>
+							<li>LB polls the servers' heatlhcheck endpoints</li>
+							<li>if a number of health checks exceeds the unhealthy threshold</li>
+	                        <ul>
+							    <li>LB removes the server from the server list</li>
+	                        </ul>
+							<li>if a server was unhealthy and a there was a successful healthcheck</li>
+							<ul>
+	                            <li>LB adds the server to the server list</li>
+	                        </ul>							
+						</ul>
+					</ul>
+				</div>				
+
+				<div class="slide">
+					<hgroup>
+						<h1>Types of Load Balancers</h1>
+					</hgroup>
+					<ul>
+						<li>Software</li>
+						<ul>
+							<li>Apache <code>mod_proxy_balancer</code></li>
+							<ul>
+								<li>HTTP Session persistence &ndash; sticky sessions</li>
+							</ul>
+							<li>WebLogic proxy plug-in</li>
+						</ul>
+						<li>Hardware</li>
+						<ul>
+							<li>Ciaco, Avaya, Barracude</li>
+						</ul>
+					</ul>
+				</div>
+								
+			</section>
+			
+			 <div class="slide outline"></div>
+
+			<section>
+				<header>Cluster Architecture</header>
+
+				<div class="slide">
+					<hgroup>
+						<h1>Overview</h1>
+					</hgroup>
+					<ul class="x-small">
+						<li>Cluster</li>
+						<ul>
+							<li>A group of servers that act together to serve client requests</li>
+							<li>Cluster appears to clients as a single application server</li>
+							<li>Servers can run on the same machines or on different machines</li>
+							<li>Cluster's capacity can be increased by adding servers to the cluster</li>
+							<li>Servers in a cluster may have the same copy of objects and they are aware of each other objects</li>
+							<ul>
+								<li>objects: JSPs, servlets, JMS destinations, RMI objects</li>
+							</ul>
+						</ul>
+						<li>Communication in the cluster</li>
+						<ul>
+							<li>peer-to-peer communication using IP sockets</li>
+							<li>IP multicast wihch servers use to broadcast availability of objects and heartbeats</li>
+						</ul>
+						<li>Configurations</li>
+						<ul>
+							<li>Objects deployed to to all servers in a cluster</li>
+							<ul>
+								<li>Cluster-wide JNDI tree allows to look-up clustered objects</li>
+							</ul>
+							<li>Servers in a cluster may get replicated through migration</li>
+						</ul>
+					</ul>
+				</div>
+
+		<!--		<div class="slide">
+					<hgroup>
+						<h1>Cluster-wide JNDI Tree</h1>
+					</hgroup>
+					<ul class="xx-small">
+						<li>Object X is deployed to server A and C</li>
+						<ol>
+							<li>Server A binds object X to its local JNDI tree</li>
+							<li>Server A advertises object X availability using IP multicast</li>
+							<li>Server B and D get replica-aware stub of object X from Server A</li>
+							<li>The steps 1-3 repeat for object X in Server C</li>
+						</ol>
+					</ul>
+					<div class="h-drawing" style="height: 360px" id="1P7NVOu_zOeEdGx_hBzBtDVAEaPEHqizqAKiXaEuHfIo"></div>
+				</div>
+
+				<div class="slide">
+					<hgroup>
+						<h1>Replica-aware Stub</h1>
+					</hgroup>
+					<ul class="xx-small">
+						<li>Replica-aware stub of an object in JNDI Tree</li>
+						<ul>
+							<li>Client-side part of the oject</li>
+							<li>Has load-balancing </li>
+						</ul>
+					</ul>
+				</div> -->
+
+				
+			</section>
+		</section>
+		
+		<div class="slide outline"></div>
+
+		<section>
+			<header>Performance Tuning</header>
+				
+			<div class="slide">
+				<hgroup>
+					<h1>Performance Limiting Factors</h1>
+				</hgroup>
+				<div id="1bo3PC-IopJA4SiyHLVag7g1amyT8W89k2edtirQwz1w" style="height: 450px; margin: 30px" class="h-drawing"></div>
+			</div>			
+
+			<div class="slide">
+				<hgroup>
+					<h1>Tuning &ndash; A Layered Approach</h1>
+				</hgroup>
+				<ul>
+					<li>ESB can be tuned at multiple layers</li>
+					<ul>
+						<li>Service configuration optimization</li>
+						<li>Transport-level tuning</li>
+						<li>Application Server Tuning</li>
+						<li>JVM Memory Tuning</li>
+						<li>OS Tuning</li>
+					</ul>
+					<li>Lower levels are cheaper to tune</li>
+				</ul>
+			</div>			
+
+			<div class="slide">
+				<hgroup>
+					<h1>Memory Allocations</h1>
+				</hgroup>
+				<ul class="x-small">
+					<div id="1VtIYJV3f-sAizvO9ZmI4c0tRvcKWbESZuAaT5s02xzA" style="height: 300px" class="h-drawing"></div>
+					<li>Generations</li>
+					<ul>
+						<li>Young &ndash; objects get allocated in this space initially</li>
+						<li>Old &ndash; objects get promoted to old from young</li>
+						<li>Perm &ndash; space for permanent allocations, e.g. objects describing classes and methods</li>
+					</ul>
+			</div>			
+
+			<div class="slide">
+				<hgroup>
+					<h1>Garbage Collection</h1>
+				</hgroup>
+				<ul class="x-small">
+					<li>Steps to move objects around</li>
+					<ol>
+						<li>Objects are created in young</li>
+						<li>When young is full, the live objects are copied to old, dead are discarded</li>
+						<ul>
+							<li><b>lightweight GC</b></li>
+						</ul>
+						<li>When young is full and no space in old &rarr; the full GC frees the old space</li>
+						<ul>
+							<li><b>Full GC</b> &ndash; nothing is running in JVM, the application stops</li>
+						</ul>
+					</ol>
+					<ul>
+						<li><b>Too frequent full GC has an impact on performance</b></li>
+					</ul>
+					<li>A memory leak or inadequate heap allocation</li>
+					<ul>
+						<li>Old is out of space &rarr; full GC will run often (or continously)</li>
+						<li>High CPU utilization, ESB will not be able to process/respond to requests</li>
+					</ul>
+				</ul>
+			</div>			
+
+			<div class="slide">
+				<hgroup>
+					<h1>JVM Memory Tuning</h1>
+				</hgroup>
+				<ul class="x-small">
+					<li>JVM Memory Parameters</li>
+					<ul class="no-bullet">
+						<li><code>-Xms</code> &ndash; initial java heap size</li>
+						<li><code>-Xmx</code> &ndash; maximum java heap size</li>
+						<li><code>-XX:NewSize</code> &ndash; the initial size of the heap for young generation</li>
+						<li><code>-XX:MaxNewSize</code> &ndash; the maximum size of the heap for young generation</li>
+					</ul>
+					<li>General recommendations</li>
+					<ul class="no-bullet">
+						<li><code>-Xms</code> and <code>-Xmx</code> should be set to the same value</li>
+						<li>(do not allow the heap to grow &rarr; limit the overhead)</li>
+						<li><code>-XX:NewSize</code> and <code>-XX:MaxNewSize</code> should be set to the one half of maximum heap</li>
+					</ul>
+					<ul>
+						<li>Example, 1GB heap size</li>
+						<ul class="no-bullet">
+							<li><code>–Xms1024m –Xmx1024m -XX:NewSize=500m -XX:MaxNewSize=500m</code></li>
+						</ul>
+					</ul>
+				</ul>
+			</div>			
+			
+			<div class="slide">
+				<hgroup>
+					<h1>Asynchronous I/O: Recall</h1>
+				</hgroup>
+				<ul class="small">
+					<li>Connections maintained by the OS, not the Web app</li>
+	                   <ul>                    
+	                       <li>The Web app registers events, OS triggers events when occur</li>
+	                   </ul>
+	               </ul>
+	   			<div id="1kxkFc3Chl4qFXxH_4f2seuNbpBdENMyZWMRUmxd1p28" class="h-drawing" style="height: 220px"></div>
+	               <ul class="small">
+					<li>Characteristics</li>
+	                   <ul>
+	                       <li>Event examples: new connection, read, write, closed</li>
+					    <li>The app may create working threads, but controls the number!</li>
+	                       <ul>
+					        <li>much less number of working threads as opposed to blocking I/O</li>
+	                       </ul>
+	                   </ul>
+				</ul>
+			</div>						
+			
+			<div class="slide">
+				<hgroup>
+					<h1>Work Manager Configuration</h1>
+				</hgroup>
+				<ul class="x-small">
+					<li>Work Manager</li>
+					<ul>
+						<li>Controls the number of thread allocated to processing of requests</li>
+						<li>In WLS is called a dispatch policy</li>
+						<ul>
+							<li>Can be assigned to OSB proxy services</li>
+						</ul>
+						<li>Parameters</li>
+						<ul>
+							<li><b>maximum threads</b> (<code>max</code>) &ndash; maximum number of working threads</li>
+							<li><b>capacity</b> (<code>cap</code>) &ndash; maximum number of connections</li>
+						</ul>
+						<li>maximum connections waiting to be processed: <code>cap - max</code></li>
+						<li>refused connections: when number of connections is <code>> cap</code></li>
+					</ul>
+					<li>Inbound throtling</li>
+					<ul>
+						<li>A dispatch policy applied to a single proxy service</li>
+						<li>Rejected connections will not be processed</li>
+					</ul>
+				</ul>
+			</div>			
+			
+		<!--	<div class="slide">
+				<hgroup>
+					<h1>Troubleshooting</h1>
+				</hgroup>
+				<ul>
+					<li>Monitoring - GC, JVM, JD, …, audoting, logging</li>
+				</ul>
+			</div> -->	
+			
+		</section>
+
+		<div class="slide outline"></div>
+
+		<section>
+			<header>Service Configuration Best Practices</header>
+
+			<div class="slide">
+				<hgroup>
+					<h1>Parallel processing</h1>
+				</hgroup>
+				<ul class="small">
+					<li>Calling many services in sequence</li>
+					<ul>
+						<li>Many service callouts may increase a total processing time</li>
+						<li>Latency of service call is high</li>
+					</ul>
+					<li>Parallel processing</li>
+					<ul>
+						<li>Outbound service calls may run in parallel</li>
+						<li>Reduced total running time of the service</li>
+					</ul>
+					<li>Example</li>
+					<ul>
+						<li>OMS requires stock availability information for every line item</li>
+						<li>Message enrichement &ndash; for every line item in an order get an availability information</li>
+						<li>In OSB, use split-join pattern</li>
+						<li>In BPMN, use OR gateway</li>
+					</ul>
+				</ul>
+			</div>			
+
+			<div class="slide">
+				<hgroup>
+					<h1>XPath</h1>
+				</hgroup>
+				<ul class="x-small">
+					<li>Avoid the use of <code>//</code> in xpath</li>
+					<ul>
+						<li><code>//</code> implies all occurences of a node</li>
+						<li>Entire XML tree has to be scanned for a pattern after <code>//</code></li>
+						<li>Example:</li>
+						<pre class="brush: xml">
+						&lt;customer>
+							&lt;orders>
+								&lt;order>…&lt;/order>
+								&lt;order>…&lt;/order>
+							&lt;/orders>
+						&lt;/customer>
+						</pre>
+						<li><code>//order</code> is worse than <code>/customer/orders/order</code></li>
+					</ul>
+					<li>Use index where there is one occurence of a node</li>
+					<ul>
+						<li><code>customer[1]/orders</code></li>
+					</ul>
+				</ul>
+			</div>			
+				
+			<div class="slide">
+				<hgroup>
+					<h1>Streaming</h1>
+				</hgroup>
+				<ul>
+					<li>Processing of large XML message sizes</li>
+					<ul>
+						<li>Streaming allows to leverage partial parsing capability of XQuery engine</li>
+					</ul>
+				</ul>
+			</div>			
+				
+		</section>			
+			
+			
+
+	</section>
+
+        
+        
+        
+        
+        
+    </body>
