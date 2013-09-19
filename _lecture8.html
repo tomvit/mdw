@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <!--
     Middleware and Web Services, CTU course slides
-    (cc) 2010-2011 Tomas Vitvar, http://vitvar.com
+    (cc) 2010-2012 Tomas Vitvar, http://vitvar.com
     written for Humla, an open source HTML5 presentation environment
 -->
 <html>  
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> 
         <meta name="course"   content="Middleware and Web Services"/>
-        <meta name="lecture"  content="Lecture 8"/>
+        <meta name="lecture"  content="Lecture 7"/>
         <meta name="keywords" content="High Availability, Load Balancer, Replication"/>
            
         <link type="text/css" rel="stylesheet" href="css/meta.css"></link>   
@@ -16,7 +16,7 @@
         <link type="text/css" rel="stylesheet" href="humla/lib/core/humla.css"></link>   
 
         <script type="text/javascript" src="humla/lib/humla.js"></script>
-        <title>High Availability and Performance</title>
+        <title>Enterprise Service Bus</title>
     </head>
     
     <body>
@@ -51,632 +51,858 @@
                 <div class="oppa"></div>
             </div>
         </div>
-
-		<div class="slide">
-			<hgroup>
-				<h1>Good Performance</h1>
-			</hgroup>
-			<ul class="small">
-				<li>What influences good performance</li>
-				<ul>
-					<li>Number of users and concurrent connections</li>
-					<li>Number of messages and messages' sizes</li>
-					<li>Number of services</li>
-				</ul>
-				<li>How we can achieve good performance</li>
-				<ul>
-					<li>Infrastructure</li>
-					<ul>
-						<li>Scalability, Cluster Architectures</li>
-					</ul>
-					<li>Performance tuning</li>
-					<ul>
-						<li>Application Server, JVM memory, OS-level tuning, Work managers configuration</li>
-					</ul>
-					<li>Service configuration</li>
-					<ul>
-						<li>Parallel processing, process optimization</li>
-					</ul>
-				</ul>
-			</ul>
-		</div>					
         
+    	<div class="slide">
+			<hgroup>
+				<h1>Overview</h1>
+			</hgroup>
+			<ul class="x-small">
+				<li>Central intermediary in SOA</li>
+				<ul>
+					<li>Types of services: shared and infrastructure</li>
+					<li>Types of processes: Technical and Business</li>
+				</ul>
+				<li>ESB Application</li>
+				<ul>
+					<li>Application running in some application server</li>
+					<li>Exposes functionality via Web service interface</li>
+					<li>Allows to communicate with various messaging protocols</li>
+				</ul>
+				<li>Design Patterns</li>
+				<ul>
+					<li>Technical-level interoperability &ndash; message broker</li>
+					<li>Location transparency</li>
+					<li>Dynamic routing</li>
+					<li>Data transformations &ndash; mediator</li>					
+					<li>Service orchestrations &ndash; BPMN, BPEL</li>
+					<li>Message enrichment</li>
+					<li>Communication</li>
+				</ul>
+            </ul>
+        </div>
+
+    	<div class="slide">
+			<hgroup>
+				<h1>ESB Vendors</h1>
+			</hgroup>
+			<ul class="x-small">
+				<li>Oracle</li>
+				<ul>
+					<li>Oracle Service Bus (OSB)</li>
+					<li>Oracle SOA Suite</li>
+					<li>Oracle Enterprise Gateway (OEG)</li>
+				</ul>
+				<li>IBM</li>
+				<ul>
+					<li>IBM WebSphere</li>
+				</ul>
+				<li>SAP</li>
+				<ul>
+					<li>SAP NetWeaver</li>
+				</ul>
+				<li>Microsoft</li>
+				<ul>
+					<li>.NET Framework</li>
+					<li>BizTalk server</li>
+				</ul>
+				<li>Opensource</li>
+				<ul>
+					<li>JBoss</li>
+					<li>Apache ServiceMix</li>
+					<li>WSMX &ndash; Semantic Web Service Execution Environment</li>
+				</ul>
+            </ul>
+        </div>
+
         <div class="slide outline"></div>
+        
+        <section>
+        	<header>
+				Architecture        		
+        	</header>
+        	
+            <div class="slide">
+                <hgroup>
+    				<h1>Enterprise Service Bus</h1>
+    			</hgroup>
+                <ul class="small">
+                    <li>Integration organized</li>
+                    <ul>
+                        <li>Enterprise Service Bus, to be used wisely</li>
+                    </ul>
+                </ul>
+                <div class="h-drawing" style="height: 400px" id="1-uHnuWoYea9KZgEBRkGmdpbKDT5THls9dn56XolZ1Lg"
+                    alt="Enterprise Service Bus"></div>
+            </div>
 
-		<section>
-			<header>Infrastructure</header>
-			
-			<div class="slide">
+            <div class="slide">
+                <hgroup>
+    				<h1>Service Types</h1>
+    			</hgroup>
+    			<ul class="x-small">
+    				<li>ESB services</li>
+    				<ul>
+    					<li>shared services &ndash; created for particular domain</li>
+    					<li>infrastructure services &ndash; support integration and interoperability</li>
+    				</ul>
+    			</ul>
+    			<div class="h-drawing" id="1HicnsnDos6MtMtIB75XP4odOnSpWs_qSj4TZJnBtWhI" style="height: 390px"></div>
+            </div>            
+
+        	<div class="slide">
 				<hgroup>
-					<h1>Definitions</h1>
-				</hgroup>
-				<ul class="x-small">
-					<li>Scalability</li>
-					<ul>
-						<li>server scalability</li>
-                        <ul>
-						    <li>ability to react to changes in loads such that users should not feel changes in loads</li>
-						    <li><b>horizontal scaling</b></li>
-						    <ul>
-						    	<li>adding new server instances</li>
-						    </ul>
-						    <li><b>vertical scaling</b></li>
-						    <ul>
-						    	<li>adding new resources (CPU, memory) to a server instance</li>
-						    </ul>
-                        </ul>
-						<li>network traffic</li>
-                        <ul>
-						    <li>bandwidth capacity influences performance too</li>
-						    <li>service should limit the network traffic through caching</li>
-                        </ul>
-					</ul>
-					<li>Availability</li>
-					<ul>
-						<li>probability that a service is operational at a particular time</li>
-						<ul>
-                            <li>e.g., 99.9987% availability &ndash; downtime ~44 seconds/year</li>
-                        </ul>
-					</ul>
-				</ul>
-			</div>
-
-			<div class="slide">
-				<hgroup>
-					<h1>Definitions (Cont.)</h1>
-				</hgroup>
-				<ul class="x-small">
-					<li>High Availability</li>
-					<ul>
-						<li>When a server instance fails, operation of the application can continue</li>
-						<li>Failures should affect application availability and performance as little as possible</li>
-					</ul>
-					<li>Application Failover</li>
-					<ul>
-						<li>When an application component performing a job becomes unavailable, 
-						a copy of the failed object finishes the job.</li>
-						<li>Issues</li>
-						<ul>
-							<li>A copy of the failed object must be available</li>
-							<li>A location and operational status of available objects must be available</li>
-							<li>A processing state must be replicated</li>
-						</ul>
-					</ul>
-					<li>Load Balancing</li>
-					<ul>
-						<li>Distribution of jobs across computing and networking resources</li>
-					</ul>					
-				</ul>
-			</div>
-			
-	
-			<div class="slide">
-				<hgroup>
-					<h1>Performance Metrics</h1>
-				</hgroup>
-				<ul class="x-small">
-					<li>Latency</li>
-					<ul>
-						<li>A client-side metric</li>
-					</ul>
-					<div class="h-drawing" style="height: 300px" id="1rgjQBi7cWEbNSjNYmnhaFTqcoXNi6JbLaGmNajArRUY"></div>
-				</ul>
-				<ul class="xx-small">
-					<ul>
-						<li>CPU intensive service or a bad configuration of a service</li>
-                        <ul>
-						    <li>consider asynchronous processing when CPU intensive</li>
-                        </ul>
-						<li>Writing to a data store</li>
-					</ul>
-				</ul>
-			</div>
-
-			<div class="slide">
-				<hgroup>
-					<h1>Performance Metrics</h1>
-				</hgroup>
-				<ul class="x-small">
-					<li>Queries/Requests per Second (QPS)</li>
-					<ul>
-						<li>A server-side metric</li>
-					</ul>
-					<div class="h-drawing" style="height: 300px" id="1BhopVXexuS5coYLBbcrBi1SiUY3YNcr-K4usFXU6IwM"></div>
-				</ul>
-				<ul class="xx-small">
-					<ul>
-						<li>Caching may improve performance</li>
-                        <ul>
-						    <li>even if data changes often, with high QPS caching improves a lot</li>
-                        </ul>
-					</ul>
-				</ul>
-			</div>
-
-			<div class="slide">
-				<hgroup>
-					<h1>Infrastructure Configuration Example</h1>
-				</hgroup>
-				<ul class="xx-small">
-					<li>Domain configuration</li>
-					<ul>
-						<li>Each server is running on a separated JVM</li>
-						<li>Load Balancers are external, software or hardware</li>
-						<li>A domain can have clustered or unclustered servers</li>
-						<li>A physical machine may run one or more servers</li>
-					</ul>
-				</ul>
-				<div class="h-drawing" style="height: 350px" id="1l-XAD0UrR_T582EqNxmcZbmZhno8L8rTMv8zzEYdVUo"></div>
-			</div>
-			
-			<div class="slide outline"></div>
-			
-			<section>
-			
-				<header>Load Balancers</header>
-				
-				<div class="slide">
-					<hgroup>
-						<h1>Load Balancing</h1>
-					</hgroup>
-					<ul>
-						<li>Distributes load to multiple app instances</li>
-						<ul>
-							<li>App instances run on different machines</li>
-							<li>Load sharing: equal or with preferences</li>
-							<li>Health checks</li>
-						</ul>
-						<li>Topics</li>
-						<ul>
-							<li>DNS-based load balancer</li>
-	                        <ul>
-							    <li>DNS Round Robin</li>
-	                        </ul>
-							<li>NAT-based load balancer</li>
-							<ul>   
-	                            <li>app protocol layer</li>
-								<li>Sticky sessions</li>
-	                        </ul>
-						</ul>
-					</ul>
-				</div>
-	
-	            <div class="slide">
-					<hgroup>
-						<h1>DNS-based Load Balancer</h1>
-					</hgroup>
-					<ul class="x-small">
-						<li>DNS Round Robin</li>
-						<ul>
-							<li>A DNS record has multiple assigned IP addresses</li>
-							<li>DNS system delivers different IP addresses from the list</li>
-							<li>Example DNS A Record:<br/>
-	                        <code>company.com A 147.32.100.71 147.32.100.72 147.32.100.73</code></li>
-						</ul>
-						<li>Advantages</li>
-						<ul>
-							<li>Very simple, easy to implement</li>
-						</ul>
-						<li>Disadvantages</li>
-						<ul>
-							<li>IP address in cache, could take hours to re-assign</li>
-							<li>No information about servers' loads and health</li>
-						</ul>
-						<!--<li>Variation of DNS Round robin</li>
-						<ul>
-							<li>a load balancer assigns domain names</li>
-	                        <ul>
-	                            <li>each domain has a different IP in DNS</li>
-	                        </ul>
-							<li>a health-check is possible, IP re-assignment problem remains</li> 
-						</ul>-->
-					</ul>
-				</div>
-	
-				<div class="slide">
-					<hgroup>
-						<h1>NAT-based Load Balancer</h1>
-					</hgroup>
-					<div class="h-drawing" style="margin-top: 40px; height: 450px" 
-					  id="1QtCAcD0R571rYmeP1hrofveZ3x6F7P61rfUpEswxOl0"></div>
-				</div>
-				
-				<div class="slide">
-					<hgroup>
-						<h1>HTTP Sticky Sessions Example</h1>
-					</hgroup>
-					<div class="h-drawing" id="1hzFB_41gJmkKQHpcSODvengGnHW98UYv1x1xZHt4XMA"
-						style="height: 320px; margin: 20px"></div>
-					<ul class="x-small">
-						<li>How to identify a server that hosts the session state</li>
-						<ul>
-							<li>Passive cookie persistence &ndash; LB uses a cookie from the app server</li>
-							<ul>
-								<li>For example, <code>sessionid!server_id</code></li>
-							</ul>
-							<li>Active cookie persistence &ndash; LB adds its own cookie</li>
-						</ul>
-					</ul>
-				</div>
-				
-				<div class="slide">
-					<hgroup>
-						<h1>Session State Persistence and Replication</h1>
-					</hgroup>
-					<ul class="xx-small">
-						<div class="h-drawing" style="height: 300px" id="1PiI-1CeVkQTYUgOPHyk3wqJufQl9cYQz5vlNziERE74"></div>
-						<li>JDBC-based persistence</li>
-						<ul>
-							<li>Session information is maintained in the database</li>
-						</ul>
-						<li>In-memory replication</li>
-						<ul>
-							<li>A <b>primary server</b> holds a session state that served the request, the <b>secondary server</b>
-							holds the replica of the session state</li>
-							<li>Can be configured in clustered environments</li>
-						</ul>
-						
-					</ul>
-				</div>
-				
-				<div class="slide">
-					<hgroup>
-						<h1>Round-Robin Algorithm with Health Check</h1>
-					</hgroup>
-					<ul class="x-small">
-						<li>Uses</li>
-						<ul>
-							<li>request &ndash; client request with or without a cookie information</li>
-							<li>server list &ndash; a list of servers that can process the request</li>
-							<li>unhealthy treshhold &ndash; a number of negative consecutive health checks 
-							before moving the server to the "unhealthy" state.</li>
-						</ul>
-						<li>Steps</li>
-						<ul>
-							<li><b>if a cookie exist in the request that identifies a server</b></li>
-							<li>always use that server</li>
-
-							<li class="space-before"><b>health check</b></li>
-							<li>LB polls the servers' heatlhcheck endpoints</li>
-							<li>if a number of health checks exceeds the unhealthy threshold</li>
-	                        <ul>
-							    <li>LB removes the server from the server list</li>
-	                        </ul>
-							<li>if a server was unhealthy and a there was a successful healthcheck</li>
-							<ul>
-	                            <li>LB adds the server to the server list</li>
-	                        </ul>							
-						</ul>
-					</ul>
-				</div>				
-
-				<div class="slide">
-					<hgroup>
-						<h1>Types of Load Balancers</h1>
-					</hgroup>
-					<ul>
-						<li>Software</li>
-						<ul>
-							<li>Apache <code>mod_proxy_balancer</code></li>
-							<ul>
-								<li>HTTP Session persistence &ndash; sticky sessions</li>
-							</ul>
-							<li>WebLogic proxy plug-in</li>
-						</ul>
-						<li>Hardware</li>
-						<ul>
-							<li>Ciaco, Avaya, Barracude</li>
-						</ul>
-					</ul>
-				</div>
-								
-			</section>
-			
-			 <div class="slide outline"></div>
-
-			<section>
-				<header>Cluster Architecture</header>
-
-				<div class="slide">
-					<hgroup>
-						<h1>Overview</h1>
-					</hgroup>
-					<ul class="x-small">
-						<li>Cluster</li>
-						<ul>
-							<li>A group of servers that act together to serve client requests</li>
-							<li>Cluster appears to clients as a single application server</li>
-							<li>Servers can run on the same machines or on different machines</li>
-							<li>Cluster's capacity can be increased by adding servers to the cluster</li>
-							<li>Servers in a cluster may have the same copy of objects and they are aware of each other objects</li>
-							<ul>
-								<li>objects: JSPs, servlets, JMS destinations, RMI objects</li>
-							</ul>
-						</ul>
-						<li>Communication in the cluster</li>
-						<ul>
-							<li>peer-to-peer communication using IP sockets</li>
-							<li>IP multicast wihch servers use to broadcast availability of objects and heartbeats</li>
-						</ul>
-						<li>Configurations</li>
-						<ul>
-							<li>Objects deployed to to all servers in a cluster</li>
-							<ul>
-								<li>Cluster-wide JNDI tree allows to look-up clustered objects</li>
-							</ul>
-							<li>Servers in a cluster may get replicated through migration</li>
-						</ul>
-					</ul>
-				</div>
-
-		<!--		<div class="slide">
-					<hgroup>
-						<h1>Cluster-wide JNDI Tree</h1>
-					</hgroup>
-					<ul class="xx-small">
-						<li>Object X is deployed to server A and C</li>
-						<ol>
-							<li>Server A binds object X to its local JNDI tree</li>
-							<li>Server A advertises object X availability using IP multicast</li>
-							<li>Server B and D get replica-aware stub of object X from Server A</li>
-							<li>The steps 1-3 repeat for object X in Server C</li>
-						</ol>
-					</ul>
-					<div class="h-drawing" style="height: 360px" id="1P7NVOu_zOeEdGx_hBzBtDVAEaPEHqizqAKiXaEuHfIo"></div>
-				</div>
-
-				<div class="slide">
-					<hgroup>
-						<h1>Replica-aware Stub</h1>
-					</hgroup>
-					<ul class="xx-small">
-						<li>Replica-aware stub of an object in JNDI Tree</li>
-						<ul>
-							<li>Client-side part of the oject</li>
-							<li>Has load-balancing </li>
-						</ul>
-					</ul>
-				</div> -->
-
-				
-			</section>
-		</section>
-		
-		<div class="slide outline"></div>
-
-		<section>
-			<header>Performance Tuning</header>
-				
-			<div class="slide">
-				<hgroup>
-					<h1>Performance Limiting Factors</h1>
-				</hgroup>
-				<div id="1bo3PC-IopJA4SiyHLVag7g1amyT8W89k2edtirQwz1w" style="height: 450px; margin: 30px" class="h-drawing"></div>
-			</div>			
-
-			<div class="slide">
-				<hgroup>
-					<h1>Tuning &ndash; A Layered Approach</h1>
-				</hgroup>
-				<ul>
-					<li>ESB can be tuned at multiple layers</li>
-					<ul>
-						<li>Service configuration optimization</li>
-						<li>Transport-level tuning</li>
-						<li>Application Server Tuning</li>
-						<li>JVM Memory Tuning</li>
-						<li>OS Tuning</li>
-					</ul>
-					<li>Lower levels are cheaper to tune</li>
-				</ul>
-			</div>			
-
-			<div class="slide">
-				<hgroup>
-					<h1>Memory Allocations</h1>
-				</hgroup>
-				<ul class="x-small">
-					<div id="1VtIYJV3f-sAizvO9ZmI4c0tRvcKWbESZuAaT5s02xzA" style="height: 300px" class="h-drawing"></div>
-					<li>Generations</li>
-					<ul>
-						<li>Young &ndash; objects get allocated in this space initially</li>
-						<li>Old &ndash; objects get promoted to old from young</li>
-						<li>Perm &ndash; space for permanent allocations, e.g. objects describing classes and methods</li>
-					</ul>
-			</div>			
-
-			<div class="slide">
-				<hgroup>
-					<h1>Garbage Collection</h1>
-				</hgroup>
-				<ul class="x-small">
-					<li>Steps to move objects around</li>
-					<ol>
-						<li>Objects are created in young</li>
-						<li>When young is full, the live objects are copied to old, dead are discarded</li>
-						<ul>
-							<li><b>lightweight GC</b></li>
-						</ul>
-						<li>When young is full and no space in old &rarr; the full GC frees the old space</li>
-						<ul>
-							<li><b>Full GC</b> &ndash; nothing is running in JVM, the application stops</li>
-						</ul>
-					</ol>
-					<ul>
-						<li><b>Too frequent full GC has an impact on performance</b></li>
-					</ul>
-					<li>A memory leak or inadequate heap allocation</li>
-					<ul>
-						<li>Old is out of space &rarr; full GC will run often (or continously)</li>
-						<li>High CPU utilization, ESB will not be able to process/respond to requests</li>
-					</ul>
-				</ul>
-			</div>			
-
-			<div class="slide">
-				<hgroup>
-					<h1>JVM Memory Tuning</h1>
-				</hgroup>
-				<ul class="x-small">
-					<li>JVM Memory Parameters</li>
-					<ul class="no-bullet">
-						<li><code>-Xms</code> &ndash; initial java heap size</li>
-						<li><code>-Xmx</code> &ndash; maximum java heap size</li>
-						<li><code>-XX:NewSize</code> &ndash; the initial size of the heap for young generation</li>
-						<li><code>-XX:MaxNewSize</code> &ndash; the maximum size of the heap for young generation</li>
-					</ul>
-					<li>General recommendations</li>
-					<ul class="no-bullet">
-						<li><code>-Xms</code> and <code>-Xmx</code> should be set to the same value</li>
-						<li>(do not allow the heap to grow &rarr; limit the overhead)</li>
-						<li><code>-XX:NewSize</code> and <code>-XX:MaxNewSize</code> should be set to the one half of maximum heap</li>
-					</ul>
-					<ul>
-						<li>Example, 1GB heap size</li>
-						<ul class="no-bullet">
-							<li><code>–Xms1024m –Xmx1024m -XX:NewSize=500m -XX:MaxNewSize=500m</code></li>
-						</ul>
-					</ul>
-				</ul>
-			</div>			
-			
-			<div class="slide">
-				<hgroup>
-					<h1>Asynchronous I/O: Recall</h1>
+					<h1>Connectivity Services</h1>
 				</hgroup>
 				<ul class="small">
-					<li>Connections maintained by the OS, not the Web app</li>
-	                   <ul>                    
-	                       <li>The Web app registers events, OS triggers events when occur</li>
-	                   </ul>
-	               </ul>
-	   			<div id="1kxkFc3Chl4qFXxH_4f2seuNbpBdENMyZWMRUmxd1p28" class="h-drawing" style="height: 220px"></div>
-	               <ul class="small">
-					<li>Characteristics</li>
-	                   <ul>
-	                       <li>Event examples: new connection, read, write, closed</li>
-					    <li>The app may create working threads, but controls the number!</li>
-	                       <ul>
-					        <li>much less number of working threads as opposed to blocking I/O</li>
-	                       </ul>
-	                   </ul>
-				</ul>
-			</div>						
-			
-			<div class="slide">
-				<hgroup>
-					<h1>Work Manager Configuration</h1>
-				</hgroup>
-				<ul class="x-small">
-					<li>Work Manager</li>
+					<li>Purpose</li>
 					<ul>
-						<li>Controls the number of thread allocated to processing of requests</li>
-						<li>In WLS is called a dispatch policy</li>
-						<ul>
-							<li>Can be assigned to OSB proxy services</li>
-						</ul>
-						<li>Parameters</li>
-						<ul>
-							<li><b>maximum threads</b> (<code>max</code>) &ndash; maximum number of working threads</li>
-							<li><b>capacity</b> (<code>cap</code>) &ndash; maximum number of connections</li>
-						</ul>
-						<li>maximum connections waiting to be processed: <code>cap - max</code></li>
-						<li>refused connections: when number of connections is <code>> cap</code></li>
-					</ul>
-					<li>Inbound throtling</li>
-					<ul>
-						<li>A dispatch policy applied to a single proxy service</li>
-						<li>Rejected connections will not be processed</li>
-					</ul>
-				</ul>
-			</div>			
-			
-		<!--	<div class="slide">
-				<hgroup>
-					<h1>Troubleshooting</h1>
-				</hgroup>
-				<ul>
-					<li>Monitoring - GC, JVM, JD, …, audoting, logging</li>
-				</ul>
-			</div> -->	
-			
-		</section>
-
-		<div class="slide outline"></div>
-
-		<section>
-			<header>Service Configuration Best Practices</header>
-
-			<div class="slide">
-				<hgroup>
-					<h1>Parallel processing</h1>
-				</hgroup>
-				<ul class="small">
-					<li>Calling many services in sequence</li>
-					<ul>
-						<li>Many service callouts may increase a total processing time</li>
-						<li>Latency of service call is high</li>
-					</ul>
-					<li>Parallel processing</li>
-					<ul>
-						<li>Outbound service calls may run in parallel</li>
-						<li>Reduced total running time of the service</li>
+						<li>Adapters for various back-end technologies</li>
+						<li>Connectivity to legacy applications</li>
+						<li>No business logic, Usually stateless, ESB internal</li>
 					</ul>
 					<li>Example</li>
 					<ul>
-						<li>OMS requires stock availability information for every line item</li>
-						<li>Message enrichement &ndash; for every line item in an order get an availability information</li>
-						<li>In OSB, use split-join pattern</li>
-						<li>In BPMN, use OR gateway</li>
+						<li>Database adapters</li>
+						<ul>
+							<li>SQL statement:</li>
+							<pre class="brush: plain">
+							SELECT ID, NAME FROM CUSTOMERS C
+							WHERE  C.REVENUE > :revenue</pre>
+							<li class="no-bullet"><code>Revenue</code> &ndash; input parameter</code></li>
+							<li class="no-bullet"><code>ID, NAME</code> &ndash; structure of output message</li>
+							<li>Expose the SQL statement as a connectivity service</li>
+						</ul>
+						<li>Example implementation: OSB Proxy service, JCA adapters</li>
 					</ul>
-				</ul>
-			</div>			
+            	</ul>
+        	</div>   
 
-			<div class="slide">
+        	<div class="slide">
 				<hgroup>
-					<h1>XPath</h1>
+					<h1>JCA Adapters</h1>
+				</hgroup>
+				<ul class="small">
+					<li>JCA &ndash; Java EE Connector Architecture</li>
+					<ul>
+						<li>Standard Java interface to connect application servers and back-end applications</li>
+						<li>Standardized in <span class="h-references" id="jsr-112">JSR 112</span></li>
+					</ul>
+					<li>Major Features (Contracts)</li>
+					<ul>
+						<li>Connection management</li>
+						<ul>
+							<li>application server can pool connections to back-end applications</li>
+							<li>application server provides connections to clients from connection pools</li>
+						</ul>
+						<li>Transaction management</li>
+						<ul>
+							<li>application server can use transaction manager for managing transactions across 
+								multiple resource managers.</li>
+						</ul>
+					</ul>
+            	</ul>
+        	</div>   
+
+        	<div class="slide">
+				<hgroup>
+					<h1>Entity Services</h1>
+				</hgroup>
+				<ul class="xx-small">
+					<li>Purpose</li>
+					<ul>
+						<li>Expose services on top of one or more entities in a database</li>
+						<li>Do not add any specific logic to entities' operations</li>
+						<ul>
+							<li>Provide CRUD operations only</li>
+						</ul>
+						<li>May be used to facilitate a Common Data Model</li>
+						<ul>
+							<li>Business entities &ndash; entities of CDM</li>
+							<li>Business objects &ndash; instances of business entities</li>
+							<li>Business Entity Service &ndash; manipulations for business entities</li>
+						</ul>
+						<li>No business logic, usually stateless, ESB internal</li>
+					</ul>
+					<li>Example</li>
+					<ul>
+						<li>Two entities in a database: <code>CUSTOMERS</code>, <code>ADDRESS</code> (1:N)</li>
+						<li>Business entity <code>CUSTOMER</code></li>
+						<pre class="brush: xml; class-name: 'tight'">
+						&lt;customer>
+							&lt;name>Company.cz&lt;/name>
+							&lt;invoice-address>
+								…
+							&lt;/invoice-address>
+							&lt;main-address>
+								…
+							&lt;/main-address>
+						&lt;/customer></pre>
+						<li>Operarions: read, write</li>
+					</ul>
+            	</ul>
+        	</div>        	  
+        	
+        	<div class="slide">
+				<hgroup>
+					<h1>Business Services</h1>
 				</hgroup>
 				<ul class="x-small">
-					<li>Avoid the use of <code>//</code> in xpath</li>
+					<li>Purpose</li>
 					<ul>
-						<li><code>//</code> implies all occurences of a node</li>
-						<li>Entire XML tree has to be scanned for a pattern after <code>//</code></li>
-						<li>Example:</li>
-						<pre class="brush: xml">
-						&lt;customer>
-							&lt;orders>
-								&lt;order>…&lt;/order>
-								&lt;order>…&lt;/order>
-							&lt;/orders>
-						&lt;/customer>
-						</pre>
-						<li><code>//order</code> is worse than <code>/customer/orders/order</code></li>
+						<li>Business/integration logic, can be stateful or stateless</li>
+						<li>Atomic business activities</li>
+						<ul>
+							<li>direct mapping to back-end application services</li>
+						</ul>
+						<li>Can be "imported" in ESB to be used in a business process</li>
+						<li>Can be exposed by ESB and add values in terms of business/integration logic or technical processing</li>
 					</ul>
-					<li>Use index where there is one occurence of a node</li>
+					<li>Example</li>
 					<ul>
-						<li><code>customer[1]/orders</code></li>
+						<li>Data transformation</li>
+						<ul>
+							<li>Back-end application service exposed in CDM language</li>
+						</ul>
+						<li>Message enrichment</li>
+						<ul>
+							<li>Adds information to content from other sources</li>
+						</ul>
+						<li>Monitoring</li>
+						<ul>
+							<li>Every invocation of the service logged</li>
+							<li>Monitoring of business metrics</li>
+							<ul>
+								<li>Number of orders, total revenue per customer</li>
+							</ul>
+						</ul>
 					</ul>
-				</ul>
-			</div>			
+            	</ul>
+        	</div>        	    
+
+        	<div class="slide">
+				<hgroup>
+					<h1>Business Processes</h1>
+				</hgroup>
+				<ul class="x-small">
+					<li>Purpose</li>
+					<ul>
+						<li>Business/integration logic, usually stateful</li>					
+						<li>Complex processes involving invocations of multiple business services at various back-end applications</li>
+						<li>Handles transformations from various data formats of back-end applications</li>
+						<li>Handles <b>key-mapping</b></li>
+						<ul>
+							<li>Business entities exist in multiple systems</li>
+							<li>Each back-end application maintains its own ID for corresponding business objects</li>
+						</ul>
+						<li>Usually implemented in a process language such as BPMN or BPEL</li>
+						<li>OSB uses its own orchestration language which translates to XQuery</li>
+					</ul>
+					<li>Example</li>
+					<ul>
+						<li>Order processing</li>
+						<ul>
+							<li>Get customer information from the CRM system</li>
+							<li>Add line items to OMS</li>
+							<li>Close order</li>
+						</ul>
+					</ul>
+            	</ul>
+        	</div>        	            	    
+        	
+        	<div class="slide">
+				<hgroup>
+					<h1>Presentation Services</h1>
+				</hgroup>
+				<ul class="small">
+					<li>Purpose</li>
+					<ul>
+						<li>Shared presentation logic</li>
+						<li>Typical for client-server Web applications</li>
+					</ul>
+					<li>Example technologies</li>
+					<ul>
+						<li>JSPs, Servlets</li>
+						<li>Shared portlets</li>
+						<ul>
+							<li>Reusable components for UI development</li>
+							<li>Dashboards</li>
+						</ul>
+					</ul>
+            	</ul>
+        	</div>        	        
+        	
+        </section>
+
+        <div class="slide outline"></div>
+
+        <section>
+        	<header>
+				Design Patterns        		
+        	</header>
+        	
+    		<div class="slide">
+				<hgroup>
+					<h1>Overview</h1>
+				</hgroup>
+				<ul class="x-small">
+					<li>Applied in implementation of business services and processes</li>
+					<ul>
+						<li>Usually a combination of more patterns</li>
+					</ul>
+					<li>Technical patterns</li>
+					<ul>				
+						<li>Deals with technical aspects of service communication</li>
+						<li>Message broker &ndash; technical-level interoperability</li>
+						<li>Location transparency</li>
+					</ul>
+					<li>Business patterns</li>
+					<ul>								
+						<li>Deals with business aspects (message content) of service communication</li>
+						<li>Dynamic routing</li>
+						<li>Data transformations &ndash; mediator</li>					
+						<li>Service orchestrations &ndash; BPMN, BPEL</li>
+						<li>Message enrichment</li>
+					</ul>
+					<li>Communication patterns</li>
+					<ul>
+						<li>Client-server communication, special cases of technical patterns</li>
+						<li>Throtling</li>
+						<li>Asynchronous communication</li>
+	            	</ul>
+            	</ul>
+        	</div>    
+
+	        <div class="slide outline"></div>
+	
+	        <section>
+	        	<header>
+					Technical and business patterns        		
+	        	</header>
+	        	
+	    		<div class="slide">
+					<hgroup>
+						<h1>Message Broker</h1>
+					</hgroup>
+					<ul class="small">
+						<li>Message broker</li>
+						<ul>
+							<li>ESB can mix and match transports both standard and proprietary</li>
+						</ul>
+					</ul>
+					<div class="h-drawing" id="1Ga9iANbaAAB-eEuCxZBPbTKX8pDQlvttS5-dI19vJRI" style="height: 350px"></div>
+	        	</div>        	        
+	        	
+	    		<div class="slide">
+					<hgroup>
+						<h1>Location Transparency</h1>
+					</hgroup>
+					<ul class="small">
+						<li>Location transparency</li>
+						<ul>
+							<li>ESB can hide changes in location of services</li>
+							<li>Such changes will not affect clients</li>
+							<li>Can also be used for load balancing for multiple service instances</li>
+						</ul>
+					</ul>
+					<div class="h-drawing" id="1yyj2VBgauYs_zVWoSR1R2Hugf8pLG-HmDq8-2bF-vNI" style="height: 200px"></div>
+	        	</div>       
+	        	
+	    		<div class="slide">
+					<hgroup>
+						<h1>Dynamic Routing</h1>
+					</hgroup>
+					<ul class="small">
+						<li>Dynamic routing</li>
+						<ul>
+							<li>ESB exposes a service that routes to various back-end services based on message contents.</li>
+						</ul>
+					</ul>
+	            	<div class="h-drawing" id="1dqQSDoXzk9KOscw7hA1N1aAexj5iqWbjn49e782DUMk" style="height: 180px"></div>
+	        	</div>        	        	        	
+	        		        	
+	    		<div class="slide">
+					<hgroup>
+						<h1>Message Enrichment</h1>
+					</hgroup>
+					<ul class="small">
+						<li>Message enrichmenet</li>
+						<ul>
+							<li>Enriches a message before invoking back-end application service.</li>
+						</ul>
+					</ul>
+					<div id="1675sNfJX75EcwMZXTSACUGKEhPf3QnTjXRPtEABXwm0" class="h-drawing" style="height: 250px"></div>
+					
+	        	</div>        	
+
+				 <div class="slide">
+                 <hgroup>
+                 	<h1>Data Transformation</h1>
+                 </hgroup>
+                    <ul class="small">
+                        <li>Data transformation phases:</li>
+                        <ul>
+                        	<li>Definition of mapping and execution of mappings</li>
+                        </ul>
+                        <li>Definition of mappings (design-time)</li>
+                        <ul>
+                            <li>A mapping associates one data structure to another data structure
+                                and defines a conversion between them.</li>
+                            <li>Mapping languages</li>
+                            <ul>
+                                <li>graphical for design that translates to XSLT, XQuery</li>
+                                <li>Sometimes implemented in 3rd gen. languages (e.g., Java)</li>
+                            </ul>
+                        </ul>
+                        <li>Execution of mappings (runtime)</li>
+                        <ul>
+                            <li>application of mappings to instance data</li>
+                        </ul>
+                        <li>CDM terminology</li>
+                        <ul>
+                        	<li>Application Business Message &ndash; back-end app format</li>
+                        	<li>Enterprise Business Message &ndash; CDM format</li>
+                        </ul>
+                    </ul>
+                </div>
+                
+                <div class="slide">
+                	<hgroup>
+                		<h1>Definitions of Data Mapping Example</h1>
+                	</hgroup>
+                	<ul class="x-small">
+                		<li>Source and target schemas</li>
+                		<ul>
+                			<li>Source: Order &ndash; flat data structure</li>
+                			<li>Target: UPS order with address as a sub-entity</li>
+                			<li>Differences in names of entities</li>
+                			<li>Conversion function applied to postal code</li>
+                		</ul>
+                	</ul>
+                	<div class="h-drawing" style="height: 320px" format="png" 
+                		id="1CBgOZj-fXVvjKgrolqX72qhVRZigGSzHIdlrIe7hghA"></div>
+                </div>
+                
+                <div class="slide">
+                	<hgroup>
+                		<h1>Transformation Patterns Example</h1>
+                	</hgroup>
+                	<ul class="x-small">
+                		<li>SOA Architecture with Common Data Model</li>
+                		<li>Oracle OSB and SOA Suite technologies</li>
+                		<ul>
+                			<li>Multiple technologies used in the environment</li>
+                			<li>Need to distinguish which technology should be used for what</li>
+                		</ul>
+                	</ul>
+                	<div class="h-drawing" id="1YEIYWDZXWpTdCZVvf6oryYrrWt_Ti4YDZQOE5noluhg" style="height: 320px"></div>
+                </div>
+
+	    		<div class="slide">
+					<hgroup>
+						<h1>Service Orchestration</h1>
+					</hgroup>
+					<ul class="x-small">
+					<li>Orchestration of multiple business services</li>
+					<ul>
+						<li>Inlcudes transformation, message enrichmenet, service callouts, etc.</li>
+						<li>A step in orchestration is an activity</li>
+					</ul>
+					<li>Patterns</li>
+					<ul>
+						<li>Sequential processing of activities</li>
+						<li>Parallel processing of activities with synchronization points</li>
+						<li>Decision branches, iterations</li>
+	            	</ul>
+	            	<li>Technologies</li>
+	            	<ul>
+	            		<li>Graphical languages</li>
+	            		<li>Standard representations: BPEL, BPMN</li>
+	            		<li>Proprietary, for example OSB uses graphical language that translates to XQuery</li>
+	            	</ul>
+	            	<li>Good design</li>
+	            	<ul>
+	            		<li>Orchestration faciliates communication in CDM</li>
+	            		<li>Orchestration handles key-mapping</li>
+	            	</ul>
+	        	</div>        	
+
+	    		<div class="slide">
+					<hgroup>
+						<h1>Key Mapping Example</h1>
+					</hgroup>
+					<ul class="x-small">
+						<li>Business object ID</li>
+						<ul>
+							<li>Universal ID in CDM, each back-end application has its own ID</li>
+							<li>Orchestration handles key mapping of various IDs of back-end apps</li>
+						</ul>
+					</ul>
+					<div id="1G4XbrYDV4ptT6GvXzWHio5bp2tfRpZd8MwrOpCcIR0U" class="h-drawing" style="height: 360px"></div>
+	        	</div>        	
+	        	        
+			</section>
+			        	
+	        <div class="slide outline"></div>
+	
+	        <section>
+	        	<header>
+					Communication patterns        		
+	        	</header>
+	        	
+	    		<div class="slide">
+					<hgroup>
+						<h1>Throttling</h1>
+					</hgroup>
+					<ul class="small">
+					<li>Throttling</li>
+					<ul>
+						<li>There may be multiple instances of processes running in the middleware</li>
+						<li>Business service can be invoked concurrently</li>
+						<li>Not to overload a back-end service, throttling enables a control on a number of concurrent invocations</li>
+					</ul>
+					<li>Parameters</li>
+					<ul>
+						<li><b>Maximum concurrency</b> &ndash; a maximum number of concurrent invocations of a service</li>
+						<li><b>Throttling queue</b> &ndash; a queue for requests that cannot be sent due to maximum concurrency limit</li>
+						<li><b>Message expiration</b> &ndash; a maximum time that a message can spent in the queue</li>
+					</ul>
+	        	</div>        	        
+	        	
+                <div class="slide" id="sync-async-comm">
+                    <hgroup>
+                        <h1>Synch/Asynch Communication: Recall</h1>
+                    </hgroup>   
+                    <div class="h-drawing" style="height: 220px" 
+                        id="14daki2YQxkRxkpg_RW16-Efihlxzhep8AWXb226NaQA"></div>                                
+    				<ul class="x-small">
+                        <li>Synchronous</li>
+                        <ul>
+            				<li>one socket, |t<sub>req</sub> &#150; t<sub>res</sub>| is small</li> 
+            				<li>easy to implement and deploy, only standard firewall config</li>
+            				<li>only the server defines endpoint</li>
+                        </ul>
+                        <li>Asynchronous</li>
+                        <ul>
+                            <li>request, response each has socket, client and server define endpoints</li>
+            				<li>|t<sub>req</sub> &#150; t<sub>res</sub>| can be large (hours, even days)</li> 
+            				<li>harder to do across network elements (private/public networks issue)</li>
+                        </ul>
+    				</ul>
+                </div>	        	
+	        	
+	    		<div class="slide">
+					<hgroup>
+						<h1>Asynchronous Communication</h1>
+					</hgroup>
+					<ul class="small">
+					<li>Implementation</li>
+					<ul>
+						<li>Via a third-party message queue</li>
+						<ul>
+							<li>client and server do not communicate directly</li>
+							<li>enables loose coupling</li>
+							<li>Messaging system</li>
+						</ul>
+						<li>By using WS-Addressing</li>
+	            	</ul>
+	            	<li>WS-Addressing</li>
+	            	<ul>
+	            		<li>A transport-independent mechanisms for web services to communicate addressing information</li>
+	            		<li>A client sends information in the request message where the service should send a response asynchronously</li>
+	            		<li>W3C Recommendation, May 2006</li>
+	            	</ul>
+	        	</div>
+	        	
+	    		<div class="slide">
+					<hgroup>
+						<h1>Order Processing Example</h1>
+					</hgroup>
+					<ul class="x-small">
+						<li>Recall example from <a href="lecture2.html#/15">Lecture 2</a>, steps:</li>
+						<ul>
+							<li>Client submits an order request</li>
+							<li>ESB processes the order involving CRM and OMS applications</li>
+							<li>ESB responds asynchronously with an order confirmation message</li>
+						</ul>
+					</ul>
+	        		<div class="h-drawing" id="1EwSY9pdczGfDG2LWyE4fTS0RG3E7H4w_Q0ppTwoSruI" style="height: 350px"></div>
+	        	</div>
+
+	    		<div class="slide">
+					<hgroup>
+						<h1>Order Processing Example Messages</h1>
+					</hgroup>
+					<ul class="x-small">
+					<li>Client Request &ndash; <code>SubmitOrder</code></li>
+					<ul>
+						<li>open socket at <code>74.125.43.100</code></li>
+					</ul>
+					<pre class="brush: xml; highlight: [10,11,12]">
+					POST /soa-infra/services/default/OrderProcess.service HTTP/1.1
+					Accept-Encoding: gzip,deflate
+					Content-Type: text/xml;charset=UTF-8
+					SOAPAction: "submitOrder"
+
+					&lt;s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"
+                  		xmlns:x="http://xmlns.oracle.com/bpmn/bpmnProcess/OrderProcess"
+                  		xmlns:o="http://company.cz/ns/Order">
+        				&lt;s:Header xmlns:wsa='http://www.w3.org/2005/08/addressing'>
+                			&lt;wsa:ReplyTo>
+                        		&lt;wsa:Address>http://147.32.100.71:7001/orderConf.service&lt;/wsa:Address>
+                			&lt;/wsa:ReplyTo>
+        				&lt;/s:Header>
+        				&lt;s:Body>
+                			&lt;x:submitOrder>
+                        		&lt;o:order>
+                        			&lt;o:customer>company.cz&lt;/o:customer>
+                        			&lt;o:address>Street 21&lt;/o:address>
+                        			&lt;o:lineItems>…&lt;/o:lineItems>
+                        		&lt;/o:order>
+                			&lt;/x:submitOrder>
+        				&lt;/s:Body>
+					&lt;/s:Envelope></pre>
+				</div>
 				
+	    		<div class="slide">
+					<hgroup>
+						<h1>Order Processing Example Messages (Cont.)</h1>
+					</hgroup>
+					<ul class="x-small">
+					<li>ESB asynchronous response &ndash; <code>OrderConfirmation</code></li>
+					<ul>
+						<li>open socket at <code>147.32.100.71:7001</code></li>
+					</ul>
+					<pre class="brush: xml;">
+					POST /OrderConf.service HTTP/1.1
+					Accept-Encoding: gzip,deflate
+					Content-Type: text/xml;charset=UTF-8
+					SOAPAction: "orderConfirmation"
+
+					&lt;s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"
+                  		xmlns:x="http://xmlns.oracle.com/bpmn/bpmnProcess/OrderProcess"
+                  		xmlns:o="http://company.cz/ns/Order">
+        				&lt;s:Header>&lt;/s:Header>
+        				&lt;s:Body>
+                			&lt;x:OrderConfirmation>
+                        		&lt;o:order-id>
+                        			123
+                        		&lt;/o:order-id>
+                			&lt;/x:OrderConfirmation>
+        				&lt;/s:Body>
+					&lt;/s:Envelope></pre>
+				</div>
+	        	        	        
+	        </section>
+        	    	        
+        </section>
+
+        <div class="slide outline" id="messaging"></div>
+		
+		<section>
+			<header>Messaging Systems</header>
+
 			<div class="slide">
 				<hgroup>
-					<h1>Streaming</h1>
+					<h1>Messaging Systems</h1>
 				</hgroup>
-				<ul>
-					<li>Processing of large XML message sizes</li>
+				<ul class="small">
+					<li>Messaging Middleware</li>
 					<ul>
-						<li>Streaming allows to leverage partial parsing capability of XQuery engine</li>
+						<li>aka Message-Oriented Middleware (MOM)</li>
+						<li>Message consumer and message producer</li>
+						<li>asynchronous communication</li>
+						<li>"anonymity" between producers and consumers</li>
+    					<ul>
+                            <li>no matter who, where, when a msg was produced</li>
+                        </ul>
+						<li>Ensures reliability, scalability</li>
+					</ul>
+					<li>Loose coupling of applications</li>
+					<ul>
+						<li>a kind of "peer-to-peer" relationship between applications</li>
+					</ul>
+					<li>Two types (Messaging Domains)</li>
+					<ul>
+						<li>Point-to-Point (message queue &mdash; MQ)</li>
+						<li>Publish/Subscribe (event-based)</li>
 					</ul>
 				</ul>
-			</div>			
-				
-		</section>			
-			
-			
+			</div>
+            
+            <section>
+                <header>Message Queues</header>
 
-	</section>
+    			<div class="slide">
+    				<hgroup>
+    					<h1>MQ System</h1>
+    				</hgroup>
+    				<div class="h-drawing" style="height: 300px" 
+                        id="14mdNb1lSNLcI5zvnJe28kJpkZ7alzH3OZjL-saFGCO8"></div>
+    				<ul class="x-small">
+    					<ul>
+    						<li>a "1 : 1" relationship between producer and consumer<br/>
+    						&rarr; <b>one message must be processed by one consumer</b></li>
+    						<li><b>no time-dependency</b> between message producer and consumer<br/>
+    						&rarr; consumer does not need to exist when producer sends a message</li>
+    						<li>Message exists in the queue until it is used by a consumer</li>
+    						<li>message consumers take as many messages as they are able to serve</li>
+    					</ul>
+    				</ul>
+    			</div>
+    
+    			<div class="slide">
+    				<hgroup>
+    					<h1>MQ API</h1>
+    				</hgroup>
+    				<ul class="small">
+    					<li><code>createQueue</code></li>
+    					<ul>
+    						<li>creates a queue in the MQ system</li>
+    						<li>called by the message producer</li>
+    					</ul>
+    					<li><code>sendMessage</code></li>
+    					<ul>
+    						<li>send a message to the queue</li>
+    						<li>called by the message producer</li>
+    					</ul>
+    					<li><code>receiveMessage</code></li>
+    					<ul>
+    						<li>request to receive (read) a message from the queue</li>
+    						<li>called by the message consumer</li>
+    					</ul>
+    					<li><code>deleteMessage</code></li>
+    					<ul>
+    						<li>deletes a message from the queue</li>
+    						<li>called by the message consumer when the message is successfully processed</li>
+    					</ul>
+    				</ul>
+    			</div>
+    
+    			<div class="slide">
+    				<hgroup>
+    					<h1>Message Consumption from the Queue</h1>
+    				</hgroup>
+    				<div class="h-drawing" style="height: 340px" 
+                        id="1FsBqFbspb4xyX-lZLQo7AiiADFphEybTrmn8UzNUSUU"></div>
+    				<ul class="x-small">
+    					<ul>
+    						<li>message consumers may fail anytime</li>
+    						<li>multiple instances of message consumers increases reliability</li>
+    						<li><b>visibility timeout</b> &ndash; time during which the message exist in the queue,
+    						and need to be deleted by the consumer (~ 30 seconds)</li>
+    					</ul>
+    				</ul>
+    			</div>
+            </section>
+            
+            <div class="slide outline"></div>
+            
+            <section>
+                <header>Publish/Subscribe</header>
 
+    			<div class="slide">
+    				<hgroup>
+    					<h1>Publish/Subscribe System</h1>
+    				</hgroup>
+    				<div class="h-drawing" style="height: 290px" 
+                        id="1VjuiJ0LVcDFJgmcNfP7wq10-bDJy6m0IHs6SgxD1kvY"></div>
+    				<ul class="x-small">
+    					<ul>
+    						<li>occurrence of a message = event that triggers one or more processes</li>
+    						<li>a "1 : N" relationship between producer and consumer<br/>
+    						&rarr; <b>one message can be processed by many different subscribers</b></li>
+    						<li><b>time-dependency</b> between publisher and subscriber<br/>
+    						&rarr; subscriber must first subscribe to a topic and then publisher can publish a message under that topic</li>
+    						<li>a message is deleted when all its subscribers consume it</li>
+    					</ul>
+    				</ul>
+    			</div>
+    
+    			<div class="slide">
+    				<hgroup>
+    					<h1>Publish/Subscribe API</h1>
+    				</hgroup>
+    				<ul class="small">
+    					<li><code>lookupTopic</code></li>
+    					<ul>
+    						<li>lookups or creates a topic</li>
+    						<li>called by the subscriber first and then by the publisher</li>
+    					</ul>
+    					<li><code>receiveMessage</code></li>
+    					<ul>
+    						<li>request to receive (read) a message under the topic</li>
+    						<li>called by the subscriber</li>
+    						<li>Implementation specific:</li>
+                            <ul>
+    						    <li>synchronous &ndash; blocking, with timeout</li>
+    						    <li>asynchronous &ndash; through event listener</li>
+                            </ul>
+    					</ul>
+    					<li><code>publishMessage</code></li>
+    					<ul>
+    						<li>publishes a message under the topic</li>
+    						<li>called by the publisher</li>
+    					</ul>
+    				</ul>					
+    			</div>
+    
+    			<div class="slide">
+    				<hgroup>
+    					<h1>Event-driven Communication</h1>
+    				</hgroup>
+    				<ul>
+    					<li>Event</li>
+    					<ul>
+    						<li>Occurrence of a message with certain topic</li>
+    					</ul>
+    					<li>Event-driven Process</li>
+    					<ul>
+    						<li>events trigger actions</li>
+    						<li>one event may trigger more actions</li>
+    						<li>loose coupling &ndash; not all actions need to be known at design time</li>
+    					</ul>
+    					<li>Service Oriented Architectures (SOA)</li>
+    					<ul>
+    						<li>Event-Driven Architectures (EDA) &ndash; new trends in realization of SOA</li>
+    					</ul>
+    				</ul>
+    				</div>
+    			</div>
+    
+    			<div class="slide">
+    				<hgroup>
+    					<h1>Event-driven Process Example</h1>
+    				</hgroup>
+    				<ul class="x-small">
+    					<li>Conceptual process</li>
+    					<div class="h-drawing" style="margin-top: -20px; margin-bottom: 10px; height: 100px" 
+                            id="1IUZaGiPpxb20-q8pBRzmhUCjJH1Ociy2sSnhSYH8guM"></div>
+    					<li>Event-driven process implementation</li>
+    					<div class="h-drawing" style="height: 320px" id="1M_yG2aVhSbWJ1iQ3iBuvRNQLg3-QGMDuwshrNj7R9oM"></div>
+    				</ul>
+    				</div>
+    			</div>
+
+    	<!--		<div class="slide">
+    				<hgroup>
+    					<h1>JEE Technology</h1>
+    				</hgroup>
+    				<ul class="x-small">
+    					<li>JMS &ndash; Java Messaging Service</li>
+    					<ul>
+    						
+    					</ul>
+    				</ul>
+    				</div>
+    			</div> -->
+    
+            </section>
+			
+		</section>
+        
+        
+        
+        
         
         
         

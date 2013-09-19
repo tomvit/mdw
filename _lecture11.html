@@ -8,15 +8,15 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> 
         <meta name="course"   content="Middleware and Web Services"/>
-        <meta name="lecture"  content="Lecture 11"/>
-        <meta name="keywords" content="SOA Governance"/>
+        <meta name="lecture"  content="Lecture 9"/>
+        <meta name="keywords" content="Web Service Security"/>
            
         <link type="text/css" rel="stylesheet" href="css/meta.css"></link>   
         <link type="text/css" rel="stylesheet" href="css/ctu-fit.css"></link>   
         <link type="text/css" rel="stylesheet" href="humla/lib/core/humla.css"></link>   
 
         <script type="text/javascript" src="humla/lib/humla.js"></script>
-        <title>SOA Governance</title>
+        <title>Web Service Security</title>
     </head>
     
     <body>
@@ -59,671 +59,616 @@
             
     		<div class="slide">
 				<hgroup>
-					<h1>SOA</h1>
+					<h1>Web Service Security Concepts</h1>
 				</hgroup>
-				<ul class="">
-					<li>Challenges</li>
+				<ul class="x-small">
+					<li>Securing the client-server communcation</li>
 					<ul>
-						<li>Facilitate and maximize reuse</li>
-						<li>Control and track reuse</li>
-						<li>Measure the business value of SOA and reuse</li>
-						<li>Provide visibility throughout a service's entire lifecycle</li>
-						<li>Ensure compliance with IT policies and best practices</li>
-						<li>Manage dependencies and determine the impact of change</li>
+						<li>Message-level security</li>
+						<li>Transport-level security</li>
 					</ul>
-					<li>Advantages</li>					
+					<li>Ensure:</li>
 					<ul>
-						<li>Business agility/reduced time to market</li>
-						<li>Reduced costs</li>
-						<li>Improved reuse of services</li>
-						<li>Improved software quality</li>
-						<li>Better interoperability</li>
+						<li>Authentication - verify clients' identity.</li>
+                        <li>Authorizaton - grant/deny access right to resources.</li>
+						<li>Message Confidentiality - keep the messages secret.</li>
+						<li>Message Integrity - no message changes during transmission.</li>
+						<li>Non-Repudiation - prevent a client from denying having performed a particular action.</li>
 					</ul>
+                    <div class="h-drawing" style="height: 190px" id="1JhEX5OGpHhQY49mxA4-r7taripW6bkWwLCu94BU9QFI"></div>
 				</ul>
-			</div>
-
-			<div class="slide" id="spaghetti">
-            	<hgroup>
-    				<h1>Spaghetti Architecture</h1>
-    			</hgroup>
-                <ul class="small">
-                    <li>Need for the integration</li>
-                    <ul>
-                        <li>One-to-one integration</li>
-                        <li>Hard to maintain, vendor interoperability problem</li>
-                    </ul>
-                    <div class="h-drawing" style="height: 350px" id="123tDQFo3Zq0LEzzhquKp1xJX4YZ6YiWC0GDNGGK1UA0"
-                        alt="Spaghetti Integration"></div>
-                </ul>               
-            </div>
-
-			
-			<div class="slide">
-				<hgroup>
-					<h1>Real point-to-point integration</h1>
-				</hgroup>				
-				<ul class="xx-small">
-					<li>Graph generated from repository database and visualized using Gephi</li>
-				</ul>
-				<div class="h-drawing" style="height: 700px" id="1a5do-aYyS0Sv2iEwRSlzfPwBfORQdswTB0Di1QAqXCA" format="png"></div>				
-
-			</div>			
-
-			<div class="slide">
-				<hgroup>
-					<h1>Reference Architecture and Governance</h1>
-				</hgroup>
-				<ul class="x-small">					
-				</ul>
-				<div class="h-drawing" id="1kkAbxSpbfXTQ4m2IDR8RjcUGyL08BaFknwylIVwRfxY" style="height: 400px"></div>				
 			</div>
             
         </section>
-
+        
         <div class="slide outline"></div>
-
+        
         <section>
-            <header>SOA Reference Architecture</header>
-
-            <div class="slide">
-				<hgroup>
-					<h1>SOA Reference Architecture</h1>
-				</hgroup>
-				<ul class="x-small">					
-					<li>Abstract realization of SOA, focusing on the elements and their relationships</li>
-					<ul>
-						<li>key to constructing a roadmap from the current state to the target state</li>
-					</ul>
-					<li>Views/Layers:</li>
-					<ul>
-						<li>Integration layer</li>
-						<li>QoS layer</li>
-						<li>Information Architecture layer</li>
-						<li>Governance layer</li>
-					</ul>
-					<li>Components:</li>
-					<ul>
-						<li>Logical/Technical Architecture</li>					
-						<li>Security, IDM</li>
-						<li>Common Data Model (CDM)</li>
-						<li>Conventions</li>
-						<li>Design patterns</li>
-						<li>Service Contracts</li>
-					</ul>					
-				</ul>
-			</div>
-
-			<div class="slide">
-				<hgroup>
-					<h1>Policies</h1>
-				</hgroup>
-				<ul class="x-small	">
-					<li>Policy</li> 					
-					<ul>
-						<li>defined by OASIS in SOA Reference Model</li>
-						<li>consists of three parts: the policy assertion, the policy owner, and policy enforcement</li>
-						<li>maintained by commercial tools, shared Word document, Wiki, ...</li>	
-					</ul>
-					<!--
-					<li>WS-Policy</li>
-					<ul>
-						<li>allows consumers and providers to specify the requirements and capabilities of their services in WSDL</li>
-						<li>allows automatic enforcement</li>
-					</ul>	
-					-->
-					<li>Examples:</li>				
-					<ul>
-						<li>Basic design-time policies</li>
-						<ul>
-							<li>No duplicate services - can save duplicate work</li>
-							<li>Technology standardization - public service must follow REST</li>
-							<li>Validate message content - messages are validated using schema</li>
-						</ul>
-						<li>Basic runtime policies</li>
-						<ul>
-							<li>Services should be available from 9 a.m. to 5 p.m.</li>
-							<li>Services calls should be made over a secure channel</li>
-							<li>Services should be self-describing</li>
-						</ul>
-					</ul>
-				</ul>
-			</div>
-
-			<div class="slide">
-				<hgroup>
-					<h1>Policies (cont.)</h1>
-				</hgroup>
-				<ul class="x-small">					
-					<li>Design and documentation policies</li>
-					<ul>
-						<li>Create self-documenting services</li>
-						<li>Reuse existing message standards</li>
-						<li>Design for reusability</li>
-						<li>Support multiple versions of services</li>
-					</ul>
-					<li>Security policies</li>
-					<ul>
-						<li>Encrypt a communications channel for sensitive data</li>
-						<li>Validate message integrity and non-repudiation</li>
-						<li>Use a centralized identity system for authentication</li>
-						<li>Use a centralized identity system for authorization</li>
-					</ul>
-					<li>Testing and performance policies</li>
-					<ul>
-						<li>Process messages within 10 ms</li>
-						<li>Monitor services in real time</li>
-						<li>Provide a flexible view for how services are used</li>
-						<li>Run services in the cloud</li>
-						<li>Enforce code quality and test coverage</li>
-					</ul>					
-				</ul>
-			</div>
-
-			<div class="slide">
-				<hgroup>
-					<h1>Example</h1>
-				</hgroup>
-				<ul class="xx-small">
-					<li>Design time - service versioning</li>
-					<ul>
-						<li>support for new and outdated services</li>						
-					</ul>
-					<li>WSDL best-practice</li>
-					<ul>
-						<li>Insert major and minor version into the WSDL file name</li>
-						<li>Insert major version into the targetNamespace</li>
-						<li>Insert major and minor version into the portType element</li>
-						<li>Insert major and minor version into the service element</li>
-						<li>Insert major version into the endpoint</li>
-					</ul>
-					<pre class="brush: xml">	                	
-						&lt;?xml version="1.0" encoding="UTF-8"?>
-						&lt;definitions  targetNamespace="http://example.com/ws/ExampleService-v0"
-						  xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
-						  xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-						  &lt;types>
-						    &lt;xsd:schema targetNamespace="http://example.com/ws/ExampleService-v0">...&lt;/xsd:schema>
-						  &lt;/types>
-						  ...
-						  &lt;portType name="ExampleServicePort-v0.1">...&lt;/portType>
-						  ...
-						  &lt;service name="ExampleService-v0.1">
-						    &lt;port binding="ExampleServiceSOAP" name="ExampleServiceSOAP">
-						      &lt;soap:address location="http://example.com/ExampleService/v0"/>
-						    &lt;/port>
-						  &lt;/service>
-						&lt;/definitions></pre>
-				</ul>				
-			</div>
-
-		</section>     
-
-		<div class="slide outline"></div>       
-
-        <section>
-            <header>SOA Governance</header>
+            <header>Authentication and Authorization</header>
             
     		<div class="slide">
 				<hgroup>
-					<h1>SOA Governance</h1>
+					<h1>Authentication and Authorization</h1>
+				</hgroup>
+				<ul class="small">
+					<li>Authentication</li>
+					<ul>
+						<li>verification of user's identity</li>
+					</ul>
+					<li>Authorization</li>
+					<ul>
+						<li>verification that a user has rights to access a resource</li>
+					</ul>
+					<li>Standard: HTTP authentication</li>
+					<ul>
+						<li>HTTP defines two options</li>
+						<ul>
+							<li>Basic Access Authentication</li>
+							<li>Digest Access Authentication</li>
+						</ul>
+						<li>They are defined in</li>
+						<ul>
+							<li><span class="h-ref" id="rfc-2616">RFC 2616: Hypertext 
+							Transfer Protocol &ndash; HTTP/1.1</span></li>
+							<li><span class="h-ref" id="rfc-2617">RFC 2617: 
+							HTTP Authentication: Basic and Digest Access Authentication</span></li> 
+						</ul>
+					</ul>
+					<li>Custom/proprietary: use of cookies</li>
+				</ul>
+			</div>                                    
+
+    		<div class="slide">
+				<hgroup>
+					<h1>Basic Access Authentication</h1>
+				</hgroup>
+				<div class="h-drawing" style="height: 280px" id="1OYyQduAQYodoiQ48uYTCB1iVn6UHcCcdDocjLOA9b9Y"></div>
+				<ul class="x-small">
+					<li>Realm</li>
+					<ul>
+						<li>an identifier of the space on the server (~ a collection of resources and their sub-resources)</li>
+						<li>client may associate a valid credentials with realms such that it copies authorization information 
+							in requests for which server requires authentication (by <code>WWW-Authenticate</code> header)</li>
+				</ul>
+			</div>                                    
+
+    		<div class="slide">
+				<hgroup>
+					<h1>Basic Access Authentication &ndash; Credentials</h1>
+				</hgroup>
+				<ul class="small">
+					<li>Credentials</li>
+					<ul>
+						<li>credentials are base64 encoded</li>
+						<li>the format is: <code>username:password</code></li>
+					</ul>
+					<pre class="brush: bash">
+						# to encode in linux
+						echo "novak:heslo" | base64
+						> bm92YWs6aGVzbG8K
+							
+						# and to decode
+						echo "bm92YWs6aGVzbG8K" | base64 -d # use capital "D" in OS X
+						> novak:heslo</pre>
+							
+					<li>Comments</li>
+					<ul class="x-small">
+						<li>It is not secure, the password travels over the network and can be read!</li>
+						<li>the purpose is to encode and send non-ASCII characters</li>
+					</ul>
+				</ul>
+				
+			</div>                                    
+
+    		<div class="slide">
+				<hgroup>
+					<h1>Digest Access Authentication</h1>
 				</hgroup>
 				<ul class="xx-small">
-					<li>The goal is to get the most out of your SOA</li>
-					<!--
-					<li>Supports following steps:</li>
-					<ol>
-						<li>Define the policies you want to apply</li>						
-						<li>Apply during design time</li>
-						<li>Monitor and enforce during runtime</li>						
-					</ol>
-					-->
-					<li>SOA governance is the combination of people, policies, and processes</li>
-					<li>3P</li>
+					<li>RFC 2617 &ndash; Basic and Digest Access Authentication</li>
 					<ul>
-						<li>People</li>
-						<ul>
-							<li>Who are the business owners, who is using, why are used, who is technically responsible</li>
-						</ul>
-						<li>Processes</li>
-						<ul>
-							<li>What processes are in place to define your services, what processes depend on your service, is there a process to determine service lifecycle</li>
-						</ul>
-						<li>Policies</li>
-						<ul>
-							<li>What policies are defined for your service, how are applied during design and runtime</li>
-						</ul>
-					</ul>					
-					<li>Supports following steps:</li>
+						<li>No password between a client and a server but a hash value</li>
+						<li>Simple and advanced mechanisms (only server-generated nonce value &ndash; replay-attacks or 
+							with client-generated nonce value &ndash; chosen-plaintext attacks)</li>
+					</ul>							
+					<li>Basic Steps</li>
 					<ol>
-						<li>Define the policies you want to apply (Reference Architecture)</li>						
-						<li>Apply during design time</li>
-						<li>Monitor and enforce during runtime</li>						
+						<li>Client accesses a protected area</li>
+						<pre class="brush:bash; class-name: 'tight'">
+							> GET / HTTP/1.1</pre>
+						<li>Server requests authentication with <code>WWW-Authenticate</code></li>
+							<pre class="brush:bash; class-name: 'tight'">
+								&lt; HTTP/1.1 401 Unauthorized
+								&lt; WWW-Authenticate: Digest realm="ProtectedArea", 
+								  nonce="BbdQof3DBAA=a293ff3d724989371610f03015f2d23f3cd2c045", 
+								  algorithm=MD5, domain="/", qop="auth"</pre>
+						<li>Client calculates a response hash by using the realm, his/her username, the password, and the 
+							quality of protection (QoP) and requests the resource with <code>authorization</code> header</li>
+							<pre class="brush:bash; class-name: 'tight'">
+								> GET / HTTP/1.1
+								> Authorization: Digest username="novak", realm="ProtectedArea",
+								  nonce="BbdQof3DBAA=a293ff3d724989371610f03015f2d23f3cd2c045", uri="/", 
+								  algorithm=MD5, response="c4ea2293aeb318826d1e533f363efd90", qop=auth, 
+								  nc=00000001, cnonce="531ee8ba7f2a8fd1"</pre>								
 					</ol>
 				</ul>
+			</div>                                    
+
+    		<div class="slide">
+				<hgroup>
+					<h1>Nonce and QoP</h1>
+				</hgroup>
+				<ul class="small">
+					<li>Nonce</li>
+					<ul>
+						<li>A value to identify an interaction that should occur only once</li>
+						<li><code>nonce</code> &ndash; generated by the server</li>
+						<ul>
+							<li>may have a time period for which the nonce is valid</li>
+							<li>may be computed using client IP, ETag of the resource, etc.</li>
+							<li>this limits chances for the replay attack.</li>
+						</ul>
+						<li><code>cnonce</code> &ndash; generated by the client</li>
+					</ul>
+					<li>QoP &ndash; quality of protection</li>
+					<ul>
+						<li>Further improvements to prevent replay attacks and chosen-plaintext 
+							attacks and enables non-repudiation</li>
+					</ul>
+				</ul>
+			</div>  
+
+    		<div class="slide">
+				<hgroup>
+					<h1>Algorithms</h1>
+				</hgroup>
+				<ul class="small">
+					<li>Algorithm for <code>response</code> value of <code>authorization</code> header</li>
+					<ul>
+						<li>No quality of protection (<code>qop</code> is missing or <code>qop=none</code>)</li>
+						<ul>
+							<li>prevents replay-attacks</li>
+						</ul>
+						<pre class="brush: bash; class-name: 'tight'">
+							HA1 = MD5(username:realm:password)
+							HA2 = MD5(method:digestURI)
+							response = MD5(HA1:nonce:HA2)</pre>
+						<li>with quality of protection (<code>qop=auth</code>)</li>
+						<ul>
+							<li>prevents chosen-plaintext attacks</li>
+						</ul>
+						<pre class="brush: bash; class-name: 'tight'">
+							HA1 = MD5(username:realm:password)
+							HA2 = MD5(method:digestURI)
+							response = MD5(HA1:nonce:nonceCount:cnonce:qop:HA2)</pre>				
+							<li>with quality of protection for message integrity (<code>qop=auth-int</code>)</li>
+							<ul>
+								<li>enables non-repudiation (i.e., proof of integrity and origin of data)</li>
+							</ul>
+							<pre class="brush: bash; class-name: 'tight'">
+								HA1 = MD5(username:realm:password)
+								HA2 = MD5(method:digestURI:MD5(payload))
+								response = MD5(HA1:nonce:nonceCount:cnonce:qop:HA2)</pre>											
+					</ul>
+					
+				</ul>
+			</div>  
+
+    		<div class="slide">
+				<hgroup>
+					<h1>Replay Attack</h1>
+				</hgroup>
+				<ul class="xx-small">
+					<li>Replay Attack Scenario (quality of protection is <code>none</code>)</li>
+					<ul>
+						<li>The communication is not encrypted (i.e., no use of HTTPS)</li>
+						<li>Eve listens to the Alice's communication (e.g. on a proxy server)</li>
+						<li>Eve resends requests with headers from Alice's requests</li>
+					</ul>
+				</ul>
+				<div class="h-drawing" id="1gQvg53vE3p9o_YRI3zYx3uBEfiT6YjiuznHN0A8O2QA" style="height: 380px"></div>
+			</div>                                  
+
+    		<div class="slide">
+				<hgroup>
+					<h1>Replay Attack (Cont.)</h1>
+				</hgroup>
+				<ul class="xx-small">
+					<li>Replay Attack Scenario (quality of protection is <code>auth</code> or <code>auth-int</code>)</li>
+					<ul>
+						<li><code>nonceCount</code> should be incremented in every request to a response of the nonce 
+							value from the server</li>
+					</ul>
+				</ul>
+				<div class="h-drawing" id="1Jto8zZvp-q7IANoQ0lckKsPHP1e5LetG7nJs8jI3Xyg" style="height: 380px"></div>
+			</div>                                  
+            
+        </section>
+        
+        <div class="slide outline"></div>
+        
+        <section>
+            <header>Digital Signature</header>
+            
+    		<div class="slide">
+				<hgroup>
+					<h1>XML Digital Signature</h1>
+				</hgroup>
+				<ul class="x-small">
+                    <li>A <b>digital signature</b> is a value computed with a cryptographic algorithm and attached along with the data.</li>
+					<li>XML Signature</li>
+					<ul>
+                        <li>A mathematical scheme for demonstrating the authenticity of a digital message.</li>
+						<li>Express digital signature in XML.</li>
+						<li>Signing any digital content that can be send over a wire.</li>
+					</ul>
+					<li>Provides</li>
+					<ul>
+						<li>Data-integrity</li>
+						<li>Message Authentication</li>
+						<li>Client Authentication</li>
+					</ul>
+					<li>Standard: XML Signature Syntax and Processing</li>
+					<ul>
+						<li>Specifies XML digital signature processing rules and syntax.</li>
+						<li><a class="ext-link ref" title="XML Signature Syntax and Processing Specification" href="http://www.w3.org/TR/xmldsig-core/">XML Signature Syntax and Processing Specification</a></li>
+					</ul>
+				</ul>
 			</div>
-
-			<!--<section>
-	            <header>Structures and processes</header>	
-	        -->
-
+            
+    		<div class="slide">
+				<hgroup>
+					<h1>Digital Signature Usage Scenario</h1>
+				</hgroup>
+				<ul class="x-small">
+                    <li>Creating and Verifying Digital Signatures</li>
+				</ul>
+				<div class="h-drawing" id="1hPBaVxchCeOoRqyseOBJF08yUghyaEqkAnMVxrzpS4A" style="height: 290px"></div>
+				<ul class="xx-small">
+                    <li>Steps</li>
+                    <ol>
+                        <li>Client creates and sends the digital signature.</li>
+                        <ul>
+                            <li>creates the message digest and encrypts the message using his private key.</li>
+                        </ul>
+                        <li>Server receives the message and verifies the client.</li>
+                        <ul>
+                            <li>decrypts the message using the client's public key and compares the message digests.</li>
+                        </ul>
+                    </ol>
+				</ul>
+			</div>
+        </section>
+        
+        <div class="slide outline"></div>
+        
+        <section>
+            <header>Web Services Security</header>
+            
+    		<div class="slide">
+				<hgroup>
+					<h1>WS-Security</h1>
+				</hgroup>
+				<ul class="x-small">
+					<li>Extension to SOAP specification defining security to Web Services.</li>
+                    <li>Defines how to insert security elements into a SOAP envelope.</li>
+                    <li>Defines three main mechanisms:</li>
+					<ul>
+                        <li>Authentication - by using security tokens.</li>
+						<li>Confidentiality - by using XML Encryption specification.</li>
+						<li>Integrity - by using XML Signature specification.</li>
+					</ul>					
+					<li>Standard driven: Web Services Security (by OASIS)</li>
+					<ul>
+						<li>Core specification: <a class="ext-link ref" title="XML Signature Syntax and Processing Specification" href="https://www.oasis-open.org/committees/download.php/16790/wss-v1.1-spec-os-SOAPMessageSecurity.pdf">WS-Security Core 1.1</a></li>
+						<li>Defines rules how to apply security to Web Services.</li>
+					</ul>
+                    <li>Ensure secure communication between the services and services' clients!</li>
+				</ul>
+			</div>
+            
+    		<div class="slide">
+				<hgroup>
+					<h1>WS-Security Stack</h1>
+				</hgroup>
+				<ul class="x-small">
+                    <li>Set of extension specifications to Web Service Security.</li>
+				</ul>
+				<div class="h-drawing" id="1UoBUq0BVNrjMAVFFYKsTd6OFuWfol3qftkngwJDXwe0" style="height: 270px"></div>
+            </div>
+            
+    		<div class="slide">
+				<hgroup>
+					<h1>WS-Security Realization</h1>
+				</hgroup>
+				<ul class="x-small">
+                    <li>Example of a Web Service security realization.</li>
+				</ul>
+				<div class="h-drawing" id="1UfKnuRAZITsR2ctFErWIz-P5xr-0CXnCFxQS1UXLtiw" style="height: 230px"></div>
+				<ul class="x-small">
+                    <li>Both, the client and the server should secure the data.</li>
+                    <li>Before sending a message:</li>
+                    <ul>
+                        <li>Sign, encrypt and add authorization token (only client)</li>
+                    </ul>
+                    <li>When receiving a message:</li>
+                    <ul>
+                        <li>Check authorization token (only server), decrypt, sign</li>
+                    </ul>
+				</ul>
+            </div>
+            
+    		<div class="slide">
+				<hgroup>
+					<h1>WS-Security Implementation</h1>
+				</hgroup>
+				<ul class="xx-small">
+                    <li>Placeholder for the security policies is the envelope header.</li>
+				</ul>
+                <ul class="x-small">
+                    <pre class="brush: xml; first-line: 1; highlight: [4,5,6]">
+                        <S:Envelope>
+                            <S:header>
+                                ...
+                                <wsse:Security s:actor="http://www.oracle.com/appml/"
+                                    s:mustUnderstand="1">
+                                    ...
+                                </wsse:Security>
+                            </S:header>
+                            ...
+                        </S:Envelope>
+                    </pre>
+                </ul>
+                <ul class="xx-small">
+                    <li>WS-Security defines <b>Security</b> element in the SOAP header.</li>
+                    <ul>
+                        <li><code>s:actor</code> attribute: identifies the actor.</li>
+                        <li><code>s:mustUnderstand</code> attribute: indicates whether a header entry is mandatory or optional for the recipient to process. Valid values: "0", "1"</li>
+                        <li>The Security element can be extened with other proprietary elements and atrribues!</li>
+                    </ul>
+                    <li>The <i>Security</i> header countains:</li>
+                    <ul>
+                        <li>Security Tokens</li>
+                        <li>Signatures</li>
+                        <li>Encryption information</li>
+                        <li>Security Timestamps</li>
+                    </ul>
+                </ul>
+            </div>
+            
+    		<div class="slide">
+				<hgroup>
+					<h1>Security Tokens</h1>
+				</hgroup>
+				<ul class="x-small">
+                    <li>Security Tokens are optional sub-elements of the <i>Security</i> element</li>
+                    <li>WS-Security defines diferent types of security tokens:</li>
+                    <ul>
+                        <li>User Name Token</li>
+                        <li>Binary Security Token</li>
+                        <li>other: XML Token, Encrypted Data Token</li>
+                    </ul>
+                    <li>User Name Tokens</li>
+                    <ul>
+                        <li>way of providing a username</li>
+                        <pre class="brush: xml; first-line: 1; highlight: [4,5,6]">
+                            <S:Envelope>
+                                <S:header>
+                                    <wsse:Security s:actor="..." s:mustUnderstand="1">
+                                        <wsse:UserNameToken wsu:id="...">
+                                            <wsse:Username>Alice</wsse:Username>
+                                        </wsse:UserNameToken>
+                                    </wsse:Security>
+                                    ...
+                                </S:header>
+                                ...
+                            </S:Envelope>
+                        </pre>
+                        <li><code>id</code> attribute - a string label for this security token.</li>
+                    </ul>
+				</ul>
+            </div>
+            
             <div class="slide">
 				<hgroup>
-					<h1>Structures and Processes</h1>
+					<h1>Binary Security Tokens</h1>
 				</hgroup>
-				<ul class="">		
-					<li>Organizational structures/Departments</li>
-					<ul>
-						<li>Business Analysis - Business Analyst</li>
-						<li>Solution Architecture - Solution Architect</li>
-						<li>Integration Architecture - Integration Architect</li>						
-						<li>Testing and Deployment - Tester</li>
-						<li>Enterprise Architecture</li>
-					</ul>					
-					<li>Processes</li>					
-					<ul>
-						<li>Service Development Process</li>
-						<li>Service Lifecycle Process</li>
-						<li>Operational Monitoring</li>
-						<li>Management Process</li>
-					</ul>
-					
+				<ul class="xx-small">
+                    <li>Way of providing security tokens in binary format.</li>
+                    <ul>
+                        <li>Encoding binary security tokens such as X.509 certificates.</li>
+                    </ul>
+                </ul>
+                <ul class="xx-small">
+                    <li>Example:</li>
+                        <pre class="brush: xml; first-line: 1; highlight: [4,5,6]">
+                            <S:Envelope>
+                                <S:header>
+                                    <wsse:Security s:actor="..." s:mustUnderstand="1">
+                                        <wsse:BinarySecurityToken wsu:id="..." EncodingType="..." ValueType="...">
+                                            ...
+                                        </wsse:BinarySecurityToken>
+                                    </wsse:Security>
+                                    ...
+                                </S:header>
+                                ...
+                            </S:Envelope>
+                        </pre>
+                </ul>                
+                <ul class="x-small">
+                    <li>Allowed attributes:</li>
+                    <ul>
+                        <li><code>id</code> - string label for the security token.</li>
+                        <li><code>valueType</code> - URI indicating the value type and space of the encoded binary data.</li>
+                        <li><code>encodingType</code> - URI indicating the encoding format (e.g., wsse:Base64Binary)</li>
+                    </ul>
 				</ul>
-			</div>
-						
-			<!--
-	        </section>
-	    	-->
-
-			<div class="slide outline"></div>  
-
-			<section>
-	            <header>Service Lifecycle</header>
-	            
-	    		<div class="slide">
-					<hgroup>
-						<h1>Service Lifecycle</h1>
-					</hgroup>
-					<ul class="x-small">
-						<li>Lifecycle</li>
-						<ul>
-							<li>helps to identify which services need to be created or updated</li>
-							<li>helps to check steps before a service is put in production, retired</li>
-							<li>to determine which policies need to be complied with in each stage</li>
-						</ul>
-						<li>Standard Phases</li>
-						<ul>
-							<li>Model - business requirements, business services, ...</li>
-							<li>Assemble - define the contract, create and test</li>
-							<li>Deploy - deployed, integrated and made available</li>
-							<li>Manage - runtime monitoring </li>
-						</ul>
-						<li>Adopted Phases</li>
-						<ul>
-							<li>Initial</li>
-							<li>Development</li>
-							<li>In Test</li>
-							<li>Available</li>
-							<li>Deprecated</li>
-							<li>Retired</li>
-						</ul>
-
-					</ul>
-				</div>
-
-				<div class="slide">
-					<hgroup>
-						<h1>Development Process</h1>
-					</hgroup>									
-					<div class="h-drawing" style="height: 500px" id="1tMIilwv3pGb2Bdw8daynwrVQAo0NKuVyx-3sZ0UUeyg" format="png"></div>	
-				</div>
-
-				<div class="slide">
-					<hgroup>
-						<h1>Service Lifecycle and Development Process</h1>
-					</hgroup>									
-					<div class="h-drawing" style="height: 500px" id="1f60jdW7RN0XE2UVVdd0bnu-PAFAPkTG61t_TT99ob2k" format="png"></div>	
-				</div>	
-	            
-	        </section>
+            </div>
             
-        </section>     
-
-        <div class="slide outline"></div>  
-
-        <section>
-            <header>Tools</header>
-
             <div class="slide">
-					<hgroup>
-						<h1>Architecture</h1>
-					</hgroup>					
-					<div class="h-drawing" id="1FEYIrF2NRZdL9-ZqMSHEYSpqDkF7mZo7Xzr4sxJXpC8" style="height: 450px"></div>
-					
-				</div>
-
-            <section>
-	            <header>Overview</header>
-
-				<div class="slide">
-					<hgroup>
-						<h1>Governance Objectives</h1>
-					</hgroup>
-					<ul class="">
-						<li>Goals of an SOA governance framework may include</li>
-						<ul>
-							<li>Centralized asset management</li>
-							<li>Adherence to reference architecture</li>
-							<li>Standard asset lifecycle</li>
-							<li>Enterprise visibility</li>
-							<li>Prescribed reuse</li>						
-							<li>Usage detection</li>
-							<li>Asset compliance</li>
-							<li>Impact analysis</li>
-							<li>Endpoint metrics</li>
-							<li>Policy enforcement</li>
-						</ul>
-					</ul>				
-				</div>
-
-				<div class="slide">
-					<hgroup>
-						<h1>Enterprise Assets</h1>
-					</hgroup>
-					<ul class="x-small">
-						<li>An asset:</li>					
-						<ul>
-							<li>Describes some type of structured information related to an IT project</li>
-							<li>Is typically associated with one or more files (documents, source, binary, and so on)</li>
-							<li>Includes other metadata to help qualify, classify, and categorize it</li>
-						</ul>
-						<li>to Support Design and Development</li>
-						<ul>
-							<li>Enterprise architectures, Project blueprints, Design patterns, Service definitions, Schemas, Frameworks, Procedures and policies, Sandbox service endpoints, Sandbox environments</li>
-						</ul>
-						<li>to Support Run Time</li>
-						<ul>
-							<li>Deployed service endpoints, Deployed service policies, Service-level agreements (SLAs), Staging and production environments</li>
-						</ul>
-					</ul>				
-				</div>
-
-				<div class="slide">
-					<hgroup>
-						<h1>Enterprise Assets</h1>
-					</hgroup>
-					<ul class="small">
-						<li>Centralized Asset Management</li>
-						<ul>
-							<li>central repository</li>
-						</ul>
-						<!--<li>Produced and Consumed Assets</li>-->
-						<li>Asset Taxonomies</li>
-						<ul>
-							<li>naming guidelines, classification schemes</li>
-						</ul>
-						<li>Asset Harvesting</li>
-						<ul>
-							<li>automate the registration</li>
-						</ul>	
-						<li>Usage Detection</li>	
-						<ul>
-							<li>integration with development process and tools</li>
-						</ul>					
-						<li>Asset Prescription</li>
-						<ul>
-							<li>reusing of assets</li>
-						</ul>
-						<!--
-						<li>Asset Compliance</li>
-						<li>Asset Promotion</li>
-						-->
-						<li>SOA Monitoring and Management</li>
-					</ul>				
-				</div>
-	            
-	        </section>
-
-	        <!--
-	        <div class="slide outline"></div>
-
-	        <section>
-	            <header>Enterprise Repository</header>
-	            
-	    		<div class="slide">
-					<hgroup>
-						<h1>Enterprise Repository</h1>
-					</hgroup>
-					<ul class="x-small">
-						
-					</ul>
-				</div>
-	            
-	        </section>
-	    	-->
-
-	        <div class="slide outline"></div>  
-
-	        <section>
-	            <header>UDDI Registry</header>
-	            
-	    		<div class="slide">
-					<hgroup>
-						<h1>UDDI Registry</h1>
-					</hgroup>
-					<ul class="x-small">
-						<li>Universal Description Discovery and Integration</li>
-						<ul>
-							<li>Is an open specification from OASIS</li>
-							<li>XML-based registry</li>							
-							<li>Describes a standard interface for a service registry</li>
-							<li>Defines services that can be used to publish, classify, and find other services</li>
-							<li>Acts like a phone book for applications to look up services</li>
-							<li>Helps decouple service producers from consumers</li>
-							<li>Promotes service visibility and reuse</li>
-							<li>Two parts</li>
-							<ul>
-								<li>registry of all a web service's metadata including a pointer to the WSDL description</li>
-								<li>set of WSDL port type definitions for manipulating and searching that registry</li>
-							</ul>
-						</ul>					
-					</ul>
-				</div>
-
-				<div class="slide">
-					<hgroup>
-						<h1>Using UDDI Registry</h1>
-					</hgroup>				
-					<div class="h-drawing" id="1Fufk37zyJV7kKQwrmPRS1SCe5whpaNuN21r7V9jm5z0" style="height: 270px"></div>	
-					<ul class="xx-small">
-						<li>Steps:</li>
-						<ol>			
-							<li>Provider publishes the WDSL URL</li>
-							<li>Client looks up and receive WSDL location, adds itself as subscriber</li>
-							<li>Client invokes the service</li>
-							<li>Provider performs the update</li>
-							<li>Registry notifies client</li>
-							<li>Client invokes the updated service</li>
-						</ol>
-					</ul>
-				</div>
-
-				<div class="slide">
-					<hgroup>
-						<h1>UDDI Service Model</h1>
-					</hgroup>						
-					<div class="h-drawing" id="1KVHrjWxWBMX_pgcrbqBDlWnaHnOf4P6iGls6x32UmMY" style="height: 450px"></div>			
-					<ul class="x-small">			
-						
-					</ul>
-				</div>
-
-				<!--
-				<div class="slide">
-					<hgroup>
-						<h1>UDDI Example</h1>
-					</hgroup>								
-					<ul class="x-small">			
-						<li>Creating Registry</li>
-						<pre class="brush: xml">
-							POST /save_business HTTP/1.1
-							Host: www.XYZ.com
-							Content-Type: text/xml; charset="utf-8"
-							Content-Length: nnnn
-							SOAPAction: "save_business"
-							&lt;?xml version="1.0" encoding="UTF-8" ?>
-							&lt;Envelope xmlns="http://schemas/xmlsoap.org/soap/envelope/">
-							      &lt;Body>
-							         &lt;save_business generic="2.0" xmlns="urn:uddi-org:api_v2">
-							         &lt;businessKey="">
-							         &lt;/businessKey>
-							         &lt;name>
-							         XYZ, Pvt Ltd.
-							         &lt;/name>
-							         &lt;description>
-							             Company is involved in giving Stat-of-the-art....
-							         &lt;/description>
-							         &lt;identifierBag> ... &lt;/identifierBag>
-							         ...
-							         &lt;/save_business>
-							      &lt;/Body>
-							&lt;/Envelope>
-						</pre>
-					</ul>
-				</div>
-
-				<div class="slide">
-					<hgroup>
-						<h1>UDDI Example (cont.)</h1>
-					</hgroup>								
-					<ul class="x-small">			
-						<li>Retrieving Information</li>
-						<pre class="brush: xml">
-							POST /get_businessDetail HTTP/1.1
-							Host: www.XYZ.com
-							Content-Type: text/xml; charset="utf-8"
-							Content-Length: nnnn
-							SOAPAction: "get_businessDetail"
-							&lt;?xml version="1.0" encoding="UTF-8" ?>
-							&lt;Envelope xmlns="http://schemas/xmlsoap.org/soap/envelope/">
-							   &lt;Body>
-							      &lt;get_businessDetail generic="2.0" xmlns="urn:uddi-org:api_v2">
-							          &lt;businessKey="C90D731D-772HSH-4130-9DE3-5303371170C2">
-							      &lt;/businessKey>
-							      &lt;/get_businessDetail>
-							   &lt;/Body>
-							&lt;/Envelope>
-						</pre>
-						<pre class="brush: xml">
-							&lt;?xml version="1.0" encoding="UTF-8"?>
-							&lt;Envelope xmlns="http://schemas.xmlsoap.org/soap/envelope/">
-							  &lt;Body>
-							    &lt;find_service businessKey="*" generic="1.0" xmlns="urn:uddi-org:api">
-							      &lt;name>delayed stock quotes&lt;/name>
-							    &lt;/find_service>
-							  &lt;/Body>
-							&lt;/Envelope>
-						</pre>
-					</ul>
-				</div>
-				-->
-	            
-	        </section>
-
-	        <div class="slide outline"></div>
-
-	        <section>
-	            <header>Monitoring and Management</header>
-	            
-	    		<div class="slide">
-					<hgroup>
-						<h1>Monitoring</h1>
-					</hgroup>
-					<ul class="">
-						<li>The operations team has additional governance needs for deployed, run-time assets such as service endpoints:</li>
-						<ul>
-							<li>Enforcing security, quality-of-service (QoS), and other policies at run time</li>
-							<li>Enforcing contracts and SLAs for different service consumers</li>
-							<li>Gathering metrics and trigger alerts</li>
-							<li>Reporting data to the repository to support decision making</li>
-							<li>Detecting services that are not in the repository</li>
-						</ul>
-					</ul>
-				</div>
-
-				<div class="slide">
-					<hgroup>
-						<h1>Measuring Success Through Reuse</h1>
-					</hgroup>
-					<ul class="x-small">
-						<li>The organizations typically focus on one main goal of SOA - Reuse</li>
-						<li>Reuse</li>
-						<ul>
-							<li>avoids the costs of repeatedly developing the same functionality</li>
-							<li>avoids the costs of maintaining different implementations of the same functionality</li>
-							<li>consolidates functionality and reduces redundancy</li>
-							<li>the more that reuse occurs, the greater the savings</li>
-						</ul>						
-						<li>Cost of Reuse</li>
-						<ul>
-							<li>The governance workflow (taxonomies, approvals, registration, metrics, and so on)</li>
-							<li>Proper asset documentation, samples, and so on</li>
-							<li>Learning to use an existing asset</li>
-							<li>Integrating an existing asset into a project</li>
-						</ul>
-					</ul>
-				</div>
-
-				<div class="slide">
-					<hgroup>
-						<h1>Cost of reuse</h1>
-					</hgroup>
-					<ul class="x-small">
-						<li>Production factor</li>						
-						<ul>
-							<li>amount of time to make an asset reusable</li>
-							<li>reusable asset typically takes more time than single use asset</li>
-						</ul>
-						<li>Consumption factor</li>						
-						<ul>
-							<li>amount of time required to reuse an asset</li>
-							<li>time to evaluate and reuse</li>
-						</ul>
-						<li>Burden rate</li>						
-						<ul>
-							<li>cost associated with this SOA overhead</li>
-						</ul>
-						<li>Example:</li>
-						<ul>
-							<li>Time to develop reusable asset: <span class="h-latex">\mathit{200 hrs}</span></li>
-							<li>Production factor: <span class="h-latex">\mathit{125 \%}</span></li>
-							<li>Consumption factor: <span class="h-latex">\mathit{20 \%}</span></li>
-							<li>Burden rate: <span class="h-latex lower">\mathit{\$150/hr}</span></li>
-							<li><span class="h-latex lower">\mathit{200 hrs / 125 \% = 160 hrs}</span> &rarr; time to develop non-reusable </li>
-							<li><span class="h-latex lower">\mathit{160 hrs * 20 \% = 32 hrs}</span> &rarr; time to reuse</li>
-							<li><span class="h-latex lower">\mathit{32 hrs * \$150/hr = \$4800}</span> &rarr; cost to reuse</li>
-						</ul>
-					</ul>
-				</div>
-
-				<div class="slide">
-					<hgroup>
-						<h1>Predicting reuse savings</h1>
-					</hgroup>
-					<ul class="small">
-						<li>Predicted total time: <span class="h-latex">\mathit{400 hrs}</span></li>
-						<li>Production factor: <span class="h-latex">\mathit{160 \%}</span></li>
-						<li>Consumption factor: <span class="h-latex">\mathit{20 \%}</span></li>
-						<li>Burden rate: <span class="h-latex lower">\mathit{\$60/hr}</span></li>
-						<li>Predicted number of reuse: <span class="h-latex">\mathit{5}</span></li>
-						<li><span class="h-latex lower">\mathit{400 hrs / 160 \% = 250 hrs}</span> &rarr; predicted time for non-reusable</li>
-						<li><span class="h-latex">\mathit{250 hrs * 20 \% = 50 hrs}</span> &rarr; predicted time to reuse</li>
-						<li><span class="h-latex">\mathit{250 hrs - 50 hrs = 200 hrs}</span> &rarr; predicted time saved</li>
-						<li><span class="h-latex lower">\mathit{200 hrs * \$60/hr * 5 = \$60,000}</span> &rarr; predicted total cost savings</li>
-					</ul>
-				</div>
-	            
-	        </section>
+				<hgroup>
+					<h1>Message Encryption</h1>
+				</hgroup>
+				<ul class="x-small">
+                    <li>XML Encryption ensures <i>Confidentiality</i>.</li>
+                    <ul>
+                        <li>syntax for representing XML content</li>
+                        <li>information needed to decrypt/encrypt XML content</li>
+                        <li>encryption of chosen elements</li>
+                    </ul>
+                    <li>Used to encrypt different SOAP envelope components.</li>
+                    <ul>
+                        <li>encrypt only sensitive data in the message</li>
+                        <li>passwords, credit card details, etc.</li>
+                    </ul>
+                    <li>Drawbacks</li>
+                    <ul>
+                        <li>encrypting is CPU intensive job</li>
+                        <li>overhead to SOAP processing due to increased message size and XML and cryptographic processing</li>
+                    </ul>
+                    <li>Usage recommendation</li>
+                    <ul>
+                        <li>encrypt only when necessary</li>
+                        <li>encrypt only sensitive data</li>
+                    </ul>
+                </ul>
+            </div>
+            
+            <div class="slide">
+				<hgroup>
+					<h1>XML Encryption Example</h1>
+				</hgroup>
+				<ul class="x-small">
+                    <li>Encrypting SOAP message with client's public key.</li>
+                    <li>Sample XML document:</li>
+                </ul>
+                <ul class="x-small">
+                    <pre class="brush: xml; first-line: 1; highlight: [5,6,7,8,9]">
+                        <S:Envelope>
+                            <S:Body>
+                                <PaymentInfo xmlns="http://example.org/paymentv2">
+                                    <Name>John Smith</Name>
+                                    <CreditCard Limit='5,000' Currency='USD'>
+                                        <Number>4019 2445 0277 5567</Number>
+                                        <Issuer>Example Bank</Issuer>
+                                        <Expiration>04/02</Expiration>
+                                    </CreditCard>
+                                </PaymentInfo>
+                            </S:Body>
+                        </S:Envelope>
+                    </pre>
+                </ul>
+                <ul class="x-small">
+                    <li><i>CreditCard</i> element will be encrypted using client's public key.</li>
+                    <ul>
+                        <li>other elements are not confident.</li>
+                    </ul>
+                </ul>
+            </div>
+                    
+            <div class="slide">
+                <hgroup>
+                    <h1>XML Encryption Example (cont.)</h1>
+                </hgroup>
+                <ul class="x-small">
+                    <li>Security metadata element describing the encryption.</li>
+                </ul>
+                <ul class="xx-small">
+                    <pre class="brush: xml; first-line: 1; highlight: [6,16]">
+                        <S:Envelope>
+                            <S:header>
+                                <wsse:Security s:actor="..." s:mustUnderstand="1">
+                                    <EncryptedKey xmlns="http://www.w3.org/2001/04/xmlenc#">
+                                        <!-- used encryption method, Rivest-Shamir-Adleman algorithm -->
+                                        <EncryptionMethod Algorithm="http://www.w3.org/2001/04/xmlenc#rsa-1_5" ></EncryptionMethod>
+                                        <KeyInfo xmlns="http://www.w3.org/2000/09/xmldsig#">
+                                            <KeyName>Sally Doe</KeyName>
+                                        </KeyInfo>
+                                        <CipherData>
+                                            <CipherValue>yMTEyOTA1M...</CipherValue>
+                                        </CipherData>
+                                    </EncryptedKey>
+                                    <ReferenceList xmlns="http://www.w3.org/2001/04/xmlenc#">
+                                        <!-- reference to the encrypted element -->
+                                        <DataReference URI="#ed1"/></DataReference>
+                                    </ReferenceList>
+                                </wsse:Security>                                
+                            </S:header>
+                            ...
+                            <!-- see next slide for the encrypted body element -->
+                        </S:Envelope>
+                    </pre>
+                </ul>
+            </div>
+            <div class="slide">
+				<hgroup>
+					<h1>XML Encryption Example (cont.)</h1>
+				</hgroup>
+                <ul class="x-small">
+                    <li>Encrypted SOAP body part.</li>
+                </ul>
+				<ul class="xx-small">
+                    
+                    <pre class="brush: xml; first-line: 1; highlight: [6,10]">
+                        <S:Body>
+                            <PaymentInfo xmlns="http://example.org/paymentv2">
+                                <Name>John Smith</Name>
+                                <EncryptedData Id="ed1" Type="http://www.w3.org/2001/04/xmlenc#Element" xmlns="http://www.w3.org/2001/04/xmlenc#">
+                                    <!-- used encryption method, triple Data Encryption Standard (DES)-->
+                                    <EncryptionMethod Algorithm="http://www.w3.org/2001/04/xmlenc#tripledes-cbc">
+                                    </EncryptionMethod>
+                                    <CipherData>
+                                        <!-- encrypted data value for the Credit Card element-->
+                                        <CipherValue>ydUNqHkMrD...</CipherValue>
+                                    </CipherData>
+                                </EncryptedData>
+                            </PaymentInfo>
+                        </S:Body>
+                    </pre>
+                </ul>
+            </div>
+            
+            <div class="slide">
+				<hgroup>
+					<h1>Signing SOAP Messages</h1>
+				</hgroup>
+				<ul class="x-small">
+                    <li>Signing SOAP messages with XML signature</li>
+                    <ul>
+                        <li>Integrity - the message was not change during the transmission.</li>
+                        <li>Authentication - the receiver can authenticate the signer.</li>
+                    </ul>
+                    <li>All information is included to the <i>Signature</i> element.</li>
+                    <ul>
+                        <li>sub-element of the Security element.</li>
+                    </ul>
+                </ul>
+                <ul class="xx-small">
+                    <pre class="brush: xml; first-line: 1; highlight: [6,11,17]">
+                        <s:envelope>
+                            <s:header>
+                                <wsse:Security>
+                                    <ds:Signature>
+                                        <ds:SignedInfo>
+                                            <ds:Reference URI="#myBody">
+                                                <!-- reference to signed element -->
+                                            </ds:Reference>
+                                            <!-- information about regarding the used signing algorithms -->
+                                        </ds:SignedInfo>
+                                        <ds:SignatureValue>
+                                            <!-- value of the signature -->
+                                        </ds:SignatureValue>
+                                    </ds:Signature>
+                                </wsse:Security>
+                            </s:header>
+                            <s:body wsu:Id="myBody">
+                                <!-- signed XML element -->
+                            </s:body>
+                        </s:envelope>
+                    </pre>
+                </ul>
+            </div>
+            
         </section>
         
     </body>
-</html>
