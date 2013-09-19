@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<!--
+    Middleware and Web Services, CTU course slides
+    (cc) 2010-2013 Tomas Vitvar, http://vitvar.com
+    written for Humla, an open source HTML5 presentation environment
+-->
+<html>  
+    <head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> 
+        <meta name="course"   content="Middleware and Web Services"/>
+		<meta name="lecture"  content="Lecture 2"/>
+   		<meta name="keywords" content="enterprise architecture, system integration, roles, software architecture"/>
+           
+        <link type="text/css" rel="stylesheet" href="css/meta.css"></link>   
+        <link type="text/css" rel="stylesheet" href="css/ctu-fit.css"></link>   
+        <link type="text/css" rel="stylesheet" href="humla/lib/core/humla.css"></link>   
+
+        <script type="text/javascript" src="humla/lib/humla.js"></script>
+        <title>Introduction to Architectures</title>
+	</head>
+	
+	<body>
+		<footer>
+			<p><b>#META_LECTURE#: #TITLE#</b>,&nbsp;<span class="meta_semester"/>,&nbsp;
+			<span class="meta_twitter"/></p>
+			<p><b>&#8210; #SLIDE_NO# &#8210;</b></p>
+		</footer>
+
+    	<div class="slide intro">
+			<hgroup>
+				<h1><span class="meta_course"/></h1>
+ 				<h2>#META_LECTURE#: #TITLE#</h2>
+			</hgroup>
+			<div class="author">
+				<p class="meta_author"/>
+				<p><span class="meta_email"/> &bull; <span class="meta_twitter"/> &bull; 
+				<span class="meta_web"/></p>
+			</div>
+			<center><div class="meta_logo"></div></center>
+			<div class="org">
+				<p class="meta_org"/>
+				<p><span class="meta_orgfac"/> &bull; <span class="meta_field"/> 
+				&bull; <span class="meta_orgweb"/></p>
+			</div>
+			<div class="etc">
+        		<div class="text-info">
+    				Modified: #LAST_MODIFIED#<br/>
+					Humla v#HUMLA_VERSION#
+				</div>
+				<a href="http://creativecommons.org/licenses/by-sa/3.0/"><div class="license"></div></a>
+				<div class="oppa"></div>
+			</div>
+		</div>
+        
+		<div class="slide outline"></div>
+        
+    	<section>
+			<header>Architecture Overview</header>
+
+			<div class="slide">
+				<hgroup>
+					<h1>Global Architecture</h1>
+				</hgroup>
+				<ul class="x-small x-spacing">
+					<li>A <b>structure</b> and a <b>behavior</b> of system's parts</li>
+					<li>Complexity &#150; views on the global architecture</li>
+					<ul>
+						<li>basic architectural views (also called dimensions): <br/>enterprise, data, 
+						functional, process, software, hardware.</li>
+					</ul>
+                    <li>Development</li>
+                    <ul>
+                        <li>basic <b>methodology</b> and <b>actors</b>:<br/>
+                        ~ analysis, design, implementation, testing, maintenance<br/>
+                        ~ end-user, architect, developer, administrator</li> 
+    					<li>basic architectural <b>development levels</b>:<br/>
+						~ conceptual, logical, physical.
+						</li>
+                    </ul>
+					<li>Global architecture and cloud computing</li>
+					<ul>
+    					<li>data, functions, processes are application (domain) specific</li>
+    					<li>software architecture defines a <b>software platform</b></li>
+    					<li>hardware architecture defines an <b>infrastructure</b></li>
+					</ul>
+					
+				</ul>
+			</div>
+
+			<div class="slide">
+				<hgroup>
+					<h1>Views</h1>
+				</hgroup>
+				<div class="h-drawing" style="height: 450px; margin-top: 25px" 
+					id="1Ju9pP6mgYoFJuzhhqLP6JibZAXLM-UEgUDd_8rQp8og"></div>
+			</div>
+
+            <div class="slide outline">
+            </div>
+    
+            <section>
+                <header>Enterprise Architecture</header>
+
+    			<div class="slide">
+    				<hgroup>
+    					<h1>Enterprise Architecture</h1>
+    				</hgroup>
+    				<div class="h-drawing" style="height: 450px; margin-top: 25px" 
+    				    id="1OdjNMgIXF5iKeBELzxGZmDLVQhVbteYoWLjNV29BfxA"></div>
+    			</div>
+        
+        		<div class="slide">
+    				<hgroup>
+    					<h1>Enterprise Architecture Levels</h1>
+    				</hgroup>
+    				<ul class="x-small">
+    					<li>Defines a structure of an enterprise system</li>
+    					<ul>
+    						<li>Abstracts from data, functions, processes, software, hardware</li>
+                            <li>divides enterprise system into functional blocks &#150; <b>applications</b></li>
+                            <ul>
+                                <li>Order Management System (OMS)</li>
+                                <li>Customer Relationship System (CRM)</li>
+                            </ul>
+                            <li>applications correspond to <b>domains</b> such as sales, finance, procurement, production, etc.</li>
+    					</ul>
+    					<li>Enterprise architecture levels</li>
+    					<ul>
+    						<li>Operational Support Systems (OSS)</li> 
+                            <li>Business Information System (BIS)</li>
+                            <li>Executive Information Systems (EIS)</li> 
+    						<li class="space-before">Office Information Systems (OIS)</li>
+                            <li>Integration</li>
+                            <ul>
+                                <li>Business-to-Business (B2B)</li>
+                                <li>Enterprise Application Integration (EAI)</li>
+                            </ul>
+    					</ul>
+    				</ul>
+    			</div>        
+
+        		<div class="slide">
+    				<hgroup>
+    					<h1>Enterprise Architecture Representation</h1>
+    				</hgroup>
+    				<div class="h-drawing" style="height: 470px" alt="Enterprise Architecture as a Pyramid"
+                        id="1OkBUAAuC4sMc_paN2OYYyJLaLdvr4qzttqRPr0uhN9A"></div>
+    			</div>
+
+    			<div class="slide">
+    				<hgroup>
+    					<h1>Example Applications and Processes</h1>
+    				</hgroup>
+    				<ul>
+    					<li>A sales process example</li>
+    					<ul>
+    						<li>performed by back-office support personnel</li>
+    					</ul>
+    					<div class="h-drawing" style="height: 100px; width: 700px" 
+    						id="1yX-8bZn0P2UwA06KeVJOgk4jaZ0EuMkWaIUa-RdMEno"></div>
+    					<li style="margin-top: 15px;">Enterprise system example</li>
+    					<ul>
+    						<li>interconnected applications</li>
+    					</ul>
+    					<div class="h-drawing" style="height: 200px; width: 700px" 
+    						id="1JRgVTqa43jbpGM6PYgGQQFk3mBFHqwWu_SGZHbd0fsY"></div>
+    				</ul>
+    			</div>			                        
+            
+	    		<div class="slide">
+					<hgroup>
+						<h1>Organization Types</h1>
+					</hgroup>
+					<ul class="spacing">
+						<li>Customer</li>
+						<ul>
+							<li>user needs: support for business processes</li>
+							<li>defines business requirements</li>
+							<li>roles: enterprise architect, developers, admins, users</li>
+						</ul>
+						<li>Supplier (enterprise system/application provider)</li>
+						<ul>
+							<li>solutions and customization according to requirements</li>
+							<li>roles: technical and solution architects, developers, admins</li>  
+						</ul>
+						<li>Vendor (technology provider)</li>
+						<ul>
+							<li>product development according to market needs</li>
+							<li>roles: product managers, developers, reference users</li>						
+						</ul>
+					</ul>  
+				</div>
+
+	    		<div class="slide">
+					<hgroup>
+						<h1>Architect Roles</h1>
+					</hgroup>
+					<ul class="spacing small">
+						<li>Technical Architect</li>
+						<ul>
+							<li>Technical architecture design</li>
+							<li>technology configurations, performance</li>
+						</ul>
+						<li>Solution Architect</li>
+						<ul>
+							<li>Requirements gathering, analysis</li>
+							<li>Solution design (data, functions, process)</li>
+						</ul>
+						<li>Enterprise Architect</li>
+						<ul>
+							<li>High-level enterprise architecture design</li>
+							<ul>
+								<li>Applications, processes, data models</li>
+							</ul>
+							<li>Should be aligned with industry standards</li>
+							<ul>
+								<li>APQC &ndash; American Productivity &amp; Quality Center (Process Classification Framework)</li>
+								<li>TM Forum &ndash; eTOM &ndash; Enahnced Telekom Operations Map (Business Process Framework)</li>																
+							</ul>
+						</ul>
+					</ul>  
+				</div>
+				
+	    		<div class="slide">
+					<hgroup>
+						<h1>Process Classification Framework</h1>
+					</hgroup>
+					<div class="h-drawing" id="1ou4lOAvwaFP2MJo1RQbJOTF-DavfYjcUF6MELE6cWws"></div>
+				</div>
+				
+				
+			</section>
+            
+            <div class="slide outline">
+            </div>
+            
+            <section>
+                <header>Integration</header>
+
+    			<div class="slide">
+    				<hgroup>
+    					<h1>Integrating Applications</h1>
+    				</hgroup>  
+    				<ul class="small">
+    					<li>Enterprise Application Integration (EAI)</li>
+    					<ul>
+    						<li>applications operate in a domain</li>
+    						<li>functions and data often overlap across domains</li>
+    						<li>need to integrate them</li>
+                            <ul>
+                                <li>applications can share data</li>
+                                <li>applications can share functionalities</li>
+                                <li>applications can communicate &#150; a result of one process may trigger another one</li>
+                            </ul>
+    					</ul>
+    					<li>Business-to-Business Integration (B2B)</li>
+    					<ul>
+    						<li>automation support for communication and collaboration among enterprises</li>
+    						<li>for example, B2B automates customers' orders processing, tracking orders, etc.</li>
+    					</ul>    					
+    				</ul>				
+    			</div>
+                    
+    			<div class="slide">
+    				<hgroup>
+    					<h1>EAI and B2B Integration Example</h1>
+    				</hgroup>
+    				<div class="h-drawing" style="height: 400px; margin-top: 40px" 
+    				id="1r38Dt-AHQIthHdf4TjYlRw1LxpuSwfK-ZULz9C_eX1M"></div>
+    			</div>
+    			
+    			<div class="slide">
+    				<hgroup>
+    					<h1>Integration Issues</h1>
+    				</hgroup>
+    				<ul class="small">
+                        <li>Key to integration = <b>interface</b></li>
+                        <ul>
+                            <li>standards &#150; data, functions, processes, technical aspects</li>
+                            <ul>
+                                <li>enterprise standards, committee standards</li>
+                                <li>unified environment from a single vendor</li> 
+                            </ul>
+                            <li>mediators</li>
+                            <ul>
+                                <li>where standard do not work out</li>
+                            </ul>
+                        </ul>
+                        <li>Data</li>
+                        <ul>
+                            <li>Message exchange formats, data representation</li>
+                            <ul>
+                                <li>a lot of standardization efforts, good results</li>
+                            </ul>
+                            <li>Semantics of data</li>
+                            <ul>
+                                <li>also standardization efforts, more difficult</li>
+                            </ul>
+                        </ul>
+                        <li>Functions and processes</li>
+                        <ul>
+                            <li>how to consume apps' functionalities, protocols, naming issues</li>
+                            <li>A concept of a service should solve the problems</li>
+                        </ul>
+    				</ul>				
+    			</div>
+            </section>
+        </section>
+            
+        <div class="slide outline">
+        </div>
+
+        <section>
+            <header>Data, Functions and Processes</header>
+            
+            <div class="slide">
+                <hgroup>
+					<h1>Overview of Representations</h1>
+				</hgroup>                
+                <ul>
+                    <li>Languages to realize architectures</li>
+                    <ul>
+                        <li>development levels &#215; architectural views</li>
+                    </ul>
+                </ul>
+                <div class="h-drawing" style="height: 380px" id="1cyaFfMg6nhpS6ZpVkjwca_FaAN-Ff0vgy_Ji6EOuSW8"></div>
+            </div>            
+
+            <div class="slide">
+            	<hgroup>
+					<h1>Syntax and Domain Semantics</h1>
+				</hgroup>                
+                <ul class="small">
+                    <li>Syntax</li>
+                    <ul>
+                        <li>Data format, representation, serialization</li>
+                        <li>Various languages at various architectural levels:<br/>
+                        XML, JSON, Class/object models in a specific programming language, SQL, DB native structures, ...</li>
+                        <li>They have formal grammars, can be checked for the correct syntax</li>
+                    </ul>
+                    <li>Domain semantics</li>
+                    <ul>
+                        <li>Meaning of terms in a domain they are being used</li>
+                        <li>We understand meaning of terms:</li>
+                        <ul>
+                            <li>Through syntax by using the natural language</li>
+                            <li>Through some <b>agreement</b> among users of the terms</li>
+                        </ul>
+                        <li class="space-before">We use this understanding to implement the meaning in code</li>
+                        <li>We expect users will understand the meaning the same</li>
+                    </ul>
+                </ul>                    
+            </div>
+            
+            <div class="slide">
+                <hgroup>
+					<h1>Example Data Syntax and Semantics</h1>
+				</hgroup>                
+                <ul class="x-small">
+                    <li>Requirement (conceptual level)</li>
+                    <pre class="brush: plain">
+                        Tomas Vitvar works at Oracle as an Architect.
+                    </pre>
+                    <li>Syntax and semantics (physical Level)</li>
+                    <ul>
+                        <li>XML representation:</li>
+                        <div class="columns-2" style="margin-left: -20px; width: 90%">
+                            <pre class="brush: xml; first-line: 1">
+                                &lt;person>
+                                    &lt;name>Tomas Vitvar&lt;/name>
+                                    &lt;company>Oracle&lt;/company>
+                                    &lt;role>Architect&lt;/role>
+                                &lt;/person>
+                            </pre>
+                            <pre class="brush: xml; first-line: 6">
+                                &lt;staff>
+                                    &lt;name>Tomas Vitvar&lt;/name>
+                                    &lt;works-at>Oracle&lt;/works-at>
+                                    &lt;title>Architect&lt;/title>
+                                &lt;/staff>
+                            </pre>
+                        </div>
+                        <li>JSON representation:</li>
+                        <div class="columns-2" style="margin-left: -20px; width: 90%">
+                            <pre class="brush: js; first-line: 11">
+                                { "person" : {
+                                    "name" : "Tomas Vitvar",
+                                    "company" : "Oracle",
+                                    "role" : "Architect" } }
+                            </pre>
+                            <pre class="brush: js; first-line: 15">
+                                { "staff" : {
+                                    "name" : "Tomas Vitvar",
+                                    "works-at" : "Oracle",
+                                    "title" : "Architect" } }
+                            </pre>
+                        </div>
+                        <li>Problems with meaning of terms <code>name</code>, <code>company</code>, <code>title</code></li>
+                        <li>Problems with meaning of relations: Is Oracle a company that Tomas works or likes? (cf. lines 2,3)
+                    </ul>
+                </ul>
+            </div>
+
+            <div class="slide">
+                <hgroup>
+    				<h1>Example Functions Syntax and Semantics</h1>
+				</hgroup>                
+                <ul class="x-small">
+                    <li>Requirement (conceptual level)</li>
+                    <pre class="brush: plain">
+                        Users provide data for new orders in the system.
+                    </pre>
+                    <li>Syntax and semantics (physical Level)</li>
+                    <ul>
+                        <li>Java representation:</li>
+                        <div class="columns-2" style="margin-left: -20px; width: 90%">
+                            <pre class="brush: java; first-line: 1">
+                                class Order {
+                                    public addOrder(data) {
+                                        // add order logic
+                                    }
+                                }
+                            </pre>
+                            <pre class="brush: java; first-line: 6">
+                                class Order {
+                                    public createOrder(data) {
+                                        // create order logic
+                                    }
+                                }
+                            </pre>
+                        </div>
+                        <li>HTTP/URI representation:</li>
+                        <div class="columns-2" style="margin-left: -20px; width: 90%">
+                            <pre class="brush: plain; first-line: 11">
+                                GET /orders/?action=add
+                                HTTP Headers*
+                                
+                                Data...
+                            </pre>
+                            <pre class="brush: plain; first-line: 15">
+                                POST /orders/
+                                HTTP Headers*
+                                
+                                Data...
+                            </pre>
+                        </div>
+                        <li>Problems with meaning of function terms <code>add</code>, <code>create</code> (cf. lines 2,7)</li>
+                        <li>Problems with domain semantics for function names: query string <code>action=add</code> vs. 
+                            HTTP method <code>POST</code> (cf. lines 11,15)</li>
+                    </ul>
+                </ul>
+            </div>
+
+            <div class="slide">
+                <hgroup>
+    				<h1>Example Process</h1>
+				</hgroup>                
+                <ul class="x-small">
+                    <li>Requirement (conceptual level)</li>
+                    <pre class="brush: plain; class-name: 'tight'">
+                        When a customer is eligible for a discount, a sales person must approve it. 
+                    </pre>
+                    <li>Syntax and semantics (physical Level)</li>
+                    <ul>
+                        <li>Java representation:</li>
+                        <div style="margin-left: -20px; width: 90%">
+                            <pre class="brush: java; first-line: 1; class-name: 'tight'">
+									// implementation of addOrder method
+                                    public createOrder(data) {
+										if (data.customer.revenue > 10000)
+											if (Sales.approveDiscount(data))
+												// offer a discount to the customer
+										}
+										//...further order processing
+                                    }
+                            </pre>
+                        </div>
+                        <li>BPMN representation:</li>
+						<div id="1sGsBROkCtdhOkhYTiyNIIHj7YUsxl6qXL9dhJytbD8Q" class="h-drawing" style="width:350px"></div>	
+                    </ul>
+                </ul>
+            </div>
+
+        </section>
+            
+        <div class="slide outline">
+        </div>
+        
+        <section>
+            <header>Software Architecture</header>
+
+			<section>
+				<header>Types, Separation of Concerns, Interface</header>
+
+        		<div class="slide">
+    				<hgroup>
+    					<h1>Software Architecture Types</h1>
+    				</hgroup>
+    				<ul class="x-small spacing">
+    					<li>Centralized &#150; Client/Server (C/S)</li>
+    					<ul>
+    						<li>Central server, a bunch of clients</li>
+    						<li>monolithic, <b>two&ndash;</b>, <b>three&ndash;</b>, <b>multi&ndash;tier</b> architectures</li> 
+    						<li>Single point of failure!</li>
+                            <ul>
+    						    <li>when a server fails the whole system fails</li>
+    						    <li>need for a scalable and <b>highly reliable</b> server-side solutions</li>
+                            </ul>
+    						<li>Enterprise systems (mostly) use centralized solutions</li>
+                            <ul>
+                                <li>But, enhanced with peer-to-peer principles</li>
+                            </ul>
+    					</ul>
+    					<li>Decentralized &#150; Peer-to-Peer (P2P)</li>
+    					<ul>
+    						<li>Reliability</li>
+                            <ul>
+                                <li>when a node fails, other nodes take up its function</li>
+                            </ul>
+    						<li>Scalability</li>
+                            <ul>
+    						    <li>multiple nodes can share the load</li>
+                                <li>such as messaging systems in enterprise systems</li>
+                            </ul>
+    					</ul>
+    				</ul>
+    			</div>		
+
+				<div class="slide">
+					<hgroup>
+						<h1>Separation of Concerns</h1>
+					</hgroup>
+					<ul class="small">
+						<li>Separation of Concerns</li>
+						<ul>
+                            <li>also called Separation of Layers</li>
+							<li>Concern &#150; any piece of interest (part) in the application</li>
+                            <ul>
+							    <li>concerns should overlap in functionality as little as possible</li>
+                            </ul>
+							<li>Basic application concerns: data manipulation, data integrity, 
+							application logic, user-interactions</li>
+                            <li>Software architecture separates concerns into layers</li>
+                            <ul>
+                                <li>presentation, application, data</li>
+                            </ul>
+						</ul>
+						<li><b>Interface</b></li>
+						<ul>
+    						<li class="no-bullet">&#8764; agreement on "how layers should communicate"</li>
+							<li>most important artifact in Separation of Concerns</li>
+                            <li class="space-before">If an interface is in place, application development and innovation can happen <b>independently</b> 
+						    at each layer</li>
+                        </ul>
+					</ul>
+				</div>		
+	
+				<div class="slide">
+					<hgroup>
+						<h1>Software Architecture Layers</h1>
+					</hgroup>	
+					<div class="h-drawing" style="height: 430px; margin-top: 30px"
+						id="1g2Jzp4zb6VvmEmeGMGnb0JXnvzV2tVvOqu1SFLQwfhY"></div>
+				</div>
+					
+				<div class="slide">
+					<hgroup>
+						<h1>Interface</h1>
+					</hgroup>	
+					<ul class="small">
+						<li>Definition</li>
+						<ul>
+							<li>Agreement (contract) between two or more layers during communication</li>
+                        </ul>
+						<li>May be achieved by</li>
+                        <ul>
+						    <li>Through standards (accepted or enforced),</li>
+                            <li>Through a social agreement during design</li>
+                            <li>A dominant position of a technology on the market</li>
+                        </ul>
+						<li>Interface includes subsets of domain architectures</li>
+						<ul>
+							<li>Subsets that are subject to communication between layers</li>
+							<li class="space-before"><b>data</b> &#150; defines communication language (syntax, semantics),</li>
+							<li><b>functions</b> &#150; defines entry points (operations),</li>
+							<li><b>processes</b> &#150; defines valid states and transitions between them</li>
+							<li><b>technical details</b> &#150; protocols, ports, IP addresses, etc.</li>							
+						</ul>
+					</ul>
+				</div>
+
+                <div class="slide">
+					<hgroup>
+						<h1>Interface Scope</h1>
+					</hgroup>	
+					<div class="h-drawing" style="height: 230px; margin-top: 10px"
+						id="1xGYhVmeOaF09PpQ9J-u4e_Zaabvy6lzxkRrgbRCm8dg"></div>
+					<ul class="x-small">
+						<li>Scope</li>
+						<ul>
+							<li>local: layer A and B on one machine</li>
+							<li>network: layer A and B on separated machines (client/server)</li>
+						</ul>
+						<li>Application Programming Interface (API) ~ local scope</li>
+						<ul>
+							<li>OS/complex apps' interface for extension development</li>
+                        </ul>
+                        <li>Web Services and Web API (network scope)</li>
+                        <ul>
+                            <li>Web API is a new term &#150; API of Web Applications</li>
+                        </ul>
+					</ul>
+				</div>
+	
+				<div class="slide">
+					<hgroup>
+						<h1>Complex Interfaces</h1>
+					</hgroup>	
+					<div class="h-drawing" style="height: 300px; margin-top: 10px"
+						id="1duolAS2N0L7UFhk75xuky5eV9V9x6isGos76S9MGBLE"></div>
+					<ul class="x-small">
+						<li>More levels of interfaces</li>
+						<ol>
+							<li>DBMS native interface</li>
+							<li>JDBC &#150; universal connectors for various DBMS systems</li>
+							<li>JDO &#150; mapping of Java classes to data objects</li>
+							<li>Domain Object Model (OM) &#150; app-specific (~API, SDK)</li>
+                            <ul>
+							    <li>try to be as universal as possible; cover many technologies</li> 
+							</ul>
+						</ol>
+					</ul>
+				</div>
+			</section>
+				
+    		<div class="slide outline"></div>
+				
+			<section>
+				<header>Client/Server Architectures</header>
+
+				<div class="slide">
+					<hgroup>
+						<h1>Monolithic Architecture</h1>
+					</hgroup>	
+					<div class="h-drawing" style="height: 150px" 
+						id="1LEdNt_g1CLOcf1sKpyHgQx93iAD9iHDrJRH3GUN00Ps"></div>
+					<ul class="x-small">
+						<li>All layers on a single machine</li>
+						<ul>
+							<li>usually non-portable apps; specific OS</li>
+							<li>first types of computer systems, typical for 90-ties</li>
+							<li>single-user only; standalone apps, minimal integration</li>
+							<li>technologies: third-gen programming languages, local storage systems</li>
+						</ul>
+						<li>Drawbacks</li>
+						<ul>
+							<li>hard to maintain (updates, distribution of new versions)</li>
+							<li>data security issues</li>
+							<li>performance and scalability issues</li> 
+						</ul>
+					</ul>
+				</div>
+
+				<div class="slide">
+					<hgroup>
+						<h1>Two-tier Client/Server Architecture</h1>
+					</hgroup>	
+					<div class="h-drawing" style="height: 150px; margin-top: 20px" 
+						id="1Hjo1rvLZShCzhrRfTXwohQfdHmb8-ivomul0HQ98qs0"></div>
+					<ul class="x-small">
+						<li>Presentation and app layers separated with data</li>
+						<ul>
+							<li>Thick client &#150; desktop application, OS-dependent</li>
+							<li>Data on a separate server (DBMS)</li>
+							<li>Multi-user system, all sharing a database</li>
+							<li>Storage system of high performance, transactions 
+								support</li>
+							<li>SQL technology; native OS desktop application</li>
+						</ul>
+						<li>Drawbacks</li>
+						<ul>
+							<li>Thick client hard to maintain (reinstallation with every update)</li>
+							<li>No app logic sharing (only through copies)</li>
+							<li>Data-oriented integration (integrity in the app logic!)</li>
+						</ul>
+					</ul>
+				</div>
+
+				<div class="slide">
+					<hgroup>
+						<h1>Three-tier Client/Server Architecture</h1>
+					</hgroup>	
+					<div class="h-drawing" style="height: 150px; margin-top: 20px" 
+						id="1zSrBDm5DGLfV5XIKMzKvEMQY31y38KkHuawB9a0bhrA"></div>
+					<ul class="x-small">
+						<li>All layers on separated machines</li>
+						<ul>
+							<li>Thin client &#150; desktop application or interpreted code</li>
+							<li>Multi-user system, all sharing app logic and a database</li>
+							<li>App server of high performance, scalability</li>
+						</ul>
+    					<li>Drawbacks</li>
+						<ul>
+							<li>Spaghetti integration (see <a href="lecture1.html#/spaghetti">Lecture 1</a>)</li>
+							<li>Limited, single app server scalability</li>
+						</ul>
+					</ul>
+				</div>
+                
+				<div class="slide">
+					<hgroup>
+						<h1>Multi-tier Client/Server Architecture</h1>
+					</hgroup>	
+					<div class="h-drawing" style="height: 120px; margin-top: 20px; margin-bottom: 20px" 
+						id="1COkmR7I_1RUdIcrQw8_NYTA-qzY_rBrrZm5JdjkIFaY"></div>
+					<ul class="y-small">
+						<li>Additional middleware layer</li>
+						<ul>
+							<li>loose coupling, shift towards peer-to-peer architectures</li> 
+							<li>provides value-added services for communications</li>
+							<li>individual servers or a compact solution (e.g., Enterprise Service Bus)</li>
+						</ul>
+                    </ul>
+                </div>
+                
+                <div class="slide">
+    				<hgroup>
+						<h1>Types of Middleware</h1>
+					</hgroup>	
+                    <ul class="x-small spacing">
+                        <li>Scalability</li>
+                        <ul>
+                            <li>They help to achieve high performance through better scalability</li>
+                            <li class="space-before">Messaging Servers (message queues, publish/subscribe)</li>
+                            <li>Load Balancers</li>
+                            <li>Proxy servers, reverse proxy</li>
+                        </ul>
+                        <li>Functional</li>
+                        <ul>
+                            <li>They help to achieve more flexible integration</li>
+                            <li class="space-before">Process servers</li>
+                            <li>Repositories, registries of services/components</li>
+                            <li>Mediators &#150; data interoperability, process interoperability, technical interoperability (SOAP server)</li>
+                            <li>Monitors for analytics of apps usages</li>
+                        </ul>
+                        <li>Security</li>
+                        <ul>
+                            <li>Firewalls, Gateways, ...</li>
+                        </ul>
+					</ul>
+				</div>
+			</section>            
+            
+        </section>
+
+        
+    </body>
+</html>
