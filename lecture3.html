@@ -636,8 +636,21 @@
 						<li>The method tests the value of the <code>host</code> header and responds back if the header
 							matches <code>company.cz</code> value.</li>					
                     </ul>
-					<div class="h-github" name="examples/protocols/src/com/vitvar/ctu/mdw/HttpListener.java"
-						lines="15-26"></div>
+                    <pre class="brush: java; class-name: 'tight'; first-line: 1">
+                    /** handles the request when client connects **/
+                    public void handleRequest(HttpServletRequest request, 
+                            HttpServletResponse response) throws IOException, ServletException {
+
+                        // test if the host is company.cz
+                        if (request.getHeader("Host").equals("company.cz")) {
+                            response.setStatus(200);
+                            response.setHeader("Content-Type", "text/plain");
+                            response.getWriter().write("This is the response");
+                            response.flushBuffer();
+                        } else
+                            response.sendError(400); // bad request
+                    }
+                    </pre>
                 </ul>
 			</div>
 
