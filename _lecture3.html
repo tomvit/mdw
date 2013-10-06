@@ -127,7 +127,7 @@
 				<ul class="xx-small">
 					<li>IP addressing: IP is an address of a machine interface</li>
                     <ul>
-                        <li>A machine can have multiple interfaces</li>
+                        <li>A machine can have multiple interfaces (eth0, eth1, bond0, ...)</li>
                     </ul>
                     <li>TCP addressing: TCP port is an address of an app running on a machine</li>
                     <ul>
@@ -150,12 +150,68 @@
                     <h1>Virtual IP</li>
                 </hgroup>
                 <div class="h-drawing" style="height: 220px" 
-                    id="1a6OhSNel7-1HC-NaWmmkRfIOyQqlvaoXGyJws1rAuZU"></div>
+                    id="1I1Hnhwi9i_VpmebflPS1NqKud_yb1CjOkb7CR0KVdkg"></div>
                 <ul class="xx-small">
-                    <li>TODO</li>
+                    <li>Virtual IP</li>
+                    <ul>
+                        <li>Additional IP addresses assigned to a network interface</li>
+                        <ul>
+                            <li>For example, <code>eth0 &ndash; eth0:1, eth0:2, eth0:3, ...</code></li>
+                            <li>A process can bind to the virtual IP</li>
+                            <li>Multiple processes can listen on the same tcp port but on different virtual IPs</li> 
+                        </ul> 
+                    </ul>
+                    <li>Benefits</li>
+                    <ul>
+                        <li>Floating IP &ndash; a process can move transparently to another physical machine</li>
+                        <li>Network configuration can be preserved, no need to reconfigure</li>
+                        <li>Failover concept uses floating IPs</li>
+                    </ul>
                 </ul>
             </div>
-            
+
+            <div class="slide">
+                <hgroup>
+                    <h1>Virtual IP Configuration</li>
+                </hgroup>
+                <ul class="x-small">
+                    <li>Steps to configure virtual IP in Linux (example for <code>eth0</code>)</li>
+                    <ol>
+                        <li>Find out the interface's network mask</li>
+                        <pre class="brush: bash; class-name: 'x-small tight'">
+                            $ ifconfig eth0
+                            eth0      Link encap:Ethernet  HWaddr 00:0C:29:AB:5E:6A
+                            inet addr:172.16.169.184  Bcast:172.16.169.255  Mask:255.255.255.0
+                            ...
+                        </pre>
+
+                        <li>Create virtual IP using <code>ifconfig</code></li>
+                        <ul>
+                            <li>it should use the same network mask</li>
+                            <li>it should be free, usually allocated to be used as a virtual IP</li>
+                        </ul>
+                        <pre class="brush: bash; class-name: 'x-small tight'; first-line: 5">
+                            $ sudo ifconfig eth0:1 172.16.169.184 netmask 255.255.255.0
+                            $ ifconfig eth0:1
+                            eth0:1    Link encap:Ethernet  HWaddr 00:0C:29:AB:5E:6A
+                                      inet addr:172.16.169.186  Bcast:172.16.169.255  Mask:255.255.255.0
+                        </pre>
+                        <li>Update neighbours' ARP (Address Resolution Protocol) caches</li>
+                        <ul>
+                            <li>to associate the virtual IP with MAC address of <code>eth0</code></li>
+                            <li>when the virtual IP was in use on other node or interface</li>
+                        </ul>                        
+                        <pre class="brush: bash; class-name: 'x-small tight'; first-line: 9">
+                            $ sudo arping -q -U -c 3 -I eht0 172.16.169.184
+                        </pre>
+                    </ol>
+                    <li class="task">Tasks</li>
+                    <ul>
+                        <li>Configure a virtual IP on your computer and test it using <code>ping</code></li>
+                    </ul>
+                </ul>
+            </div>
+
             <div class="slide outline"></div>
 
             <section>
@@ -185,12 +241,25 @@
 
                 <div class="slide">
                     <hgroup>
-                        <h1>Asynchronous via Third-Party</h1>
+                        <h1>Asynchronous via Intermediary</h1>
                     </hgroup>   
                     <div class="h-drawing" style="height: 220px" 
-                        id="14daki2YQxkRxkpg_RW16-Efihlxzhep8AWXb226NaQA"></div>                                
+                        id="1mh4fk7kNmLyqVT1Cks4rRFRpGjFcU1yStOYQw2uiew8"></div>                                
                     <ul class="x-small">
-                        <li>TODO</li>
+                        <li>Intermediary</li>
+                        <ul>
+                            <li>A component that decouples a client-server communication</li>
+                            <li>It increases reliability and performance</li>
+                            <ul>
+                                <li>The server may not be available when a client sends a request</li>
+                                <li>There can be multiple servers that can handle the request</li>
+                            </ul>
+                        </ul>
+                        <li>Further Concepts</li>
+                        <ul>
+                            <li>Message Queues (MQ) &ndash; queue-based communication</li>
+                            <li>Publish/Subscribe (P/S) &ndash; event-driven communication</li> 
+                        </ul> 
                     </ul>
                 </div>
 
@@ -199,9 +268,22 @@
                         <h1>Asynchronous via Polling</h1>
                     </hgroup>   
                     <div class="h-drawing" style="height: 220px" 
-                        id="14daki2YQxkRxkpg_RW16-Efihlxzhep8AWXb226NaQA"></div>                                
+                        id="1F3GsWbkka-hDU75qAzFl1OlhtMMHt_gfxE9m3CcvlAk"></div>                                
                     <ul class="x-small">
-                        <li>TODO</li>
+                        <li>Polling &ndash; only clients open sockets</li>
+                        <ul>
+                            <li>A client performs multiple request-response interactions</li>
+                            <ul>
+                                <li>The first interaction initiates a process on the server</li>
+                                <li>Subsequent interaction check for the processing status</li>
+                                <li>The last interaction retrieves the processing result</li>
+                            </ul>
+                        </ul>
+                        <li>Properties of environments</li>
+                        <ul>
+                            <li>A server cannot open a socket with the client (network restrictions)</li>
+                            <li>Typically on the Web (a client runs in a browser)</li> 
+                        </ul>
                     </ul>
                 </div>
 
@@ -210,7 +292,7 @@
             <div class="slide outline"></div>
 
             <section>
-                <header>Configuraion of Networks</header>
+                <header>Selected Networking Concepts</header>
                 
                 <div class="slide">
                     <hgroup>
@@ -276,80 +358,174 @@
                     </ul>
                 </div>
 
-            </section>
-            
-            <div class="slide outline"></div>
-            
-            <section>
-                <header>Simple Protocol Example</header>
-
                 <div class="slide">
                     <hgroup>
-                        <h1>TCP Socket Protocol</h1>
+                        <h1>Proxy Server</li>
                     </hgroup>
+                    <div class="h-drawing" id="1zt7pfPYpd5cdHu92rimaRelwjKHkHeeA7AhHnrerI74" 
+                        style="height: 270px"></div>
                     <ul class="xx-small">
-                        <li>Example simple TCP Socket protocol in Java<a rel="code"                             href="https://github.com/tomvit/mdw/blob/master/examples/protocols/src/com/vitvar/ctu/mdw/SimpleProtocol.java">&nbsp;</a>
-                        </li>
+                        <li>Proxy Server</li>
                         <ul>
-                            <li>functions (verbs): <code>add</code> and <code>bye</code></li>
-                            <li>data syntax: <code>add</code> <code>"^[0-9]+ [0-9]+$"</code>, <code>bye</code> <code>"^$"</code> 
-								(regular grammars)</li>
-                            <li>data semantics: <code>add</code> decimal numbers, <code>bye</code> none</li> 
-                            <li>process: transitions <code>S1&#151;add&#151;S1</code>, <code>S1&#151;bye&#151;S0</code>, 
-                                where <code>S0</code>, <code>S1</code> are states such that<br/>
-                                <code>S1=connection established</code>, <code>S0=connection closed</code>.</li>
-                        </ul>
-						<div class="h-github" name="examples/protocols/src/com/vitvar/ctu/mdw/SimpleProtocol.java" 
-							lines="1-21" cid="master"></div></div>
-                    </ul>
-                </div>    
-
-                <div class="slide">
-                    <hgroup>
-                        <h1>TCP Socket Protocol (Cont.)</h1>
-                    </hgroup>
-					<ul class="xx-small">
-					<div class="h-github" name="examples/protocols/src/com/vitvar/ctu/mdw/SimpleProtocol.java" 
-						lines="22-52" cid="master"></div></div>
-					</ul>	
-                </div>    
-
-                <div class="slide">
-                    <hgroup>
-                        <h1>Testing</h1>
-                    </hgroup>
-                    <ul class="x-small">
-                        <li>Many app protocols communicate in plain text</li>
-                        <ul>
-                            <li>messages in ASCII or Base64 encoded (printable chars only)</li>
-                            <li>this allows to test them just with Telnet</li>
+                            <li>Centralized access control based on content</li>
+                            <li>Perfoms request on behalf of the client</li>
                             <ul>
-                                <li>Telnet not need to know any protocol-specific semantics</li>
-                                <li>only opens, reads/writes, and closes the socket</li>
-                            </ul>
+                                <li>Caches content to increase performance, limits network traffic</li>
+                                <li>Filters requests based on their destinations</li>
+                            </ul> 
+                            <li>Widely used in private networks in companies</li>
+                            <li>Most of the proxy servers today are Web proxy servers</li>
                         </ul>
-                        <li>Testing our protocol</li>
-                        <pre class="brush: bash; class-name='xx-small'">
-							# 1. run the listener
-							bin/simple_protocol.sh
-							Listening on port 8080...
-							
-                            # 2. open the socket using telnet but first dig for DNS lookup							
-                            telnet 127.0.0.1 8080
-                            Trying 127.0.0.1...
-                            Connected to localhost.
-                            Escape character is '^]'.
-                            Verbs: add a b, bye.
-                            add 3 4
-                            The result is: 7
-                            minus 7 5
-                            Do not understand: minus 7 5
-                            bye
-                            Goodbye!
-                        </pre>
                     </ul>
-                </div>    
+                </div>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>Reverse Proxy Server</li>
+                    </hgroup>
+                    <div class="h-drawing" id="1RpfjNLhFSzu7mDdWVvV3ZldHEhzx9rLB1KpHpdL9bno" 
+                        style="height: 270px"></div>
+                    <ul class="xx-small">
+                        <li>Reverse Proxy Server</li>
+                        <ul>
+                            <li>Aggregates multiple request-response interactions with back-end systems</li>
+                            <li>Processes the request on behalf of the client</li>
+                            <li>Provides additional values to communication</li>
+                            <ul>
+                                <li>Data transformations</li>
+                                <li>Security &ndash; authentication, authorization</li>
+                                <li>Orchestration of communication with back-end systems</li>
+                            </ul>
+                            <li>Examples: Enterprise Service Bus, Security Gateway</li>
+                        </ul>
+                    </ul>
+                </div>
+
             </section>
+        </section>
+            
+        <div class="slide outline"></div>
+        
+        <section>
+            <header>Simple Protocol Example</header>
+
+            <div class="slide">
+                <hgroup>
+                    <h1>TCP Socket Protocol</h1>
+                </hgroup>
+                <ul class="xx-small">
+                    <li>Example simple TCP Socket protocol in Java<a rel="code" href="https://github.com/tomvit/mdw/blob/master/examples/protocols/src/com/vitvar/ctu/mdw/SimpleProtocol.java">&nbsp;</a>
+                    </li>
+                    <ul>
+                        <li>functions (verbs): <code>add</code> and <code>bye</code></li>
+                        <li>data syntax: <code>add</code> <code>"^[0-9]+ [0-9]+$"</code>, <code>bye</code> <code>"^$"</code> 
+							(regular grammars)</li>
+                        <li>data semantics: <code>add</code> decimal numbers, <code>bye</code> none</li> 
+                        <li>process: transitions <code>S1&#151;add&#151;S1</code>, <code>S1&#151;bye&#151;S0</code>, 
+                            where <code>S0</code>, <code>S1</code> are states such that<br/>
+                            <code>S1=connection established</code>, <code>S0=connection closed</code>.</li>
+                    </ul>
+                    <pre class="brush: java; class-name: 'tight'">
+                        package com.vitvar.ctu.mdw;
+
+                        import java.io.*;
+                        import java.net.*;
+                        import java.util.regex.*;
+
+                        /**
+                         * Simple protocol example. The class starts a listener on the port 8080.
+                         * When a client connects, the server parses the input in a form "add a b", 
+                         * where "a" and "b" are integer values, adds the two numbers and sends 
+                         * the result back to the client. The communication ends when the client sends "bye".
+                         * 
+                         * @author tomas@vitvar.com
+                         *
+                         */
+                        public class SimpleProtocol {
+
+                            public static void main(String[] args) throws IOException {
+                                // info message to the console
+                                System.out.println("Listening on port 8080...");
+                        </pre>
+                </ul>
+            </div>    
+
+            <div class="slide">
+                <hgroup>
+                    <h1>TCP Socket Protocol (Cont.)</h1>
+                </hgroup>
+				<ul class="xx-small">
+                    <div style="padding-top: 10px">
+                    <pre class="brush: java; class-name: 'tight'; first-line: 22">
+                            // listen on port 8080
+                            ServerSocket serverSocket = new ServerSocket(8080);
+                            Socket clientSocket = serverSocket.accept();
+
+                            // create reader and writer to read from and write to the socket
+                            PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+                            BufferedReader in = new BufferedReader(
+                                new InputStreamReader(clientSocket.getInputStream()));
+
+                            // print information to the client
+                            out.println("verbs: add a b, bye");
+
+                            // grammar definition
+                            Pattern p = Pattern.compile("^add ([0-9]+) ([0-9]+)$");
+                            Matcher m; String message;      
+
+                            // read input from the client and process the input
+                            while ((message = in.readLine()) != null) {   
+                                if ((m = p.matcher(message)).matches())
+                                    out.println("Result: " + (Integer.parseInt(m.group(1)) + 
+                                        Integer.parseInt(m.group(2))));
+                                else
+                                    if (message.equals("bye")) {
+                                        out.println("Goodbye!");
+                                        break;
+                                    } else
+                                        out.println("Do not understand: " + message);
+                            }
+                        }
+                    }</pre>
+                    </div>
+				</ul>	
+            </div>    
+
+            <div class="slide">
+                <hgroup>
+                    <h1>Testing</h1>
+                </hgroup>
+                <ul class="x-small">
+                    <li>Many app protocols communicate in plain text</li>
+                    <ul>
+                        <li>messages in ASCII or Base64 encoded (printable chars only)</li>
+                        <li>this allows to test them just with Telnet</li>
+                        <ul>
+                            <li>Telnet does not know about any protocol-specific semantics</li>
+                            <li>only opens, reads/writes, and closes the socket</li>
+                        </ul>
+                    </ul>
+                    <li>Testing our protocol</li>
+                    <pre class="brush: bash; class-name='xx-small'">
+						# 1. run the listener
+						bin/simple_protocol.sh
+						Listening on port 8080...
+						
+                        # 2. open the socket using telnet but first dig for DNS lookup							
+                        telnet 127.0.0.1 8080
+                        Trying 127.0.0.1...
+                        Connected to localhost.
+                        Escape character is '^]'.
+                        Verbs: add a b, bye.
+                        add 3 4
+                        The result is: 7
+                        minus 7 5
+                        Do not understand: minus 7 5
+                        bye
+                        Goodbye!
+                    </pre>
+                </ul>
+            </div>    
         </section>
         
         <div class="slide outline">
@@ -665,10 +841,43 @@
                 
                 <div class="slide" id="session-object">
         			<hgroup>
-    					<h1>Object for session management</h1>
+    					<h1>Session Management Java Class</h1>
     				</hgroup>
-					<div class="h-github" name="examples/protocols/src/com/vitvar/ctu/mdw/Sessions.java" 
-						lines="11-46" config="class-name: 'xx-small'"></div>	
+                    <ul class="xx-small">
+                        <li>Manages client sessions in a server memory<a rel="code" href="https://github.com/tomvit/mdw/blob/master/examples/protocols/src/com/vitvar/ctu/mdw/Sessions.java">&nbsp;</a></li> 
+                    <pre class="brush: java; class-name: 'tight'; first-line: 1">
+                        public class Sessions&lt;E> {
+
+                            // storage for the session data;
+                            private Hashtable&lt;String, E> sessions = new Hashtable&lt;String, E>();
+
+                            /** Returns session id based on the information in the http request **/
+                            public String getSessionID(HttpServletRequest request) throws Exception {
+                                String sid = null;
+
+                                // extract the session id from the cookie
+                                if (request.getHeader("cookie") != null) {
+                                    Pattern p = Pattern.compile(".*session-id=([a-zA-Z0-9]+).*");
+                                    Matcher m = p.matcher(request.getHeader("cookie"));
+                                    if (m.matches()) sid = m.group(1);
+                                }
+
+                                // create the session id md5 hash; use random number to generate a client-id
+                                // note that this is a simple solution but not very reliable 
+                                if (sid == null || sessions.get(sid) == null) {
+                                    MessageDigest md = MessageDigest.getInstance("MD5");
+                                    md.update(new String(request.getRemoteAddr() + 
+                                        Math.floor(Math.random()*1000)).getBytes());
+                                    sid = Utils.toHexString(md.digest());
+                                }
+                                return sid;
+                            }
+
+                            public E getData(String sid) ... // returns session data from sessions object
+                            public void setData(String sid, E d) ... // sets session data to sessions object
+                        }                        
+                    </pre>
+                    </ul>
     			</div>
 
                 <div class="slide">
@@ -679,8 +888,28 @@
                         <li>Simple per-client counter<a rel="code" 
                  href="https://github.com/tomvit/mdw/blob/master/examples/protocols/src/com/vitvar/ctu/mdw/Counter.java">&nbsp;</a></li>
 
-						<div class="h-github" lines="17-36" name="examples/protocols/src/com/vitvar/ctu/mdw/Counter.java"
-							config="class-name: 'xx-small'"></div>
+                        <pre class="brush: java; class-name: 'tight'; first-line: 1">
+                        public void handleRequest(HttpServletRequest request,
+                                HttpServletResponse response) throws Exception {
+                            // get the session id
+                            String sid = sessions.getSessionID(request);
+
+                            // create the new data if none exists
+                            if (sessions.getData(sid) != null)
+                                sessions.setData(sid, 
+                                    Integer.valueOf(sessions.getData(sid).intValue() + 1));
+                            else
+                                sessions.setData(sid, Integer.valueOf(1));
+
+                            // send the response
+                            response.setStatus(200);
+                            response.setHeader("Set-Cookie", "session-id="+ sid + "; MaxAge=3600");
+                            response.setHeader("Content-Type", "text/plain");
+                            response.getWriter().write("Number of hits from you: " + 
+                                sessions.getData(sid).toString());
+                            response.flushBuffer();
+                        }
+                        </pre>
                         <li class="task">Task</li>
                         <ul>
                             <li>What happens when the server restarts?</li>                    
