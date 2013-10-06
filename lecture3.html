@@ -129,17 +129,16 @@
                     <ul>
                         <li>A machine can have multiple interfaces (eth0, eth1, bond0, ...)</li>
                     </ul>
-                    <li>TCP addressing: TCP port is an address of an app running on a machine</li>
+                    <li>TCP addressing: TCP port is an address of an app running on a machine and listening on a machine interface</li>
                     <ul>
-                        <li>Multiple applications with different TCP ports may run on a machine</li>
+                        <li>Multiple applications with different TCP ports may listen on a machine interface</li>
                     </ul>
                     <li>Application addressing</li>
                     <ul>
                         <li>Additional mechanisms to address entities within an application</li>
-                        <li>They are outside of scope of IP/TCP, they are app specific</li>
+                        <li>They are out of scope of IP/TCP, they are app specific</li>
                         <ul>
-                            <li>for example, HTTP handles multiple resources in Web application, multiple 
-                            Web applications served by a single Web server (see <a href="#/http-request/">Serving HTTP Request</a>)</li>
+                            <li>for example, Web apps served by a single Web server</li>
                         </ul>
                     </ul>
                 </ul>    
@@ -331,7 +330,6 @@
                             <ul>
                                 <li>no access to all live data, subsets copied in batches</li>
                                 <li>frequent monitoring</li> 
-                                <li>mechanisms to "fool" attackers</li>
                             </ul>
                         </ul>
                     </ul>
