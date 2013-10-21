@@ -8,15 +8,15 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> 
         <meta name="course"   content="Middleware and Web Services"/>
-        <meta name="lecture"  content="Lecture 10"/>
-        <meta name="keywords" content="Business Process Management"/>
+        <meta name="lecture"  content="Lecture 9"/>
+        <meta name="keywords" content="High Availability, Load Balancer, Replication"/>
            
         <link type="text/css" rel="stylesheet" href="css/meta.css"></link>   
         <link type="text/css" rel="stylesheet" href="css/ctu-fit.css"></link>   
         <link type="text/css" rel="stylesheet" href="humla/lib/core/humla.css"></link>   
 
         <script type="text/javascript" src="humla/lib/humla.js"></script>
-        <title>Business Process Management</title>
+        <title>Enterprise Service Bus</title>
     </head>
     
     <body>
@@ -52,722 +52,657 @@
             </div>
         </div>
         
-        <div class="slide outline"></div>        
+    	<div class="slide">
+			<hgroup>
+				<h1>Overview</h1>
+			</hgroup>
+			<ul class="x-small">
+				<li>Central intermediary in SOA</li>
+				<ul>
+					<li>Types of services: shared and infrastructure</li>
+					<li>Types of processes: Technical and Business</li>
+				</ul>
+				<li>ESB Application</li>
+				<ul>
+					<li>Application running in some application server</li>
+					<li>Exposes functionality via Web service interface</li>
+					<li>Allows to communicate with various messaging protocols</li>
+				</ul>
+				<li>Design Patterns</li>
+				<ul>
+					<li>Technical-level interoperability &ndash; message broker</li>
+					<li>Location transparency</li>
+					<li>Dynamic routing</li>
+					<li>Data transformations &ndash; mediator</li>					
+					<li>Service orchestrations &ndash; BPMN, BPEL</li>
+					<li>Message enrichment</li>
+					<li>Communication</li>
+				</ul>
+            </ul>
+        </div>
+
+    	<div class="slide">
+			<hgroup>
+				<h1>ESB Vendors</h1>
+			</hgroup>
+			<ul class="x-small">
+				<li>Oracle</li>
+				<ul>
+					<li>Oracle Service Bus (OSB)</li>
+					<li>Oracle SOA Suite</li>
+					<li>Oracle Enterprise Gateway (OEG)</li>
+				</ul>
+				<li>IBM</li>
+				<ul>
+					<li>IBM WebSphere</li>
+				</ul>
+				<li>SAP</li>
+				<ul>
+					<li>SAP NetWeaver</li>
+				</ul>
+				<li>Microsoft</li>
+				<ul>
+					<li>.NET Framework</li>
+					<li>BizTalk server</li>
+				</ul>
+				<li>Opensource</li>
+				<ul>
+					<li>JBoss</li>
+					<li>Apache ServiceMix</li>
+					<li>WSMX &ndash; Semantic Web Service Execution Environment</li>
+				</ul>
+            </ul>
+        </div>
+
+        <div class="slide outline"></div>
         
         <section>
-        	<header>Business Processes in SOA</header>
+        	<header>
+				Architecture        		
+        	</header>
         	
+            <div class="slide">
+                <hgroup>
+    				<h1>Enterprise Service Bus</h1>
+    			</hgroup>
+                <ul class="small">
+                    <li>Integration organized</li>
+                    <ul>
+                        <li>Enterprise Service Bus, to be used wisely</li>
+                    </ul>
+                </ul>
+                <div class="h-drawing" style="height: 400px" id="1-uHnuWoYea9KZgEBRkGmdpbKDT5THls9dn56XolZ1Lg"
+                    alt="Enterprise Service Bus"></div>
+            </div>
+
+            <div class="slide">
+                <hgroup>
+    				<h1>Service Types</h1>
+    			</hgroup>
+    			<ul class="x-small">
+    				<li>ESB services</li>
+    				<ul>
+    					<li>shared services &ndash; created for particular domain</li>
+    					<li>infrastructure services &ndash; support integration and interoperability</li>
+    				</ul>
+    			</ul>
+    			<div class="h-drawing" id="1HicnsnDos6MtMtIB75XP4odOnSpWs_qSj4TZJnBtWhI" style="height: 390px"></div>
+            </div>            
+
         	<div class="slide">
 				<hgroup>
-					<h1>Overview</h1>
-				</hgroup>
-				<ul class="x-small">
-					<li>Business Process</li>
-					<ul>
-						<li>A set of activities and transitions between activities that one or more persons or systems need to 
-							perform in order to complete a goal.</li>
-						<li>A set of business processes realize internal and external operations</li>
-						<ul>
-							<li>Order Management, Customer Management, Product Lifecycle Management, etc.</li>
-						</ul>
-						<li>A process usually spans multiple departments/divisions and applications</li>
-					</ul>
-					<li>Business Process Management</li>
-					<ul>
-						<li>Management of business processes that involves:</li>
-						<ul>
-							<li>Methodology to design processes</li>
-							<li>Tools to design, execute, monitor processes</li>
-						</ul>
-					</ul>					
-					<li>Business process standardization</li>
-					<ul>
-						<li>APQC &ndash; American Productivity & Quality Center</li>
-						<li>TMForum &ndash; eTOM &ndash; Enhanced Telekom Operations Map (Business Process Framework)</li>
-					</ul>
-				</ul>
-        	</div>
-
-  	    	<div class="slide">
-				<hgroup>
-					<h1>Process Classification Framework: Recall</h1>
-				</hgroup>
-				<div class="h-drawing" id="1ou4lOAvwaFP2MJo1RQbJOTF-DavfYjcUF6MELE6cWws"></div>
-			</div>
-      	
-      		<div class="slide">
-				<hgroup>
-					<h1>Level 5 Business Process</h1>
-				</hgroup>
-				<ul class="x-small">
-					<li>Level 5 Details</li>
-					<ul>
-						<li>The lowest level of a process classification framework</li>
-						<li>Level 5 business process involves technical parts that run in ESB</li>
-					</ul>
-				</ul>
-				<div class="h-drawing" style="height: 340px; margin-top: 40px" 
-					id="1-MNreOnY0NDd_NUK_WlZXv7fIY7oMk1J39TZLxP5l4Q" format="png"></div>
-      		</div>
-      		
-      		<div class="slide">
-				<hgroup>
-					<h1>Languages</h1>
+					<h1>Connectivity Services</h1>
 				</hgroup>
 				<ul class="small">
-					<li>Business Process Management Notation (BPMN)</li>
+					<li>Purpose</li>
 					<ul>
-						<li>Easy to understand</li>
-						<li>Originally only a language for people to model processes</li>
-						<li>Now also possible to describe execution ready processes</li>
-						<ul>
-							<li>Seamless transition from a business view to a technical view</li>
-						</ul>
+						<li>Adapters for various back-end technologies</li>
+						<li>Connectivity to legacy applications</li>
+						<li>No business logic, Usually stateless, ESB internal</li>
 					</ul>
-					<li>Business Process Execution Language (BPEL)</li>
+					<li>Example</li>
 					<ul>
-						<li>Only execution language for ESB, not suitable for modeling higher levels of business processes</li>
-						<li>Architets need to translate from BPMN (or another language) to BPEL</li>
+						<li>Database adapters</li>
 						<ul>
-							<li>Part of technical SOA design</li>
+							<li>SQL statement:</li>
+							<pre class="brush: plain">
+							SELECT ID, NAME FROM CUSTOMERS C
+							WHERE  C.REVENUE > :revenue</pre>
+							<li class="no-bullet"><code>Revenue</code> &ndash; input parameter</code></li>
+							<li class="no-bullet"><code>ID, NAME</code> &ndash; structure of output message</li>
+							<li>Expose the SQL statement as a connectivity service</li>
+						</ul>
+						<li>Example implementation: OSB Proxy service, JCA adapters</li>
+					</ul>
+            	</ul>
+        	</div>   
+
+        	<div class="slide">
+				<hgroup>
+					<h1>JCA Adapters</h1>
+				</hgroup>
+				<ul class="small">
+					<li>JCA &ndash; Java EE Connector Architecture</li>
+					<ul>
+						<li>Standard Java interface to connect application servers and back-end applications</li>
+						<li>Standardized in <span class="h-references" id="jsr-112">JSR 112</span></li>
+					</ul>
+					<li>Major Features (Contracts)</li>
+					<ul>
+						<li>Connection management</li>
+						<ul>
+							<li>application server can pool connections to back-end applications</li>
+							<li>application server provides connections to clients from connection pools</li>
+						</ul>
+						<li>Transaction management</li>
+						<ul>
+							<li>application server can use transaction manager for managing transactions across 
+								multiple resource managers.</li>
 						</ul>
 					</ul>
-				</ul>
-      		</div>
+            	</ul>
+        	</div>   
 
-			<div class="slide outline"></div>
-			
-			<section>
-				<header>Process Execution Models</header>
-				
-	      		<div class="slide">
-					<hgroup>
-						<h1>Static Process Exeuction</h1>
-					</hgroup>
-					<ul class="small">
-						<li>Explicitly defined process using control flows</li>
-					</ul>
-					<div class="h-drawing" id="1r83N3bTF61ovBoT1jLT8f3L0UzpA6kQqhlar-UKyzt4"></div>
-	      		</div>
-
-	      		<div class="slide">
-					<hgroup>
-						<h1>Dynamic Process Execution</h1>
-					</hgroup>
-					<ul class="small">
-						<li>Implicitly defined process using rules</li>
-					</ul>
-					<div class="h-drawing" id="1bfOg9ddws9GHYsLdErX62PnAyh6pl-D3Ocuab5L18f8"></div>
-					<ul class="xx-small">
-						<li>Forward-chaining algorithm (inference)</li>
-						<ol>
-							<li>A user defines a goal &ndash; described as a state (memory content)</li>
-							<li>Rule engine finds a rule which condition matches the memory'c content</li>
-							<li>Rule's action is executed; the result may add or modify data in the memory</li>
-							<li>When the memory content matches the goal, execution stops otherwise go to 2</li>
-						</ol>
-					</ul>
-	      		</div>
-
-	      		<div class="slide">
-					<hgroup>
-						<h1>Dynamic Process Execution Example</h1>
-					</hgroup>
-					<ul class="xx-small">
-						<li>Rule Set</li>
+        	<div class="slide">
+				<hgroup>
+					<h1>Entity Services</h1>
+				</hgroup>
+				<ul class="xx-small">
+					<li>Purpose</li>
+					<ul>
+						<li>Expose services on top of one or more entities in a database</li>
+						<li>Do not add any specific logic to entities' operations</li>
 						<ul>
-							<li>A: if a customer is a premium customer, give them 10% discount<br/>
-							<code>if customer.type=='premium' then order.discount=0.1</code></li>
-							<li>B: if a customer is a gold customer, give them 5% discount<br/>
-							<code>if customer.type=='gold' then order.discount=0.05</code></li>
-							<li>C: if a customer spends is 1,000 or more, make them a premium customer<br/>
-							<code>if customer.revenue>1000 then customer.type='premium'</code></li>	
-							<li>Note: actions are memory modifications but can be results of service calls</li>						
+							<li>Provide CRUD operations only</li>
 						</ul>
-						<li>Execution</li>
+						<li>May be used to facilitate a Common Data Model</li>
 						<ul>
-							<li>Option 1</li>
-							<ul class="no-bullet">
-								<li>MEM: <code>customer.type=='gold'</code>, <code>customer.revenue==1500</code><br/>
-									Rules: <code>C, A</code><br/>
-									MEM: <code>customer.type=='premium'</code>, <code>customer.revenue==1500</code>, 
-									<code>order.discount==0.1</code>
-								</li>
-							</ul>
-							<li>Option 2</li>
-							<ul class="no-bullet">
-								<li>MEM: <code>customer.type=='gold'</code>, <code>customer.revenue==200</code><br/>
-									Rules: <code>B</code><br/>
-									MEM: <code>customer.type=='gold'</code>, <code>customer.revenue==200</code>, 
-									<code>order.discount==0.05</code>
-								</li>
-							</ul>
+							<li>Business entities &ndash; entities of CDM</li>
+							<li>Business objects &ndash; instances of business entities</li>
+							<li>Business Entity Service &ndash; manipulations for business entities</li>
 						</ul>
+						<li>No business logic, usually stateless, ESB internal</li>
 					</ul>
-	      		</div>
-      		
-      		</section>
-      		        	
-        </section>
-        
-        <div class="slide outline"></div>        
-        
-        <section>
-        	<header>Business Process Management Notation</header>
+					<li>Example</li>
+					<ul>
+						<li>Two entities in a database: <code>CUSTOMERS</code>, <code>ADDRESS</code> (1:N)</li>
+						<li>Business entity <code>CUSTOMER</code></li>
+						<pre class="brush: xml; class-name: 'tight'">
+						&lt;customer>
+							&lt;name>Company.cz&lt;/name>
+							&lt;invoice-address>
+								…
+							&lt;/invoice-address>
+							&lt;main-address>
+								…
+							&lt;/main-address>
+						&lt;/customer></pre>
+						<li>Operarions: read, write</li>
+					</ul>
+            	</ul>
+        	</div>        	  
         	
         	<div class="slide">
 				<hgroup>
-					<h1>BPMN Constructs &ndash; Activities and Gateways</h1>
+					<h1>Business Services</h1>
 				</hgroup>
-				<ul class="xx-small">
-					<li>Activities (Tasks)</li>
-					<div class="h-drawing" style="height: 100px; margin: -7px 0px 0px -50px" 
-						id="1RkfCK67eEbj7C9ePrs7wrw3XGrR_xosvK_AMk2Qm88Q" format="png"></div>
+				<ul class="x-small">
+					<li>Purpose</li>
 					<ul>
-						<li>Service Task &ndash; synchronous service invocation</li>
-						<li>Send and receive task &ndash; asynchronous service invocation</li>
-						<li>User task &ndash; human step, managed by workflow engine</li>
-						<li>Manual task &ndash; human step, not managed by workflow engine</li>
-						<li>Script task &ndash; automatic activity, assigning of variables, modify variables' values</li>
-						<li>Call activity &ndash; to call a another process (modularisation, process chaining)</li>
-					</ul>
-					<li>Gateways</li>
-					<div class="h-drawing" style="height: 100px; margin: -7px 0px -30px -40px" 
-						id="187HC23lxGl8dfRQA9pX2ZTKpgjfJiqgoO6CICIPKm64" format="png"></div>
-					<ul>
-						<li>Exclusive OR (XOR)</li>
-						<li>Inclusive OR (OR)</li>
-						<li>Parallel fork and join (AND)</li>
-						<li>Complex gateway</li>
-						<li>Event-based gateway</li>
-					</ul>
-				</ul>
-			</div>
-
-        	<div class="slide">
-				<hgroup>
-					<h1>BPMN Constructs &ndash; Catch Events</h1>
-				</hgroup>
-				<ul class="xx-small">
-					<li>Catch Events</li>
-					<ul>
-						<li>They start a process or continue a process from a sub-process when event occurs.</li>
-						<div id="1kNXpNqUIATLok6rH0ngEIZUpvQ5oeFU7_DkEdSQ-fK4"
-							style="height: 100px; margin: 0px 0px 0px -100px" 
-							class="h-drawing" format="png"></div>
-						<li>Catch Event Types</li>
+						<li>Business/integration logic, can be stateful or stateless</li>
+						<li>Atomic business activities</li>
 						<ul>
-							<li>Start Message &ndash; starts a process by a new message</li>
-							<li>Start Timer &ndash; starts a proceess by a timer</li>
-							<li>Start Signal &ndash; starts a process by a new event (such as EDN)</li>
-							<li>Catch Error &ndash; catches error during execution of an activity (boundary event)</li>
-							<li>Catch Timer &ndash; a timeout when during execution of an activity (boundary event)</li>
-							<li>Catch Signal &ndash; catches a signal during execution of an activity (boundary event)</li>
+							<li>direct mapping to back-end application services</li>
 						</ul>
-					</ul>
-					<li>Event Delivery Network (EDN)</li>
-					<ul>
-						<li>Messaging system that implements publish/subscribe mechanism</li>
-						<li>Oracle technology provided by Oracle SOA Suite</li>
-						<li>See more details on <a href="lecture7.html#/messaging">messaging systems</a> in Lecture 7</li>
-					</ul>
-				</ul>
-			</div>
-
-        	<div class="slide">
-				<hgroup>
-					<h1>BPMN Constructs &ndash; Throw Events</h1>
-				</hgroup>
-				<ul class="xx-small">
-					<li>Throw Events</li>
-					<ul>
-						<li>They end a process or a sub-process</li>
-						<div id="1bKjB33--JNbhapfgGnUs2W9QSzH0WPFrFlqHzXKyIpI" 
-							style="height: 100px; margin: 0px 0px 0px -140px" format="png"						
-							class="h-drawing"></div>
-						<li>Throw Event Types</li>
-						<ul>
-							<li>End Message &ndash; ends a process by sending a message back to client</li>
-							<li>End Terminate &ndash; ends a process silently</li>
-							<li>End Signal &ndash; ends a process by signalling an EDN event</li>
-							<li>End Error &ndash; ends a process by throwing an error (fault)</li>
-							<li>Throw Message &ndash; throws a message during process execution</li>
-							<li>Throw Signal &ndash; throws an EDN event during process execution</li>
-						</ul>
-					</ul>
-				</ul>
-			</div>
-			
-			<div class="slide">
-				<hgroup>
-					<h1>Swim Lanes</h1>
-				</hgroup>
-				<ul class="xx-small">
-					<li>Swim Lanes</li>
-					<ul>
-						<li>Group of activities in a process</li>
-						<li>Each swim lane is associated with a role; a user in the role performs activities</li>
-						<li>A special role "Automated" or "System" defines automated activities or activites performed by the 
-						system, not humans.</li>
+						<li>Can be "imported" in ESB to be used in a business process</li>
+						<li>Can be exposed by ESB and add values in terms of business/integration logic or technical processing</li>
 					</ul>
 					<li>Example</li>
-					<div class="h-drawing" id="1l7AcdnWGOrCMeZ3b5n34AyjtKgcTobRCEL5kHrgCgD0" 
-						format="png" style="height: 310px"></div>
-				</ul>				
-			</div>
+					<ul>
+						<li>Data transformation</li>
+						<ul>
+							<li>Back-end application service exposed in CDM language</li>
+						</ul>
+						<li>Message enrichment</li>
+						<ul>
+							<li>Adds information to content from other sources</li>
+						</ul>
+						<li>Monitoring</li>
+						<ul>
+							<li>Every invocation of the service logged</li>
+							<li>Monitoring of business metrics</li>
+							<ul>
+								<li>Number of orders, total revenue per customer</li>
+							</ul>
+						</ul>
+					</ul>
+            	</ul>
+        	</div>        	    
 
-        	<div class="slide outline"></div>        			
-			
-			<section>
-				<header>Patterns</header>
+        	<div class="slide">
+				<hgroup>
+					<h1>Business Processes</h1>
+				</hgroup>
+				<ul class="x-small">
+					<li>Purpose</li>
+					<ul>
+						<li>Business/integration logic, usually stateful</li>					
+						<li>Complex processes involving invocations of multiple business services at various back-end applications</li>
+						<li>Handles transformations from various data formats of back-end applications</li>
+						<li>Handles <b>key-mapping</b></li>
+						<ul>
+							<li>Business entities exist in multiple systems</li>
+							<li>Each back-end application maintains its own ID for corresponding business objects</li>
+						</ul>
+						<li>Usually implemented in a process language such as BPMN or BPEL</li>
+						<li>OSB uses its own orchestration language which translates to XQuery</li>
+					</ul>
+					<li>Example</li>
+					<ul>
+						<li>Order processing</li>
+						<ul>
+							<li>Get customer information from the CRM system</li>
+							<li>Add line items to OMS</li>
+							<li>Close order</li>
+						</ul>
+					</ul>
+            	</ul>
+        	</div>        	            	    
+        	
+        	<div class="slide">
+				<hgroup>
+					<h1>Presentation Services</h1>
+				</hgroup>
+				<ul class="small">
+					<li>Purpose</li>
+					<ul>
+						<li>Shared presentation logic</li>
+						<li>Typical for client-server Web applications</li>
+					</ul>
+					<li>Example technologies</li>
+					<ul>
+						<li>JSPs, Servlets</li>
+						<li>Shared portlets</li>
+						<ul>
+							<li>Reusable components for UI development</li>
+							<li>Dashboards</li>
+						</ul>
+					</ul>
+            	</ul>
+        	</div>        	        
+        	
+        </section>
 
-        		<div class="slide">
-					<hgroup>
-						<h1>Exclusive OR</h1>
-					</hgroup>
-					<ul class="x-small">
-						<li>Definition</li>
-						<ul>
-							<li>XOR defines multiple alternative paths</li>
-							<li>One and only one path can result from an evaluation of conditions on each branch</li>
-							<li>There must be a <b>default path</b></li>
-							<ul>
-								<li>Path that will be used when no conditions on other paths will evaluate to true</li>
-							</ul>
-						</ul>
-						<li>Example</li>
-					</ul>
-					<div id="1FWUsUDHNEe_HjJx52j2tGUg-_LYHoROD-V6YM-Fv2Uk" class="h-drawing" 
-						format="png" style="height: 250px; margin-top: -20px"></div>
-				</div>
-								
-				<div class="slide">
-					<hgroup>
-						<h1>Parallel Fork and Join</h1>
-					</hgroup>
-					<ul class="x-small">
-						<li>Definition</li>
-						<ul>
-							<li>AND Gateway &ndash; defines multiple paths</li>
-							<li>All paths are processed</li>
-							<li>All paths must be either joined by AND Gateway or each path may end with a separated end events</li>
-						</ul>
-						<li>Example</li>
-					</ul>
-					<div id="190Jyq40Srw_dxAZmMjpXakU2yf6n4h7B3Qer2taTzfQ" class="h-drawing" 
-						format="png" style="height: 250px"></div>					
-				</div>
+        <div class="slide outline"></div>
 
-				<div class="slide">
-					<hgroup>
-						<h1>Inclusive OR</h1>
-					</hgroup>
-					<ul class="x-small">
-						<li>Definition</li>
-						<ul>
-							<li>OR Gateway &ndash; defines multiple paths</li>
-							<li>One or more paths are processed in parallel</li>
-							<ul>
-								<li>There can be more than one possible outcomes</li>
-							</ul>
-							<li>There can be a default path</li>
-							<li>All paths must be either joined by OR Gateway or each path may end with a separated end events</li>
-						</ul>
-						<li>Example</li>
-					</ul>
-					<div id="1ADJOdNWTf_PMXT0ux1CGHl5PNKt1oly_loAaBaufyIw" class="h-drawing" 
-						format="png" style="height: 250px; margin-top: -10px"></div>					
-					
-				</div>
-				
-				<div class="slide">
-					<hgroup>
-						<h1>Complex Gateway</h1>
-					</hgroup>
-					<ul class="x-small">
-						<li>Definition</li>
-						<ul>
-							<li>Evaluates conditions to decide when the process should continue</li>
-							<li>Used only when merging process flows (OR is used for splitting)</li>
-						</ul>
-						<li>Example</li>
-						<div class="h-drawing" id="1JXSk2g734D70dIje3zVBGu6xChpm0o28ujx2ls7TTAc"
-							style="height: 200px" format="png"></div>
-						<ul>
-							<li>Complex gatway condition</li>
-							<pre class="brush: plain">
-								credit-card/balance/text() > 1000 OR customer/history/num-purchases/text() > 10</pre>
-							<ul>
-								<li>Only one condition needs to be satisfied for the process to continue</li>
-								<li>Other parallel flows are canceled</li>
-							</ul>
-						</ul>
-					</ul>
-				</div>
-				
-				<div class="slide">
-					<hgroup>
-						<h1>Loops</h1>
-					</hgroup>
-					<ul class="x-small">
-						<li>Definition</li>
-						<ul>
-							<li>Loops can be created with XOR Gateways by connecting a flow to a previous step</li>
-							<li>XOR checks for conditions</li>
-							<ul>
-								<li>logical expression or counters</li>
-							</ul>
-						</ul>
-						<li>Example</li>
-						<div class="h-drawing" format="png" id="1EcY1Lw5BYDtWFSf11hj5vjx7vb8YkdnZaR0yPwG5xSk"
-							style="height: 150px"></div>
-						<ul>
-							<li>Example condition on "YES" path</li>
-							<pre class="brush: plain">
-							quote/price/text() > 0</pre>
-						</ul>
-					</ul>
-				</div>
-				
-				<div class="slide">
-					<hgroup>
-						<h1>Error Handling</h1>
-					</hgroup>
-					<ul class="small">
-						<li>Definition</li>
-						<ul>
-							<li>Mechanism to handle errors during process executions</li>
-							<li>Throwing errors</li>
-							<ul>
-								<li>On evaluation of conditions</li>
-								<li>A result of external service calls</li>
-							</ul>
-							<li>Catching Errors</li>
-							<ul>
-								<li>Take actions to resolve errors, continue process execution</li>
-								<li>Throw errors  as a result of process execution</li>
-							</ul>
-						</ul>
-						<li>Implementation</li>
-						<ul>
-							<li>Use boundary catch error events to catch errors on activities or sub-processes</li>
-							<li>Implement paths in process flows that resolve errors</li>
-						</ul>
-					</ul>
-				</div>
-						
-				
-				
-			</section>
-						
-        	<div class="slide outline"></div>        			
-			
-			<section>
-				<header>Conversation and Correlation</header>
-
-        		<div class="slide">
-					<hgroup>
-						<h1>Conversation</h1>
-					</hgroup>
-					<ul class="x-small">
-						<li>Definition</li>
-						<ul>
-							<li>A group of client-service interactions that logically and technically belong 
-								together, e.g. <code>submitOrder</code>, <code>getOrderStatus</code>, <code>cancelOrder</code></li>
-							<li>There is typically one conversation per process but can be more</li>
-						</ul>
-						<li>Implementation</li>
-						<ul>
-							<li>Single conversation corresponds to a single WSDL interface definition (<code>portType</code> in WSDL 1.1)</li>
-							<li>Two conversations will have own interface definition each</li>
-							<ul>
-								<li>hence you can define separated binding for each</li>
-							</ul>
-							<li>To relate interactions in a single conversation, you should have:</li>
-							<ul>
-								<li>a <b>main process</b>, that is a main operation/event that triggers the process and creates a conversation, 
-									e.g. <code>submitOrder</code></li>
-								<li>a <b>sub-process</b> to the main process, e.g. <code>checkStatus</code></li>
-							</ul>
-							<li>WS-Addressing defines <code>MessageID</code> element that is a conversation ID</code></li>
-						</ul>
-					</ul>
-				</div>
-				
-				<div class="slide">
-					<hgroup>
-						<h1>Architecture</h1>
-					</hgroup>
-					<div id="1eb9ySf0g1pmyh0xz-fsSQRYNMjaNJWvDsdNQKafw0o4"
-						style="height: 270px" 
-						class="h-drawing"></div>
-					<ul class="xx-small">
-						<li>Steps</li>
-						<ol>
-							<li>Client invokes an operation that triggers the main process.</li>
-							<li>Service starts a conversation and responds with a conversation id</li>
-							<li>Client uses the conversation id in a subsequent interaction when invoking an operation 
-								(a trigger to start a sub-process)</li>
-							<li>Service relates the interaction with a running process instance and executes the operation
-							in the context of the running process</li>
-						</ol>
-					</ul>
-				</div>
-				
-				<div class="slide">
-					<hgroup>
-						<h1>Example Messages</h1>
-					</hgroup>
-					<ul class="xx-small">
-						<li>Client invokes <code>submitOrder</code> operation</li>
-						<ol>
-							<li>Client sends a request</li>
-							<li>Server responds</li>
-							<pre class="brush: xml; class-name: 'tight'; highlight: [3]">
-							&lt;s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
-								&lt;s:Header xmlns:wsa="http://www.w3.org/2005/08/addressing">
-									&lt;wsa:MessageID>a4dsdsadsdfb94a-593b-1dc1-36d2-000000000000&lt;/wsa:MessageID>
-								&lt;/s:Header>
-								&lt;s:Body>
-									<!-- response message -->
-								&lt;/s:Body>
-							&lt;/s:Envelope></pre>
-						</ol>
-						<li>Client invokes <code>checkStatus</code> operation</li>
-						<ol>
-							<li>Client sends a request</li>
-							<pre class="brush: xml; highlight: [3]">
-							&lt;s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
-							        &lt;s:Header xmlns:wsa="http://www.w3.org/2005/08/addressing">
-							        	&lt;wsa:MessageID>a4dsdsadsdfb94a-593b-1dc1-36d2-000000000000&lt;/wsa:MessageID>
-							        &lt;/s:Header>
-							        &lt;s:Body>
-							        	<!-- operation name to invoke -->
-							    &lt;/soap:Body>
-							&lt;/s:Envelope>							
-							</pre>
-						</ol>
-					</ul>
-				</div>
-
-        		<div class="slide">
-					<hgroup>
-						<h1>Correlation</h1>
-					</hgroup>
-					<ul class="small">
-						<li>Definition</li>
-						<ul>
-							<li>Correlation associates an interaction with a conversation</li>
-							<li>Two types</li>
-							<ul>
-								<li>automatic (handled by WS-Addressing)</li>
-								<li>manual (handled by correlation keys from message content and properties &ndash; values of keys)</li>
-							</ul>
-						</ul>
-						<li>Usage scenarios</li>
-						<ul>
-							<li>Asynchronous interaction between two processes</li>
-							<li>A client does not suppot WS-Addressing (cannot send conversation ID)</li>
-						</ul>
-					</ul>
-				</div>
-				
-				<div class="slide">
-					<hgroup>
-						<h1>Automatic Correlation Example</h1>
-					</hgroup>
-					<div id="1XOQkvYYBZi68206KSiJQ4iahbDCoo9xaCKUXdQudBr8" format="png" 
-						style="height: 460px" class="h-drawing"></div>
-				</div>
-
-				<div class="slide">
-					<hgroup>
-						<h1>Manual Correlation</h1>
-					</hgroup>
-					<ul class="x-small">
-						<li>Correlation keys and properties</li>
-						<ul>
-							<li>A process may have one or more correlations defined</li>
-							<ul>
-								<li>A single correlation handles interactions with a single client and a single process' entry point</li>
-							</ul>
-							<li>A key may have one or more properties</li>
-							<ul>
-								<li>Each property value is defined by an xpath on a message structure</li>
-							</ul>
-						</ul>
-						<li>Example</li>
-						<ul>
-							<li>A correlation with two properties</li>
-							<ul>
-								<li>Key: <code>order_correlation</code></li>
-								<li>Property 1: <code>customer_id</code></li>
-								<li>Property 2: <code>order_id</code></li>							
-							</ul>	
-						</ul>
-					</ul>
-				</div>
-
-				<div class="slide">
-					<hgroup>
-						<h1>Manual Correlation Example</h1>
-					</hgroup>
-					<ul class="xx-small">
-						<li>Correlation key for Order message</li>
-						<ul>
-							<li>Order message</li>
-						<pre class="brush: xml; highlight: [3,5,6,7]">
-						&lt;s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
-						    &lt;s:Body>
-						    	&lt;ns1:submitOrder xmlns:ns1="http://xmlns.oracle.com/bpmn/bpmnProcess/Process" 
-						    					 xmlns:ns2="http://www.example.org/order">
-						        	&lt;ns2:Order>
-						            	&lt;ns2:OrderId>566&lt;/ns2:OrderId>
-						            	&lt;ns2:CustomerId>4354&lt;/ns2:CustomerId>
-						                &lt;ns2:Address>Thakourova 6&lt;/ns2:Address>
-						                &lt;ns2:Phone>+42024537765&lt;/ns2:Phone>
-						                &lt;ns2:LineItems>
-						                	&lt;ns2:item>
-						                    	&lt;ns2:name>HP ProBook 4540s&lt;/ns2:name>
-						                        &lt;ns2:price>900&lt;/ns2:price>
-						                    &lt;/ns2:item>
-						                &lt;/ns2:LineItems>
-						            &lt;/ns2:Order>
-						        &lt;/ns1:submitOrder>
-						    &lt;/s:Body>
-						&lt;/s:Envelope></pre>
-						<li>Correlation key <code>order_correlation</code>, xpath definition</li>						
-						<pre class="brush: plain">
-							customer_id property: /ns1:submitOrder/ns2:Order/ns2:CustomerId						
-							order_id property:    /ns1:submitOrder/ns2:Order/ns2:OrderId</pre>						
-					</ul>
-				</div>
-				
-				
-				
-			</section>
-		</section>
-		
-
-    	<div class="slide outline"></div>        			
-
-		<section>
-			<header>Use Case</header>
-
+        <section>
+        	<header>
+				Design Patterns        		
+        	</header>
+        	
     		<div class="slide">
 				<hgroup>
 					<h1>Overview</h1>
 				</hgroup>
-				<ul class="xx-small">
-					<li>Simplified processing of an order</li>
+				<ul class="x-small">
+					<li>Applied in implementation of business services and processes</li>
 					<ul>
-						<li>Two processes: 1) main process for order processing, 2) sub-process for querying the order processing status</li>
+						<li>Usually a combination of more patterns</li>
 					</ul>
-					<li>Main process</li>
-					<ol>
-						<li>A client submits an order</li>
-						<ul>
-							<li>the order contains customer data and line items, each line item has a price</li>
-						</ul>
-						<li>The process accepts the order and acknowledges it</li>
-						<li>The process calculates <code>total_price</code> (a sum of all line items prices)</li>
-						<li>If <code>total_price</code> exceeds <code>&euro;1000</code>, the order must be approved by a sales rep,
-							otherwise the order is stored and the process responds with the <code>success</code></li>
-						<li>If a sales rep approves the order, the process responds with <code>success</code></li>
-						<li>If a sales rep does not approve the order, the process responds with <code>rejected</code></li>
-						<li>If a sales rep does not approve the order by <code>1</code> minute, the process responds 
-							with <code>approve timeout</code> result.</li>							
-					</ol>
-					<li>Sub-process</li>
-					<ol>
-						<li>Client sends a status query <code>checkStatus</code></li>
-						<li>The process responds with the status of order processing (<code>processing</code>, 
-							<code>wating for approval</code>)</li>
-					</ol>
-				</ul>
-			</div>
+					<li>Technical patterns</li>
+					<ul>				
+						<li>Deals with technical aspects of service communication</li>
+						<li>Message broker &ndash; technical-level interoperability</li>
+						<li>Location transparency</li>
+					</ul>
+					<li>Business patterns</li>
+					<ul>								
+						<li>Deals with business aspects (message content) of service communication</li>
+						<li>Dynamic routing</li>
+						<li>Data transformations &ndash; mediator</li>					
+						<li>Service orchestrations &ndash; BPMN, BPEL</li>
+						<li>Message enrichment</li>
+					</ul>
+					<li>Communication patterns</li>
+					<ul>
+						<li>Client-server communication, special cases of technical patterns</li>
+						<li>Throtling</li>
+						<li>Asynchronous communication</li>
+	            	</ul>
+            	</ul>
+        	</div>    
 
-    		<div class="slide">
-				<hgroup>
-					<h1>Order XML Schema</h1>
-				</hgroup>
-				<div class="h-drawing" id="19GcroN7cLziruEV2spqyF4Cl3Zz4kWrsISzJDUIDA3I" 
-					style="height: 350px" format="png"></div>
-				<ul class="x-small">
-					<li>Defines</li>
-					<ul>
-						<li>the schema for the input message for <code>submitOrder</code></li>
-						<li>the schema for order in the process memory</li>
-					</ul>
-				</ul>
-			</div>
-			
-			<div class="slide">
-				<hgroup>
-					<h1>Architecture Demo</h1>
-				</hgroup>
-				<div id="1Eyz6A6w4Pspb8PMN8E7DdnrfpcgSyerraAKW8Zz7GQw" style="height: 250px" class="h-drawing"></div>
-				<ul class="x-small">
-					<li>Demo setting</li>
-					<ul>
-						<li>Client: bash utilities for submiting an order, checking its status (using <code>curl</code> and
-						creating a listener (using <code>ncat</code>)</li>
-						<li>Server: SOA Suite with Business Process Management (BPM) extension running on WebLogic Server</li>
-					</ul>
-				</ul>
-			</div>				
-			
-			<div class="slide">
-				<hgroup>
-					<h1>BPMN Process</h1>
-				</hgroup>
-				<div id="1NzT5M-LWm0cKoTd1Iy2e2NJFvXe3rq7-obmL1poj16w" class="h-drawing" 
-					style="height: 360px" format="png"></div>
-				<ul class="x-small">
-					<li>Notes</li>
-					<ul>
-						<li>There is a sleep (timeout for 30 seconds) to delay the processing</li>
-						<li>Store order simply stores the order to a file (a file JCA adapter service)</li>
-					</ul>
-				</ul>
-			</div>				
-			
-			<div class="slide">
-				<hgroup>
-					<h1>Demo</h1>
-				</hgroup>
-				<ul class="xx-small">
-					<li>Prerequisites</li>
-					<ul>
-						<li>Utilities</li>
+	        <div class="slide outline"></div>
+	
+	        <section>
+	        	<header>
+					Technical and business patterns        		
+	        	</header>
+	        	
+	    		<div class="slide">
+					<hgroup>
+						<h1>Message Broker</h1>
+					</hgroup>
+					<ul class="small">
+						<li>Message broker</li>
 						<ul>
-							<li>Available in <a href="https://github.com/tomvit/mdw/tree/master/examples">examples</a> folder</li>
-						</ul>
-						<li>Environment</li>
-						<ul>
-							<li>SOA Suite running at <code>http://sb.vitvar.com:8001</code></li>
-							<li>Order service available at 
-							<code>http://sb.vitvar.com:8001/soa-infra/services/default/OrderProcess/Process.service?WSDL</code></li>
-							<li>Access on request, ask at tomas@vitvar.com</li>
+							<li>ESB can mix and match transports both standard and proprietary</li>
 						</ul>
 					</ul>
-					<li>Steps</li>
-					<ol>
-						<li>Run the listener for asynchornous callbacks<br/>
-							<code>./http-listener.sh</code> (using <a href="lecture3.html#ncat">http listener script</a>)</li>
-						<li>Submit the order<br/>
-							<code>./submit-order.sh</code> (using <a href="lecture3.html#curl">curl command</a>)</li>
-						<li>Check order status<br/>
-							<code>./check-status.sh</code> (using <a href="lecture3.html#curl">curl command</a>)</li>
-					</ol>
-					<li>Modifications</li>
-					<ul>
-						<li>Change a line item's price in <code>order-message.xml</code> so that the total price exceeds 1000 EUR 
-							and run the steps again.</li>
+					<div class="h-drawing" id="1Ga9iANbaAAB-eEuCxZBPbTKX8pDQlvttS5-dI19vJRI" style="height: 350px"></div>
+	        	</div>        	        
+	        	
+	    		<div class="slide">
+					<hgroup>
+						<h1>Location Transparency</h1>
+					</hgroup>
+					<ul class="small">
+						<li>Location transparency</li>
+						<ul>
+							<li>ESB can hide changes in location of services</li>
+							<li>Such changes will not affect clients</li>
+							<li>Can also be used for load balancing for multiple service instances</li>
+						</ul>
 					</ul>
-				</ul>
-			</div>
-			
-		</section>			
+					<div class="h-drawing" id="1yyj2VBgauYs_zVWoSR1R2Hugf8pLG-HmDq8-2bF-vNI" style="height: 200px"></div>
+	        	</div>       
+	        	
+	    		<div class="slide">
+					<hgroup>
+						<h1>Dynamic Routing</h1>
+					</hgroup>
+					<ul class="small">
+						<li>Dynamic routing</li>
+						<ul>
+							<li>ESB exposes a service that routes to various back-end services based on message contents.</li>
+						</ul>
+					</ul>
+	            	<div class="h-drawing" id="1dqQSDoXzk9KOscw7hA1N1aAexj5iqWbjn49e782DUMk" style="height: 180px"></div>
+	        	</div>        	        	        	
+	        		        	
+	    		<div class="slide">
+					<hgroup>
+						<h1>Message Enrichment</h1>
+					</hgroup>
+					<ul class="small">
+						<li>Message enrichmenet</li>
+						<ul>
+							<li>Enriches a message before invoking back-end application service.</li>
+						</ul>
+					</ul>
+					<div id="1675sNfJX75EcwMZXTSACUGKEhPf3QnTjXRPtEABXwm0" class="h-drawing" style="height: 250px"></div>
+					
+	        	</div>        	
+
+				 <div class="slide">
+                 <hgroup>
+                 	<h1>Data Transformation</h1>
+                 </hgroup>
+                    <ul class="small">
+                        <li>Data transformation phases:</li>
+                        <ul>
+                        	<li>Definition of mapping and execution of mappings</li>
+                        </ul>
+                        <li>Definition of mappings (design-time)</li>
+                        <ul>
+                            <li>A mapping associates one data structure to another data structure
+                                and defines a conversion between them.</li>
+                            <li>Mapping languages</li>
+                            <ul>
+                                <li>graphical for design that translates to XSLT, XQuery</li>
+                                <li>Sometimes implemented in 3rd gen. languages (e.g., Java)</li>
+                            </ul>
+                        </ul>
+                        <li>Execution of mappings (runtime)</li>
+                        <ul>
+                            <li>application of mappings to instance data</li>
+                        </ul>
+                        <li>CDM terminology</li>
+                        <ul>
+                        	<li>Application Business Message &ndash; back-end app format</li>
+                        	<li>Enterprise Business Message &ndash; CDM format</li>
+                        </ul>
+                    </ul>
+                </div>
+                
+                <div class="slide">
+                	<hgroup>
+                		<h1>Definitions of Data Mapping Example</h1>
+                	</hgroup>
+                	<ul class="x-small">
+                		<li>Source and target schemas</li>
+                		<ul>
+                			<li>Source: Order &ndash; flat data structure</li>
+                			<li>Target: UPS order with address as a sub-entity</li>
+                			<li>Differences in names of entities</li>
+                			<li>Conversion function applied to postal code</li>
+                		</ul>
+                	</ul>
+                	<div class="h-drawing" style="height: 320px" format="png" 
+                		id="1CBgOZj-fXVvjKgrolqX72qhVRZigGSzHIdlrIe7hghA"></div>
+                </div>
+                
+                <div class="slide">
+                	<hgroup>
+                		<h1>Transformation Patterns Example</h1>
+                	</hgroup>
+                	<ul class="x-small">
+                		<li>SOA Architecture with Common Data Model</li>
+                		<li>Oracle OSB and SOA Suite technologies</li>
+                		<ul>
+                			<li>Multiple technologies used in the environment</li>
+                			<li>Need to distinguish which technology should be used for what</li>
+                		</ul>
+                	</ul>
+                	<div class="h-drawing" id="1YEIYWDZXWpTdCZVvf6oryYrrWt_Ti4YDZQOE5noluhg" style="height: 320px"></div>
+                </div>
+
+	    		<div class="slide">
+					<hgroup>
+						<h1>Service Orchestration</h1>
+					</hgroup>
+					<ul class="x-small">
+					<li>Orchestration of multiple business services</li>
+					<ul>
+						<li>Inlcudes transformation, message enrichmenet, service callouts, etc.</li>
+						<li>A step in orchestration is an activity</li>
+					</ul>
+					<li>Patterns</li>
+					<ul>
+						<li>Sequential processing of activities</li>
+						<li>Parallel processing of activities with synchronization points</li>
+						<li>Decision branches, iterations</li>
+	            	</ul>
+	            	<li>Technologies</li>
+	            	<ul>
+	            		<li>Graphical languages</li>
+	            		<li>Standard representations: BPEL, BPMN</li>
+	            		<li>Proprietary, for example OSB uses graphical language that translates to XQuery</li>
+	            	</ul>
+	            	<li>Good design</li>
+	            	<ul>
+	            		<li>Orchestration faciliates communication in CDM</li>
+	            		<li>Orchestration handles key-mapping</li>
+	            	</ul>
+	        	</div>        	
+
+	    		<div class="slide">
+					<hgroup>
+						<h1>Key Mapping Example</h1>
+					</hgroup>
+					<ul class="x-small">
+						<li>Business object ID</li>
+						<ul>
+							<li>Universal ID in CDM, each back-end application has its own ID</li>
+							<li>Orchestration handles key mapping of various IDs of back-end apps</li>
+						</ul>
+					</ul>
+					<div id="1G4XbrYDV4ptT6GvXzWHio5bp2tfRpZd8MwrOpCcIR0U" class="h-drawing" style="height: 360px"></div>
+	        	</div>        	
+	        	        
+			</section>
+			        	
+	        <div class="slide outline"></div>
+	
+	        <section>
+	        	<header>
+					Communication patterns        		
+	        	</header>
+	        	
+	    		<div class="slide">
+					<hgroup>
+						<h1>Throttling</h1>
+					</hgroup>
+					<ul class="small">
+					<li>Throttling</li>
+					<ul>
+						<li>There may be multiple instances of processes running in the middleware</li>
+						<li>Business service can be invoked concurrently</li>
+						<li>Not to overload a back-end service, throttling enables a control on a number of concurrent invocations</li>
+					</ul>
+					<li>Parameters</li>
+					<ul>
+						<li><b>Maximum concurrency</b> &ndash; a maximum number of concurrent invocations of a service</li>
+						<li><b>Throttling queue</b> &ndash; a queue for requests that cannot be sent due to maximum concurrency limit</li>
+						<li><b>Message expiration</b> &ndash; a maximum time that a message can spent in the queue</li>
+					</ul>
+	        	</div>        	        
+	        	
+                <div class="slide" id="sync-async-comm">
+                    <hgroup>
+                        <h1>Synch/Asynch Communication: Recall</h1>
+                    </hgroup>   
+                    <div class="h-drawing" style="height: 220px" 
+                        id="14daki2YQxkRxkpg_RW16-Efihlxzhep8AWXb226NaQA"></div>                                
+    				<ul class="x-small">
+                        <li>Synchronous</li>
+                        <ul>
+            				<li>one socket, |t<sub>req</sub> &#150; t<sub>res</sub>| is small</li> 
+            				<li>easy to implement and deploy, only standard firewall config</li>
+            				<li>only the server defines endpoint</li>
+                        </ul>
+                        <li>Asynchronous</li>
+                        <ul>
+                            <li>request, response each has socket, client and server define endpoints</li>
+            				<li>|t<sub>req</sub> &#150; t<sub>res</sub>| can be large (hours, even days)</li> 
+            				<li>harder to do across network elements (private/public networks issue)</li>
+                        </ul>
+    				</ul>
+                </div>	        	
+	        	
+	    		<div class="slide">
+					<hgroup>
+						<h1>Asynchronous Communication</h1>
+					</hgroup>
+					<ul class="small">
+					<li>Implementation</li>
+					<ul>
+						<li>Via a third-party message queue</li>
+						<ul>
+							<li>client and server do not communicate directly</li>
+							<li>enables loose coupling</li>
+							<li>Messaging system</li>
+						</ul>
+						<li>By using WS-Addressing</li>
+	            	</ul>
+	            	<li>WS-Addressing</li>
+	            	<ul>
+	            		<li>A transport-independent mechanisms for web services to communicate addressing information</li>
+	            		<li>A client sends information in the request message where the service should send a response asynchronously</li>
+	            		<li>W3C Recommendation, May 2006</li>
+	            	</ul>
+	        	</div>
+	        	
+	    		<div class="slide">
+					<hgroup>
+						<h1>Order Processing Example</h1>
+					</hgroup>
+					<ul class="x-small">
+						<li>Recall example from <a href="lecture2.html#/15">Lecture 2</a>, steps:</li>
+						<ul>
+							<li>Client submits an order request</li>
+							<li>ESB processes the order involving CRM and OMS applications</li>
+							<li>ESB responds asynchronously with an order confirmation message</li>
+						</ul>
+					</ul>
+	        		<div class="h-drawing" id="1EwSY9pdczGfDG2LWyE4fTS0RG3E7H4w_Q0ppTwoSruI" style="height: 350px"></div>
+	        	</div>
+
+	    		<div class="slide">
+					<hgroup>
+						<h1>Order Processing Example Messages</h1>
+					</hgroup>
+					<ul class="x-small">
+					<li>Client Request &ndash; <code>SubmitOrder</code></li>
+					<ul>
+						<li>open socket at <code>74.125.43.100</code></li>
+					</ul>
+					<pre class="brush: xml; highlight: [10,11,12]">
+					POST /soa-infra/services/default/OrderProcess.service HTTP/1.1
+					Accept-Encoding: gzip,deflate
+					Content-Type: text/xml;charset=UTF-8
+					SOAPAction: "submitOrder"
+
+					&lt;s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"
+                  		xmlns:x="http://xmlns.oracle.com/bpmn/bpmnProcess/OrderProcess"
+                  		xmlns:o="http://company.cz/ns/Order">
+        				&lt;s:Header xmlns:wsa='http://www.w3.org/2005/08/addressing'>
+                			&lt;wsa:ReplyTo>
+                        		&lt;wsa:Address>http://147.32.100.71:7001/orderConf.service&lt;/wsa:Address>
+                			&lt;/wsa:ReplyTo>
+        				&lt;/s:Header>
+        				&lt;s:Body>
+                			&lt;x:submitOrder>
+                        		&lt;o:order>
+                        			&lt;o:customer>company.cz&lt;/o:customer>
+                        			&lt;o:address>Street 21&lt;/o:address>
+                        			&lt;o:lineItems>…&lt;/o:lineItems>
+                        		&lt;/o:order>
+                			&lt;/x:submitOrder>
+        				&lt;/s:Body>
+					&lt;/s:Envelope></pre>
+				</div>
+				
+	    		<div class="slide">
+					<hgroup>
+						<h1>Order Processing Example Messages (Cont.)</h1>
+					</hgroup>
+					<ul class="x-small">
+					<li>ESB asynchronous response &ndash; <code>OrderConfirmation</code></li>
+					<ul>
+						<li>open socket at <code>147.32.100.71:7001</code></li>
+					</ul>
+					<pre class="brush: xml;">
+					POST /OrderConf.service HTTP/1.1
+					Accept-Encoding: gzip,deflate
+					Content-Type: text/xml;charset=UTF-8
+					SOAPAction: "orderConfirmation"
+
+					&lt;s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"
+                  		xmlns:x="http://xmlns.oracle.com/bpmn/bpmnProcess/OrderProcess"
+                  		xmlns:o="http://company.cz/ns/Order">
+        				&lt;s:Header>&lt;/s:Header>
+        				&lt;s:Body>
+                			&lt;x:OrderConfirmation>
+                        		&lt;o:order-id>
+                        			123
+                        		&lt;/o:order-id>
+                			&lt;/x:OrderConfirmation>
+        				&lt;/s:Body>
+					&lt;/s:Envelope></pre>
+				</div>
+	        	        	        
+	        </section>
+        	    	        
+        </section>
+
+        
+        
+        
+        
+        
+        
+        
+        
         
     </body>

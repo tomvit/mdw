@@ -8,15 +8,15 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> 
         <meta name="course"   content="Middleware and Web Services"/>
-        <meta name="lecture"  content="Lecture 9"/>
-        <meta name="keywords" content="Web Service Security"/>
+        <meta name="lecture"  content="Lecture 11"/>
+        <meta name="keywords" content="High Availability, Load Balancer, Replication"/>
            
         <link type="text/css" rel="stylesheet" href="css/meta.css"></link>   
         <link type="text/css" rel="stylesheet" href="css/ctu-fit.css"></link>   
         <link type="text/css" rel="stylesheet" href="humla/lib/core/humla.css"></link>   
 
         <script type="text/javascript" src="humla/lib/humla.js"></script>
-        <title>Web Service Security</title>
+        <title>High Availability and Performance</title>
     </head>
     
     <body>
@@ -51,624 +51,635 @@
                 <div class="oppa"></div>
             </div>
         </div>
+
+		<div class="slide">
+			<hgroup>
+				<h1>Good Performance</h1>
+			</hgroup>
+			<ul class="small">
+				<li>What influences good performance</li>
+				<ul>
+					<li>Number of users and concurrent connections</li>
+					<li>Number of messages and messages' sizes</li>
+					<li>Number of services</li>
+				</ul>
+				<li>How we can achieve good performance</li>
+				<ul>
+					<li>Infrastructure</li>
+					<ul>
+						<li>Scalability, Cluster Architectures</li>
+					</ul>
+					<li>Performance tuning</li>
+					<ul>
+						<li>Application Server, JVM memory, OS-level tuning, Work managers configuration</li>
+					</ul>
+					<li>Service configuration</li>
+					<ul>
+						<li>Parallel processing, process optimization</li>
+					</ul>
+				</ul>
+			</ul>
+		</div>					
         
         <div class="slide outline"></div>
-        
-        <section>
-            <header>Introduction</header>
-            
-    		<div class="slide">
+
+		<section>
+			<header>Infrastructure</header>
+			
+			<div class="slide">
 				<hgroup>
-					<h1>Web Service Security Concepts</h1>
+					<h1>Definitions</h1>
 				</hgroup>
 				<ul class="x-small">
-					<li>Securing the client-server communcation</li>
+					<li>Scalability</li>
 					<ul>
-						<li>Message-level security</li>
-						<li>Transport-level security</li>
-					</ul>
-					<li>Ensure:</li>
-					<ul>
-						<li>Authentication - verify clients' identity.</li>
-                        <li>Authorizaton - grant/deny access right to resources.</li>
-						<li>Message Confidentiality - keep the messages secret.</li>
-						<li>Message Integrity - no message changes during transmission.</li>
-						<li>Non-Repudiation - prevent a client from denying having performed a particular action.</li>
-					</ul>
-                    <div class="h-drawing" style="height: 190px" id="1JhEX5OGpHhQY49mxA4-r7taripW6bkWwLCu94BU9QFI"></div>
-				</ul>
-			</div>
-            
-        </section>
-        
-        <div class="slide outline"></div>
-        
-        <section>
-            <header>Authentication and Authorization</header>
-            
-    		<div class="slide">
-				<hgroup>
-					<h1>Authentication and Authorization</h1>
-				</hgroup>
-				<ul class="small">
-					<li>Authentication</li>
-					<ul>
-						<li>verification of user's identity</li>
-					</ul>
-					<li>Authorization</li>
-					<ul>
-						<li>verification that a user has rights to access a resource</li>
-					</ul>
-					<li>Standard: HTTP authentication</li>
-					<ul>
-						<li>HTTP defines two options</li>
-						<ul>
-							<li>Basic Access Authentication</li>
-							<li>Digest Access Authentication</li>
-						</ul>
-						<li>They are defined in</li>
-						<ul>
-							<li><span class="h-ref" id="rfc-2616">RFC 2616: Hypertext 
-							Transfer Protocol &ndash; HTTP/1.1</span></li>
-							<li><span class="h-ref" id="rfc-2617">RFC 2617: 
-							HTTP Authentication: Basic and Digest Access Authentication</span></li> 
-						</ul>
-					</ul>
-					<li>Custom/proprietary: use of cookies</li>
-				</ul>
-			</div>                                    
-
-    		<div class="slide">
-				<hgroup>
-					<h1>Basic Access Authentication</h1>
-				</hgroup>
-				<div class="h-drawing" style="height: 280px" id="1OYyQduAQYodoiQ48uYTCB1iVn6UHcCcdDocjLOA9b9Y"></div>
-				<ul class="x-small">
-					<li>Realm</li>
-					<ul>
-						<li>an identifier of the space on the server (~ a collection of resources and their sub-resources)</li>
-						<li>client may associate a valid credentials with realms such that it copies authorization information 
-							in requests for which server requires authentication (by <code>WWW-Authenticate</code> header)</li>
-				</ul>
-			</div>                                    
-
-    		<div class="slide">
-				<hgroup>
-					<h1>Basic Access Authentication &ndash; Credentials</h1>
-				</hgroup>
-				<ul class="small">
-					<li>Credentials</li>
-					<ul>
-						<li>credentials are base64 encoded</li>
-						<li>the format is: <code>username:password</code></li>
-					</ul>
-					<pre class="brush: bash">
-						# to encode in linux
-						echo "novak:heslo" | base64
-						> bm92YWs6aGVzbG8K
-							
-						# and to decode
-						echo "bm92YWs6aGVzbG8K" | base64 -d # use capital "D" in OS X
-						> novak:heslo</pre>
-							
-					<li>Comments</li>
-					<ul class="x-small">
-						<li>It is not secure, the password travels over the network and can be read!</li>
-						<li>the purpose is to encode and send non-ASCII characters</li>
-					</ul>
-				</ul>
-				
-			</div>                                    
-
-    		<div class="slide">
-				<hgroup>
-					<h1>Digest Access Authentication</h1>
-				</hgroup>
-				<ul class="xx-small">
-					<li>RFC 2617 &ndash; Basic and Digest Access Authentication</li>
-					<ul>
-						<li>No password between a client and a server but a hash value</li>
-						<li>Simple and advanced mechanisms (only server-generated nonce value &ndash; replay-attacks or 
-							with client-generated nonce value &ndash; chosen-plaintext attacks)</li>
-					</ul>							
-					<li>Basic Steps</li>
-					<ol>
-						<li>Client accesses a protected area</li>
-						<pre class="brush:bash; class-name: 'tight'">
-							> GET / HTTP/1.1</pre>
-						<li>Server requests authentication with <code>WWW-Authenticate</code></li>
-							<pre class="brush:bash; class-name: 'tight'">
-								&lt; HTTP/1.1 401 Unauthorized
-								&lt; WWW-Authenticate: Digest realm="ProtectedArea", 
-								  nonce="BbdQof3DBAA=a293ff3d724989371610f03015f2d23f3cd2c045", 
-								  algorithm=MD5, domain="/", qop="auth"</pre>
-						<li>Client calculates a response hash by using the realm, his/her username, the password, and the 
-							quality of protection (QoP) and requests the resource with <code>authorization</code> header</li>
-							<pre class="brush:bash; class-name: 'tight'">
-								> GET / HTTP/1.1
-								> Authorization: Digest username="novak", realm="ProtectedArea",
-								  nonce="BbdQof3DBAA=a293ff3d724989371610f03015f2d23f3cd2c045", uri="/", 
-								  algorithm=MD5, response="c4ea2293aeb318826d1e533f363efd90", qop=auth, 
-								  nc=00000001, cnonce="531ee8ba7f2a8fd1"</pre>								
-					</ol>
-				</ul>
-			</div>                                    
-
-    		<div class="slide">
-				<hgroup>
-					<h1>Nonce and QoP</h1>
-				</hgroup>
-				<ul class="small">
-					<li>Nonce</li>
-					<ul>
-						<li>A value to identify an interaction that should occur only once</li>
-						<li><code>nonce</code> &ndash; generated by the server</li>
-						<ul>
-							<li>may have a time period for which the nonce is valid</li>
-							<li>may be computed using client IP, ETag of the resource, etc.</li>
-							<li>this limits chances for the replay attack.</li>
-						</ul>
-						<li><code>cnonce</code> &ndash; generated by the client</li>
-					</ul>
-					<li>QoP &ndash; quality of protection</li>
-					<ul>
-						<li>Further improvements to prevent replay attacks and chosen-plaintext 
-							attacks and enables non-repudiation</li>
-					</ul>
-				</ul>
-			</div>  
-
-    		<div class="slide">
-				<hgroup>
-					<h1>Algorithms</h1>
-				</hgroup>
-				<ul class="small">
-					<li>Algorithm for <code>response</code> value of <code>authorization</code> header</li>
-					<ul>
-						<li>No quality of protection (<code>qop</code> is missing or <code>qop=none</code>)</li>
-						<ul>
-							<li>prevents replay-attacks</li>
-						</ul>
-						<pre class="brush: bash; class-name: 'tight'">
-							HA1 = MD5(username:realm:password)
-							HA2 = MD5(method:digestURI)
-							response = MD5(HA1:nonce:HA2)</pre>
-						<li>with quality of protection (<code>qop=auth</code>)</li>
-						<ul>
-							<li>prevents chosen-plaintext attacks</li>
-						</ul>
-						<pre class="brush: bash; class-name: 'tight'">
-							HA1 = MD5(username:realm:password)
-							HA2 = MD5(method:digestURI)
-							response = MD5(HA1:nonce:nonceCount:cnonce:qop:HA2)</pre>				
-							<li>with quality of protection for message integrity (<code>qop=auth-int</code>)</li>
-							<ul>
-								<li>enables non-repudiation (i.e., proof of integrity and origin of data)</li>
-							</ul>
-							<pre class="brush: bash; class-name: 'tight'">
-								HA1 = MD5(username:realm:password)
-								HA2 = MD5(method:digestURI:MD5(payload))
-								response = MD5(HA1:nonce:nonceCount:cnonce:qop:HA2)</pre>											
-					</ul>
-					
-				</ul>
-			</div>  
-
-    		<div class="slide">
-				<hgroup>
-					<h1>Replay Attack</h1>
-				</hgroup>
-				<ul class="xx-small">
-					<li>Replay Attack Scenario (quality of protection is <code>none</code>)</li>
-					<ul>
-						<li>The communication is not encrypted (i.e., no use of HTTPS)</li>
-						<li>Eve listens to the Alice's communication (e.g. on a proxy server)</li>
-						<li>Eve resends requests with headers from Alice's requests</li>
-					</ul>
-				</ul>
-				<div class="h-drawing" id="1gQvg53vE3p9o_YRI3zYx3uBEfiT6YjiuznHN0A8O2QA" style="height: 380px"></div>
-			</div>                                  
-
-    		<div class="slide">
-				<hgroup>
-					<h1>Replay Attack (Cont.)</h1>
-				</hgroup>
-				<ul class="xx-small">
-					<li>Replay Attack Scenario (quality of protection is <code>auth</code> or <code>auth-int</code>)</li>
-					<ul>
-						<li><code>nonceCount</code> should be incremented in every request to a response of the nonce 
-							value from the server</li>
-					</ul>
-				</ul>
-				<div class="h-drawing" id="1Jto8zZvp-q7IANoQ0lckKsPHP1e5LetG7nJs8jI3Xyg" style="height: 380px"></div>
-			</div>                                  
-            
-        </section>
-        
-        <div class="slide outline"></div>
-        
-        <section>
-            <header>Digital Signature</header>
-            
-    		<div class="slide">
-				<hgroup>
-					<h1>XML Digital Signature</h1>
-				</hgroup>
-				<ul class="x-small">
-                    <li>A <b>digital signature</b> is a value computed with a cryptographic algorithm and attached along with the data.</li>
-					<li>XML Signature</li>
-					<ul>
-                        <li>A mathematical scheme for demonstrating the authenticity of a digital message.</li>
-						<li>Express digital signature in XML.</li>
-						<li>Signing any digital content that can be send over a wire.</li>
-					</ul>
-					<li>Provides</li>
-					<ul>
-						<li>Data-integrity</li>
-						<li>Message Authentication</li>
-						<li>Client Authentication</li>
-					</ul>
-					<li>Standard: XML Signature Syntax and Processing</li>
-					<ul>
-						<li>Specifies XML digital signature processing rules and syntax.</li>
-						<li><a class="ext-link ref" title="XML Signature Syntax and Processing Specification" href="http://www.w3.org/TR/xmldsig-core/">XML Signature Syntax and Processing Specification</a></li>
-					</ul>
-				</ul>
-			</div>
-            
-    		<div class="slide">
-				<hgroup>
-					<h1>Digital Signature Usage Scenario</h1>
-				</hgroup>
-				<ul class="x-small">
-                    <li>Creating and Verifying Digital Signatures</li>
-				</ul>
-				<div class="h-drawing" id="1hPBaVxchCeOoRqyseOBJF08yUghyaEqkAnMVxrzpS4A" style="height: 290px"></div>
-				<ul class="xx-small">
-                    <li>Steps</li>
-                    <ol>
-                        <li>Client creates and sends the digital signature.</li>
+						<li>server scalability</li>
                         <ul>
-                            <li>creates the message digest and encrypts the message using his private key.</li>
+						    <li>ability to react to changes in loads such that users should not feel changes in loads</li>
+						    <li><b>horizontal scaling</b></li>
+						    <ul>
+						    	<li>adding new server instances</li>
+						    </ul>
+						    <li><b>vertical scaling</b></li>
+						    <ul>
+						    	<li>adding new resources (CPU, memory) to a server instance</li>
+						    </ul>
                         </ul>
-                        <li>Server receives the message and verifies the client.</li>
+						<li>network traffic</li>
                         <ul>
-                            <li>decrypts the message using the client's public key and compares the message digests.</li>
+						    <li>bandwidth capacity influences performance too</li>
+						    <li>service should limit the network traffic through caching</li>
                         </ul>
-                    </ol>
+					</ul>
+					<li>Availability</li>
+					<ul>
+						<li>probability that a service is operational at a particular time</li>
+						<ul>
+                            <li>e.g., 99.9987% availability &ndash; downtime ~44 seconds/year</li>
+                        </ul>
+					</ul>
 				</ul>
 			</div>
-        </section>
-        
-        <div class="slide outline"></div>
-        
-        <section>
-            <header>Web Services Security</header>
-            
-    		<div class="slide">
+
+			<div class="slide">
 				<hgroup>
-					<h1>WS-Security</h1>
+					<h1>Definitions (Cont.)</h1>
 				</hgroup>
 				<ul class="x-small">
-					<li>Extension to SOAP specification defining security to Web Services.</li>
-                    <li>Defines how to insert security elements into a SOAP envelope.</li>
-                    <li>Defines three main mechanisms:</li>
+					<li>High Availability</li>
 					<ul>
-                        <li>Authentication - by using security tokens.</li>
-						<li>Confidentiality - by using XML Encryption specification.</li>
-						<li>Integrity - by using XML Signature specification.</li>
+						<li>When a server instance fails, operation of the application can continue</li>
+						<li>Failures should affect application availability and performance as little as possible</li>
+					</ul>
+					<li>Application Failover</li>
+					<ul>
+						<li>When an application component performing a job becomes unavailable, 
+						a copy of the failed object finishes the job.</li>
+						<li>Issues</li>
+						<ul>
+							<li>A copy of the failed object must be available</li>
+							<li>A location and operational status of available objects must be available</li>
+							<li>A processing state must be replicated</li>
+						</ul>
+					</ul>
+					<li>Load Balancing</li>
+					<ul>
+						<li>Distribution of jobs across computing and networking resources</li>
 					</ul>					
-					<li>Standard driven: Web Services Security (by OASIS)</li>
-					<ul>
-						<li>Core specification: <a class="ext-link ref" title="XML Signature Syntax and Processing Specification" href="https://www.oasis-open.org/committees/download.php/16790/wss-v1.1-spec-os-SOAPMessageSecurity.pdf">WS-Security Core 1.1</a></li>
-						<li>Defines rules how to apply security to Web Services.</li>
-					</ul>
-                    <li>Ensure secure communication between the services and services' clients!</li>
 				</ul>
 			</div>
-            
-    		<div class="slide">
+			
+	
+			<div class="slide">
 				<hgroup>
-					<h1>WS-Security Stack</h1>
+					<h1>Performance Metrics</h1>
 				</hgroup>
 				<ul class="x-small">
-                    <li>Set of extension specifications to Web Service Security.</li>
+					<li>Latency</li>
+					<ul>
+						<li>A client-side metric</li>
+					</ul>
+					<div class="h-drawing" style="height: 300px" id="1rgjQBi7cWEbNSjNYmnhaFTqcoXNi6JbLaGmNajArRUY"></div>
 				</ul>
-				<div class="h-drawing" id="1UoBUq0BVNrjMAVFFYKsTd6OFuWfol3qftkngwJDXwe0" style="height: 270px"></div>
-            </div>
-            
-    		<div class="slide">
+				<ul class="xx-small">
+					<ul>
+						<li>CPU intensive service or a bad configuration of a service</li>
+                        <ul>
+						    <li>consider asynchronous processing when CPU intensive</li>
+                        </ul>
+						<li>Writing to a data store</li>
+					</ul>
+				</ul>
+			</div>
+
+			<div class="slide">
 				<hgroup>
-					<h1>WS-Security Realization</h1>
+					<h1>Performance Metrics</h1>
 				</hgroup>
 				<ul class="x-small">
-                    <li>Example of a Web Service security realization.</li>
+					<li>Queries/Requests per Second (QPS)</li>
+					<ul>
+						<li>A server-side metric</li>
+					</ul>
+					<div class="h-drawing" style="height: 300px" id="1BhopVXexuS5coYLBbcrBi1SiUY3YNcr-K4usFXU6IwM"></div>
 				</ul>
-				<div class="h-drawing" id="1UfKnuRAZITsR2ctFErWIz-P5xr-0CXnCFxQS1UXLtiw" style="height: 230px"></div>
-				<ul class="x-small">
-                    <li>Both, the client and the server should secure the data.</li>
-                    <li>Before sending a message:</li>
-                    <ul>
-                        <li>Sign, encrypt and add authorization token (only client)</li>
-                    </ul>
-                    <li>When receiving a message:</li>
-                    <ul>
-                        <li>Check authorization token (only server), decrypt, sign</li>
-                    </ul>
+				<ul class="xx-small">
+					<ul>
+						<li>Caching may improve performance</li>
+                        <ul>
+						    <li>even if data changes often, with high QPS caching improves a lot</li>
+                        </ul>
+					</ul>
 				</ul>
-            </div>
-            
-    		<div class="slide">
+			</div>
+
+			<div class="slide">
 				<hgroup>
-					<h1>WS-Security Implementation</h1>
+					<h1>Infrastructure Configuration Example</h1>
 				</hgroup>
 				<ul class="xx-small">
-                    <li>Placeholder for the security policies is the envelope header.</li>
+					<li>Domain configuration</li>
+					<ul>
+						<li>Each server is running on a separated JVM</li>
+						<li>Load Balancers are external, software or hardware</li>
+						<li>A domain can have clustered or unclustered servers</li>
+						<li>A physical machine may run one or more servers</li>
+					</ul>
 				</ul>
-                <ul class="x-small">
-                    <pre class="brush: xml; first-line: 1; highlight: [4,5,6]">
-                        <S:Envelope>
-                            <S:header>
-                                ...
-                                <wsse:Security s:actor="http://www.oracle.com/appml/"
-                                    s:mustUnderstand="1">
-                                    ...
-                                </wsse:Security>
-                            </S:header>
-                            ...
-                        </S:Envelope>
-                    </pre>
-                </ul>
-                <ul class="xx-small">
-                    <li>WS-Security defines <b>Security</b> element in the SOAP header.</li>
-                    <ul>
-                        <li><code>s:actor</code> attribute: identifies the actor.</li>
-                        <li><code>s:mustUnderstand</code> attribute: indicates whether a header entry is mandatory or optional for the recipient to process. Valid values: "0", "1"</li>
-                        <li>The Security element can be extened with other proprietary elements and atrribues!</li>
-                    </ul>
-                    <li>The <i>Security</i> header countains:</li>
-                    <ul>
-                        <li>Security Tokens</li>
-                        <li>Signatures</li>
-                        <li>Encryption information</li>
-                        <li>Security Timestamps</li>
-                    </ul>
-                </ul>
-            </div>
-            
-    		<div class="slide">
+				<div class="h-drawing" style="height: 350px" id="1l-XAD0UrR_T582EqNxmcZbmZhno8L8rTMv8zzEYdVUo"></div>
+			</div>
+			
+			<div class="slide outline"></div>
+			
+			<section>
+			
+				<header>Load Balancers</header>
+				
+				<div class="slide">
+					<hgroup>
+						<h1>Load Balancing</h1>
+					</hgroup>
+					<ul>
+						<li>Distributes load to multiple app instances</li>
+						<ul>
+							<li>App instances run on different machines</li>
+							<li>Load sharing: equal or with preferences</li>
+							<li>Health checks</li>
+						</ul>
+						<li>Topics</li>
+						<ul>
+							<li>DNS-based load balancer</li>
+	                        <ul>
+							    <li>DNS Round Robin</li>
+	                        </ul>
+							<li>NAT-based load balancer</li>
+							<ul>   
+	                            <li>app protocol layer</li>
+								<li>Sticky sessions</li>
+	                        </ul>
+						</ul>
+					</ul>
+				</div>
+	
+	            <div class="slide">
+					<hgroup>
+						<h1>DNS-based Load Balancer</h1>
+					</hgroup>
+					<ul class="x-small">
+						<li>DNS Round Robin</li>
+						<ul>
+							<li>A DNS record has multiple assigned IP addresses</li>
+							<li>DNS system delivers different IP addresses from the list</li>
+							<li>Example DNS A Record:<br/>
+	                        <code>company.com A 147.32.100.71 147.32.100.72 147.32.100.73</code></li>
+						</ul>
+						<li>Advantages</li>
+						<ul>
+							<li>Very simple, easy to implement</li>
+						</ul>
+						<li>Disadvantages</li>
+						<ul>
+							<li>IP address in cache, could take hours to re-assign</li>
+							<li>No information about servers' loads and health</li>
+						</ul>
+						<!--<li>Variation of DNS Round robin</li>
+						<ul>
+							<li>a load balancer assigns domain names</li>
+	                        <ul>
+	                            <li>each domain has a different IP in DNS</li>
+	                        </ul>
+							<li>a health-check is possible, IP re-assignment problem remains</li> 
+						</ul>-->
+					</ul>
+				</div>
+	
+				<div class="slide">
+					<hgroup>
+						<h1>NAT-based Load Balancer</h1>
+					</hgroup>
+					<div class="h-drawing" style="margin-top: 40px; height: 450px" 
+					  id="1QtCAcD0R571rYmeP1hrofveZ3x6F7P61rfUpEswxOl0"></div>
+				</div>
+				
+				<div class="slide">
+					<hgroup>
+						<h1>HTTP Sticky Sessions Example</h1>
+					</hgroup>
+					<div class="h-drawing" id="1hzFB_41gJmkKQHpcSODvengGnHW98UYv1x1xZHt4XMA"
+						style="height: 320px; margin: 20px"></div>
+					<ul class="x-small">
+						<li>How to identify a server that hosts the session state</li>
+						<ul>
+							<li>Passive cookie persistence &ndash; LB uses a cookie from the app server</li>
+							<ul>
+								<li>For example, <code>sessionid!server_id</code></li>
+							</ul>
+							<li>Active cookie persistence &ndash; LB adds its own cookie</li>
+						</ul>
+					</ul>
+				</div>
+				
+				<div class="slide">
+					<hgroup>
+						<h1>Session State Persistence and Replication</h1>
+					</hgroup>
+					<ul class="xx-small">
+						<div class="h-drawing" style="height: 300px" id="1PiI-1CeVkQTYUgOPHyk3wqJufQl9cYQz5vlNziERE74"></div>
+						<li>JDBC-based persistence</li>
+						<ul>
+							<li>Session information is maintained in the database</li>
+						</ul>
+						<li>In-memory replication</li>
+						<ul>
+							<li>A <b>primary server</b> holds a session state that served the request, the <b>secondary server</b>
+							holds the replica of the session state</li>
+							<li>Can be configured in clustered environments</li>
+						</ul>
+						
+					</ul>
+				</div>
+				
+				<div class="slide">
+					<hgroup>
+						<h1>Round-Robin Algorithm with Health Check</h1>
+					</hgroup>
+					<ul class="x-small">
+						<li>Uses</li>
+						<ul>
+							<li>request &ndash; client request with or without a cookie information</li>
+							<li>server list &ndash; a list of servers that can process the request</li>
+							<li>unhealthy treshhold &ndash; a number of negative consecutive health checks 
+							before moving the server to the "unhealthy" state.</li>
+						</ul>
+						<li>Steps</li>
+						<ul>
+							<li><b>if a cookie exist in the request that identifies a server</b></li>
+							<li>always use that server</li>
+
+							<li class="space-before"><b>health check</b></li>
+							<li>LB polls the servers' heatlhcheck endpoints</li>
+							<li>if a number of health checks exceeds the unhealthy threshold</li>
+	                        <ul>
+							    <li>LB removes the server from the server list</li>
+	                        </ul>
+							<li>if a server was unhealthy and a there was a successful healthcheck</li>
+							<ul>
+	                            <li>LB adds the server to the server list</li>
+	                        </ul>							
+						</ul>
+					</ul>
+				</div>				
+
+				<div class="slide">
+					<hgroup>
+						<h1>Types of Load Balancers</h1>
+					</hgroup>
+					<ul>
+						<li>Software</li>
+						<ul>
+							<li>Apache <code>mod_proxy_balancer</code></li>
+							<ul>
+								<li>HTTP Session persistence &ndash; sticky sessions</li>
+							</ul>
+							<li>WebLogic proxy plug-in</li>
+						</ul>
+						<li>Hardware</li>
+						<ul>
+							<li>Ciaco, Avaya, Barracude</li>
+						</ul>
+					</ul>
+				</div>
+								
+			</section>
+			
+			 <div class="slide outline"></div>
+
+			<section>
+				<header>Cluster Architecture</header>
+
+				<div class="slide">
+					<hgroup>
+						<h1>Overview</h1>
+					</hgroup>
+					<ul class="x-small">
+						<li>Cluster</li>
+						<ul>
+							<li>A group of servers that act together to serve client requests</li>
+							<li>Cluster appears to clients as a single application server</li>
+							<li>Servers can run on the same machines or on different machines</li>
+							<li>Cluster's capacity can be increased by adding servers to the cluster</li>
+							<li>Servers in a cluster may have the same copy of objects and they are aware of each other objects</li>
+							<ul>
+								<li>objects: JSPs, servlets, JMS destinations, RMI objects</li>
+							</ul>
+						</ul>
+						<li>Communication in the cluster</li>
+						<ul>
+							<li>peer-to-peer communication using IP sockets</li>
+							<li>IP multicast wihch servers use to broadcast availability of objects and heartbeats</li>
+						</ul>
+						<li>Configurations</li>
+						<ul>
+							<li>Objects deployed to to all servers in a cluster</li>
+							<ul>
+								<li>Cluster-wide JNDI tree allows to look-up clustered objects</li>
+							</ul>
+							<li>Servers in a cluster may get replicated through migration</li>
+						</ul>
+					</ul>
+				</div>
+
+		<!--		<div class="slide">
+					<hgroup>
+						<h1>Cluster-wide JNDI Tree</h1>
+					</hgroup>
+					<ul class="xx-small">
+						<li>Object X is deployed to server A and C</li>
+						<ol>
+							<li>Server A binds object X to its local JNDI tree</li>
+							<li>Server A advertises object X availability using IP multicast</li>
+							<li>Server B and D get replica-aware stub of object X from Server A</li>
+							<li>The steps 1-3 repeat for object X in Server C</li>
+						</ol>
+					</ul>
+					<div class="h-drawing" style="height: 360px" id="1P7NVOu_zOeEdGx_hBzBtDVAEaPEHqizqAKiXaEuHfIo"></div>
+				</div>
+
+				<div class="slide">
+					<hgroup>
+						<h1>Replica-aware Stub</h1>
+					</hgroup>
+					<ul class="xx-small">
+						<li>Replica-aware stub of an object in JNDI Tree</li>
+						<ul>
+							<li>Client-side part of the oject</li>
+							<li>Has load-balancing </li>
+						</ul>
+					</ul>
+				</div> -->
+
+				
+			</section>
+		</section>
+		
+		<div class="slide outline"></div>
+
+		<section>
+			<header>Performance Tuning</header>
+				
+			<div class="slide">
 				<hgroup>
-					<h1>Security Tokens</h1>
+					<h1>Performance Limiting Factors</h1>
 				</hgroup>
-				<ul class="x-small">
-                    <li>Security Tokens are optional sub-elements of the <i>Security</i> element</li>
-                    <li>WS-Security defines diferent types of security tokens:</li>
-                    <ul>
-                        <li>User Name Token</li>
-                        <li>Binary Security Token</li>
-                        <li>other: XML Token, Encrypted Data Token</li>
-                    </ul>
-                    <li>User Name Tokens</li>
-                    <ul>
-                        <li>way of providing a username</li>
-                        <pre class="brush: xml; first-line: 1; highlight: [4,5,6]">
-                            <S:Envelope>
-                                <S:header>
-                                    <wsse:Security s:actor="..." s:mustUnderstand="1">
-                                        <wsse:UserNameToken wsu:id="...">
-                                            <wsse:Username>Alice</wsse:Username>
-                                        </wsse:UserNameToken>
-                                    </wsse:Security>
-                                    ...
-                                </S:header>
-                                ...
-                            </S:Envelope>
-                        </pre>
-                        <li><code>id</code> attribute - a string label for this security token.</li>
-                    </ul>
+				<div id="1bo3PC-IopJA4SiyHLVag7g1amyT8W89k2edtirQwz1w" style="height: 450px; margin: 30px" class="h-drawing"></div>
+			</div>			
+
+			<div class="slide">
+				<hgroup>
+					<h1>Tuning &ndash; A Layered Approach</h1>
+				</hgroup>
+				<ul>
+					<li>ESB can be tuned at multiple layers</li>
+					<ul>
+						<li>Service configuration optimization</li>
+						<li>Transport-level tuning</li>
+						<li>Application Server Tuning</li>
+						<li>JVM Memory Tuning</li>
+						<li>OS Tuning</li>
+					</ul>
+					<li>Lower levels are cheaper to tune</li>
 				</ul>
-            </div>
-            
-            <div class="slide">
+			</div>			
+
+			<div class="slide">
 				<hgroup>
-					<h1>Binary Security Tokens</h1>
+					<h1>Memory Allocations</h1>
 				</hgroup>
-				<ul class="xx-small">
-                    <li>Way of providing security tokens in binary format.</li>
-                    <ul>
-                        <li>Encoding binary security tokens such as X.509 certificates.</li>
-                    </ul>
-                </ul>
-                <ul class="xx-small">
-                    <li>Example:</li>
-                        <pre class="brush: xml; first-line: 1; highlight: [4,5,6]">
-                            <S:Envelope>
-                                <S:header>
-                                    <wsse:Security s:actor="..." s:mustUnderstand="1">
-                                        <wsse:BinarySecurityToken wsu:id="..." EncodingType="..." ValueType="...">
-                                            ...
-                                        </wsse:BinarySecurityToken>
-                                    </wsse:Security>
-                                    ...
-                                </S:header>
-                                ...
-                            </S:Envelope>
-                        </pre>
-                </ul>                
-                <ul class="x-small">
-                    <li>Allowed attributes:</li>
-                    <ul>
-                        <li><code>id</code> - string label for the security token.</li>
-                        <li><code>valueType</code> - URI indicating the value type and space of the encoded binary data.</li>
-                        <li><code>encodingType</code> - URI indicating the encoding format (e.g., wsse:Base64Binary)</li>
-                    </ul>
+				<ul class="x-small">
+					<div id="1VtIYJV3f-sAizvO9ZmI4c0tRvcKWbESZuAaT5s02xzA" style="height: 300px" class="h-drawing"></div>
+					<li>Generations</li>
+					<ul>
+						<li>Young &ndash; objects get allocated in this space initially</li>
+						<li>Old &ndash; objects get promoted to old from young</li>
+						<li>Perm &ndash; space for permanent allocations, e.g. objects describing classes and methods</li>
+					</ul>
+			</div>			
+
+			<div class="slide">
+				<hgroup>
+					<h1>Garbage Collection</h1>
+				</hgroup>
+				<ul class="x-small">
+					<li>Steps to move objects around</li>
+					<ol>
+						<li>Objects are created in young</li>
+						<li>When young is full, the live objects are copied to old, dead are discarded</li>
+						<ul>
+							<li><b>lightweight GC</b></li>
+						</ul>
+						<li>When young is full and no space in old &rarr; the full GC frees the old space</li>
+						<ul>
+							<li><b>Full GC</b> &ndash; nothing is running in JVM, the application stops</li>
+						</ul>
+					</ol>
+					<ul>
+						<li><b>Too frequent full GC has an impact on performance</b></li>
+					</ul>
+					<li>A memory leak or inadequate heap allocation</li>
+					<ul>
+						<li>Old is out of space &rarr; full GC will run often (or continously)</li>
+						<li>High CPU utilization, ESB will not be able to process/respond to requests</li>
+					</ul>
 				</ul>
-            </div>
-            
-            <div class="slide">
+			</div>			
+
+			<div class="slide">
 				<hgroup>
-					<h1>Message Encryption</h1>
+					<h1>JVM Memory Tuning</h1>
 				</hgroup>
 				<ul class="x-small">
-                    <li>XML Encryption ensures <i>Confidentiality</i>.</li>
-                    <ul>
-                        <li>syntax for representing XML content</li>
-                        <li>information needed to decrypt/encrypt XML content</li>
-                        <li>encryption of chosen elements</li>
-                    </ul>
-                    <li>Used to encrypt different SOAP envelope components.</li>
-                    <ul>
-                        <li>encrypt only sensitive data in the message</li>
-                        <li>passwords, credit card details, etc.</li>
-                    </ul>
-                    <li>Drawbacks</li>
-                    <ul>
-                        <li>encrypting is CPU intensive job</li>
-                        <li>overhead to SOAP processing due to increased message size and XML and cryptographic processing</li>
-                    </ul>
-                    <li>Usage recommendation</li>
-                    <ul>
-                        <li>encrypt only when necessary</li>
-                        <li>encrypt only sensitive data</li>
-                    </ul>
-                </ul>
-            </div>
-            
-            <div class="slide">
+					<li>JVM Memory Parameters</li>
+					<ul class="no-bullet">
+						<li><code>-Xms</code> &ndash; initial java heap size</li>
+						<li><code>-Xmx</code> &ndash; maximum java heap size</li>
+						<li><code>-XX:NewSize</code> &ndash; the initial size of the heap for young generation</li>
+						<li><code>-XX:MaxNewSize</code> &ndash; the maximum size of the heap for young generation</li>
+					</ul>
+					<li>General recommendations</li>
+					<ul class="no-bullet">
+						<li><code>-Xms</code> and <code>-Xmx</code> should be set to the same value</li>
+						<li>(do not allow the heap to grow &rarr; limit the overhead)</li>
+						<li><code>-XX:NewSize</code> and <code>-XX:MaxNewSize</code> should be set to the one half of maximum heap</li>
+					</ul>
+					<ul>
+						<li>Example, 1GB heap size</li>
+						<ul class="no-bullet">
+							<li><code>–Xms1024m –Xmx1024m -XX:NewSize=500m -XX:MaxNewSize=500m</code></li>
+						</ul>
+					</ul>
+				</ul>
+			</div>			
+			
+			<div class="slide">
 				<hgroup>
-					<h1>XML Encryption Example</h1>
+					<h1>Asynchronous I/O: Recall</h1>
+				</hgroup>
+				<ul class="small">
+					<li>Connections maintained by the OS, not the Web app</li>
+	                   <ul>                    
+	                       <li>The Web app registers events, OS triggers events when occur</li>
+	                   </ul>
+	               </ul>
+	   			<div id="1kxkFc3Chl4qFXxH_4f2seuNbpBdENMyZWMRUmxd1p28" class="h-drawing" style="height: 220px"></div>
+	               <ul class="small">
+					<li>Characteristics</li>
+	                   <ul>
+	                       <li>Event examples: new connection, read, write, closed</li>
+					    <li>The app may create working threads, but controls the number!</li>
+	                       <ul>
+					        <li>much less number of working threads as opposed to blocking I/O</li>
+	                       </ul>
+	                   </ul>
+				</ul>
+			</div>						
+			
+			<div class="slide">
+				<hgroup>
+					<h1>Work Manager Configuration</h1>
 				</hgroup>
 				<ul class="x-small">
-                    <li>Encrypting SOAP message with client's public key.</li>
-                    <li>Sample XML document:</li>
-                </ul>
-                <ul class="x-small">
-                    <pre class="brush: xml; first-line: 1; highlight: [5,6,7,8,9]">
-                        <S:Envelope>
-                            <S:Body>
-                                <PaymentInfo xmlns="http://example.org/paymentv2">
-                                    <Name>John Smith</Name>
-                                    <CreditCard Limit='5,000' Currency='USD'>
-                                        <Number>4019 2445 0277 5567</Number>
-                                        <Issuer>Example Bank</Issuer>
-                                        <Expiration>04/02</Expiration>
-                                    </CreditCard>
-                                </PaymentInfo>
-                            </S:Body>
-                        </S:Envelope>
-                    </pre>
-                </ul>
-                <ul class="x-small">
-                    <li><i>CreditCard</i> element will be encrypted using client's public key.</li>
-                    <ul>
-                        <li>other elements are not confident.</li>
-                    </ul>
-                </ul>
-            </div>
-                    
-            <div class="slide">
-                <hgroup>
-                    <h1>XML Encryption Example (cont.)</h1>
-                </hgroup>
-                <ul class="x-small">
-                    <li>Security metadata element describing the encryption.</li>
-                </ul>
-                <ul class="xx-small">
-                    <pre class="brush: xml; first-line: 1; highlight: [6,16]">
-                        <S:Envelope>
-                            <S:header>
-                                <wsse:Security s:actor="..." s:mustUnderstand="1">
-                                    <EncryptedKey xmlns="http://www.w3.org/2001/04/xmlenc#">
-                                        <!-- used encryption method, Rivest-Shamir-Adleman algorithm -->
-                                        <EncryptionMethod Algorithm="http://www.w3.org/2001/04/xmlenc#rsa-1_5" ></EncryptionMethod>
-                                        <KeyInfo xmlns="http://www.w3.org/2000/09/xmldsig#">
-                                            <KeyName>Sally Doe</KeyName>
-                                        </KeyInfo>
-                                        <CipherData>
-                                            <CipherValue>yMTEyOTA1M...</CipherValue>
-                                        </CipherData>
-                                    </EncryptedKey>
-                                    <ReferenceList xmlns="http://www.w3.org/2001/04/xmlenc#">
-                                        <!-- reference to the encrypted element -->
-                                        <DataReference URI="#ed1"/></DataReference>
-                                    </ReferenceList>
-                                </wsse:Security>                                
-                            </S:header>
-                            ...
-                            <!-- see next slide for the encrypted body element -->
-                        </S:Envelope>
-                    </pre>
-                </ul>
-            </div>
-            <div class="slide">
+					<li>Work Manager</li>
+					<ul>
+						<li>Controls the number of thread allocated to processing of requests</li>
+						<li>In WLS is called a dispatch policy</li>
+						<ul>
+							<li>Can be assigned to OSB proxy services</li>
+						</ul>
+						<li>Parameters</li>
+						<ul>
+							<li><b>maximum threads</b> (<code>max</code>) &ndash; maximum number of working threads</li>
+							<li><b>capacity</b> (<code>cap</code>) &ndash; maximum number of connections</li>
+						</ul>
+						<li>maximum connections waiting to be processed: <code>cap - max</code></li>
+						<li>refused connections: when number of connections is <code>> cap</code></li>
+					</ul>
+					<li>Inbound throtling</li>
+					<ul>
+						<li>A dispatch policy applied to a single proxy service</li>
+						<li>Rejected connections will not be processed</li>
+					</ul>
+				</ul>
+			</div>			
+			
+		<!--	<div class="slide">
 				<hgroup>
-					<h1>XML Encryption Example (cont.)</h1>
+					<h1>Troubleshooting</h1>
 				</hgroup>
-                <ul class="x-small">
-                    <li>Encrypted SOAP body part.</li>
-                </ul>
-				<ul class="xx-small">
-                    
-                    <pre class="brush: xml; first-line: 1; highlight: [6,10]">
-                        <S:Body>
-                            <PaymentInfo xmlns="http://example.org/paymentv2">
-                                <Name>John Smith</Name>
-                                <EncryptedData Id="ed1" Type="http://www.w3.org/2001/04/xmlenc#Element" xmlns="http://www.w3.org/2001/04/xmlenc#">
-                                    <!-- used encryption method, triple Data Encryption Standard (DES)-->
-                                    <EncryptionMethod Algorithm="http://www.w3.org/2001/04/xmlenc#tripledes-cbc">
-                                    </EncryptionMethod>
-                                    <CipherData>
-                                        <!-- encrypted data value for the Credit Card element-->
-                                        <CipherValue>ydUNqHkMrD...</CipherValue>
-                                    </CipherData>
-                                </EncryptedData>
-                            </PaymentInfo>
-                        </S:Body>
-                    </pre>
-                </ul>
-            </div>
-            
-            <div class="slide">
+				<ul>
+					<li>Monitoring - GC, JVM, JD, …, audoting, logging</li>
+				</ul>
+			</div> -->	
+			
+		</section>
+
+		<div class="slide outline"></div>
+
+		<section>
+			<header>Service Configuration Best Practices</header>
+
+			<div class="slide">
 				<hgroup>
-					<h1>Signing SOAP Messages</h1>
+					<h1>Parallel processing</h1>
+				</hgroup>
+				<ul class="small">
+					<li>Calling many services in sequence</li>
+					<ul>
+						<li>Many service callouts may increase a total processing time</li>
+						<li>Latency of service call is high</li>
+					</ul>
+					<li>Parallel processing</li>
+					<ul>
+						<li>Outbound service calls may run in parallel</li>
+						<li>Reduced total running time of the service</li>
+					</ul>
+					<li>Example</li>
+					<ul>
+						<li>OMS requires stock availability information for every line item</li>
+						<li>Message enrichement &ndash; for every line item in an order get an availability information</li>
+						<li>In OSB, use split-join pattern</li>
+						<li>In BPMN, use OR gateway</li>
+					</ul>
+				</ul>
+			</div>			
+
+			<div class="slide">
+				<hgroup>
+					<h1>XPath</h1>
 				</hgroup>
 				<ul class="x-small">
-                    <li>Signing SOAP messages with XML signature</li>
-                    <ul>
-                        <li>Integrity - the message was not change during the transmission.</li>
-                        <li>Authentication - the receiver can authenticate the signer.</li>
-                    </ul>
-                    <li>All information is included to the <i>Signature</i> element.</li>
-                    <ul>
-                        <li>sub-element of the Security element.</li>
-                    </ul>
-                </ul>
-                <ul class="xx-small">
-                    <pre class="brush: xml; first-line: 1; highlight: [6,11,17]">
-                        <s:envelope>
-                            <s:header>
-                                <wsse:Security>
-                                    <ds:Signature>
-                                        <ds:SignedInfo>
-                                            <ds:Reference URI="#myBody">
-                                                <!-- reference to signed element -->
-                                            </ds:Reference>
-                                            <!-- information about regarding the used signing algorithms -->
-                                        </ds:SignedInfo>
-                                        <ds:SignatureValue>
-                                            <!-- value of the signature -->
-                                        </ds:SignatureValue>
-                                    </ds:Signature>
-                                </wsse:Security>
-                            </s:header>
-                            <s:body wsu:Id="myBody">
-                                <!-- signed XML element -->
-                            </s:body>
-                        </s:envelope>
-                    </pre>
-                </ul>
-            </div>
-            
-        </section>
+					<li>Avoid the use of <code>//</code> in xpath</li>
+					<ul>
+						<li><code>//</code> implies all occurences of a node</li>
+						<li>Entire XML tree has to be scanned for a pattern after <code>//</code></li>
+						<li>Example:</li>
+						<pre class="brush: xml">
+						&lt;customer>
+							&lt;orders>
+								&lt;order>…&lt;/order>
+								&lt;order>…&lt;/order>
+							&lt;/orders>
+						&lt;/customer>
+						</pre>
+						<li><code>//order</code> is worse than <code>/customer/orders/order</code></li>
+					</ul>
+					<li>Use index where there is one occurence of a node</li>
+					<ul>
+						<li><code>customer[1]/orders</code></li>
+					</ul>
+				</ul>
+			</div>			
+				
+			<div class="slide">
+				<hgroup>
+					<h1>Streaming</h1>
+				</hgroup>
+				<ul>
+					<li>Processing of large XML message sizes</li>
+					<ul>
+						<li>Streaming allows to leverage partial parsing capability of XQuery engine</li>
+					</ul>
+				</ul>
+			</div>			
+				
+		</section>			
+			
+			
+
+	</section>
+
+        
+        
+        
+        
         
     </body>

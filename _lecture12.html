@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<!--
+    Middleware and Web Services, CTU course slides
+    (cc) 2010-2011 Tomas Vitvar, http://vitvar.com
+    written for Humla, an open source HTML5 presentation environment
+-->
+<html>  
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> 
+        <meta name="course"   content="Middleware and Web Services"/>
+        <meta name="lecture"  content="Lecture 12"/>
+        <meta name="keywords" content="Web Service Security"/>
+           
+        <link type="text/css" rel="stylesheet" href="css/meta.css"></link>   
+        <link type="text/css" rel="stylesheet" href="css/ctu-fit.css"></link>   
+        <link type="text/css" rel="stylesheet" href="humla/lib/core/humla.css"></link>   
+
+        <script type="text/javascript" src="humla/lib/humla.js"></script>
+        <title>Web Service Security</title>
+    </head>
+    
+    <body>
+        <footer>
+            <p><b>#META_LECTURE#: #TITLE#</b>,&nbsp;<span class="meta_semester"/>,&nbsp;
+            <span class="meta_twitter"/></p>
+            <p><b>&#8210; #SLIDE_NO# &#8210;</b></p>
+        </footer>
+
+        <div class="slide intro">
+            <hgroup>
+                <h1><span class="meta_course"/></h1>
+                <h2>#META_LECTURE#: #TITLE#</h2>
+            </hgroup>
+            <div class="author">
+                <p class="meta_author"/>
+                <p><span class="meta_email"/> &bull; <span class="meta_twitter"/> &bull; 
+                <span class="meta_web"/></p>
+            </div>
+            <center><div class="meta_logo"></div></center>
+            <div class="org">
+                <p class="meta_org"/>
+                <p><span class="meta_orgfac"/> &bull; <span class="meta_field"/> 
+                &bull; <span class="meta_orgweb"/></p>
+            </div>
+            <div class="etc">
+                <div class="text-info">
+                    Modified: #LAST_MODIFIED#<br/>
+                    Humla v#HUMLA_VERSION#
+                </div>
+                <a href="http://creativecommons.org/licenses/by-sa/3.0/"><div class="license"></div></a>
+                <div class="oppa"></div>
+            </div>
+        </div>
+        
+        <div class="slide outline"></div>
+        
+        <section>
+            <header>Introduction</header>
+            
+    		<div class="slide">
+				<hgroup>
+					<h1>Web Service Security Concepts</h1>
+				</hgroup>
+				<ul class="x-small">
+					<li>Securing the client-server communcation</li>
+					<ul>
+						<li>Message-level security</li>
+						<li>Transport-level security</li>
+					</ul>
+					<li>Ensure:</li>
+					<ul>
+						<li>Authentication - verify clients' identity.</li>
+                        <li>Authorizaton - grant/deny access right to resources.</li>
+						<li>Message Confidentiality - keep the messages secret.</li>
+						<li>Message Integrity - no message changes during transmission.</li>
+						<li>Non-Repudiation - prevent a client from denying having performed a particular action.</li>
+					</ul>
+                    <div class="h-drawing" style="height: 190px" id="1JhEX5OGpHhQY49mxA4-r7taripW6bkWwLCu94BU9QFI"></div>
+				</ul>
+			</div>
+            
+        </section>
+        
+        <div class="slide outline"></div>
+        
+        <section>
+            <header>Authentication and Authorization</header>
+            
+    		<div class="slide">
+				<hgroup>
+					<h1>Authentication and Authorization</h1>
+				</hgroup>
+				<ul class="small">
+					<li>Authentication</li>
+					<ul>
+						<li>verification of user's identity</li>
+					</ul>
+					<li>Authorization</li>
+					<ul>
+						<li>verification that a user has rights to access a resource</li>
+					</ul>
+					<li>Standard: HTTP authentication</li>
+					<ul>
+						<li>HTTP defines two options</li>
+						<ul>
+							<li>Basic Access Authentication</li>
+							<li>Digest Access Authentication</li>
+						</ul>
+						<li>They are defined in</li>
+						<ul>
+							<li><span class="h-ref" id="rfc-2616">RFC 2616: Hypertext 
+							Transfer Protocol &ndash; HTTP/1.1</span></li>
+							<li><span class="h-ref" id="rfc-2617">RFC 2617: 
+							HTTP Authentication: Basic and Digest Access Authentication</span></li> 
+						</ul>
+					</ul>
+					<li>Custom/proprietary: use of cookies</li>
+				</ul>
+			</div>                                    
+
+    		<div class="slide">
+				<hgroup>
+					<h1>Basic Access Authentication</h1>
+				</hgroup>
+				<div class="h-drawing" style="height: 280px" id="1OYyQduAQYodoiQ48uYTCB1iVn6UHcCcdDocjLOA9b9Y"></div>
+				<ul class="x-small">
+					<li>Realm</li>
+					<ul>
+						<li>an identifier of the space on the server (~ a collection of resources and their sub-resources)</li>
+						<li>client may associate a valid credentials with realms such that it copies authorization information 
+							in requests for which server requires authentication (by <code>WWW-Authenticate</code> header)</li>
+				</ul>
+			</div>                                    
+
+    		<div class="slide">
+				<hgroup>
+					<h1>Basic Access Authentication &ndash; Credentials</h1>
+				</hgroup>
+				<ul class="small">
+					<li>Credentials</li>
+					<ul>
+						<li>credentials are base64 encoded</li>
+						<li>the format is: <code>username:password</code></li>
+					</ul>
+					<pre class="brush: bash">
+						# to encode in linux
+						echo "novak:heslo" | base64
+						> bm92YWs6aGVzbG8K
+							
+						# and to decode
+						echo "bm92YWs6aGVzbG8K" | base64 -d # use capital "D" in OS X
+						> novak:heslo</pre>
+							
+					<li>Comments</li>
+					<ul class="x-small">
+						<li>It is not secure, the password travels over the network and can be read!</li>
+						<li>the purpose is to encode and send non-ASCII characters</li>
+					</ul>
+				</ul>
+				
+			</div>                                    
+
+    		<div class="slide">
+				<hgroup>
+					<h1>Digest Access Authentication</h1>
+				</hgroup>
+				<ul class="xx-small">
+					<li>RFC 2617 &ndash; Basic and Digest Access Authentication</li>
+					<ul>
+						<li>No password between a client and a server but a hash value</li>
+						<li>Simple and advanced mechanisms (only server-generated nonce value &ndash; replay-attacks or 
+							with client-generated nonce value &ndash; chosen-plaintext attacks)</li>
+					</ul>							
+					<li>Basic Steps</li>
+					<ol>
+						<li>Client accesses a protected area</li>
+						<pre class="brush:bash; class-name: 'tight'">
+							> GET / HTTP/1.1</pre>
+						<li>Server requests authentication with <code>WWW-Authenticate</code></li>
+							<pre class="brush:bash; class-name: 'tight'">
+								&lt; HTTP/1.1 401 Unauthorized
+								&lt; WWW-Authenticate: Digest realm="ProtectedArea", 
+								  nonce="BbdQof3DBAA=a293ff3d724989371610f03015f2d23f3cd2c045", 
+								  algorithm=MD5, domain="/", qop="auth"</pre>
+						<li>Client calculates a response hash by using the realm, his/her username, the password, and the 
+							quality of protection (QoP) and requests the resource with <code>authorization</code> header</li>
+							<pre class="brush:bash; class-name: 'tight'">
+								> GET / HTTP/1.1
+								> Authorization: Digest username="novak", realm="ProtectedArea",
+								  nonce="BbdQof3DBAA=a293ff3d724989371610f03015f2d23f3cd2c045", uri="/", 
+								  algorithm=MD5, response="c4ea2293aeb318826d1e533f363efd90", qop=auth, 
+								  nc=00000001, cnonce="531ee8ba7f2a8fd1"</pre>								
+					</ol>
+				</ul>
+			</div>                                    
+
+    		<div class="slide">
+				<hgroup>
+					<h1>Nonce and QoP</h1>
+				</hgroup>
+				<ul class="small">
+					<li>Nonce</li>
+					<ul>
+						<li>A value to identify an interaction that should occur only once</li>
+						<li><code>nonce</code> &ndash; generated by the server</li>
+						<ul>
+							<li>may have a time period for which the nonce is valid</li>
+							<li>may be computed using client IP, ETag of the resource, etc.</li>
+							<li>this limits chances for the replay attack.</li>
+						</ul>
+						<li><code>cnonce</code> &ndash; generated by the client</li>
+					</ul>
+					<li>QoP &ndash; quality of protection</li>
+					<ul>
+						<li>Further improvements to prevent replay attacks and chosen-plaintext 
+							attacks and enables non-repudiation</li>
+					</ul>
+				</ul>
+			</div>  
+
+    		<div class="slide">
+				<hgroup>
+					<h1>Algorithms</h1>
+				</hgroup>
+				<ul class="small">
+					<li>Algorithm for <code>response</code> value of <code>authorization</code> header</li>
+					<ul>
+						<li>No quality of protection (<code>qop</code> is missing or <code>qop=none</code>)</li>
+						<ul>
+							<li>prevents replay-attacks</li>
+						</ul>
+						<pre class="brush: bash; class-name: 'tight'">
+							HA1 = MD5(username:realm:password)
+							HA2 = MD5(method:digestURI)
+							response = MD5(HA1:nonce:HA2)</pre>
+						<li>with quality of protection (<code>qop=auth</code>)</li>
+						<ul>
+							<li>prevents chosen-plaintext attacks</li>
+						</ul>
+						<pre class="brush: bash; class-name: 'tight'">
+							HA1 = MD5(username:realm:password)
+							HA2 = MD5(method:digestURI)
+							response = MD5(HA1:nonce:nonceCount:cnonce:qop:HA2)</pre>				
+							<li>with quality of protection for message integrity (<code>qop=auth-int</code>)</li>
+							<ul>
+								<li>enables non-repudiation (i.e., proof of integrity and origin of data)</li>
+							</ul>
+							<pre class="brush: bash; class-name: 'tight'">
+								HA1 = MD5(username:realm:password)
+								HA2 = MD5(method:digestURI:MD5(payload))
+								response = MD5(HA1:nonce:nonceCount:cnonce:qop:HA2)</pre>											
+					</ul>
+					
+				</ul>
+			</div>  
+
+    		<div class="slide">
+				<hgroup>
+					<h1>Replay Attack</h1>
+				</hgroup>
+				<ul class="xx-small">
+					<li>Replay Attack Scenario (quality of protection is <code>none</code>)</li>
+					<ul>
+						<li>The communication is not encrypted (i.e., no use of HTTPS)</li>
+						<li>Eve listens to the Alice's communication (e.g. on a proxy server)</li>
+						<li>Eve resends requests with headers from Alice's requests</li>
+					</ul>
+				</ul>
+				<div class="h-drawing" id="1gQvg53vE3p9o_YRI3zYx3uBEfiT6YjiuznHN0A8O2QA" style="height: 380px"></div>
+			</div>                                  
+
+    		<div class="slide">
+				<hgroup>
+					<h1>Replay Attack (Cont.)</h1>
+				</hgroup>
+				<ul class="xx-small">
+					<li>Replay Attack Scenario (quality of protection is <code>auth</code> or <code>auth-int</code>)</li>
+					<ul>
+						<li><code>nonceCount</code> should be incremented in every request to a response of the nonce 
+							value from the server</li>
+					</ul>
+				</ul>
+				<div class="h-drawing" id="1Jto8zZvp-q7IANoQ0lckKsPHP1e5LetG7nJs8jI3Xyg" style="height: 380px"></div>
+			</div>                                  
+            
+        </section>
+        
+        <div class="slide outline"></div>
+        
+        <section>
+            <header>Digital Signature</header>
+            
+    		<div class="slide">
+				<hgroup>
+					<h1>XML Digital Signature</h1>
+				</hgroup>
+				<ul class="x-small">
+                    <li>A <b>digital signature</b> is a value computed with a cryptographic algorithm and attached along with the data.</li>
+					<li>XML Signature</li>
+					<ul>
+                        <li>A mathematical scheme for demonstrating the authenticity of a digital message.</li>
+						<li>Express digital signature in XML.</li>
+						<li>Signing any digital content that can be send over a wire.</li>
+					</ul>
+					<li>Provides</li>
+					<ul>
+						<li>Data-integrity</li>
+						<li>Message Authentication</li>
+						<li>Client Authentication</li>
+					</ul>
+					<li>Standard: XML Signature Syntax and Processing</li>
+					<ul>
+						<li>Specifies XML digital signature processing rules and syntax.</li>
+						<li><a class="ext-link ref" title="XML Signature Syntax and Processing Specification" href="http://www.w3.org/TR/xmldsig-core/">XML Signature Syntax and Processing Specification</a></li>
+					</ul>
+				</ul>
+			</div>
+            
+    		<div class="slide">
+				<hgroup>
+					<h1>Digital Signature Usage Scenario</h1>
+				</hgroup>
+				<ul class="x-small">
+                    <li>Creating and Verifying Digital Signatures</li>
+				</ul>
+				<div class="h-drawing" id="1hPBaVxchCeOoRqyseOBJF08yUghyaEqkAnMVxrzpS4A" style="height: 290px"></div>
+				<ul class="xx-small">
+                    <li>Steps</li>
+                    <ol>
+                        <li>Client creates and sends the digital signature.</li>
+                        <ul>
+                            <li>creates the message digest and encrypts the message using his private key.</li>
+                        </ul>
+                        <li>Server receives the message and verifies the client.</li>
+                        <ul>
+                            <li>decrypts the message using the client's public key and compares the message digests.</li>
+                        </ul>
+                    </ol>
+				</ul>
+			</div>
+        </section>
+        
+        <div class="slide outline"></div>
+        
+        <section>
+            <header>Web Services Security</header>
+            
+    		<div class="slide">
+				<hgroup>
+					<h1>WS-Security</h1>
+				</hgroup>
+				<ul class="x-small">
+					<li>Extension to SOAP specification defining security to Web Services.</li>
+                    <li>Defines how to insert security elements into a SOAP envelope.</li>
+                    <li>Defines three main mechanisms:</li>
+					<ul>
+                        <li>Authentication - by using security tokens.</li>
+						<li>Confidentiality - by using XML Encryption specification.</li>
+						<li>Integrity - by using XML Signature specification.</li>
+					</ul>					
+					<li>Standard driven: Web Services Security (by OASIS)</li>
+					<ul>
+						<li>Core specification: <a class="ext-link ref" title="XML Signature Syntax and Processing Specification" href="https://www.oasis-open.org/committees/download.php/16790/wss-v1.1-spec-os-SOAPMessageSecurity.pdf">WS-Security Core 1.1</a></li>
+						<li>Defines rules how to apply security to Web Services.</li>
+					</ul>
+                    <li>Ensure secure communication between the services and services' clients!</li>
+				</ul>
+			</div>
+            
+    		<div class="slide">
+				<hgroup>
+					<h1>WS-Security Stack</h1>
+				</hgroup>
+				<ul class="x-small">
+                    <li>Set of extension specifications to Web Service Security.</li>
+				</ul>
+				<div class="h-drawing" id="1UoBUq0BVNrjMAVFFYKsTd6OFuWfol3qftkngwJDXwe0" style="height: 270px"></div>
+            </div>
+            
+    		<div class="slide">
+				<hgroup>
+					<h1>WS-Security Realization</h1>
+				</hgroup>
+				<ul class="x-small">
+                    <li>Example of a Web Service security realization.</li>
+				</ul>
+				<div class="h-drawing" id="1UfKnuRAZITsR2ctFErWIz-P5xr-0CXnCFxQS1UXLtiw" style="height: 230px"></div>
+				<ul class="x-small">
+                    <li>Both, the client and the server should secure the data.</li>
+                    <li>Before sending a message:</li>
+                    <ul>
+                        <li>Sign, encrypt and add authorization token (only client)</li>
+                    </ul>
+                    <li>When receiving a message:</li>
+                    <ul>
+                        <li>Check authorization token (only server), decrypt, sign</li>
+                    </ul>
+				</ul>
+            </div>
+            
+    		<div class="slide">
+				<hgroup>
+					<h1>WS-Security Implementation</h1>
+				</hgroup>
+				<ul class="xx-small">
+                    <li>Placeholder for the security policies is the envelope header.</li>
+				</ul>
+                <ul class="x-small">
+                    <pre class="brush: xml; first-line: 1; highlight: [4,5,6]">
+                        <S:Envelope>
+                            <S:header>
+                                ...
+                                <wsse:Security s:actor="http://www.oracle.com/appml/"
+                                    s:mustUnderstand="1">
+                                    ...
+                                </wsse:Security>
+                            </S:header>
+                            ...
+                        </S:Envelope>
+                    </pre>
+                </ul>
+                <ul class="xx-small">
+                    <li>WS-Security defines <b>Security</b> element in the SOAP header.</li>
+                    <ul>
+                        <li><code>s:actor</code> attribute: identifies the actor.</li>
+                        <li><code>s:mustUnderstand</code> attribute: indicates whether a header entry is mandatory or optional for the recipient to process. Valid values: "0", "1"</li>
+                        <li>The Security element can be extened with other proprietary elements and atrribues!</li>
+                    </ul>
+                    <li>The <i>Security</i> header countains:</li>
+                    <ul>
+                        <li>Security Tokens</li>
+                        <li>Signatures</li>
+                        <li>Encryption information</li>
+                        <li>Security Timestamps</li>
+                    </ul>
+                </ul>
+            </div>
+            
+    		<div class="slide">
+				<hgroup>
+					<h1>Security Tokens</h1>
+				</hgroup>
+				<ul class="x-small">
+                    <li>Security Tokens are optional sub-elements of the <i>Security</i> element</li>
+                    <li>WS-Security defines diferent types of security tokens:</li>
+                    <ul>
+                        <li>User Name Token</li>
+                        <li>Binary Security Token</li>
+                        <li>other: XML Token, Encrypted Data Token</li>
+                    </ul>
+                    <li>User Name Tokens</li>
+                    <ul>
+                        <li>way of providing a username</li>
+                        <pre class="brush: xml; first-line: 1; highlight: [4,5,6]">
+                            <S:Envelope>
+                                <S:header>
+                                    <wsse:Security s:actor="..." s:mustUnderstand="1">
+                                        <wsse:UserNameToken wsu:id="...">
+                                            <wsse:Username>Alice</wsse:Username>
+                                        </wsse:UserNameToken>
+                                    </wsse:Security>
+                                    ...
+                                </S:header>
+                                ...
+                            </S:Envelope>
+                        </pre>
+                        <li><code>id</code> attribute - a string label for this security token.</li>
+                    </ul>
+				</ul>
+            </div>
+            
+            <div class="slide">
+				<hgroup>
+					<h1>Binary Security Tokens</h1>
+				</hgroup>
+				<ul class="xx-small">
+                    <li>Way of providing security tokens in binary format.</li>
+                    <ul>
+                        <li>Encoding binary security tokens such as X.509 certificates.</li>
+                    </ul>
+                </ul>
+                <ul class="xx-small">
+                    <li>Example:</li>
+                        <pre class="brush: xml; first-line: 1; highlight: [4,5,6]">
+                            <S:Envelope>
+                                <S:header>
+                                    <wsse:Security s:actor="..." s:mustUnderstand="1">
+                                        <wsse:BinarySecurityToken wsu:id="..." EncodingType="..." ValueType="...">
+                                            ...
+                                        </wsse:BinarySecurityToken>
+                                    </wsse:Security>
+                                    ...
+                                </S:header>
+                                ...
+                            </S:Envelope>
+                        </pre>
+                </ul>                
+                <ul class="x-small">
+                    <li>Allowed attributes:</li>
+                    <ul>
+                        <li><code>id</code> - string label for the security token.</li>
+                        <li><code>valueType</code> - URI indicating the value type and space of the encoded binary data.</li>
+                        <li><code>encodingType</code> - URI indicating the encoding format (e.g., wsse:Base64Binary)</li>
+                    </ul>
+				</ul>
+            </div>
+            
+            <div class="slide">
+				<hgroup>
+					<h1>Message Encryption</h1>
+				</hgroup>
+				<ul class="x-small">
+                    <li>XML Encryption ensures <i>Confidentiality</i>.</li>
+                    <ul>
+                        <li>syntax for representing XML content</li>
+                        <li>information needed to decrypt/encrypt XML content</li>
+                        <li>encryption of chosen elements</li>
+                    </ul>
+                    <li>Used to encrypt different SOAP envelope components.</li>
+                    <ul>
+                        <li>encrypt only sensitive data in the message</li>
+                        <li>passwords, credit card details, etc.</li>
+                    </ul>
+                    <li>Drawbacks</li>
+                    <ul>
+                        <li>encrypting is CPU intensive job</li>
+                        <li>overhead to SOAP processing due to increased message size and XML and cryptographic processing</li>
+                    </ul>
+                    <li>Usage recommendation</li>
+                    <ul>
+                        <li>encrypt only when necessary</li>
+                        <li>encrypt only sensitive data</li>
+                    </ul>
+                </ul>
+            </div>
+            
+            <div class="slide">
+				<hgroup>
+					<h1>XML Encryption Example</h1>
+				</hgroup>
+				<ul class="x-small">
+                    <li>Encrypting SOAP message with client's public key.</li>
+                    <li>Sample XML document:</li>
+                </ul>
+                <ul class="x-small">
+                    <pre class="brush: xml; first-line: 1; highlight: [5,6,7,8,9]">
+                        <S:Envelope>
+                            <S:Body>
+                                <PaymentInfo xmlns="http://example.org/paymentv2">
+                                    <Name>John Smith</Name>
+                                    <CreditCard Limit='5,000' Currency='USD'>
+                                        <Number>4019 2445 0277 5567</Number>
+                                        <Issuer>Example Bank</Issuer>
+                                        <Expiration>04/02</Expiration>
+                                    </CreditCard>
+                                </PaymentInfo>
+                            </S:Body>
+                        </S:Envelope>
+                    </pre>
+                </ul>
+                <ul class="x-small">
+                    <li><i>CreditCard</i> element will be encrypted using client's public key.</li>
+                    <ul>
+                        <li>other elements are not confident.</li>
+                    </ul>
+                </ul>
+            </div>
+                    
+            <div class="slide">
+                <hgroup>
+                    <h1>XML Encryption Example (cont.)</h1>
+                </hgroup>
+                <ul class="x-small">
+                    <li>Security metadata element describing the encryption.</li>
+                </ul>
+                <ul class="xx-small">
+                    <pre class="brush: xml; first-line: 1; highlight: [6,16]">
+                        <S:Envelope>
+                            <S:header>
+                                <wsse:Security s:actor="..." s:mustUnderstand="1">
+                                    <EncryptedKey xmlns="http://www.w3.org/2001/04/xmlenc#">
+                                        <!-- used encryption method, Rivest-Shamir-Adleman algorithm -->
+                                        <EncryptionMethod Algorithm="http://www.w3.org/2001/04/xmlenc#rsa-1_5" ></EncryptionMethod>
+                                        <KeyInfo xmlns="http://www.w3.org/2000/09/xmldsig#">
+                                            <KeyName>Sally Doe</KeyName>
+                                        </KeyInfo>
+                                        <CipherData>
+                                            <CipherValue>yMTEyOTA1M...</CipherValue>
+                                        </CipherData>
+                                    </EncryptedKey>
+                                    <ReferenceList xmlns="http://www.w3.org/2001/04/xmlenc#">
+                                        <!-- reference to the encrypted element -->
+                                        <DataReference URI="#ed1"/></DataReference>
+                                    </ReferenceList>
+                                </wsse:Security>                                
+                            </S:header>
+                            ...
+                            <!-- see next slide for the encrypted body element -->
+                        </S:Envelope>
+                    </pre>
+                </ul>
+            </div>
+            <div class="slide">
+				<hgroup>
+					<h1>XML Encryption Example (cont.)</h1>
+				</hgroup>
+                <ul class="x-small">
+                    <li>Encrypted SOAP body part.</li>
+                </ul>
+				<ul class="xx-small">
+                    
+                    <pre class="brush: xml; first-line: 1; highlight: [6,10]">
+                        <S:Body>
+                            <PaymentInfo xmlns="http://example.org/paymentv2">
+                                <Name>John Smith</Name>
+                                <EncryptedData Id="ed1" Type="http://www.w3.org/2001/04/xmlenc#Element" xmlns="http://www.w3.org/2001/04/xmlenc#">
+                                    <!-- used encryption method, triple Data Encryption Standard (DES)-->
+                                    <EncryptionMethod Algorithm="http://www.w3.org/2001/04/xmlenc#tripledes-cbc">
+                                    </EncryptionMethod>
+                                    <CipherData>
+                                        <!-- encrypted data value for the Credit Card element-->
+                                        <CipherValue>ydUNqHkMrD...</CipherValue>
+                                    </CipherData>
+                                </EncryptedData>
+                            </PaymentInfo>
+                        </S:Body>
+                    </pre>
+                </ul>
+            </div>
+            
+            <div class="slide">
+				<hgroup>
+					<h1>Signing SOAP Messages</h1>
+				</hgroup>
+				<ul class="x-small">
+                    <li>Signing SOAP messages with XML signature</li>
+                    <ul>
+                        <li>Integrity - the message was not change during the transmission.</li>
+                        <li>Authentication - the receiver can authenticate the signer.</li>
+                    </ul>
+                    <li>All information is included to the <i>Signature</i> element.</li>
+                    <ul>
+                        <li>sub-element of the Security element.</li>
+                    </ul>
+                </ul>
+                <ul class="xx-small">
+                    <pre class="brush: xml; first-line: 1; highlight: [6,11,17]">
+                        <s:envelope>
+                            <s:header>
+                                <wsse:Security>
+                                    <ds:Signature>
+                                        <ds:SignedInfo>
+                                            <ds:Reference URI="#myBody">
+                                                <!-- reference to signed element -->
+                                            </ds:Reference>
+                                            <!-- information about regarding the used signing algorithms -->
+                                        </ds:SignedInfo>
+                                        <ds:SignatureValue>
+                                            <!-- value of the signature -->
+                                        </ds:SignatureValue>
+                                    </ds:Signature>
+                                </wsse:Security>
+                            </s:header>
+                            <s:body wsu:Id="myBody">
+                                <!-- signed XML element -->
+                            </s:body>
+                        </s:envelope>
+                    </pre>
+                </ul>
+            </div>
+            
+        </section>
+        
+    </body>
