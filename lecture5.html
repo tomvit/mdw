@@ -672,19 +672,62 @@
                         </ul>
                     </ul>
                 </div>
-    
+
                 <div class="slide">
                     <hgroup>
-                        <h1>Message Consumption using Timeout</h1>
+                        <h1>Queues in Client-Server Communication</h1>
+                    </hgroup>
+                    <ul class="small">
+                        <li>Queues decouple a client and a server</li>
+                        <li>Types of queues</li>
+                        <ul> 
+                            <li>Input Queue</li>
+                            <ul>
+                                <li>a client places a message to the queue</li>
+                                <li>a server reads the message and process it</li>
+                            </ul>
+                            <li>Output Queue</li>
+                            <ul>
+                                <li>a server places output message (response) to the queue</li>
+                                <li>a client reads the message</li>
+                            </ul>
+                            <li>Error Queue</li>
+                            <ul>
+                                <li>a server reads the message from the input queue</li>
+                                <li>when processing of the message fails, the server places the message to the error queue</li>
+                                <li>there can be several attempts to process the message before it is placed to the error queue</li>
+                            </ul>
+                        </ul>
+                    </ul>
+                </div>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>Error Handling Using Timeout</h1>
                     </hgroup>
                     <div class="h-drawing" style="height: 340px" 
                         id="1FsBqFbspb4xyX-lZLQo7AiiADFphEybTrmn8UzNUSUU"></div>
                     <ul class="x-small">
                         <ul>
-                            <li>message consumers may fail anytime</li>
-                            <li>multiple instances of message consumers increases reliability</li>
+                            <li>message consumers or message processing may fail</li>
                             <li><b>visibility timeout</b> &ndash; time during which the message exist in the queue,
                             and need to be deleted by the consumer (~ 30 seconds)</li>
+                            <li>Example technology: Amazon Simple Queue Service (SQS)</li>
+                        </ul>
+                    </ul>
+                </div>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>Error Handling Using Transactions</h1>
+                    </hgroup>
+                    <div class="h-drawing" style="height: 340px" 
+                        id="1xVyCqGNXxxD8XPKs9FNx6tHGgX95mQjjoslEIBbEOkI"></div>
+                    <ul class="x-small" style="padding-top: 20px">
+                        <ul>
+                            <li><b>transaction</b> &ndash; message consumer opens a transaction and deletes the message;
+                                when the processing is succesfull the transaction is committed otherwise it is rolled back and the message appears in the queue again</li>
+                            <li>Example technology: JMS, Weblogic server</li>
                         </ul>
                     </ul>
                 </div>
