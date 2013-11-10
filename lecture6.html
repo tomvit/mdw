@@ -265,7 +265,7 @@
 				<ul class="x-small spacing">
 					<li>Agent</li>
 					<ul>
-						<li>software or hardware that sends/received messages</li>
+						<li>software or hardware that sends/receives messages</li>
 						<li>concrete implementation of a service</li>
 					</ul>
 					<li>Service</li>
@@ -788,22 +788,20 @@
                                 <tr class="fr">
                                     <td rowspan="3">Loose Coupling</td>
                                     <td>&nbsp;&plus;</td><td>Uses standard response codes.</td></tr>
-                                <tr><td>&nbsp;&minus;</td><td>Implements server-side public process using a stateful server;
-                                  Stateful server might cause scalability issues.</td></tr>
+                                <tr><td>&nbsp;&minus;</td><td>Unforeseen clients will have to know the service's public process to 
+                                    work with it.</td></tr>
                                 <tr><td>&nbsp;&minus;</td><td>Uses operation names which can cause interoperability problems and 
                                 dependency on clients.</td></tr>
                                 
                                         
                                 <tr class="fr">
                                     <td rowspan="2">Reusability</td>
-                                    <td>&nbsp;&minus;</td><td>Unforeseen clients will have to know the service's public process to 
-                                    work with it.</td></tr>
-                                <tr><td>&nbsp;&minus;</td><td>Uses plain text in responses that unforeseen clients might not understand.</td></tr>
+                                    <td>&nbsp;&minus;</td><td>Can be reused but is subject to loose coupling issues.</td></tr>
 
 
                                 <tr class="fr">
                                     <td rowspan="1">Contracting and Discoverability</td>
-                                    <td>&nbsp;&minus;</td><td>Textual description is informal, could be hard to agree on the service interface.</td></tr>
+                                    <td>&nbsp;&minus;</td><td>Textual description is informal, it is hard to agree on the service interface.</td></tr>
 
                                 <tr class="fr">
                                     <td rowspan="1">Composability</td>
