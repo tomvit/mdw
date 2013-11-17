@@ -537,10 +537,10 @@
                     </ul>
                     <li>RESTful service &ndash; HTTP methods</li>
                     <ul>
-                        <li>GET &ndash; reads the resource (+ HEAD, OPTIONS)</li>
-                        <li>PUT &ndash; updates the resource</li>
-                        <li>POST &ndash; updates or creates a new resource</li>
-                        <li>DELETE &ndash; deletes the resource</li>
+                        <li>GET &ndash; reads a resource (+ HEAD, OPTIONS)</li>
+                        <li>PUT &ndash; updates or creates a resource (+ PATCH)</li>
+                        <li>POST &ndash; creates a new resource</li>
+                        <li>DELETE &ndash; deletes a resource</li>
                     </ul>
                     <li>HTTP methods' properties</li>
                     <ul>
@@ -552,7 +552,7 @@
                         </ul>
                         <li>a method is <b>idempotent</b></li>
                         <ul>
-                            <li>Every method invocation will always have the same result</li>
+                            <li>Every method invocation will always have the same effect</li>
                             <li>GET, PUT, DELETE</li>
                         </ul>
                     </ul>
@@ -593,7 +593,7 @@
                     </pre>
                     <li>Operation <code>closeOrder(customerId, orderId)</code></li>
                     <ul>
-                        <li>Closes the order</li>
+                        <li>Closes the order (i.e., changes a state of the order resource)</li>
                     </ul>
                     <pre class="brush: 'bash'; class-name: 'tight'">
                         > PUT /customers/{customerId}/orders/{orderId}
@@ -669,7 +669,7 @@
                 <ul class="xx-small">
                     <li style="margin-top: 15px; margin-bottom: -8px">SOAP clients must hard-code service's public process</li>
                     <li>REST clients can follow links in hypertext for application states</li>
-                    <li style="margin-top: 15px; margin-bottom: -8px">SOAP services are used for intra-enterprise integration</li>
+                    <li style="margin-top: 15px; margin-bottom: -8px">SOAP services are used for inter/intra-enterprise integration</li>
                     <li>REST services are used for Web APIs for integration on the Web</li>  
                 </ul>
             </div>
