@@ -589,8 +589,27 @@
 						<li>Rejected connections will not be processed</li>
 					</ul>
 				</ul>
-			</div>			
-			
+			</div>		
+
+    		<div class="slide">
+				<hgroup>
+					<h1>Throttling</h1>
+				</hgroup>
+				<ul class="small">
+				<li>Throttling</li>
+				<ul>
+					<li>There may be multiple instances of processes running in the middleware</li>
+					<li>Business service can be invoked concurrently</li>
+					<li>Not to overload a back-end service, throttling enables a control on a number of concurrent invocations</li>
+				</ul>
+				<li>Parameters</li>
+				<ul>
+					<li><b>Maximum concurrency</b> &ndash; a maximum number of concurrent invocations of a service</li>
+					<li><b>Throttling queue</b> &ndash; a queue for requests that cannot be sent due to maximum concurrency limit</li>
+					<li><b>Message expiration</b> &ndash; a maximum time that a message can spent in the queue</li>
+				</ul>
+        	</div>        	        
+							
 		<!--	<div class="slide">
 				<hgroup>
 					<h1>Troubleshooting</h1>

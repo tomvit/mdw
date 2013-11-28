@@ -39,11 +39,21 @@
 	content: "http://vitvar.com/courses/mdw";
 }
 
+div.oracle-academy {
+	width: 200px;
+	float: left;
+	background: url('oracle-academy.png') left top no-repeat;
+	margin-left: 0px;
+	margin-top: 3px;
+	height: 50px;
+    opacity: 0.7;
+}
+
 div.oppa {
 	width: 400px;
 	/*float: left;*/
 	background: url('oppa2.png') left top no-repeat;
-	margin-left: 110px;
+	margin-left: 210px;
 	margin-top: 3px;
 	height: 50px;
     opacity: 0.7;
