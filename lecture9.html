@@ -47,10 +47,36 @@
                     Modified: #LAST_MODIFIED#<br/>
                     Humla v#HUMLA_VERSION#
                 </div>
-                <a href="http://academy.oracle.com"><div class="oracle-academy"></div></a>
+                <a href="http://creativecommons.org/licenses/by-sa/3.0/"><div class="license"></div></a>
                 <div class="oppa"></div>
             </div>
         </div>
+
+<!--        <div class="slide intro">
+            <hgroup>
+                <h1><span class="meta_course"/></h1>
+                <h2>#META_LECTURE#: #TITLE#</h2>
+            </hgroup>
+            <div class="author">
+                <p class="meta_author"/>
+                <p><span class="meta_email"/> &bull; <span class="meta_twitter"/> &bull; 
+                <span class="meta_web"/></p>
+            </div>
+            <center><div class="meta_logo"></div></center>
+            <div class="org">
+                <p class="meta_org"/>
+                <p><span class="meta_orgfac"/> &bull; <span class="meta_field"/> 
+                &bull; <span class="meta_orgweb"/></p>
+            </div>
+            <div class="etc">
+                <div class="text-info">
+                    Modified: #LAST_MODIFIED#<br/>
+                    Humla v#HUMLA_VERSION#
+                </div>
+                <a href="http://academy.oracle.com"><div class="oracle-academy"></div></a>
+                <div class="oppa"></div>
+            </div>
+        </div>-->
         
     	<div class="slide">
 			<hgroup>
@@ -76,7 +102,6 @@
 					<li>Data transformations &ndash; mediator</li>					
 					<li>Service orchestrations &ndash; BPMN, BPEL</li>
 					<li>Message enrichment</li>
-					<li>Communication</li>
 				</ul>
             </ul>
         </div>
@@ -305,8 +330,13 @@
 	    					<li>MDS &ndash; Metadata Store; can be in the DB or on file system</li>
 	    					<li>Common artefacts as above + deployed composites</li>
 	    					<li>Artefacts can be referenced/access by <code>oramds</code> protocol:</li>
-	    					<pre class="brush: xml">
-	    					</pre>
+	    					<pre class="brush: xml; highlight: [6]">
+	    						...
+							    &lt;wsdl:types>
+							        &lt;schema 
+							        	xmlns="http://www.w3.org/2001/XMLSchema"> 
+							            &lt;import namespace="http://mimdw.fit.cvut.cz/mdw-examples/cdm/order" 
+							                schemaLocation="oramds:/apps/MDWMetaData/order.xsd"/></pre>
 	    				</ul>
 	    			</ul>
 	            </div>            
@@ -365,18 +395,26 @@
 					<hgroup>
 						<h1>JCA Adapters</h1>
 					</hgroup>
-					<ul class="small">
+					<ul class="x-small">
 						<li>JCA &ndash; Java EE Connector Architecture</li>
 						<ul>
-							<li>Standard Java interface to connect application servers and back-end applications</li>
+							<li>Standard Java interface to connect to back-end systems</li>
 							<li>Standardized in <span class="h-ref" id="jsr-112">JSR 112</span></li>
+							<li>Main JCA Adapters</li>
+							<ul>
+								<li>JCA DB Adapter &ndash; access to DB objects</li>
+								<li>JCA JMS Adapter &ndash; JMS queues</li>
+								<li>JCA AQ Adapter &ndash; Oracle AQ (in a database)</li>
+								<li>JCA MQ Adapter &ndash; IBM MQ</li>
+								<li>JCA FTP Adapter &ndash; FTP access</li>
+								<li>JCA File Adapter &ndash; File system access</li>
+							</ul>
 						</ul>
 						<li>Major Features (Contracts)</li>
 						<ul>
-							<li>Connection management</li>
+							<li>Connection pool</li>
 							<ul>
-								<li>application server can pool connections to back-end applications</li>
-								<li>application server provides connections to clients from connection pools</li>
+								<li>cache of connections to a back-end system (DB, etc.)</li>
 							</ul>
 							<li>Transaction management</li>
 							<ul>
@@ -548,184 +586,169 @@
 					<li>Service orchestrations &ndash; BPMN, BPEL</li>
 					<li>Message enrichment</li>
 				</ul>
-				<li>Communication patterns</li>
-				<ul>
-					<li>Client-server communication, special cases of technical patterns</li>
-					<li>Throtling</li>
-					<li>Asynchronous communication</li>
-            	</ul>
         	</ul>
     	</div>    
 
-        <div class="slide outline"></div>
+		<div class="slide">
+			<hgroup>
+				<h1>Message Broker</h1>
+			</hgroup>
+			<ul class="small">
+				<li>Message broker</li>
+				<ul>
+					<li>ESB can mix and match transports both standard and proprietary</li>
+				</ul>
+			</ul>
+			<div class="h-drawing" id="1Ga9iANbaAAB-eEuCxZBPbTKX8pDQlvttS5-dI19vJRI" style="height: 350px"></div>
+    	</div>        	        
+    	
+		<div class="slide">
+			<hgroup>
+				<h1>Location Transparency</h1>
+			</hgroup>
+			<ul class="small">
+				<li>Location transparency</li>
+				<ul>
+					<li>ESB can hide changes in location of services</li>
+					<li>Such changes will not affect clients</li>
+					<li>Can also be used for load balancing for multiple service instances</li>
+				</ul>
+			</ul>
+			<div class="h-drawing" id="1yyj2VBgauYs_zVWoSR1R2Hugf8pLG-HmDq8-2bF-vNI" style="height: 200px"></div>
+    	</div>       
+    	
+		<div class="slide">
+			<hgroup>
+				<h1>Dynamic Routing</h1>
+			</hgroup>
+			<ul class="small">
+				<li>Dynamic routing</li>
+				<ul>
+					<li>ESB exposes a service that routes to various back-end services based on message contents.</li>
+				</ul>
+			</ul>
+        	<div class="h-drawing" id="1dqQSDoXzk9KOscw7hA1N1aAexj5iqWbjn49e782DUMk" style="height: 180px"></div>
+    	</div>        	        	        	
+    		        	
+		<div class="slide">
+			<hgroup>
+				<h1>Message Enrichment</h1>
+			</hgroup>
+			<ul class="small">
+				<li>Message enrichmenet</li>
+				<ul>
+					<li>Enriches a message before invoking back-end application service.</li>
+				</ul>
+			</ul>
+			<div id="1675sNfJX75EcwMZXTSACUGKEhPf3QnTjXRPtEABXwm0" class="h-drawing" style="height: 250px"></div>
+			
+    	</div>        	
 
-        <section>
-        	<header>
-				Technical and business patterns        		
-        	</header>
-        	
-    		<div class="slide">
-				<hgroup>
-					<h1>Message Broker</h1>
-				</hgroup>
-				<ul class="small">
-					<li>Message broker</li>
-					<ul>
-						<li>ESB can mix and match transports both standard and proprietary</li>
-					</ul>
-				</ul>
-				<div class="h-drawing" id="1Ga9iANbaAAB-eEuCxZBPbTKX8pDQlvttS5-dI19vJRI" style="height: 350px"></div>
-        	</div>        	        
-        	
-    		<div class="slide">
-				<hgroup>
-					<h1>Location Transparency</h1>
-				</hgroup>
-				<ul class="small">
-					<li>Location transparency</li>
-					<ul>
-						<li>ESB can hide changes in location of services</li>
-						<li>Such changes will not affect clients</li>
-						<li>Can also be used for load balancing for multiple service instances</li>
-					</ul>
-				</ul>
-				<div class="h-drawing" id="1yyj2VBgauYs_zVWoSR1R2Hugf8pLG-HmDq8-2bF-vNI" style="height: 200px"></div>
-        	</div>       
-        	
-    		<div class="slide">
-				<hgroup>
-					<h1>Dynamic Routing</h1>
-				</hgroup>
-				<ul class="small">
-					<li>Dynamic routing</li>
-					<ul>
-						<li>ESB exposes a service that routes to various back-end services based on message contents.</li>
-					</ul>
-				</ul>
-            	<div class="h-drawing" id="1dqQSDoXzk9KOscw7hA1N1aAexj5iqWbjn49e782DUMk" style="height: 180px"></div>
-        	</div>        	        	        	
-        		        	
-    		<div class="slide">
-				<hgroup>
-					<h1>Message Enrichment</h1>
-				</hgroup>
-				<ul class="small">
-					<li>Message enrichmenet</li>
-					<ul>
-						<li>Enriches a message before invoking back-end application service.</li>
-					</ul>
-				</ul>
-				<div id="1675sNfJX75EcwMZXTSACUGKEhPf3QnTjXRPtEABXwm0" class="h-drawing" style="height: 250px"></div>
-				
-        	</div>        	
-
-			 <div class="slide">
-             <hgroup>
-             	<h1>Data Transformation</h1>
-             </hgroup>
-                <ul class="small">
-                    <li>Data transformation phases:</li>
+		 <div class="slide">
+         <hgroup>
+         	<h1>Data Transformation</h1>
+         </hgroup>
+            <ul class="small">
+                <li>Data transformation phases:</li>
+                <ul>
+                	<li>Definition of mapping and execution of mappings</li>
+                </ul>
+                <li>Definition of mappings (design-time)</li>
+                <ul>
+                    <li>A mapping associates one data structure to another data structure
+                        and defines a conversion between them.</li>
+                    <li>Mapping languages</li>
                     <ul>
-                    	<li>Definition of mapping and execution of mappings</li>
-                    </ul>
-                    <li>Definition of mappings (design-time)</li>
-                    <ul>
-                        <li>A mapping associates one data structure to another data structure
-                            and defines a conversion between them.</li>
-                        <li>Mapping languages</li>
-                        <ul>
-                            <li>graphical for design that translates to XSLT, XQuery</li>
-                            <li>Sometimes implemented in 3rd gen. languages (e.g., Java)</li>
-                        </ul>
-                    </ul>
-                    <li>Execution of mappings (runtime)</li>
-                    <ul>
-                        <li>application of mappings to instance data</li>
-                    </ul>
-                    <li>CDM terminology</li>
-                    <ul>
-                    	<li>Application Business Message &ndash; back-end app format</li>
-                    	<li>Enterprise Business Message &ndash; CDM format</li>
+                        <li>graphical for design that translates to XSLT, XQuery</li>
+                        <li>Sometimes implemented in 3rd gen. languages (e.g., Java)</li>
                     </ul>
                 </ul>
-            </div>
-            
-            <div class="slide">
-            	<hgroup>
-            		<h1>Definitions of Data Mapping Example</h1>
-            	</hgroup>
-            	<ul class="x-small">
-            		<li>Source and target schemas</li>
-            		<ul>
-            			<li>Source: Order &ndash; flat data structure</li>
-            			<li>Target: UPS order with address as a sub-entity</li>
-            			<li>Differences in names of entities</li>
-            			<li>Conversion function applied to postal code</li>
-            		</ul>
-            	</ul>
-            	<div class="h-drawing" style="height: 320px" format="png" 
-            		id="1CBgOZj-fXVvjKgrolqX72qhVRZigGSzHIdlrIe7hghA"></div>
-            </div>
-            
-            <div class="slide">
-            	<hgroup>
-            		<h1>Transformation Patterns Example</h1>
-            	</hgroup>
-            	<ul class="x-small">
-            		<li>SOA Architecture with Common Data Model</li>
-            		<li>Oracle OSB and SOA Suite technologies</li>
-            		<ul>
-            			<li>Multiple technologies used in the environment</li>
-            			<li>Need to distinguish which technology should be used for what</li>
-            		</ul>
-            	</ul>
-            	<div class="h-drawing" id="1YEIYWDZXWpTdCZVvf6oryYrrWt_Ti4YDZQOE5noluhg" style="height: 320px"></div>
-            </div>
+                <li>Execution of mappings (runtime)</li>
+                <ul>
+                    <li>application of mappings to instance data</li>
+                </ul>
+                <li>CDM terminology</li>
+                <ul>
+                	<li>Application Business Message &ndash; back-end app format</li>
+                	<li>Enterprise Business Message &ndash; CDM format</li>
+                </ul>
+            </ul>
+        </div>
+        
+        <div class="slide">
+        	<hgroup>
+        		<h1>Definitions of Data Mapping Example</h1>
+        	</hgroup>
+        	<ul class="x-small">
+        		<li>Source and target schemas</li>
+        		<ul>
+        			<li>Source: Order &ndash; flat data structure</li>
+        			<li>Target: UPS order with address as a sub-entity</li>
+        			<li>Differences in names of entities</li>
+        			<li>Conversion function applied to postal code</li>
+        		</ul>
+        	</ul>
+        	<div class="h-drawing" style="height: 320px" format="png" 
+        		id="1CBgOZj-fXVvjKgrolqX72qhVRZigGSzHIdlrIe7hghA"></div>
+        </div>
+        
+        <div class="slide">
+        	<hgroup>
+        		<h1>Transformation Patterns Example</h1>
+        	</hgroup>
+        	<ul class="x-small">
+        		<li>SOA Architecture with Common Data Model</li>
+        		<li>Oracle OSB and SOA Suite technologies</li>
+        		<ul>
+        			<li>Multiple technologies used in the environment</li>
+        			<li>Need to distinguish which technology should be used for what</li>
+        		</ul>
+        	</ul>
+        	<div class="h-drawing" id="1YEIYWDZXWpTdCZVvf6oryYrrWt_Ti4YDZQOE5noluhg" style="height: 320px"></div>
+        </div>
 
-    		<div class="slide">
-				<hgroup>
-					<h1>Service Orchestration</h1>
-				</hgroup>
-				<ul class="x-small">
-				<li>Orchestration of multiple business services</li>
-				<ul>
-					<li>Inlcudes transformation, message enrichmenet, service callouts, etc.</li>
-					<li>A step in orchestration is an activity</li>
-				</ul>
-				<li>Patterns</li>
-				<ul>
-					<li>Sequential processing of activities</li>
-					<li>Parallel processing of activities with synchronization points</li>
-					<li>Decision branches, iterations</li>
-            	</ul>
-            	<li>Technologies</li>
-            	<ul>
-            		<li>Graphical languages</li>
-            		<li>Standard representations: BPEL, BPMN</li>
-            		<li>Proprietary, for example OSB uses graphical language that translates to XQuery</li>
-            	</ul>
-            	<li>Good design</li>
-            	<ul>
-            		<li>Orchestration faciliates communication in CDM</li>
-            		<li>Orchestration handles key-mapping</li>
-            	</ul>
-        	</div>        	
+		<div class="slide">
+			<hgroup>
+				<h1>Service Orchestration</h1>
+			</hgroup>
+			<ul class="x-small">
+			<li>Orchestration of multiple business services</li>
+			<ul>
+				<li>Inlcudes transformation, message enrichmenet, service callouts, etc.</li>
+				<li>A step in orchestration is an activity</li>
+			</ul>
+			<li>Patterns</li>
+			<ul>
+				<li>Sequential processing of activities</li>
+				<li>Parallel processing of activities with synchronization points</li>
+				<li>Decision branches, iterations</li>
+        	</ul>
+        	<li>Technologies</li>
+        	<ul>
+        		<li>Graphical languages</li>
+        		<li>Standard representations: BPEL, BPMN</li>
+        		<li>Proprietary, for example OSB uses graphical language that translates to XQuery</li>
+        	</ul>
+        	<li>Good design</li>
+        	<ul>
+        		<li>Orchestration faciliates communication in CDM</li>
+        		<li>Orchestration handles key-mapping</li>
+        	</ul>
+    	</div>        	
 
-    		<div class="slide">
-				<hgroup>
-					<h1>Key Mapping Example</h1>
-				</hgroup>
-				<ul class="x-small">
-					<li>Business object ID</li>
-					<ul>
-						<li>Universal ID in CDM, each back-end application has its own ID</li>
-						<li>Orchestration handles key mapping of various IDs of back-end apps</li>
-					</ul>
+		<div class="slide">
+			<hgroup>
+				<h1>Key Mapping Example</h1>
+			</hgroup>
+			<ul class="x-small">
+				<li>Business object ID</li>
+				<ul>
+					<li>Universal ID in CDM, each back-end application has its own ID</li>
+					<li>Orchestration handles key mapping of various IDs of back-end apps</li>
 				</ul>
-				<div id="1G4XbrYDV4ptT6GvXzWHio5bp2tfRpZd8MwrOpCcIR0U" class="h-drawing" style="height: 360px"></div>
-        	</div>        	
-        	        
-		</section>
+			</ul>
+			<div id="1G4XbrYDV4ptT6GvXzWHio5bp2tfRpZd8MwrOpCcIR0U" class="h-drawing" style="height: 360px"></div>
+    	</div>        	
         	    	        
     </section>
 
