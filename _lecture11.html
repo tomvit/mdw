@@ -236,6 +236,9 @@
 							<ul>   
 	                            <li>app protocol layer</li>
 								<li>Sticky sessions</li>
+								<ul>
+									<li>JSession, JSession-aware load balancer</li>
+								</ul>
 	                        </ul>
 						</ul>
 					</ul>
@@ -305,18 +308,27 @@
 					</hgroup>
 					<ul class="xx-small">
 						<div class="h-drawing" style="height: 300px" id="1PiI-1CeVkQTYUgOPHyk3wqJufQl9cYQz5vlNziERE74"></div>
-						<li>JDBC-based persistence</li>
+						<li>Session persistence</li>
 						<ul>
 							<li>Session information is maintained in the database</li>
+							<li>Does not require 
 						</ul>
 						<li>In-memory replication</li>
 						<ul>
 							<li>A <b>primary server</b> holds a session state that served the request, the <b>secondary server</b>
 							holds the replica of the session state</li>
-							<li>Can be configured in clustered environments</li>
-						</ul>
-						
+							<li>Information about primary and secondary servers are part of JSession</li>
+						</ul>					
 					</ul>
+				</div>
+
+				<div class="slide">
+					<hgroup>
+						<h1>In-Memory Replication Scenarios</h1>
+					</hgroup>
+					<center>
+					<div class="h-drawing" id="1APKL5IK-WG_8rlF6g__Q5TwxVrwmW9a4KPbK10JiKGU" style="width: 690px"></div>
+					</center>
 				</div>
 				
 				<div class="slide">
@@ -408,36 +420,6 @@
 						</ul>
 					</ul>
 				</div>
-
-		<!--		<div class="slide">
-					<hgroup>
-						<h1>Cluster-wide JNDI Tree</h1>
-					</hgroup>
-					<ul class="xx-small">
-						<li>Object X is deployed to server A and C</li>
-						<ol>
-							<li>Server A binds object X to its local JNDI tree</li>
-							<li>Server A advertises object X availability using IP multicast</li>
-							<li>Server B and D get replica-aware stub of object X from Server A</li>
-							<li>The steps 1-3 repeat for object X in Server C</li>
-						</ol>
-					</ul>
-					<div class="h-drawing" style="height: 360px" id="1P7NVOu_zOeEdGx_hBzBtDVAEaPEHqizqAKiXaEuHfIo"></div>
-				</div>
-
-				<div class="slide">
-					<hgroup>
-						<h1>Replica-aware Stub</h1>
-					</hgroup>
-					<ul class="xx-small">
-						<li>Replica-aware stub of an object in JNDI Tree</li>
-						<ul>
-							<li>Client-side part of the oject</li>
-							<li>Has load-balancing </li>
-						</ul>
-					</ul>
-				</div> -->
-
 				
 			</section>
 		</section>
@@ -512,6 +494,20 @@
 					</ul>
 				</ul>
 			</div>			
+
+			<div class="slide">
+				<hgroup>
+					<h1>Heap Size and GC Runs
+				</hgroup>
+				<ul class="small">
+					<li>Heap Size and GC runs</li>
+					<ul>
+						<li>Wrong heap size allocation &ndash; too small or memory leaks</li>
+						<li>GC full runs too often, this has a negative impact on performance</li>
+					</ul>
+				</ul>
+				<div class="h-drawing" id="15ZZC64x6TXSgkQBFeoNfGZnaQMjqUu-ODOA7IfnDMDg"></div>
+			</div>
 
 			<div class="slide">
 				<hgroup>
@@ -610,82 +606,42 @@
 				</ul>
         	</div>        	        
 							
-		<!--	<div class="slide">
-				<hgroup>
-					<h1>Troubleshooting</h1>
-				</hgroup>
-				<ul>
-					<li>Monitoring - GC, JVM, JD, …, audoting, logging</li>
-				</ul>
-			</div> -->	
-			
 		</section>
 
 		<div class="slide outline"></div>
 
 		<section>
-			<header>Service Configuration Best Practices</header>
+			<header>Troubleshooting</header>
 
 			<div class="slide">
 				<hgroup>
-					<h1>Parallel processing</h1>
+					<h1>Overview</h1>
 				</hgroup>
-				<ul class="small">
-					<li>Calling many services in sequence</li>
+				<ul class="xx-small spacing">
+					<li>Complex environments</li>
 					<ul>
-						<li>Many service callouts may increase a total processing time</li>
-						<li>Latency of service call is high</li>
+						<li>SOA middleware is a complex environment involving many laeyers</li>
+						<li>When an error occurs in one layer, it may be propagated to another layer</li>
+						<li>Layers</li>
+						<ul class="no-bullet">
+							<li><b>OS</b> &ndash; I/O, network, file system</li>
+							<li><b>JVM</b> &ndash; memory, threads</li>
+							<li><b>AS</b> &ndash; services, applications</li>
+							<li><b>ESB</b> &ndash; services, processes, references</li> 
+							<li><b>DB</b> &ndash; tables</li>
+						</ul>
 					</ul>
-					<li>Parallel processing</li>
+					<li>Troubleshooting = to systematically locate a root cause of an error</li>
+					<li>Tools</li>
 					<ul>
-						<li>Outbound service calls may run in parallel</li>
-						<li>Reduced total running time of the service</li>
-					</ul>
-					<li>Example</li>
-					<ul>
-						<li>OMS requires stock availability information for every line item</li>
-						<li>Message enrichement &ndash; for every line item in an order get an availability information</li>
-						<li>In OSB, use split-join pattern</li>
-						<li>In BPMN, use OR gateway</li>
-					</ul>
-				</ul>
-			</div>			
-
-			<div class="slide">
-				<hgroup>
-					<h1>XPath</h1>
-				</hgroup>
-				<ul class="x-small">
-					<li>Avoid the use of <code>//</code> in xpath</li>
-					<ul>
-						<li><code>//</code> implies all occurences of a node</li>
-						<li>Entire XML tree has to be scanned for a pattern after <code>//</code></li>
-						<li>Example:</li>
-						<pre class="brush: xml">
-						&lt;customer>
-							&lt;orders>
-								&lt;order>…&lt;/order>
-								&lt;order>…&lt;/order>
-							&lt;/orders>
-						&lt;/customer>
-						</pre>
-						<li><code>//order</code> is worse than <code>/customer/orders/order</code></li>
-					</ul>
-					<li>Use index where there is one occurence of a node</li>
-					<ul>
-						<li><code>customer[1]/orders</code></li>
-					</ul>
-				</ul>
-			</div>			
-				
-			<div class="slide">
-				<hgroup>
-					<h1>Streaming</h1>
-				</hgroup>
-				<ul>
-					<li>Processing of large XML message sizes</li>
-					<ul>
-						<li>Streaming allows to leverage partial parsing capability of XQuery engine</li>
+						<li>Tools to understand the error context</li>
+						<ul class="no-bullet">
+							<li><b>OS</b> &ndash; <code>telnet</code>, <code>wget</code>, <code>curl</code>, <code>ps</code>, <code>lsof</code>, <code>arp</code>, <code>netstat</code>, <code>/proc/{pid}/{resource}</code></li>
+							<li><b>JVM</b> &ndash; thread dumps, memory inspection tools, GC logs, Java decompiler</li>
+							<li><b>AS</b> &ndash; standard, error, diagnostic logs</li>
+							<li><b>ESB</b> &ndash; monitoring, inspection of messages, etc.</li>
+							<li><b>DB</b> &ndash; SQL client</li>
+						</ul>
 					</ul>
 				</ul>
 			</div>			
