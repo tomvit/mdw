@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 <!--
     Middleware and Web Services, CTU course slides
-    (cc) 2010-2011 Tomas Vitvar, http://vitvar.com
+    (cc) 2010-2012 Tomas Vitvar, http://vitvar.com
     written for Humla, an open source HTML5 presentation environment
 -->
 <html>  
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> 
         <meta name="course"   content="Middleware and Web Services"/>
-        <meta name="lecture"  content="Lecture 11"/>
-        <meta name="keywords" content="High Availability, Load Balancer, Replication"/>
+        <meta name="lecture"  content="Lecture 10"/>
+        <meta name="keywords" content="Business Process Management"/>
            
         <link type="text/css" rel="stylesheet" href="css/meta.css"></link>   
         <link type="text/css" rel="stylesheet" href="css/ctu-fit.css"></link>   
         <link type="text/css" rel="stylesheet" href="humla/lib/core/humla.css"></link>   
 
         <script type="text/javascript" src="humla/lib/humla.js"></script>
-        <title>High Availability and Performance</title>
+        <title>Business Process Management</title>
     </head>
     
     <body>
@@ -51,610 +51,723 @@
                 <div class="oppa"></div>
             </div>
         </div>
-
-		<div class="slide">
-			<hgroup>
-				<h1>Good Performance</h1>
-			</hgroup>
-			<ul class="small">
-				<li>What influences good performance</li>
-				<ul>
-					<li>Number of users and concurrent connections</li>
-					<li>Number of messages and messages' sizes</li>
-					<li>Number of services</li>
-				</ul>
-				<li>How we can achieve good performance</li>
-				<ul>
-					<li>Infrastructure</li>
-					<ul>
-						<li>Scalability, Cluster Architectures</li>
-					</ul>
-					<li>Performance tuning</li>
-					<ul>
-						<li>Application Server, JVM memory, OS-level tuning, Work managers configuration</li>
-					</ul>
-					<li>Service configuration</li>
-					<ul>
-						<li>Parallel processing, process optimization</li>
-					</ul>
-				</ul>
-			</ul>
-		</div>					
         
-        <div class="slide outline"></div>
-
-		<section>
-			<header>Infrastructure</header>
-			
-			<div class="slide">
+        <div class="slide outline"></div>        
+        
+        <section>
+        	<header>Business Processes in SOA</header>
+        	
+        	<div class="slide">
 				<hgroup>
-					<h1>Definitions</h1>
+					<h1>Overview</h1>
 				</hgroup>
 				<ul class="x-small">
-					<li>Scalability</li>
+					<li>Business Process</li>
 					<ul>
-						<li>server scalability</li>
-                        <ul>
-						    <li>ability to react to changes in loads such that users should not feel changes in loads</li>
-						    <li><b>horizontal scaling</b></li>
-						    <ul>
-						    	<li>adding new server instances</li>
-						    </ul>
-						    <li><b>vertical scaling</b></li>
-						    <ul>
-						    	<li>adding new resources (CPU, memory) to a server instance</li>
-						    </ul>
-                        </ul>
-						<li>network traffic</li>
-                        <ul>
-						    <li>bandwidth capacity influences performance too</li>
-						    <li>service should limit the network traffic through caching</li>
-                        </ul>
-					</ul>
-					<li>Availability</li>
-					<ul>
-						<li>probability that a service is operational at a particular time</li>
+						<li>A set of activities and transitions between activities that one or more persons or systems need to 
+							perform in order to complete a goal.</li>
+						<li>A set of business processes realize internal and external operations</li>
 						<ul>
-                            <li>e.g., 99.9987% availability &ndash; downtime ~44 seconds/year</li>
-                        </ul>
+							<li>Order Management, Customer Management, Product Lifecycle Management, etc.</li>
+						</ul>
+						<li>A process usually spans multiple departments/divisions and applications</li>
+					</ul>
+					<li>Business Process Management</li>
+					<ul>
+						<li>Management of business processes that involves:</li>
+						<ul>
+							<li>Methodology to design processes</li>
+							<li>Tools to design, execute, monitor processes</li>
+						</ul>
+					</ul>					
+					<li>Business process standardization</li>
+					<ul>
+						<li>APQC &ndash; American Productivity & Quality Center</li>
+						<li>TMForum &ndash; eTOM &ndash; Enhanced Telekom Operations Map (Business Process Framework)</li>
 					</ul>
 				</ul>
-			</div>
+        	</div>
 
-			<div class="slide">
+  	    	<div class="slide">
 				<hgroup>
-					<h1>Definitions (Cont.)</h1>
+					<h1>Process Classification Framework: Recall</h1>
+				</hgroup>
+				<div class="h-drawing" id="1ou4lOAvwaFP2MJo1RQbJOTF-DavfYjcUF6MELE6cWws"></div>
+			</div>
+      	
+      		<div class="slide">
+				<hgroup>
+					<h1>Level 5 Business Process</h1>
 				</hgroup>
 				<ul class="x-small">
-					<li>High Availability</li>
+					<li>Level 5 Details</li>
 					<ul>
-						<li>When a server instance fails, operation of the application can continue</li>
-						<li>Failures should affect application availability and performance as little as possible</li>
+						<li>The lowest level of a process classification framework</li>
+						<li>Level 5 business process involves technical parts that run in ESB</li>
 					</ul>
-					<li>Application Failover</li>
+				</ul>
+				<div class="h-drawing" style="height: 340px; margin-top: 40px" 
+					id="1-MNreOnY0NDd_NUK_WlZXv7fIY7oMk1J39TZLxP5l4Q" format="png"></div>
+      		</div>
+      		
+      		<div class="slide">
+				<hgroup>
+					<h1>Languages</h1>
+				</hgroup>
+				<ul class="small">
+					<li>Business Process Management Notation (BPMN)</li>
 					<ul>
-						<li>When an application component performing a job becomes unavailable, 
-						a copy of the failed object finishes the job.</li>
-						<li>Issues</li>
+						<li>Easy to understand</li>
+						<li>Originally only a language for people to model processes</li>
+						<li>Now also possible to describe execution ready processes</li>
 						<ul>
-							<li>A copy of the failed object must be available</li>
-							<li>A location and operational status of available objects must be available</li>
-							<li>A processing state must be replicated</li>
+							<li>Seamless transition from a business view to a technical view</li>
 						</ul>
 					</ul>
-					<li>Load Balancing</li>
+					<li>Business Process Execution Language (BPEL)</li>
 					<ul>
-						<li>Distribution of jobs across computing and networking resources</li>
-					</ul>					
-				</ul>
-			</div>
-			
-	
-			<div class="slide">
-				<hgroup>
-					<h1>Performance Metrics</h1>
-				</hgroup>
-				<ul class="x-small">
-					<li>Latency</li>
-					<ul>
-						<li>A client-side metric</li>
-					</ul>
-					<div class="h-drawing" style="height: 300px" id="1rgjQBi7cWEbNSjNYmnhaFTqcoXNi6JbLaGmNajArRUY"></div>
-				</ul>
-				<ul class="xx-small">
-					<ul>
-						<li>CPU intensive service or a bad configuration of a service</li>
-                        <ul>
-						    <li>consider asynchronous processing when CPU intensive</li>
-                        </ul>
-						<li>Writing to a data store</li>
+						<li>Only execution language for ESB, not suitable for modeling higher levels of business processes</li>
+						<li>Architets need to translate from BPMN (or another language) to BPEL</li>
+						<ul>
+							<li>Part of technical SOA design</li>
+						</ul>
 					</ul>
 				</ul>
-			</div>
+      		</div>
 
-			<div class="slide">
-				<hgroup>
-					<h1>Performance Metrics</h1>
-				</hgroup>
-				<ul class="x-small">
-					<li>Queries/Requests per Second (QPS)</li>
-					<ul>
-						<li>A server-side metric</li>
-					</ul>
-					<div class="h-drawing" style="height: 300px" id="1BhopVXexuS5coYLBbcrBi1SiUY3YNcr-K4usFXU6IwM"></div>
-				</ul>
-				<ul class="xx-small">
-					<ul>
-						<li>Caching may improve performance</li>
-                        <ul>
-						    <li>even if data changes often, with high QPS caching improves a lot</li>
-                        </ul>
-					</ul>
-				</ul>
-			</div>
-
-			<div class="slide">
-				<hgroup>
-					<h1>Infrastructure Configuration Example</h1>
-				</hgroup>
-				<ul class="xx-small">
-					<li>Domain configuration</li>
-					<ul>
-						<li>Each server is running on a separated JVM</li>
-						<li>Load Balancers are external, software or hardware</li>
-						<li>A domain can have clustered or unclustered servers</li>
-						<li>A physical machine may run one or more servers</li>
-					</ul>
-				</ul>
-				<div class="h-drawing" style="height: 350px" id="1l-XAD0UrR_T582EqNxmcZbmZhno8L8rTMv8zzEYdVUo"></div>
-			</div>
-			
 			<div class="slide outline"></div>
 			
 			<section>
-			
-				<header>Load Balancers</header>
+				<header>Process Execution Models</header>
 				
-				<div class="slide">
+	      		<div class="slide">
 					<hgroup>
-						<h1>Load Balancing</h1>
+						<h1>Static Process Exeuction</h1>
 					</hgroup>
-					<ul>
-						<li>Distributes load to multiple app instances</li>
-						<ul>
-							<li>App instances run on different machines</li>
-							<li>Load sharing: equal or with preferences</li>
-							<li>Health checks</li>
-						</ul>
-						<li>Topics</li>
-						<ul>
-							<li>DNS-based load balancer</li>
-	                        <ul>
-							    <li>DNS Round Robin</li>
-	                        </ul>
-							<li>NAT-based load balancer</li>
-							<ul>   
-	                            <li>app protocol layer</li>
-								<li>Sticky sessions</li>
-								<ul>
-									<li>JSession, JSession-aware load balancer</li>
-								</ul>
-	                        </ul>
-						</ul>
+					<ul class="small">
+						<li>Explicitly defined process using control flows</li>
 					</ul>
-				</div>
-	
-	            <div class="slide">
+					<div class="h-drawing" id="1r83N3bTF61ovBoT1jLT8f3L0UzpA6kQqhlar-UKyzt4"></div>
+	      		</div>
+
+	      		<div class="slide">
 					<hgroup>
-						<h1>DNS-based Load Balancer</h1>
+						<h1>Dynamic Process Execution</h1>
 					</hgroup>
-					<ul class="x-small">
-						<li>DNS Round Robin</li>
-						<ul>
-							<li>A DNS record has multiple assigned IP addresses</li>
-							<li>DNS system delivers different IP addresses from the list</li>
-							<li>Example DNS A Record:<br/>
-	                        <code>company.com A 147.32.100.71 147.32.100.72 147.32.100.73</code></li>
-						</ul>
-						<li>Advantages</li>
-						<ul>
-							<li>Very simple, easy to implement</li>
-						</ul>
-						<li>Disadvantages</li>
-						<ul>
-							<li>IP address in cache, could take hours to re-assign</li>
-							<li>No information about servers' loads and health</li>
-						</ul>
-						<!--<li>Variation of DNS Round robin</li>
-						<ul>
-							<li>a load balancer assigns domain names</li>
-	                        <ul>
-	                            <li>each domain has a different IP in DNS</li>
-	                        </ul>
-							<li>a health-check is possible, IP re-assignment problem remains</li> 
-						</ul>-->
+					<ul class="small">
+						<li>Implicitly defined process using rules</li>
 					</ul>
-				</div>
-	
-				<div class="slide">
-					<hgroup>
-						<h1>NAT-based Load Balancer</h1>
-					</hgroup>
-					<div class="h-drawing" style="margin-top: 40px; height: 450px" 
-					  id="1QtCAcD0R571rYmeP1hrofveZ3x6F7P61rfUpEswxOl0"></div>
-				</div>
-				
-				<div class="slide">
-					<hgroup>
-						<h1>HTTP Sticky Sessions Example</h1>
-					</hgroup>
-					<div class="h-drawing" id="1hzFB_41gJmkKQHpcSODvengGnHW98UYv1x1xZHt4XMA"
-						style="height: 320px; margin: 20px"></div>
-					<ul class="x-small">
-						<li>How to identify a server that hosts the session state</li>
-						<ul>
-							<li>Passive cookie persistence &ndash; LB uses a cookie from the app server</li>
-							<ul>
-								<li>For example, <code>sessionid!server_id</code></li>
-							</ul>
-							<li>Active cookie persistence &ndash; LB adds its own cookie</li>
-						</ul>
+					<div class="h-drawing" id="1bfOg9ddws9GHYsLdErX62PnAyh6pl-D3Ocuab5L18f8"></div>
+					<ul class="xx-small">
+						<li>Forward-chaining algorithm (inference)</li>
+						<ol>
+							<li>A user defines a goal &ndash; described as a state (memory content)</li>
+							<li>Rule engine finds a rule which condition matches the memory'c content</li>
+							<li>Rule's action is executed; the result may add or modify data in the memory</li>
+							<li>When the memory content matches the goal, execution stops otherwise go to 2</li>
+						</ol>
 					</ul>
-				</div>
-				
-				<div class="slide">
+	      		</div>
+
+	      		<div class="slide">
 					<hgroup>
-						<h1>Session State Persistence and Replication</h1>
+						<h1>Dynamic Process Execution Example</h1>
 					</hgroup>
 					<ul class="xx-small">
-						<div class="h-drawing" style="height: 300px" id="1PiI-1CeVkQTYUgOPHyk3wqJufQl9cYQz5vlNziERE74"></div>
-						<li>Session persistence</li>
+						<li>Rule Set</li>
 						<ul>
-							<li>Session information is maintained in the database</li>
-							<li>Does not require 
+							<li>A: if a customer is a premium customer, give them 10% discount<br/>
+							<code>if customer.type=='premium' then order.discount=0.1</code></li>
+							<li>B: if a customer is a gold customer, give them 5% discount<br/>
+							<code>if customer.type=='gold' then order.discount=0.05</code></li>
+							<li>C: if a customer spends is 1,000 or more, make them a premium customer<br/>
+							<code>if customer.revenue>1000 then customer.type='premium'</code></li>	
+							<li>Note: actions are memory modifications but can be results of service calls</li>						
 						</ul>
-						<li>In-memory replication</li>
+						<li>Execution</li>
 						<ul>
-							<li>A <b>primary server</b> holds a session state that served the request, the <b>secondary server</b>
-							holds the replica of the session state</li>
-							<li>Information about primary and secondary servers are part of JSession</li>
-						</ul>					
+							<li>Option 1</li>
+							<ul class="no-bullet">
+								<li>MEM: <code>customer.type=='gold'</code>, <code>customer.revenue==1500</code><br/>
+									Rules: <code>C, A</code><br/>
+									MEM: <code>customer.type=='premium'</code>, <code>customer.revenue==1500</code>, 
+									<code>order.discount==0.1</code>
+								</li>
+							</ul>
+							<li>Option 2</li>
+							<ul class="no-bullet">
+								<li>MEM: <code>customer.type=='gold'</code>, <code>customer.revenue==200</code><br/>
+									Rules: <code>B</code><br/>
+									MEM: <code>customer.type=='gold'</code>, <code>customer.revenue==200</code>, 
+									<code>order.discount==0.05</code>
+								</li>
+							</ul>
+						</ul>
 					</ul>
+	      		</div>
+      		
+      		</section>
+      		        	
+        </section>
+        
+        <div class="slide outline"></div>        
+        
+        <section>
+        	<header>Business Process Management Notation</header>
+        	
+        	<div class="slide">
+				<hgroup>
+					<h1>BPMN Constructs &ndash; Activities and Gateways</h1>
+				</hgroup>
+				<ul class="xx-small">
+					<li>Activities (Tasks)</li>
+					<div class="h-drawing" style="height: 100px; margin: -7px 0px 0px -50px" 
+						id="1RkfCK67eEbj7C9ePrs7wrw3XGrR_xosvK_AMk2Qm88Q" format="png"></div>
+					<ul>
+						<li>Service Task &ndash; synchronous service invocation</li>
+						<li>Send and receive task &ndash; asynchronous service invocation</li>
+						<li>User task &ndash; human step, managed by workflow engine</li>
+						<li>Manual task &ndash; human step, not managed by workflow engine</li>
+						<li>Script task &ndash; automatic activity, assigning of variables, modify variables' values</li>
+						<li>Call activity &ndash; to call a another process (modularisation, process chaining)</li>
+					</ul>
+					<li>Gateways</li>
+					<div class="h-drawing" style="height: 100px; margin: -7px 0px -30px -40px" 
+						id="187HC23lxGl8dfRQA9pX2ZTKpgjfJiqgoO6CICIPKm64" format="png"></div>
+					<ul>
+						<li>Exclusive OR (XOR)</li>
+						<li>Inclusive OR (OR)</li>
+						<li>Parallel fork and join (AND)</li>
+						<li>Complex gateway</li>
+						<li>Event-based gateway</li>
+					</ul>
+				</ul>
+			</div>
+
+        	<div class="slide">
+				<hgroup>
+					<h1>BPMN Constructs &ndash; Catch Events</h1>
+				</hgroup>
+				<ul class="xx-small">
+					<li>Catch Events</li>
+					<ul>
+						<li>They start a process or continue a process from a sub-process when event occurs.</li>
+						<div id="1kNXpNqUIATLok6rH0ngEIZUpvQ5oeFU7_DkEdSQ-fK4"
+							style="height: 100px; margin: 0px 0px 0px -100px" 
+							class="h-drawing" format="png"></div>
+						<li>Catch Event Types</li>
+						<ul>
+							<li>Start Message &ndash; starts a process by a new message</li>
+							<li>Start Timer &ndash; starts a proceess by a timer</li>
+							<li>Start Signal &ndash; starts a process by a new event (such as EDN)</li>
+							<li>Catch Error &ndash; catches error during execution of an activity (boundary event)</li>
+							<li>Catch Timer &ndash; a timeout when during execution of an activity (boundary event)</li>
+							<li>Catch Signal &ndash; catches a signal during execution of an activity (boundary event)</li>
+						</ul>
+					</ul>
+					<li>Event Delivery Network (EDN)</li>
+					<ul>
+						<li>Messaging system that implements publish/subscribe mechanism</li>
+						<li>Oracle technology provided by Oracle SOA Suite</li>
+						<li>See more details on <a href="lecture7.html#/messaging">messaging systems</a> in Lecture 7</li>
+					</ul>
+				</ul>
+			</div>
+
+        	<div class="slide">
+				<hgroup>
+					<h1>BPMN Constructs &ndash; Throw Events</h1>
+				</hgroup>
+				<ul class="xx-small">
+					<li>Throw Events</li>
+					<ul>
+						<li>They end a process or a sub-process</li>
+						<div id="1bKjB33--JNbhapfgGnUs2W9QSzH0WPFrFlqHzXKyIpI" 
+							style="height: 100px; margin: 0px 0px 0px -140px" format="png"						
+							class="h-drawing"></div>
+						<li>Throw Event Types</li>
+						<ul>
+							<li>End Message &ndash; ends a process by sending a message back to client</li>
+							<li>End Terminate &ndash; ends a process silently</li>
+							<li>End Signal &ndash; ends a process by signalling an EDN event</li>
+							<li>End Error &ndash; ends a process by throwing an error (fault)</li>
+							<li>Throw Message &ndash; throws a message during process execution</li>
+							<li>Throw Signal &ndash; throws an EDN event during process execution</li>
+						</ul>
+					</ul>
+				</ul>
+			</div>
+			
+			<div class="slide">
+				<hgroup>
+					<h1>Swim Lanes</h1>
+				</hgroup>
+				<ul class="xx-small">
+					<li>Swim Lanes</li>
+					<ul>
+						<li>Group of activities in a process</li>
+						<li>Each swim lane is associated with a role; a user in the role performs activities</li>
+						<li>A special role "Automated" or "System" defines automated activities or activites performed by the 
+						system, not humans.</li>
+					</ul>
+					<li>Example</li>
+					<div class="h-drawing" id="1l7AcdnWGOrCMeZ3b5n34AyjtKgcTobRCEL5kHrgCgD0" 
+						format="png" style="height: 310px"></div>
+				</ul>				
+			</div>
+
+        	<div class="slide outline"></div>        			
+			
+			<section>
+				<header>Patterns</header>
+
+        		<div class="slide">
+					<hgroup>
+						<h1>Exclusive OR</h1>
+					</hgroup>
+					<ul class="x-small">
+						<li>Definition</li>
+						<ul>
+							<li>XOR defines multiple alternative paths</li>
+							<li>One and only one path can result from an evaluation of conditions on each branch</li>
+							<li>There must be a <b>default path</b></li>
+							<ul>
+								<li>Path that will be used when no conditions on other paths will evaluate to true</li>
+							</ul>
+						</ul>
+						<li>Example</li>
+					</ul>
+					<div id="1FWUsUDHNEe_HjJx52j2tGUg-_LYHoROD-V6YM-Fv2Uk" class="h-drawing" 
+						format="png" style="height: 250px; margin-top: -20px"></div>
+				</div>
+								
+				<div class="slide">
+					<hgroup>
+						<h1>Parallel Fork and Join</h1>
+					</hgroup>
+					<ul class="x-small">
+						<li>Definition</li>
+						<ul>
+							<li>AND Gateway &ndash; defines multiple paths</li>
+							<li>All paths are processed</li>
+							<li>All paths must be either joined by AND Gateway or each path may end with a separated end events</li>
+						</ul>
+						<li>Example</li>
+					</ul>
+					<div id="190Jyq40Srw_dxAZmMjpXakU2yf6n4h7B3Qer2taTzfQ" class="h-drawing" 
+						format="png" style="height: 250px"></div>					
 				</div>
 
 				<div class="slide">
 					<hgroup>
-						<h1>In-Memory Replication Scenarios</h1>
+						<h1>Inclusive OR</h1>
 					</hgroup>
-					<center>
-					<div class="h-drawing" id="1APKL5IK-WG_8rlF6g__Q5TwxVrwmW9a4KPbK10JiKGU" style="width: 690px"></div>
-					</center>
+					<ul class="x-small">
+						<li>Definition</li>
+						<ul>
+							<li>OR Gateway &ndash; defines multiple paths</li>
+							<li>One or more paths are processed in parallel</li>
+							<ul>
+								<li>There can be more than one possible outcomes</li>
+							</ul>
+							<li>There can be a default path</li>
+							<li>All paths must be either joined by OR Gateway or each path may end with a separated end events</li>
+						</ul>
+						<li>Example</li>
+					</ul>
+					<div id="1ADJOdNWTf_PMXT0ux1CGHl5PNKt1oly_loAaBaufyIw" class="h-drawing" 
+						format="png" style="height: 250px; margin-top: -10px"></div>					
+					
 				</div>
 				
 				<div class="slide">
 					<hgroup>
-						<h1>Round-Robin Algorithm with Health Check</h1>
+						<h1>Complex Gateway</h1>
 					</hgroup>
 					<ul class="x-small">
-						<li>Uses</li>
+						<li>Definition</li>
 						<ul>
-							<li>request &ndash; client request with or without a cookie information</li>
-							<li>server list &ndash; a list of servers that can process the request</li>
-							<li>unhealthy treshhold &ndash; a number of negative consecutive health checks 
-							before moving the server to the "unhealthy" state.</li>
+							<li>Evaluates conditions to decide when the process should continue</li>
+							<li>Used only when merging process flows (OR is used for splitting)</li>
 						</ul>
-						<li>Steps</li>
+						<li>Example</li>
+						<div class="h-drawing" id="1JXSk2g734D70dIje3zVBGu6xChpm0o28ujx2ls7TTAc"
+							style="height: 200px" format="png"></div>
 						<ul>
-							<li><b>if a cookie exist in the request that identifies a server</b></li>
-							<li>always use that server</li>
-
-							<li class="space-before"><b>health check</b></li>
-							<li>LB polls the servers' heatlhcheck endpoints</li>
-							<li>if a number of health checks exceeds the unhealthy threshold</li>
-	                        <ul>
-							    <li>LB removes the server from the server list</li>
-	                        </ul>
-							<li>if a server was unhealthy and a there was a successful healthcheck</li>
+							<li>Complex gatway condition</li>
+							<pre class="brush: plain">
+								credit-card/balance/text() > 1000 OR customer/history/num-purchases/text() > 10</pre>
 							<ul>
-	                            <li>LB adds the server to the server list</li>
-	                        </ul>							
-						</ul>
-					</ul>
-				</div>				
-
-				<div class="slide">
-					<hgroup>
-						<h1>Types of Load Balancers</h1>
-					</hgroup>
-					<ul>
-						<li>Software</li>
-						<ul>
-							<li>Apache <code>mod_proxy_balancer</code></li>
-							<ul>
-								<li>HTTP Session persistence &ndash; sticky sessions</li>
+								<li>Only one condition needs to be satisfied for the process to continue</li>
+								<li>Other parallel flows are canceled</li>
 							</ul>
-							<li>WebLogic proxy plug-in</li>
-						</ul>
-						<li>Hardware</li>
-						<ul>
-							<li>Ciaco, Avaya, Barracude</li>
 						</ul>
 					</ul>
 				</div>
-								
+				
+				<div class="slide">
+					<hgroup>
+						<h1>Loops</h1>
+					</hgroup>
+					<ul class="x-small">
+						<li>Definition</li>
+						<ul>
+							<li>Loops can be created with XOR Gateways by connecting a flow to a previous step</li>
+							<li>XOR checks for conditions</li>
+							<ul>
+								<li>logical expression or counters</li>
+							</ul>
+						</ul>
+						<li>Example</li>
+						<div class="h-drawing" format="png" id="1EcY1Lw5BYDtWFSf11hj5vjx7vb8YkdnZaR0yPwG5xSk"
+							style="height: 150px"></div>
+						<ul>
+							<li>Example condition on "YES" path</li>
+							<pre class="brush: plain">
+							quote/price/text() > 0</pre>
+						</ul>
+					</ul>
+				</div>
+				
+				<div class="slide">
+					<hgroup>
+						<h1>Error Handling</h1>
+					</hgroup>
+					<ul class="small">
+						<li>Definition</li>
+						<ul>
+							<li>Mechanism to handle errors during process executions</li>
+							<li>Throwing errors</li>
+							<ul>
+								<li>On evaluation of conditions</li>
+								<li>A result of external service calls</li>
+							</ul>
+							<li>Catching Errors</li>
+							<ul>
+								<li>Take actions to resolve errors, continue process execution</li>
+								<li>Throw errors  as a result of process execution</li>
+							</ul>
+						</ul>
+						<li>Implementation</li>
+						<ul>
+							<li>Use boundary catch error events to catch errors on activities or sub-processes</li>
+							<li>Implement paths in process flows that resolve errors</li>
+						</ul>
+					</ul>
+				</div>
+						
+				
+				
 			</section>
+						
+        	<div class="slide outline"></div>        			
 			
-			 <div class="slide outline"></div>
-
 			<section>
-				<header>Cluster Architecture</header>
+				<header>Conversation and Correlation</header>
 
-				<div class="slide">
+        		<div class="slide">
 					<hgroup>
-						<h1>Overview</h1>
+						<h1>Conversation</h1>
 					</hgroup>
 					<ul class="x-small">
-						<li>Cluster</li>
+						<li>Definition</li>
 						<ul>
-							<li>A group of servers that act together to serve client requests</li>
-							<li>Cluster appears to clients as a single application server</li>
-							<li>Servers can run on the same machines or on different machines</li>
-							<li>Cluster's capacity can be increased by adding servers to the cluster</li>
-							<li>Servers in a cluster may have the same copy of objects and they are aware of each other objects</li>
-							<ul>
-								<li>objects: JSPs, servlets, JMS destinations, RMI objects</li>
-							</ul>
+							<li>A group of client-service interactions that logically and technically belong 
+								together, e.g. <code>submitOrder</code>, <code>getOrderStatus</code>, <code>cancelOrder</code></li>
+							<li>There is typically one conversation per process but can be more</li>
 						</ul>
-						<li>Communication in the cluster</li>
+						<li>Implementation</li>
 						<ul>
-							<li>peer-to-peer communication using IP sockets</li>
-							<li>IP multicast wihch servers use to broadcast availability of objects and heartbeats</li>
-						</ul>
-						<li>Configurations</li>
-						<ul>
-							<li>Objects deployed to to all servers in a cluster</li>
+							<li>Single conversation corresponds to a single WSDL interface definition (<code>portType</code> in WSDL 1.1)</li>
+							<li>Two conversations will have own interface definition each</li>
 							<ul>
-								<li>Cluster-wide JNDI tree allows to look-up clustered objects</li>
+								<li>hence you can define separated binding for each</li>
 							</ul>
-							<li>Servers in a cluster may get replicated through migration</li>
+							<li>To relate interactions in a single conversation, you should have:</li>
+							<ul>
+								<li>a <b>main process</b>, that is a main operation/event that triggers the process and creates a conversation, 
+									e.g. <code>submitOrder</code></li>
+								<li>a <b>sub-process</b> to the main process, e.g. <code>checkStatus</code></li>
+							</ul>
+							<li>WS-Addressing defines <code>MessageID</code> element that is a conversation ID</code></li>
 						</ul>
 					</ul>
 				</div>
+				
+				<div class="slide">
+					<hgroup>
+						<h1>Architecture</h1>
+					</hgroup>
+					<div id="1eb9ySf0g1pmyh0xz-fsSQRYNMjaNJWvDsdNQKafw0o4"
+						style="height: 270px" 
+						class="h-drawing"></div>
+					<ul class="xx-small">
+						<li>Steps</li>
+						<ol>
+							<li>Client invokes an operation that triggers the main process.</li>
+							<li>Service starts a conversation and responds with a conversation id</li>
+							<li>Client uses the conversation id in a subsequent interaction when invoking an operation 
+								(a trigger to start a sub-process)</li>
+							<li>Service relates the interaction with a running process instance and executes the operation
+							in the context of the running process</li>
+						</ol>
+					</ul>
+				</div>
+				
+				<div class="slide">
+					<hgroup>
+						<h1>Example Messages</h1>
+					</hgroup>
+					<ul class="xx-small">
+						<li>Client invokes <code>submitOrder</code> operation</li>
+						<ol>
+							<li>Client sends a request</li>
+							<li>Server responds</li>
+							<pre class="brush: xml; class-name: 'tight'; highlight: [3]">
+							&lt;s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
+								&lt;s:Header xmlns:wsa="http://www.w3.org/2005/08/addressing">
+									&lt;wsa:MessageID>a4dsdsadsdfb94a-593b-1dc1-36d2-000000000000&lt;/wsa:MessageID>
+								&lt;/s:Header>
+								&lt;s:Body>
+									<!-- response message -->
+								&lt;/s:Body>
+							&lt;/s:Envelope></pre>
+						</ol>
+						<li>Client invokes <code>checkStatus</code> operation</li>
+						<ol>
+							<li>Client sends a request</li>
+							<pre class="brush: xml; highlight: [3]">
+							&lt;s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
+							        &lt;s:Header xmlns:wsa="http://www.w3.org/2005/08/addressing">
+							        	&lt;wsa:MessageID>a4dsdsadsdfb94a-593b-1dc1-36d2-000000000000&lt;/wsa:MessageID>
+							        &lt;/s:Header>
+							        &lt;s:Body>
+							        	<!-- operation name to invoke -->
+							    &lt;/soap:Body>
+							&lt;/s:Envelope>							
+							</pre>
+						</ol>
+					</ul>
+				</div>
+
+        		<div class="slide">
+					<hgroup>
+						<h1>Correlation</h1>
+					</hgroup>
+					<ul class="small">
+						<li>Definition</li>
+						<ul>
+							<li>Correlation associates an interaction with a conversation</li>
+							<li>Two types</li>
+							<ul>
+								<li>automatic (handled by WS-Addressing)</li>
+								<li>manual (handled by correlation keys from message content and properties &ndash; values of keys)</li>
+							</ul>
+						</ul>
+						<li>Usage scenarios</li>
+						<ul>
+							<li>Asynchronous interaction between two processes</li>
+							<li>A client does not suppot WS-Addressing (cannot send conversation ID)</li>
+						</ul>
+					</ul>
+				</div>
+				
+				<div class="slide">
+					<hgroup>
+						<h1>Automatic Correlation Example</h1>
+					</hgroup>
+					<div id="1XOQkvYYBZi68206KSiJQ4iahbDCoo9xaCKUXdQudBr8" format="png" 
+						style="height: 460px" class="h-drawing"></div>
+				</div>
+
+				<div class="slide">
+					<hgroup>
+						<h1>Manual Correlation</h1>
+					</hgroup>
+					<ul class="x-small">
+						<li>Correlation keys and properties</li>
+						<ul>
+							<li>A process may have one or more correlations defined</li>
+							<ul>
+								<li>A single correlation handles interactions with a single client and a single process' entry point</li>
+							</ul>
+							<li>A key may have one or more properties</li>
+							<ul>
+								<li>Each property value is defined by an xpath on a message structure</li>
+							</ul>
+						</ul>
+						<li>Example</li>
+						<ul>
+							<li>A correlation with two properties</li>
+							<ul>
+								<li>Key: <code>order_correlation</code></li>
+								<li>Property 1: <code>customer_id</code></li>
+								<li>Property 2: <code>order_id</code></li>							
+							</ul>	
+						</ul>
+					</ul>
+				</div>
+
+				<div class="slide">
+					<hgroup>
+						<h1>Manual Correlation Example</h1>
+					</hgroup>
+					<ul class="xx-small">
+						<li>Correlation key for Order message</li>
+						<ul>
+							<li>Order message</li>
+						<pre class="brush: xml; highlight: [3,5,6,7]">
+						&lt;s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
+						    &lt;s:Body>
+						    	&lt;ns1:submitOrder xmlns:ns1="http://xmlns.oracle.com/bpmn/bpmnProcess/Process" 
+						    					 xmlns:ns2="http://www.example.org/order">
+						        	&lt;ns2:Order>
+						            	&lt;ns2:OrderId>566&lt;/ns2:OrderId>
+						            	&lt;ns2:CustomerId>4354&lt;/ns2:CustomerId>
+						                &lt;ns2:Address>Thakourova 6&lt;/ns2:Address>
+						                &lt;ns2:Phone>+42024537765&lt;/ns2:Phone>
+						                &lt;ns2:LineItems>
+						                	&lt;ns2:item>
+						                    	&lt;ns2:name>HP ProBook 4540s&lt;/ns2:name>
+						                        &lt;ns2:price>900&lt;/ns2:price>
+						                    &lt;/ns2:item>
+						                &lt;/ns2:LineItems>
+						            &lt;/ns2:Order>
+						        &lt;/ns1:submitOrder>
+						    &lt;/s:Body>
+						&lt;/s:Envelope></pre>
+						<li>Correlation key <code>order_correlation</code>, xpath definition</li>						
+						<pre class="brush: plain">
+							customer_id property: /ns1:submitOrder/ns2:Order/ns2:CustomerId						
+							order_id property:    /ns1:submitOrder/ns2:Order/ns2:OrderId</pre>						
+					</ul>
+				</div>
+				
+				
 				
 			</section>
 		</section>
 		
-		<div class="slide outline"></div>
+
+    	<div class="slide outline"></div>        			
 
 		<section>
-			<header>Performance Tuning</header>
-				
-			<div class="slide">
-				<hgroup>
-					<h1>Performance Limiting Factors</h1>
-				</hgroup>
-				<div id="1bo3PC-IopJA4SiyHLVag7g1amyT8W89k2edtirQwz1w" style="height: 450px; margin: 30px" class="h-drawing"></div>
-			</div>			
-
-			<div class="slide">
-				<hgroup>
-					<h1>Tuning &ndash; A Layered Approach</h1>
-				</hgroup>
-				<ul>
-					<li>ESB can be tuned at multiple layers</li>
-					<ul>
-						<li>Service configuration optimization</li>
-						<li>Transport-level tuning</li>
-						<li>Application Server Tuning</li>
-						<li>JVM Memory Tuning</li>
-						<li>OS Tuning</li>
-					</ul>
-					<li>Lower levels are cheaper to tune</li>
-				</ul>
-			</div>			
-
-			<div class="slide">
-				<hgroup>
-					<h1>Memory Allocations</h1>
-				</hgroup>
-				<ul class="x-small">
-					<div id="1VtIYJV3f-sAizvO9ZmI4c0tRvcKWbESZuAaT5s02xzA" style="height: 300px" class="h-drawing"></div>
-					<li>Generations</li>
-					<ul>
-						<li>Young &ndash; objects get allocated in this space initially</li>
-						<li>Old &ndash; objects get promoted to old from young</li>
-						<li>Perm &ndash; space for permanent allocations, e.g. objects describing classes and methods</li>
-					</ul>
-			</div>			
-
-			<div class="slide">
-				<hgroup>
-					<h1>Garbage Collection</h1>
-				</hgroup>
-				<ul class="x-small">
-					<li>Steps to move objects around</li>
-					<ol>
-						<li>Objects are created in young</li>
-						<li>When young is full, the live objects are copied to old, dead are discarded</li>
-						<ul>
-							<li><b>lightweight GC</b></li>
-						</ul>
-						<li>When young is full and no space in old &rarr; the full GC frees the old space</li>
-						<ul>
-							<li><b>Full GC</b> &ndash; nothing is running in JVM, the application stops</li>
-						</ul>
-					</ol>
-					<ul>
-						<li><b>Too frequent full GC has an impact on performance</b></li>
-					</ul>
-					<li>A memory leak or inadequate heap allocation</li>
-					<ul>
-						<li>Old is out of space &rarr; full GC will run often (or continously)</li>
-						<li>High CPU utilization, ESB will not be able to process/respond to requests</li>
-					</ul>
-				</ul>
-			</div>			
-
-			<div class="slide">
-				<hgroup>
-					<h1>Heap Size and GC Runs
-				</hgroup>
-				<ul class="small">
-					<li>Heap Size and GC runs</li>
-					<ul>
-						<li>Wrong heap size allocation &ndash; too small or memory leaks</li>
-						<li>GC full runs too often, this has a negative impact on performance</li>
-					</ul>
-				</ul>
-				<div class="h-drawing" id="15ZZC64x6TXSgkQBFeoNfGZnaQMjqUu-ODOA7IfnDMDg"></div>
-			</div>
-
-			<div class="slide">
-				<hgroup>
-					<h1>JVM Memory Tuning</h1>
-				</hgroup>
-				<ul class="x-small">
-					<li>JVM Memory Parameters</li>
-					<ul class="no-bullet">
-						<li><code>-Xms</code> &ndash; initial java heap size</li>
-						<li><code>-Xmx</code> &ndash; maximum java heap size</li>
-						<li><code>-XX:NewSize</code> &ndash; the initial size of the heap for young generation</li>
-						<li><code>-XX:MaxNewSize</code> &ndash; the maximum size of the heap for young generation</li>
-					</ul>
-					<li>General recommendations</li>
-					<ul class="no-bullet">
-						<li><code>-Xms</code> and <code>-Xmx</code> should be set to the same value</li>
-						<li>(do not allow the heap to grow &rarr; limit the overhead)</li>
-						<li><code>-XX:NewSize</code> and <code>-XX:MaxNewSize</code> should be set to the one half of maximum heap</li>
-					</ul>
-					<ul>
-						<li>Example, 1GB heap size</li>
-						<ul class="no-bullet">
-							<li><code>–Xms1024m –Xmx1024m -XX:NewSize=500m -XX:MaxNewSize=500m</code></li>
-						</ul>
-					</ul>
-				</ul>
-			</div>			
-			
-			<div class="slide">
-				<hgroup>
-					<h1>Asynchronous I/O: Recall</h1>
-				</hgroup>
-				<ul class="small">
-					<li>Connections maintained by the OS, not the Web app</li>
-	                   <ul>                    
-	                       <li>The Web app registers events, OS triggers events when occur</li>
-	                   </ul>
-	               </ul>
-	   			<div id="1kxkFc3Chl4qFXxH_4f2seuNbpBdENMyZWMRUmxd1p28" class="h-drawing" style="height: 220px"></div>
-	               <ul class="small">
-					<li>Characteristics</li>
-	                   <ul>
-	                       <li>Event examples: new connection, read, write, closed</li>
-					    <li>The app may create working threads, but controls the number!</li>
-	                       <ul>
-					        <li>much less number of working threads as opposed to blocking I/O</li>
-	                       </ul>
-	                   </ul>
-				</ul>
-			</div>						
-			
-			<div class="slide">
-				<hgroup>
-					<h1>Work Manager Configuration</h1>
-				</hgroup>
-				<ul class="x-small">
-					<li>Work Manager</li>
-					<ul>
-						<li>Controls the number of thread allocated to processing of requests</li>
-						<li>In WLS is called a dispatch policy</li>
-						<ul>
-							<li>Can be assigned to OSB proxy services</li>
-						</ul>
-						<li>Parameters</li>
-						<ul>
-							<li><b>maximum threads</b> (<code>max</code>) &ndash; maximum number of working threads</li>
-							<li><b>capacity</b> (<code>cap</code>) &ndash; maximum number of connections</li>
-						</ul>
-						<li>maximum connections waiting to be processed: <code>cap - max</code></li>
-						<li>refused connections: when number of connections is <code>> cap</code></li>
-					</ul>
-					<li>Inbound throtling</li>
-					<ul>
-						<li>A dispatch policy applied to a single proxy service</li>
-						<li>Rejected connections will not be processed</li>
-					</ul>
-				</ul>
-			</div>		
+			<header>Use Case</header>
 
     		<div class="slide">
 				<hgroup>
-					<h1>Throttling</h1>
-				</hgroup>
-				<ul class="small">
-				<li>Throttling</li>
-				<ul>
-					<li>There may be multiple instances of processes running in the middleware</li>
-					<li>Business service can be invoked concurrently</li>
-					<li>Not to overload a back-end service, throttling enables a control on a number of concurrent invocations</li>
-				</ul>
-				<li>Parameters</li>
-				<ul>
-					<li><b>Maximum concurrency</b> &ndash; a maximum number of concurrent invocations of a service</li>
-					<li><b>Throttling queue</b> &ndash; a queue for requests that cannot be sent due to maximum concurrency limit</li>
-					<li><b>Message expiration</b> &ndash; a maximum time that a message can spent in the queue</li>
-				</ul>
-        	</div>        	        
-							
-		</section>
-
-		<div class="slide outline"></div>
-
-		<section>
-			<header>Troubleshooting</header>
-
-			<div class="slide">
-				<hgroup>
 					<h1>Overview</h1>
 				</hgroup>
-				<ul class="xx-small spacing">
-					<li>Complex environments</li>
+				<ul class="xx-small">
+					<li>Simplified processing of an order</li>
 					<ul>
-						<li>SOA middleware is a complex environment involving many laeyers</li>
-						<li>When an error occurs in one layer, it may be propagated to another layer</li>
-						<li>Layers</li>
-						<ul class="no-bullet">
-							<li><b>OS</b> &ndash; I/O, network, file system</li>
-							<li><b>JVM</b> &ndash; memory, threads</li>
-							<li><b>AS</b> &ndash; services, applications</li>
-							<li><b>ESB</b> &ndash; services, processes, references</li> 
-							<li><b>DB</b> &ndash; tables</li>
-						</ul>
+						<li>Two processes: 1) main process for order processing, 2) sub-process for querying the order processing status</li>
 					</ul>
-					<li>Troubleshooting = to systematically locate a root cause of an error</li>
-					<li>Tools</li>
-					<ul>
-						<li>Tools to understand the error context</li>
-						<ul class="no-bullet">
-							<li><b>OS</b> &ndash; <code>telnet</code>, <code>wget</code>, <code>curl</code>, <code>ps</code>, <code>lsof</code>, <code>arp</code>, <code>netstat</code>, <code>/proc/{pid}/{resource}</code></li>
-							<li><b>JVM</b> &ndash; thread dumps, memory inspection tools, GC logs, Java decompiler</li>
-							<li><b>AS</b> &ndash; standard, error, diagnostic logs</li>
-							<li><b>ESB</b> &ndash; monitoring, inspection of messages, etc.</li>
-							<li><b>DB</b> &ndash; SQL client</li>
+					<li>Main process</li>
+					<ol>
+						<li>A client submits an order</li>
+						<ul>
+							<li>the order contains customer data and line items, each line item has a price</li>
 						</ul>
+						<li>The process accepts the order and acknowledges it</li>
+						<li>The process calculates <code>total_price</code> (a sum of all line items prices)</li>
+						<li>If <code>total_price</code> exceeds <code>&euro;1000</code>, the order must be approved by a sales rep,
+							otherwise the order is stored and the process responds with the <code>success</code></li>
+						<li>If a sales rep approves the order, the process responds with <code>success</code></li>
+						<li>If a sales rep does not approve the order, the process responds with <code>rejected</code></li>
+						<li>If a sales rep does not approve the order by <code>1</code> minute, the process responds 
+							with <code>approve timeout</code> result.</li>							
+					</ol>
+					<li>Sub-process</li>
+					<ol>
+						<li>Client sends a status query <code>checkStatus</code></li>
+						<li>The process responds with the status of order processing (<code>processing</code>, 
+							<code>wating for approval</code>)</li>
+					</ol>
+				</ul>
+			</div>
+
+    		<div class="slide">
+				<hgroup>
+					<h1>Order XML Schema</h1>
+				</hgroup>
+				<div class="h-drawing" id="19GcroN7cLziruEV2spqyF4Cl3Zz4kWrsISzJDUIDA3I" 
+					style="height: 350px" format="png"></div>
+				<ul class="x-small">
+					<li>Defines</li>
+					<ul>
+						<li>the schema for the input message for <code>submitOrder</code></li>
+						<li>the schema for order in the process memory</li>
 					</ul>
 				</ul>
-			</div>			
-				
+			</div>
+			
+			<div class="slide">
+				<hgroup>
+					<h1>Architecture Demo</h1>
+				</hgroup>
+				<div id="1Eyz6A6w4Pspb8PMN8E7DdnrfpcgSyerraAKW8Zz7GQw" style="height: 250px" class="h-drawing"></div>
+				<ul class="x-small">
+					<li>Demo setting</li>
+					<ul>
+						<li>Client: bash utilities for submiting an order, checking its status (using <code>curl</code> and
+						creating a listener (using <code>ncat</code>)</li>
+						<li>Server: SOA Suite with Business Process Management (BPM) extension running on WebLogic Server</li>
+					</ul>
+				</ul>
+			</div>				
+			
+			<div class="slide">
+				<hgroup>
+					<h1>BPMN Process</h1>
+				</hgroup>
+				<div id="1NzT5M-LWm0cKoTd1Iy2e2NJFvXe3rq7-obmL1poj16w" class="h-drawing" 
+					style="height: 360px" format="png"></div>
+				<ul class="x-small">
+					<li>Notes</li>
+					<ul>
+						<li>There is a sleep (timeout for 30 seconds) to delay the processing</li>
+						<li>Store order simply stores the order to a file (a file JCA adapter service)</li>
+					</ul>
+				</ul>
+			</div>				
+			
+			<div class="slide">
+				<hgroup>
+					<h1>Demo</h1>
+				</hgroup>
+				<ul class="xx-small">
+					<li>Prerequisites</li>
+					<ul>
+						<li>Utilities</li>
+						<ul>
+							<li>Available in <a href="https://github.com/tomvit/mdw/tree/master/examples">examples</a> folder</li>
+						</ul>
+						<li>Environment</li>
+						<ul>
+							<li>SOA Suite running at <code>http://sb.vitvar.com:8001</code></li>
+							<li>Order service available at 
+							<code>http://sb.vitvar.com:8001/soa-infra/services/default/OrderProcess/Process.service?WSDL</code></li>
+							<li>Access on request, ask at tomas@vitvar.com</li>
+						</ul>
+					</ul>
+					<li>Steps</li>
+					<ol>
+						<li>Run the listener for asynchornous callbacks<br/>
+							<code>./http-listener.sh</code> (using <a href="lecture3.html#ncat">http listener script</a>)</li>
+						<li>Submit the order<br/>
+							<code>./submit-order.sh</code> (using <a href="lecture3.html#curl">curl command</a>)</li>
+						<li>Check order status<br/>
+							<code>./check-status.sh</code> (using <a href="lecture3.html#curl">curl command</a>)</li>
+					</ol>
+					<li>Modifications</li>
+					<ul>
+						<li>Change a line item's price in <code>order-message.xml</code> so that the total price exceeds 1000 EUR 
+							and run the steps again.</li>
+					</ul>
+				</ul>
+			</div>
+			
 		</section>			
-			
-			
-
-	</section>
-
-        
-        
-        
-        
         
     </body>
