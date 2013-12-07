@@ -463,7 +463,7 @@
 							<li>Cluster's capacity can be increased by adding servers to the cluster</li>
 							<li>Servers in a cluster may have the same copy of objects and they are aware of each other objects</li>
 							<ul>
-								<li>objects: JSPs, servlets, JMS destinations, RMI objects</li>
+								<li>objects: applications, JMS destinations, RMI objects</li>
 							</ul>
 						</ul>
 						<li>Communication in the cluster</li>
@@ -480,6 +480,47 @@
 							<li>Servers in a cluster may get replicated through migration</li>
 						</ul>
 					</ul>
+				</div>
+
+				<div class="slide">
+					<hgroup>
+						<h1>Deployment to Cluster</h1>
+					</hgroup>
+					<ul class="x-small">
+						<li>Deployment of an object</li>
+						<ul>
+							<li>Client deploys to one managed server in the cluster</li>
+							<li>Object gets replicated to its targets</li>
+							<ul>
+								<li>Targets can be configured for the object, usually all servers but can be selected servers</li>
+							</ul>
+						</ul>
+					</ul>
+					<center>
+					<div id="1f_D8YEP87vmI-ZLR8wGx9yMRFAsJkCDwVm0mltz5xiw" class="h-drawing" style="width: 550px"></div>
+					</center>
+				</div>
+
+				<div class="slide">
+					<hgroup>
+						<h1>Failover</h1>
+					</hgroup>
+					<ul class="x-small">
+						<li>Failover</li>
+						<ul>
+							<li>Failover = ability to relocate the server to another machine without impact on the 
+								performace and configuration</li>
+						</ul>
+					</ul>
+					<center>
+					<div id="1oL9qq_e6rKx3hJeTWMaOc4xhliMfUB1TgYJl_Ph8a70" class="h-drawing" style="width: 550px"></div>
+					</center>
+					<ul class="x-small"><ul>
+						<li>Managed server listens on <code>virtual_IP:port</code></li>
+						<li>A load balancer forwards a request to <code>virtual_IP:port</code></li>
+						<li>When the server moves, <code>virtual_IP:port</code> remains the same</li>
+					</ul></ul>
+
 				</div>
 				
 			</section>
