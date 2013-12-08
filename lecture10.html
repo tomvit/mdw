@@ -95,7 +95,9 @@
 					<ul>
 						<li>server scalability</li>
                         <ul>
-						    <li>ability to react to changes in loads such that users should not feel changes in loads</li>
+						    <li>ability of a system to react to changes in loads</li>
+						    <li>users should not feel changes when more users 
+						    	access the same application at the same time</li>
 						    <li><b>horizontal scaling</b></li>
 						    <ul>
 						    	<li>adding new server instances</li>
@@ -144,7 +146,7 @@
 					</ul>
 					<li>Load Balancing</li>
 					<ul>
-						<li>Distribution of jobs across computing and networking resources</li>
+						<li>Distribution of incoming requests across server instances</li>
 					</ul>					
 				</ul>
 			</div>
@@ -315,7 +317,7 @@
 					<ul class="x-small">
 						<li>How to identify a server that hosts the session state</li>
 						<ul>
-							<li>Passive cookie persistence &ndash; LB uses a cookie from the app server</li>
+							<li>Passive cookie persistence &ndash; LB uses a cookie from the server</li>
 							<li>Active cookie persistence &ndash; LB adds its own cookie</li>
 						</ul>
 					</ul>
@@ -429,7 +431,7 @@
 							<li>LB has information whether the server is running or not (via healthchecks)</li>
 							<li>if the primary server is running, it redirects the request there</li>
 							<li>if the primary server is not running, it redirects the request to the secondary server directly</li>
-							<li>if primary and secondary servers are not running, it redirect the request to any other server it has in the list</li>
+							<li>if primary and secondary servers are not running, it redirect the request to any other server it has in the list &ndash; this may cause side effects!</li>
 						</ul>
 					</ul>	
 				</div>
@@ -689,7 +691,7 @@
 				</ul>
 			</div>		
 
-    		<div class="slide">
+    	<!--	<div class="slide">
 				<hgroup>
 					<h1>Throttling</h1>
 				</hgroup>
@@ -706,7 +708,7 @@
 					<li><b>Throttling queue</b> &ndash; a queue for requests that cannot be sent due to maximum concurrency limit</li>
 					<li><b>Message expiration</b> &ndash; a maximum time that a message can spent in the queue</li>
 				</ul>
-        	</div>        	        
+        	</div> -->        	        
 							
 		</section>
 
