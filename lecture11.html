@@ -16,7 +16,7 @@
         <link type="text/css" rel="stylesheet" href="humla/lib/core/humla.css"></link>   
 
         <script type="text/javascript" src="humla/lib/humla.js"></script>
-        <title>Business Process Management</title>
+        <title>Service Orchestration</title>
     </head>
     
     <body>
@@ -61,15 +61,16 @@
 				<hgroup>
 					<h1>Overview</h1>
 				</hgroup>
-				<ul class="x-small">
+				<ul class="xx-small">
+					<li>Service Orchestration</li>
+					<ul>
+						<li>How a functionality of a service is realized by interactions with other services.</li>
+						<li>Business process is one possible form of a service orchestration that uses a business process language 
+							to describe the orchestration.</li>
+					</ul>
 					<li>Business Process</li>
 					<ul>
-						<li>A set of activities and transitions between activities that one or more persons or systems need to 
-							perform in order to complete a goal.</li>
-						<li>A set of business processes realize internal and external operations</li>
-						<ul>
-							<li>Order Management, Customer Management, Product Lifecycle Management, etc.</li>
-						</ul>
+						<li>A set of activities and transitions between activities performed by one or more persons or systems..</li>
 						<li>A process usually spans multiple departments/divisions and applications</li>
 					</ul>
 					<li>Business Process Management</li>
@@ -207,6 +208,46 @@
 	      		</div>
       		
       		</section>
+
+      		<div class="slide outline"></div>	
+
+      		<section>
+				<header>Key Mapping</header>
+        	
+	        	<div class="slide">
+					<hgroup>
+						<h1>Overview</h1>
+					</hgroup>
+					<ul class="x-small">
+						<li>What is key mapping</li>
+						<ul>
+							<li>Key = identifier of en entity in a back-end application</li>
+							<li>Key Mapping = a mapping of an ID of an entity in one system to an ID of the same entity in another system.</li>
+							<li>Key mapping is realized using universal IDs (UID)</li>
+						</ul>      			
+						<li>Example</li>
+						<ul>
+							<li>A customer MOON exists in CRM and OMS systems</li>
+							<li>In CRM system, MOON has an <code>CRM-ID=AB1</code></li>
+							<li>In OMS system, MOON has an <code>CRM-ID=45A</code></li>
+							<li>Key mappig allows to map the <code>CRM-ID AB1</code> to the <code>OMS-ID 45A</code></li>
+							<li>Key mapping is a table</li>
+							<ul class="no-bullet">
+								<li><code>CRM-ID &rarr; UID &rarr; OMS-ID</code></li>
+							</ul>
+						</ul>
+					</ul>
+				</div>
+
+				<div class="slide">
+					<hgroup>
+						<h1>Key Mapping Example</h1>
+					</hgroup>
+					<div id="1G4XbrYDV4ptT6GvXzWHio5bp2tfRpZd8MwrOpCcIR0U" class="h-drawing" style="height: 410px; margin-top: 60px"></div>
+		    	</div>        	
+
+      		</section>
+
       		        	
         </section>
         
@@ -228,7 +269,7 @@
 						<li>Send and receive task &ndash; asynchronous service invocation</li>
 						<li>User task &ndash; human step, managed by workflow engine</li>
 						<li>Manual task &ndash; human step, not managed by workflow engine</li>
-						<li>Script task &ndash; automatic activity, assigning of variables, modify variables' values</li>
+						<li>Script task &ndash; automatic activity, assigning variables, modify variables' values</li>
 						<li>Call activity &ndash; to call a another process (modularisation, process chaining)</li>
 					</ul>
 					<li>Gateways</li>
@@ -239,7 +280,6 @@
 						<li>Inclusive OR (OR)</li>
 						<li>Parallel fork and join (AND)</li>
 						<li>Complex gateway</li>
-						<li>Event-based gateway</li>
 					</ul>
 				</ul>
 			</div>
@@ -259,17 +299,11 @@
 						<ul>
 							<li>Start Message &ndash; starts a process by a new message</li>
 							<li>Start Timer &ndash; starts a proceess by a timer</li>
-							<li>Start Signal &ndash; starts a process by a new event (such as EDN)</li>
+							<li>Start Signal &ndash; starts a process by a new event</li>
 							<li>Catch Error &ndash; catches error during execution of an activity (boundary event)</li>
 							<li>Catch Timer &ndash; a timeout when during execution of an activity (boundary event)</li>
 							<li>Catch Signal &ndash; catches a signal during execution of an activity (boundary event)</li>
 						</ul>
-					</ul>
-					<li>Event Delivery Network (EDN)</li>
-					<ul>
-						<li>Messaging system that implements publish/subscribe mechanism</li>
-						<li>Oracle technology provided by Oracle SOA Suite</li>
-						<li>See more details on <a href="lecture7.html#/messaging">messaging systems</a> in Lecture 7</li>
 					</ul>
 				</ul>
 			</div>
@@ -289,7 +323,7 @@
 						<ul>
 							<li>End Message &ndash; ends a process by sending a message back to client</li>
 							<li>End Terminate &ndash; ends a process silently</li>
-							<li>End Signal &ndash; ends a process by signalling an EDN event</li>
+							<li>End Signal &ndash; ends a process by signalling an event</li>
 							<li>End Error &ndash; ends a process by throwing an error (fault)</li>
 							<li>Throw Message &ndash; throws a message during process execution</li>
 							<li>Throw Signal &ndash; throws an EDN event during process execution</li>
@@ -467,7 +501,7 @@
 
         		<div class="slide">
 					<hgroup>
-						<h1>Conversation</h1>
+						<h1>Conversation: Recall</h1>
 					</hgroup>
 					<ul class="x-small">
 						<li>Definition</li>
@@ -490,107 +524,25 @@
 								<li>a <b>sub-process</b> to the main process, e.g. <code>checkStatus</code></li>
 							</ul>
 							<li>WS-Addressing defines <code>MessageID</code> element that is a conversation ID</code></li>
+							<li>See details in <a href="lecture8.html#/30">lecture 8</a>
 						</ul>
 					</ul>
 				</div>
-				
-				<div class="slide">
-					<hgroup>
-						<h1>Architecture</h1>
-					</hgroup>
-					<div id="1eb9ySf0g1pmyh0xz-fsSQRYNMjaNJWvDsdNQKafw0o4"
-						style="height: 270px" 
-						class="h-drawing"></div>
-					<ul class="xx-small">
-						<li>Steps</li>
-						<ol>
-							<li>Client invokes an operation that triggers the main process.</li>
-							<li>Service starts a conversation and responds with a conversation id</li>
-							<li>Client uses the conversation id in a subsequent interaction when invoking an operation 
-								(a trigger to start a sub-process)</li>
-							<li>Service relates the interaction with a running process instance and executes the operation
-							in the context of the running process</li>
-						</ol>
-					</ul>
-				</div>
-				
-				<div class="slide">
-					<hgroup>
-						<h1>Example Messages</h1>
-					</hgroup>
-					<ul class="xx-small">
-						<li>Client invokes <code>submitOrder</code> operation</li>
-						<ol>
-							<li>Client sends a request</li>
-							<li>Server responds</li>
-							<pre class="brush: xml; class-name: 'tight'; highlight: [3]">
-							&lt;s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
-								&lt;s:Header xmlns:wsa="http://www.w3.org/2005/08/addressing">
-									&lt;wsa:MessageID>a4dsdsadsdfb94a-593b-1dc1-36d2-000000000000&lt;/wsa:MessageID>
-								&lt;/s:Header>
-								&lt;s:Body>
-									<!-- response message -->
-								&lt;/s:Body>
-							&lt;/s:Envelope></pre>
-						</ol>
-						<li>Client invokes <code>checkStatus</code> operation</li>
-						<ol>
-							<li>Client sends a request</li>
-							<pre class="brush: xml; highlight: [3]">
-							&lt;s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
-							        &lt;s:Header xmlns:wsa="http://www.w3.org/2005/08/addressing">
-							        	&lt;wsa:MessageID>a4dsdsadsdfb94a-593b-1dc1-36d2-000000000000&lt;/wsa:MessageID>
-							        &lt;/s:Header>
-							        &lt;s:Body>
-							        	<!-- operation name to invoke -->
-							    &lt;/soap:Body>
-							&lt;/s:Envelope>							
-							</pre>
-						</ol>
-					</ul>
-				</div>
 
-        		<div class="slide">
+				<div class="slide">
 					<hgroup>
 						<h1>Correlation</h1>
 					</hgroup>
-					<ul class="small">
+					<ul class="x-small">
 						<li>Definition</li>
 						<ul>
-							<li>Correlation associates an interaction with a conversation</li>
-							<li>Two types</li>
-							<ul>
-								<li>automatic (handled by WS-Addressing)</li>
-								<li>manual (handled by correlation keys from message content and properties &ndash; values of keys)</li>
-							</ul>
+							<li>Correlation associates a client interaction with a running process instance by using 
+								correlation keys and data in an nput message.</li>
+							<li>A process may have one or more correlations defined</li>
 						</ul>
-						<li>Usage scenarios</li>
-						<ul>
-							<li>Asynchronous interaction between two processes</li>
-							<li>A client does not suppot WS-Addressing (cannot send conversation ID)</li>
-						</ul>
-					</ul>
-				</div>
-				
-				<div class="slide">
-					<hgroup>
-						<h1>Automatic Correlation Example</h1>
-					</hgroup>
-					<div id="1XOQkvYYBZi68206KSiJQ4iahbDCoo9xaCKUXdQudBr8" format="png" 
-						style="height: 460px" class="h-drawing"></div>
-				</div>
-
-				<div class="slide">
-					<hgroup>
-						<h1>Manual Correlation</h1>
-					</hgroup>
-					<ul class="x-small">
 						<li>Correlation keys and properties</li>
 						<ul>
-							<li>A process may have one or more correlations defined</li>
-							<ul>
-								<li>A single correlation handles interactions with a single client and a single process' entry point</li>
-							</ul>
+							<li>Correlations are defined by so called <b>correlation keys</b></li>
 							<li>A key may have one or more properties</li>
 							<ul>
 								<li>Each property value is defined by an xpath on a message structure</li>
@@ -610,7 +562,7 @@
 
 				<div class="slide">
 					<hgroup>
-						<h1>Manual Correlation Example</h1>
+						<h1>Correlation Example</h1>
 					</hgroup>
 					<ul class="xx-small">
 						<li>Correlation key for Order message</li>
@@ -643,131 +595,7 @@
 					</ul>
 				</div>
 				
-				
-				
 			</section>
 		</section>
-		
-
-    	<div class="slide outline"></div>        			
-
-		<section>
-			<header>Use Case</header>
-
-    		<div class="slide">
-				<hgroup>
-					<h1>Overview</h1>
-				</hgroup>
-				<ul class="xx-small">
-					<li>Simplified processing of an order</li>
-					<ul>
-						<li>Two processes: 1) main process for order processing, 2) sub-process for querying the order processing status</li>
-					</ul>
-					<li>Main process</li>
-					<ol>
-						<li>A client submits an order</li>
-						<ul>
-							<li>the order contains customer data and line items, each line item has a price</li>
-						</ul>
-						<li>The process accepts the order and acknowledges it</li>
-						<li>The process calculates <code>total_price</code> (a sum of all line items prices)</li>
-						<li>If <code>total_price</code> exceeds <code>&euro;1000</code>, the order must be approved by a sales rep,
-							otherwise the order is stored and the process responds with the <code>success</code></li>
-						<li>If a sales rep approves the order, the process responds with <code>success</code></li>
-						<li>If a sales rep does not approve the order, the process responds with <code>rejected</code></li>
-						<li>If a sales rep does not approve the order by <code>1</code> minute, the process responds 
-							with <code>approve timeout</code> result.</li>							
-					</ol>
-					<li>Sub-process</li>
-					<ol>
-						<li>Client sends a status query <code>checkStatus</code></li>
-						<li>The process responds with the status of order processing (<code>processing</code>, 
-							<code>wating for approval</code>)</li>
-					</ol>
-				</ul>
-			</div>
-
-    		<div class="slide">
-				<hgroup>
-					<h1>Order XML Schema</h1>
-				</hgroup>
-				<div class="h-drawing" id="19GcroN7cLziruEV2spqyF4Cl3Zz4kWrsISzJDUIDA3I" 
-					style="height: 350px" format="png"></div>
-				<ul class="x-small">
-					<li>Defines</li>
-					<ul>
-						<li>the schema for the input message for <code>submitOrder</code></li>
-						<li>the schema for order in the process memory</li>
-					</ul>
-				</ul>
-			</div>
-			
-			<div class="slide">
-				<hgroup>
-					<h1>Architecture Demo</h1>
-				</hgroup>
-				<div id="1Eyz6A6w4Pspb8PMN8E7DdnrfpcgSyerraAKW8Zz7GQw" style="height: 250px" class="h-drawing"></div>
-				<ul class="x-small">
-					<li>Demo setting</li>
-					<ul>
-						<li>Client: bash utilities for submiting an order, checking its status (using <code>curl</code> and
-						creating a listener (using <code>ncat</code>)</li>
-						<li>Server: SOA Suite with Business Process Management (BPM) extension running on WebLogic Server</li>
-					</ul>
-				</ul>
-			</div>				
-			
-			<div class="slide">
-				<hgroup>
-					<h1>BPMN Process</h1>
-				</hgroup>
-				<div id="1NzT5M-LWm0cKoTd1Iy2e2NJFvXe3rq7-obmL1poj16w" class="h-drawing" 
-					style="height: 360px" format="png"></div>
-				<ul class="x-small">
-					<li>Notes</li>
-					<ul>
-						<li>There is a sleep (timeout for 30 seconds) to delay the processing</li>
-						<li>Store order simply stores the order to a file (a file JCA adapter service)</li>
-					</ul>
-				</ul>
-			</div>				
-			
-			<div class="slide">
-				<hgroup>
-					<h1>Demo</h1>
-				</hgroup>
-				<ul class="xx-small">
-					<li>Prerequisites</li>
-					<ul>
-						<li>Utilities</li>
-						<ul>
-							<li>Available in <a href="https://github.com/tomvit/mdw/tree/master/examples">examples</a> folder</li>
-						</ul>
-						<li>Environment</li>
-						<ul>
-							<li>SOA Suite running at <code>http://sb.vitvar.com:8001</code></li>
-							<li>Order service available at 
-							<code>http://sb.vitvar.com:8001/soa-infra/services/default/OrderProcess/Process.service?WSDL</code></li>
-							<li>Access on request, ask at tomas@vitvar.com</li>
-						</ul>
-					</ul>
-					<li>Steps</li>
-					<ol>
-						<li>Run the listener for asynchornous callbacks<br/>
-							<code>./http-listener.sh</code> (using <a href="lecture3.html#ncat">http listener script</a>)</li>
-						<li>Submit the order<br/>
-							<code>./submit-order.sh</code> (using <a href="lecture3.html#curl">curl command</a>)</li>
-						<li>Check order status<br/>
-							<code>./check-status.sh</code> (using <a href="lecture3.html#curl">curl command</a>)</li>
-					</ol>
-					<li>Modifications</li>
-					<ul>
-						<li>Change a line item's price in <code>order-message.xml</code> so that the total price exceeds 1000 EUR 
-							and run the steps again.</li>
-					</ul>
-				</ul>
-			</div>
-			
-		</section>			
         
     </body>
