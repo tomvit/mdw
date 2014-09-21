@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<!--
+	Middleware and Web Services, CTU course slides
+	(cc) 2010-2014 Tomas Vitvar, tomas@vitvar.com
+-->
+<html>   
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> 
+        <meta name="course"   content="Middleware and Web Services"/>
+		<meta name="lecture"  content="Lecture 1"/>
+   		<meta name="keywords" content="motivation, scope, requirements, resources"/>
+           
+        <link type="text/css" rel="stylesheet" href="css/meta.css"></link>   
+        <link type="text/css" rel="stylesheet" href="css/ctu-fit.css"></link>   
+        <link type="text/css" rel="stylesheet" href="humla/lib/core/humla.css"></link>   
+
+        <script type="text/javascript" src="humla/lib/humla.js"></script>
+        <title>Motivation and Course Overview</title>
+	</head>
+	<body> 
+    
+		<footer>
+			<p><b>#META_LECTURE#: #TITLE#</b>,&nbsp;<span class="meta_semester"/>,&nbsp;
+			<span class="meta_twitter"/></p>
+			<p><b>&#8210; #SLIDE_NO# &#8210;</b></p>
+		</footer>
+
+    	<div class="slide intro">
+			<hgroup>
+				<h1><span class="meta_course"/></h1>
+ 				<h2>#TITLE#</h2>
+			</hgroup>
+			<div class="author">
+				<p class="meta_author"/>
+				<p><span class="meta_email"/> &bull; <span class="meta_twitter"/> &bull; 
+				<span class="meta_web"/></p>
+			</div>
+			<center><div class="meta_logo"></div></center>
+			<div class="org">
+				<p class="meta_org"/>
+				<p><span class="meta_orgfac"/> &bull; <span class="meta_field"/> 
+				&bull; <span class="meta_orgweb"/></p>
+			</div>
+			<div class="etc">
+        		<div class="text-info">
+    				Modified: #LAST_MODIFIED#<br/>
+					Humla v#HUMLA_VERSION#
+				</div>
+				<a href="http://creativecommons.org/licenses/by-sa/3.0/"><div class="license"></div></a>
+				<div class="oppa"></div>
+			</div>
+		</div>
+
+		<div class="slide">
+			<hgroup>
+				<h1>Hellos</h1>
+			</hgroup>
+			<ul class="small spacing">
+				<li>Tomáš Vitvar</li> 
+				<ul>
+                    <li>Web Engineering curricula chair, CVUT FIT</li>
+                    <li>Research - Web Intelligence, Semantic Web, LinkedData, Web Services</li> 
+					<li>Technical Architect at Oracle</li>
+                    <ul>
+                        <li>SOA and Oracle Integration Architectures<br/>
+                        (Vodafone UK, Turkish Telecom, MTN ZA)
+                        </li>
+                    </ul>
+				</ul>
+				<li>Jaroslav Kuchař, Milan Dojčinovski</li>
+				<ul>
+					<li>research assistants, Ph.D. students</li>
+					<li>Web services, data mining, analytics, Web technologies</li>
+				</ul>
+			</ul>
+		</div>
+
+        <div class="slide outline">
+        </div>
+
+		<div class="slide">
+			<hgroup>
+				<h1>Web Engineering Curricula &ndsh; bird's view</h1>
+			</hgroup>
+			<ul class="small">
+				<li>Web 2.0 engineering is...</li> 
+				<ul>
+					<li>far beyond PHP and HTML!</li>
+				</ul>
+			</ul>
+			<div class="h-drawing" style="height: 390px" alt="Web Engineering Overview" 
+				id="1oyGz6GdF-K_hln9g_l3Cp1eNK843S4NKE4tO8HMUYGw"></div>
+		</div>
+
+        <div class="slide outline">
+        </div>
+        
+        <section>
+            <header>Course at a Glance</header>
+            
+            <section>
+                <header>Motivation and Scope</header>
+		
+            	<div class="slide">
+        			<hgroup>
+        				<h1>Motivation in Brief</h1>
+        			</hgroup>
+        			<ul class="small spacing">
+        				<li>Systems rely on complex infrastructures</li> 
+        				<ul>
+        					<li>A lot of data and many processes, internal and external</li>
+                            <li>As people communicate, underlying systems must too</li>
+        					<li>But:</li>
+                            <ul>
+                                <li>variety of data formants, technologies, protocols</li>
+        					    <li>variety of architectures, client-server, peer-to-peer, ...</li>
+                            </ul>
+        				</ul>
+        				<li>Good performance</li>
+        				<ul>
+        					<li>frequent changes in applications' loads, peek hours</li>
+        					<li>scalability &ndash; effective load balancing</li>
+        					<li>low costs &ndash; cheaper to outsource?</li>
+        				</ul>
+        				<li>Rapid changes in applications' functionality</li>
+        				<ul>
+        					<li>modular development</li>
+        					<li>reuse of application functionality</li>
+                            <li>low costs &ndash; do it now and quickly!</li>
+        				<ul>
+        			</ul>
+        		</div>
+
+                <div class="slide" id="spaghetti">
+                	<hgroup>
+        				<h1>Spaghetti Architecture</h1>
+        			</hgroup>
+                    <ul class="small">
+                        <li>Need for the integration</li>
+                        <ul>
+                            <li>One-to-one integration</li>
+                            <li>Hard to maintain, vendor interoperability problem</li>
+                        </ul>
+                        <div class="h-drawing" style="height: 350px" id="123tDQFo3Zq0LEzzhquKp1xJX4YZ6YiWC0GDNGGK1UA0"
+                            alt="Spaghetti Integration"></div>
+                    </ul>
+                </div>
+
+                <div class="slide">
+                    <hgroup>
+        				<h1>SOA Architecture</h1>
+        			</hgroup>
+                    <ul class="small">
+                        <li>Integration organized</li>
+                        <ul>
+                            <li>Enterprise Service Bus, to be used wisely</li>
+                        </ul>
+                    </ul>
+                    <div class="h-drawing" style="height: 400px" id="1-uHnuWoYea9KZgEBRkGmdpbKDT5THls9dn56XolZ1Lg"
+                        alt="SOA Integration"></div>
+                </div>
+
+        		<div class="slide">
+        			<hgroup>
+        				<h1>Scope</h1>
+        			</hgroup>
+        			<ul class="small x-spacing">
+        				<li>Architectural and conceptual basis</li>
+        				<ul>
+        					<li>What is an architecture &ndash; enterprise, processes, data, software</li>
+        					<li>Service Oriented Architecture, Service Concepts, Middleware, ESB</li>
+        				</ul>
+        				<li>Web Service technologies</li>
+        				<ul>
+        					<li>Web Service Description Language, SOAP</li>
+                            <li>Process languages &ndash; BPEL/BPMN</li>
+                            <li>Communication patterns &ndash; synchronous, asynchronous, decoupling</li>
+        				</ul>
+        				<li>Middleware</li>
+        				<ul>
+                            <li>Application server</li>
+							<li>Middleware technology for SOA</li>
+                            <li>Performance, Scalability</li>
+        				</ul>
+        			</ul>
+        		</div>
+    
+            </section>
+            
+            <div class="slide outline">
+            </div>
+            
+            <section>
+                <header>Requirements and Organization</header>
+
+            	<div class="slide">
+        			<hgroup>
+        				<h1>Prerequisites</h1>
+        			</hgroup>				
+        			<ul class="small spacing">
+        				<li>Object-oriented programming</li>
+        				<ul>
+        					<li>Principles</li>
+        					<ul>
+                                <li>class, object, inheritance, encapsulation, ...</li>
+                                <ul>
+								    <li>basis for service concepts</li>
+                                </ul>
+                            </ul>
+        				</ul>
+        				<li>Java</li>
+        				<ul>
+        					<li>All code examples will be in Java</li>
+							<li>All lab work will be in Java</li>
+        				</ul>
+        				<li>Web Architecture</li>
+        				<ul>
+            				<li>Basics of XML, XPath, HTTP, URI</li>
+        				</ul>
+            			<li>Other</li>
+        				<ul>
+                            <li>Networking</li>
+            				<li>Regular expressions, basics of Linux</li>
+        				</ul>                        
+        			</ul>
+        		</div>
+                
+            	<div class="slide" id="plan">
+        			<hgroup>
+        				<h1>Organization of Lectures</h1>
+        			</hgroup>
+        			<ul class="xx-small">
+        				<li>13 Lectures</li>
+                        <ul>
+                            <li>Czech: Mon 7:15-8:45, T9:155</li>
+                            <li>English: TBA</li>
+                        </ul>
+        				
+        				<li>Plan</li>
+        				<ol>
+                            <li>22.09.2014 &#150; Motivation and Course Overview (<a href="lecture0.html">html</a>)</li>
+                            <li>22.09.2014 &#150; Application Server I. (<a href="lecture1.html">html</a>)</li>
+                            <li>29.09.2014 &#150; Introduction to Architectures (<a href="lecture2.html">html</a>)</li>
+                            <li>06.10.2014 &#150; Application Protocols (<a href="lecture3.html">html</a>)</li>
+                            <li>13.10.2014 &#150; Application Server II. (<a href="lecture4.html">html</a>)</li>
+                            <li>20.10.2014 &#150; Application Server Services (<a href="lecture5.html">html</a>)</li>
+                            <li>27.11.2014 &#150; Service Oriented Architecture (<a href="lecture6.html">html</a>)</li>
+                            <li>03.11.2014 &#150; SOAP and REST (<a href="lecture7.html">html</a>)</li>
+                            <li>10.11.2014 &#150; Web Service Description Language (<a href="lecture8.html">html</a>)
+                            <br/>17.11.2014 &#150; no lecture</li>
+                            <li>24.11.2014 &#150; Enterprise Service Bus (<a href="lecture9.html">html</a>)</li>
+                            <li>01.12.2014 &#150; High Availability and Performance (<a href="lecture10.html">html</a>)</li>
+                            <li>08.12.2014 &#150; Service Orchestration (<a href="lecture11.html">html</a>)</li>
+                            <li>15.12.2014 &#150; Reserve</li>
+        				</ol>        				
+        			</ul>
+        		</div>			
+    
+        		<div class="slide">
+        			<hgroup>
+        				<h1>Organization of Labs</h1>
+        			</hgroup>
+        			<ul class="small">
+        				<li>Individual work (no teams!)</li>
+        				<li>Labs every second week</li>
+        				<li>Number of labs: 6:</li>
+        				<ol>
+        					<li>Introduction, Setup</li>
+        					<li>WebLogic Server, application</li>
+        					<li>Service design, implementation, wsdl, soap, soapui</li>
+        					<li>Oracle Service Bus, Web service integration</li>
+        					<li>Interoperability, transformation</li>
+        					<li>Security</li>
+        				</ol>		
+        			</ul>
+        		</div>
+                
+        		<div class="slide">
+        			<hgroup>
+        				<h1>Methodology for Lab Work</h1>
+        			</hgroup>
+        			<ul class="spacing">
+        				<li>No app development, not directly related assignments</li>
+        				<ul>
+        					<li>assignment every second week</li>
+        					<li>be prepared for the lab!</li>
+                            <li>work alone, ask others for advices</li>
+                			<li><b>Results:</b></li>
+            				<ul>
+            					<li>5 completed tasks</li>
+            					<li>documentation (in the wiki)</li>
+            					<li>implementation (code in the source tracker)</li> 
+            				</ul>
+        				</ul>
+        			</ul>
+                </div>
+    
+                <div class="slide">
+        			<hgroup>
+        				<h1>Development Platform</h1>
+        			</hgroup>				
+        			<ul>
+						<li>WebLogic Server</li>
+						<ul>
+        					<li>JEE development environment</li>
+						</ul>
+        				<li>Oracle Service Bus</li>
+        				<ul>
+        					<li>Oracle Middleware platform</li>
+							<li>Runs on WebLogic Server</li> 
+                            <li>You use scripts to install it and run it</li>
+                            </ul>
+        				</ul>
+        			</ul>
+        		</div>
+                                
+            </section>
+        </section>
+
+        <div class="slide outline">
+        </div>
+        
+        <section>
+            <header>Assessment</header>
+
+    		<div class="slide">
+    			<hgroup>
+    				<h1>Assessment</h1>
+    			</hgroup>
+    			<ul class="small">
+    				<li>Labs</li>
+    				<ul>
+						<li>Presence is mandatory</li>
+						<ul>
+                            <li>You can miss up to 1 lab without sending regrets</li>
+                        </ul>
+						<li>Every task gives you a max. of <span class="h-latex">6</span> points</li>
+						<li><span class="h-latex">6 \cdot 5=30</span> points</li>
+						<li>Activity in labs gives you a max. of <span class="h-latex">10</span> points</li>
+						<li>Total maximal points: <span class="h-latex lower">p_p=40</span>, <b>to pass</b>: 
+						<span class="h-latex lower">p_p \geq 20</li>
+                    </ul>
+					<li>Final exam</li>
+					<ul>
+						<li>Mandatory written test: 3 exercises, 1 hour</li>
+                        <ul>
+						    <li>each gives you a max. of <span class="h-latex">20</span> points, the total 
+                            <span class="h-latex lower">p_t = 60</span> points</li>
+							<li>To pass, you need to have at least <span class="h-latex">50</span>% from each exercise!</li>
+						    <li>spoken exam only if <span class="h-latex lower">p_t \geq 30</li>
+                        </ul>
+						<li>Final score:</li>
+                        <ul>
+                            <li><span class="h-latex x-lower">p_p + p_t = 100</span> maximum points</li>
+						    <li>spoken exam may adjust your points freely</li>
+                        </ul>
+					</ul>
+                </ul>
+    		</div>
+
+    		<div class="slide" id="final-marks">
+    			<hgroup>
+    				<h1>Final Marks</h1>
+    			</hgroup>
+    				<center>
+						<table class="prettytable" style="margin-top: 30px; margin-bottom: 30px; width: 450px">
+							<caption>Source: <a href="http://www.cvut.cz/pracoviste/pravni-odbor/dokumenty/studijni-predpisy/studijnirad.pdf">
+                                http://www.cvut.cz/pracoviste/pravni-odbor/dokumenty/studijni-predpisy/studijnirad.pdf
+                            </a></caption>
+							<thead>
+								<tr><th>Mark</th><th>Points</th><th>In words</th></tr>
+							</thead>
+							<tbody>
+								<tr><td>A</td><td>100&#150;90</td><td>výborně</td></tr>
+								<tr><td>B</td><td>89&#150;80</td><td>velmi dobře</td></tr>
+								<tr><td>C</td><td>79&#150;70</td><td>dobře</td></tr>
+								<tr><td>D</td><td>69&#150;60</td><td>uspokojivě</td></tr>
+								<tr><td>E</td><td>59&#150;50</td><td>dostatečně</td></tr>
+								<tr><td>F</td><td>49&#150;0</td><td>nedostatečně</td></tr>
+							</tbody>
+						</table>
+					</center>
+					<ul>
+						<li>Everything good and bad will count</li>
+						<ul>
+							<li>practicals, coding, (pro-)activity, passiveness, <br/>
+							hacking (bad and good), lectures, exam, cheating, ...</li>
+						</ul>
+					</ul>
+    		</div>
+        </section>
+        
+        <div class="slide outline">
+        </div>
+
+        <section>
+            <header>Communication and Resources</header>
+
+        	<div class="slide">
+    			<hgroup>
+    				<h1>Communication</h1>
+    			</hgroup>
+    			<ul class="small">
+    				<li>Language</li>
+    				<ul>
+    					<li>Text: English (slides, tweets, posts, instructions, etc.)</li>
+    					<ul>
+                            <li>choose English/Czech for your contributions to the wiki</li>
+                        </ul>
+    					<li>Voice: Czech and English (English version of the course)</li>
+    				</ul>
+    				<li>Direct</li>
+    				<ul>
+    					<li>you can always contact me directly at <a href="mailto:tomas@vitvar.com">tomas@vitvar.com</a> or 
+                            <a href="http://twitter.com/TomasVitvar">@TomasVitvar</a></li>
+    				</ul>
+    			</ul>
+    		</div>
+
+    		<div class="slide">
+    			<hgroup>
+    				<h1>Overview of Resources</h1>
+    			</hgroup>
+                <ul class="small spacing">
+                    <li>Overview of resources</li>
+                    <table style="width: 80%;">
+                        <thead>
+                            <th style="width: 200px">Item</th><th>URL</th><th>Feed</th>
+                        </thead>
+                        <tbody>
+                            <tr><td>Course page</td><td><a href="http://vitvar.com/courses/mdw">http://vitvar.com/courses/mdw</a></td><td>-</td></tr>
+                            <tr><td>EDUX</td><td><a href="http://edux.fit.cvut.cz/courses/MI-MDW">http://edux.fit.cvut.cz/courses/MI-MDW</a></td><td>-</td></tr>
+                            <tr><td>Lab project</td><td><a href="https://gitlab.fit.cvut.cz">https://gitlab.fit.cvut.cz</a></td><td>-</td></tr>
+                            <tr><td>Bookshelf</td><td><a href="http://books.google.com/books?uid=110127161049269255182&as_coll=1003&source=gbs_lp_bookshelf_list">http://vitvar.com/courses/mdw/bookshelf</a></td>
+                              <td><a href="http://pipes.yahoo.com/pipes/pipe.run?_id=82d5e6aa0e777bf136ecaa96206c6f6f&_render=rss&lid=1003&uid=110127161049269255182">RSS</a></td></tr>
+                        </tbody>
+                    </table>
+    				<li>Books from the MDW bookshelf</li>
+                    <ul class="h-rssfeed x-small" 
+          src="http://pipes.yahoo.com/pipes/pipe.run?_id=82d5e6aa0e777bf136ecaa96206c6f6f&_render=json&lid=1003&uid=110127161049269255182">
+                    </ul>
+                </ul>
+    		</div>
+
+    		<div class="slide" id="humla">
+    			<hgroup>
+    				<h1>About Slides</h1>
+    			</hgroup>
+    			<ul class="x-small">
+    				<li>Humla &#150; Open Source HTML5 Presentation Environment</li>
+    				<ul>
+                        <li>every slide has a unique URL</li>
+                        <li>all figures linked with Google drawings</li>
+                        <li>possible to format and print in PDF</li>
+                        <li>running local, with back-end NodeJS support, and offline</li>
+                        <li>Fork it at <a href="https://github.com/tomvit/humla">Humla github repo</a></li>
+    				</ul>
+                    <li>Keys</li>
+                    <ul class="no-bullet spacing xx-small">
+                        <li><span class="key">1</span>&#160;&#160;default browsing mode</li>
+                        <li><span class="key">2</span>&#160;&#160;slideshow mode (automatically scales to fullscreen)</li>
+                        <li><span class="key">3</span>&#160;&#160;grid (overview) mode</li>
+                        <li><span class="key">4</span>&#160;&#160;print mode, 2 slides per page</li>
+                        <li><span class="key">&#8592;</span>&#160;&#160;slide left</li>
+                        <li><span class="key">&#8594;</span>&#160;&#160;slide right</li>
+                        <li><span class="key">d</span>&#160;&#160;debug mode</li>
+                        <li><span class="key">e</span>&#160;&#160;toggle last error messages on/off</li>
+                    </ul>
+    			</ul>
+    		</div>
+
+        </section>
+        		
+	</body>
+
+</html>
+
