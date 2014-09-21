@@ -1,24 +1,25 @@
 <!DOCTYPE html>
 <!--
-	Middleware and Web Services, CTU course slides
-	(cc) 2010-2012 Tomas Vitvar, tomas@vitvar.com
+    Middleware and Web Services, CTU course slides
+    (cc) 2010-2012 Tomas Vitvar, http://vitvar.com
+    written for Humla, an open source HTML5 presentation environment
 -->
-<html>   
-	<head>
+<html>  
+    <head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> 
         <meta name="course"   content="Middleware and Web Services"/>
 		<meta name="lecture"  content="Lecture 1"/>
-   		<meta name="keywords" content="motivation, scope, requirements, resources"/>
+   		<meta name="keywords" content="Web Server, Application Server, JEE"/>
            
         <link type="text/css" rel="stylesheet" href="css/meta.css"></link>   
         <link type="text/css" rel="stylesheet" href="css/ctu-fit.css"></link>   
         <link type="text/css" rel="stylesheet" href="humla/lib/core/humla.css"></link>   
 
         <script type="text/javascript" src="humla/lib/humla.js"></script>
-        <title>Motivation and Course Overview</title>
+        <title>Application Server I.</title>
 	</head>
-	<body> 
-    
+	
+	<body>
 		<footer>
 			<p><b>#META_LECTURE#: #TITLE#</b>,&nbsp;<span class="meta_semester"/>,&nbsp;
 			<span class="meta_twitter"/></p>
@@ -50,557 +51,325 @@
 				<div class="oppa"></div>
 			</div>
 		</div>
-
-		<div class="slide">
-			<hgroup>
-				<h1>Hellos</h1>
-			</hgroup>
-			<ul class="small spacing">
-				<li>Tomáš Vitvar</li> 
-				<ul>
-					<li>Technical Architect at Oracle</li>
-                    <ul>
-                        <li>SOA and Oracle Integration Architectures<br/>
-                        (Vodafone UK, Turkish Telecom, MTN ZA)
-                        </li>
-                    </ul>
-					<li>Researcher, developer, software architect</li>
-                    <ul>
-					    <li>Have worked in Austria, Ireland, Germany, Czech rep.</li> 
-					    <li>Academia and industry</li>
-					    <li>member of W3C Advisory Committee</li>
-					    <li>EU research and development projects</li>
-                    </ul>
-				</ul>
-				<li>Jaroslav Kuchař</li>
-				<ul>
-					<li>CTU FIT research assistant, Ph.D. student at CTU FIT</li>
-					<li>Web services, data mining, analytics, Web technologies</li>
-				</ul>
-				<li>Milan Dojchinovski</li>
-				<ul>
-					<li>Ph.D. student at CTU FIT, web services</li>
-				</ul>
-			</ul>
-		</div>
-
-        <div class="slide outline">
-        </div>
-
-        <section>
-            <header>Web Engineering Curricula</header>
-
-    		<div class="slide">
-    			<hgroup>
-    				<h1>Web Engineering Curricula</h1>
-    			</hgroup>
-    			<ul class="small">
-    				<li>Web engineering</li> 
-    				<ul>
-    					<li>Part of Software and Web Engineering Curriculum</li>
-    					<li>Started winter 2010 (accreditation in 04/2010, CZ, EN)</li>
-    					<li>Designed from scratch, no "backward-compatibility problem"</li>
-    				</ul>
-    				<li>Key people</li>
-    				<ul>
-    					<li>Well-established researchers, community work<br/>
-    					&rarr; coming from ČVUT, MFF UK, VŠE, intl. experience</li>
-    					<li class="x-space-before">doc. Ing. Tomáš Vitvar, Ph.D. &ndash; Web services, Web 2.0
-    					<li>doc. RNDr. Tomáš Skopal, Ph.D. &ndash; Media, Search</li>
-        				<li>prof. RNDr. Peter Vojtáš, CSc. &ndash; Semantic Web</li>
-    					<li>doc. Ing. Vojtěch Svátek, Ph.D. &ndash; Data Mining, Semantic Web</li>
-    				</ul>
-    			</ul>
-    		</div>
-
-    		<div class="slide">
-    			<hgroup>
-    				<h1>Bird's View</h1>
-    			</hgroup>
-    			<ul class="small">
-    				<li>Web 2.0 engineering is...</li> 
-    				<ul>
-    					<li>far beyond PHP and HTML!</li>
-    				</ul>
-    			</ul>
-    			<div class="h-drawing" style="height: 390px" alt="Web Engineering Overview" 
-    				id="1oyGz6GdF-K_hln9g_l3Cp1eNK843S4NKE4tO8HMUYGw"></div>
-    		</div>
-        </section>
-				        
-        <div class="slide outline">
-        </div>
-        
-        <section>
-            <header>Course at a Glance</header>
-            
-            <section>
-                <header>Motivation and Scope</header>
 		
-            	<div class="slide">
-        			<hgroup>
-        				<h1>Motivation in Brief</h1>
-        			</hgroup>
-        			<ul class="small spacing">
-        				<li>Systems rely on complex infrastructures</li> 
-        				<ul>
-        					<li>A lot of data and many processes, internal and external</li>
-                            <li>As people communicate, underlying systems must too</li>
-        					<li>But:</li>
-                            <ul>
-                                <li>variety of data formants, technologies, protocols</li>
-        					    <li>variety of architectures, client-server, peer-to-peer, ...</li>
-                            </ul>
-        				</ul>
-        				<li>Good performance</li>
-        				<ul>
-        					<li>frequent changes in applications' loads, peek hours</li>
-        					<li>scalability &ndash; effective load balancing</li>
-        					<li>low costs &ndash; cheaper to outsource?</li>
-        				</ul>
-        				<li>Rapid changes in applications' functionality</li>
-        				<ul>
-        					<li>modular development</li>
-        					<li>reuse of application functionality</li>
-                            <li>low costs &ndash; do it now and quickly!</li>
-        				<ul>
-        			</ul>
-        		</div>
-
-                <div class="slide" id="spaghetti">
-                	<hgroup>
-        				<h1>Spaghetti Architecture</h1>
-        			</hgroup>
-                    <ul class="small">
-                        <li>Need for the integration</li>
-                        <ul>
-                            <li>One-to-one integration</li>
-                            <li>Hard to maintain, vendor interoperability problem</li>
-                        </ul>
-                        <div class="h-drawing" style="height: 350px" id="123tDQFo3Zq0LEzzhquKp1xJX4YZ6YiWC0GDNGGK1UA0"
-                            alt="Spaghetti Integration"></div>
-                    </ul>
-                </div>
-
-                <div class="slide">
-                    <hgroup>
-        				<h1>SOA Architecture</h1>
-        			</hgroup>
-                    <ul class="small">
-                        <li>Integration organized</li>
-                        <ul>
-                            <li>Enterprise Service Bus, to be used wisely</li>
-                        </ul>
-                    </ul>
-                    <div class="h-drawing" style="height: 400px" id="1-uHnuWoYea9KZgEBRkGmdpbKDT5THls9dn56XolZ1Lg"
-                        alt="SOA Integration"></div>
-                </div>
-
-                <div class="slide">
-            		<hgroup>
-        				<h1>Good Performance &#150; Traditional Solution</h1>
-        			</hgroup>
-                    <ul class="small">
-                        <li>Traditional hardware model</li>
-                        <ul>
-                            <li>Up-front hardware investments</li>
-                            <li>Hardware not optimally utilized</li>
-                        </ul>
-                    </ul>
-                    <div class="h-drawing" style="height: 350px; margin-left: -10px" 
-                        id="17jEYye-th5U5T-N-iE1gR7f_k5Bwrk9P7z9yYC4EZlw" alt="Traditional Hardware Model"></div>
-                </div>
-
-                <div class="slide">
-                    <hgroup>
-                        <h1>Good Performance &#150; Scalable Solution</h1>
-                    </hgroup>
-                    <div class="h-drawing" id="18vW_i7-8GeUHUdE9q9dccbAvDbA5b1fuQ-qAovzabTc" style="height: 450px"></div>
-                </div>
-
-        		<div class="slide">
-        			<hgroup>
-        				<h1>Scope</h1>
-        			</hgroup>
-        			<ul class="small x-spacing">
-        				<li>Architectural and conceptual basis</li>
-        				<ul>
-        					<li>Integrating systems and applications</li>
-        					<li>Service Oriented Architecture, Service Concepts, Middleware</li>
-        				</ul>
-        				<li>Web Service technologies</li>
-        				<ul>
-        					<li>Web Service Description Language, SOAP</li>
-                            <li>Process languages &ndash; BPEL/BPMN</li>
-                            <li>Communication patterns</li>
-        				</ul>
-        				<li>Middleware</li>
-        				<ul>
-							<li>Middleware technology for SOA</li>
-                            <li>Performance, Scalability</li>
-        				</ul>
-        			</ul>
-        		</div>
-    
-            </section>
-            
-            <div class="slide outline">
-            </div>
-            
-            <section>
-                <header>Requirements and Organization</header>
-
-            	<div class="slide">
-        			<hgroup>
-        				<h1>Prerequisites</h1>
-        			</hgroup>				
-        			<ul class="small spacing">
-        				<li>Object-oriented programming</li>
-        				<ul>
-        					<li>Principles</li>
-        					<ul>
-                                <li>class, object, inheritance, encapsulation, ...</li>
-								<li>basis for service concepts</li>
-                            </ul>
-        				</ul>
-        				<li>Java</li>
-        				<ul>
-        					<li>All code examples will be in Java</li>
-							<li>All lab work will be in Java</li>
-        				</ul>
-        				<li>Web Architecture</li>
-        				<ul>
-            				<li>Basics of XML, XPath, HTTP, URI</li>
-        				</ul>
-            			<li>Other</li>
-        				<ul>
-                            <li>Networking</li>
-            				<li>Regular expressions, basics of Linux</li>
-        				</ul>                        
-        			</ul>
-        		</div>
-                
-            	<div class="slide" id="plan">
-        			<hgroup>
-        				<h1>Organization of Lectures</h1>
-        			</hgroup>
-        			<ul class="small">
-        				<li>13 Lectures</li>
-                        <ul>
-                            <li>Czech: Mo 7:15-8:45, T9:155</li>
-                            <li>English: TBA</li>
-                        </ul>
-        				
-        				<li>Plan</li>
-        				<ol class="xx-small">
-                            <li>23.09.2013 &#150; Motivation and Course Overview (<a href="lecture1.html">html</a>)</li>
-                            <li>30.09.2013 &#150; Introduction to Architectures (<a href="lecture2.html">html</a>)</li>
-                            <li>07.10.2013 &#150; Application Protocols (<a href="lecture3.html">html</a>)</li>
-                            <li>14.10.2013 &#150; Application Server (<a href="lecture4.html">html</a>)</li>
-                            <li>21.10.2013 &#150; Application Server Services (<a href="lecture5.html">html</a>)</li>
-                            <li>11.11.2013 &#150; Service Oriented Architecture (<a href="lecture6.html">html</a>)</li>
-                            <li>18.11.2013 &#150; SOAP and REST (<a href="lecture7.html">html</a>)</li>
-                            <li>25.11.2013 &#150; Web Service Description Language (<a href="lecture8.html">html</a>)</li>
-                            <li>02.11.2013 &#150; Enterprise Service Bus (<a href="lecture9.html">html</a>)</li>
-                            <li>09.12.2013 &#150; High Availability and Performance (<a href="lecture10.html">html</a>)</li>
-                            <li>16.12.2013 &#150; Service Orchestration (<a href="lecture11.html">html</a>)</li>
-        				</ol>        				
-        			</ul>
-        		</div>			
-    
-        		<div class="slide">
-        			<hgroup>
-        				<h1>Organization of Labs</h1>
-        			</hgroup>
-        			<ul class="small">
-        				<li>Individual work (no teams!)</li>
-        				<li>Labs every second week</li>
-        				<li>Number of sessions: 6-7:</li>
-        				<ol>
-        					<li>Introduction, Setup</li>
-        					<li>WebLogic Server, application</li>
-        					<li>Service design, implementation, wsdl, soap, soapui</li>
-        					<li>Oracle Service Bus, Web service integration</li>
-        					<li>Interoperability, transformation</li>
-        					<li>Security</li>
-        				</ol>		
-        				<li>All textual/design diagrams results in the wiki</li>
-                        <ul>
-                            <li>EDUX: <a href="https://edux.fit.cvut.cz/courses/MI-MDW">https://edux.fit.cvut.cz/courses/MI-MDW</a></code></li>
-                        </ul>
-        				<li>All (nicely commented!) code results in the svn</li>
-                        <ul>
-                            <li>FIT Project Site: <a href="http://project.fit.cvut.cz">http://project.fit.cvut.cz</a></li>
-                        </ul>
-        			</ul>
-        		</div>
-                
-        		<div class="slide">
-        			<hgroup>
-        				<h1>Methodology for Lab Work</h1>
-        			</hgroup>
-        			<ul class="spacing">
-        				<li>No app development, not directly related assignments</li>
-        				<ul>
-        					<li>assignment every second week</li>
-        					<li>be prepared for the lab!</li>
-                            <li>work alone, ask others for advices</li>
-                			<li><b>Results:</b></li>
-            				<ul>
-            					<li>5 completed tasks</li>
-            					<li>documentation (in the wiki)</li>
-            					<li>implementation (code in the svn)</li> 
-            				</ul>
-        				</ul>
-        			</ul>
-                </div>
-    
-            </section>
-            
-            <div class="slide outline">
-            </div>
-
-            <section>
-                <header>Technologies/Development Platform</header>
-            
-                <div class="slide">
-        			<hgroup>
-        				<h1>Development Platforms</h1>
-        			</hgroup>				
-        			<ul>
-						<li>WebLogic Server</li>
-						<ul>
-        					<li>Java development environment</li>
-							<li>Scalability, performance</li>
-						</ul>
-        				<li>Oracle Service Bus</li>
-        				<ul>
-        					<li>Oracle Middleware platform (former AquaLogic)</li>
-							<li>Runs on WebLogic Server</li> 
-                            <li>To use it:</li>
-                            <ul>
-                                <li>Installation directory available in machines in labs</li>
-                                <li>To run it, you need to create so called "domain"</li>
-                            </ul>
-        				</ul>
-        			</ul>
-        		</div>
-                                
-            </section>
-        </section>
-
-        <div class="slide outline">
-        </div>
+        <div class="slide outline"></div>
         
         <section>
-            <header>Assessment</header>
-
-    		<div class="slide">
-    			<hgroup>
-    				<h1>Assessment</h1>
-    			</hgroup>
-    			<ul class="small">
-    				<li>Labs</li>
-    				<ul>
-						<li>Presence is mandatory</li>
+            <header>Architecture</header>
+            
+	        <div class="slide">
+	            <hgroup>
+	                <h1>Application Server Overview</h1>
+	            </hgroup>  
+	            <ul class="x-small">
+	                <li>An environment that runs an application logic</li>
+	                <ul>
+	                    <li>A client communicates with the server using an application protocol</li>
+	                </ul>
+	                <li>Application Server</li>
+                 	<ul>
+                        <li>A modular environment</li>
 						<ul>
-                            <li>You can miss up to 1 lab without sending regrets</li>
-                        </ul>
-						<li>Every task gives you a max. of <span class="h-latex">6</span> points</li>
-						<li><span class="h-latex">6 \cdot 5=30</span> points</li>
-						<li>Activity in labs gives you a max. of <span class="h-latex">10</span> points</li>
-						<li>Total maximal points: <span class="h-latex lower">p_p=40</span>, <b>to pass</b>: 
-						<span class="h-latex lower">p_p \geq 20</li>
-                    </ul>
-					<li>Final exam</li>
-					<ul>
-						<li>Mandatory written test: 3 exercises, ~1 hour</li>
-                        <ul>
-						    <li>each gives you a max. of <span class="h-latex">20</span> points, the total 
-                            <span class="h-latex lower">p_t = 60</span> points</li>
-							<li>To pass, you need to have at least <span class="h-latex">50</span>% from each exercise!</li>
-						    <li>F2F discussion: only if <span class="h-latex lower">p_t \geq 30</li>
-                        </ul>
-						<li>Final score:</li>
-                        <ul>
-                            <li><span class="h-latex x-lower">p_p + p_t = 100</span> maximum points</li>
-						    <li>discussion may adjust your points freely</li>
-                        </ul>
-					</ul>
-                </ul>
-    		</div>
-
-    		<div class="slide" id="final-marks">
-    			<hgroup>
-    				<h1>Final Marks</h1>
-    			</hgroup>
-    				<center>
-						<table class="prettytable" style="margin-top: 30px; margin-bottom: 30px; width: 450px">
-							<caption>Source: <a href="http://www.cvut.cz/pracoviste/pravni-odbor/dokumenty/studijni-predpisy/studijnirad.pdf">
-                                http://www.cvut.cz/pracoviste/pravni-odbor/dokumenty/studijni-predpisy/studijnirad.pdf
-                            </a></caption>
-							<thead>
-								<tr><th>Mark</th><th>Points</th><th>In words</th></tr>
-							</thead>
-							<tbody>
-								<tr><td>A</td><td>100&#150;90</td><td>výborně</td></tr>
-								<tr><td>B</td><td>89&#150;80</td><td>velmi dobře</td></tr>
-								<tr><td>C</td><td>79&#150;70</td><td>dobře</td></tr>
-								<tr><td>D</td><td>69&#150;60</td><td>uspokojivě</td></tr>
-								<tr><td>E</td><td>59&#150;50</td><td>dostatečně</td></tr>
-								<tr><td>F</td><td>49&#150;0</td><td>nedostatečně</td></tr>
-							</tbody>
-						</table>
-					</center>
-					<ul>
-						<li>Everything good and bad will count</li>
-						<ul>
-							<li>practicals, coding, (pro-)activity, passiveness, <br/>
-							hacking (bad and good), lectures, exam, cheating, ...</li>
+							<li>provides technology to realize enterprise systems</li>
+							<li>JEE containers &ndash; Java technology for AS components</li>
+							<li>Supports a variety of objects such as Servlets, JPSs, JMS</li>
 						</ul>
+						<li>Provides services such as naming and directory, performance, failover</li>
+                        <li>Provides Web server capabilities</li>
+						<li>Can be a single server or multiple servers</li>
 					</ul>
-    		</div>
-        </section>
-        
-        <div class="slide outline">
-        </div>
-
-        <section>
-            <header>Communication and Resources</header>
-
-        	<div class="slide">
-    			<hgroup>
-    				<h1>Communication</h1>
-    			</hgroup>
-    			<ul class="small">
-    				<li>Language</li>
-    				<ul>
-    					<li>Text: English (slides, tweets, posts, instructions, etc.)</li>
-    					<ul>
-                            <li>choose English/Czech for your contributions to the wiki</li>
-                        </ul>
-    					<li>Voice: Czech and English (English version of the course)</li>
-    				</ul>
-    				<li>Channels</li>
-    				<ul>	
-    					<li>Twitter: <a href="http://twitter.com/Web2e">@Web2e</a></li>
-    					<ul>
-                            <li>technology news related to web engineering courses</li>
-                            <li>hashtags <code>#w2e_mdwann</code></b> for MDW-related organizational announcements</li>
-                        </ul>
-    				</ul>
-    				<li>Direct</li>
-    				<ul>
-    					<li>you can always contact me directly at <a href="mailto:tomas@vitvar.com">tomas@vitvar.com</a> or 
-                            <a href="http://twitter.com/TomasVitvar">@TomasVitvar</a></li>
-    				</ul>
-    			</ul>
-    		</div>
-
-    		<div class="slide">
-    			<hgroup>
-    				<h1>Overview of Resources</h1>
-    			</hgroup>
-                <ul class="small spacing">
-                    <li>Overview of resources</li>
-                    <table style="width: 80%;">
-                        <thead>
-                            <th style="width: 200px">Item</th><th>URL</th><th>Feed</th>
-                        </thead>
-                        <tbody>
-                            <tr><td>Course page</td><td><a href="http://vitvar.com/courses/mdw">http://vitvar.com/courses/mdw</a></td><td>-</td></tr>
-                            <tr><td>EDUX</td><td><a href="http://edux.fit.cvut.cz/courses/MI-MDW">http://edux.fit.cvut.cz/courses/MI-MDW</a></td><td>-</td></tr>
-                            <tr><td>Lab project/SVN</td><td>TBA</td><td>-</td></tr>
-                            <tr><td>Bookshelf</td><td><a href="http://books.google.com/books?uid=110127161049269255182&as_coll=1003&source=gbs_lp_bookshelf_list">http://vitvar.com/courses/mdw/bookshelf</a></td>
-                              <td><a href="http://pipes.yahoo.com/pipes/pipe.run?_id=82d5e6aa0e777bf136ecaa96206c6f6f&_render=rss&lid=1003&uid=110127161049269255182">RSS</a></td></tr>
-                            <tr><td>References</td><td>-</td><td>TBA</td></tr>
-                            <tr><td>News/announcements</td><td><a href="http://twitter.com/Web2e">http://twitter.com/Web2e</a></td><td>TBA</td></tr>
-                        </tbody>
-                    </table>
-    				<li>Books from the MDW bookshelf</li>
-                    <ul class="h-rssfeed x-small" 
-          src="http://pipes.yahoo.com/pipes/pipe.run?_id=82d5e6aa0e777bf136ecaa96206c6f6f&_render=json&lid=1003&uid=110127161049269255182">
-                    </ul>
-                </ul>
-    		</div>
-
-    		<div class="slide" id="humla">
-    			<hgroup>
-    				<h1>About Slides</h1>
-    			</hgroup>
-    			<ul class="x-small">
-    				<li>Humla &#150; Open Source HTML5 Presentation Environment</li>
-    				<ul>
-                        <li>every slide has a unique URL</li>
-                        <li>all figures linked with Google drawings</li>
-                        <li>possible to format and print in PDF</li>
-                        <li>running local, with back-end NodeJS support, and offline</li>
-                        <li>Fork it at <a href="https://github.com/tomvit/humla">Humla github repo</a></li>
-    				</ul>
-                    <li>Keys</li>
-                    <ul class="no-bullet spacing xx-small">
-                        <li><span class="key">1</span>&#160;&#160;default browsing mode</li>
-                        <li><span class="key">2</span>&#160;&#160;slideshow mode (automatically scales to fullscreen)</li>
-                        <li><span class="key">3</span>&#160;&#160;grid (overview) mode</li>
-                        <li><span class="key">4</span>&#160;&#160;print mode, 2 slides per page</li>
-                        <li><span class="key">&#8592;</span>&#160;&#160;slide left</li>
-                        <li><span class="key">&#8594;</span>&#160;&#160;slide right</li>
-                        <li><span class="key">d</span>&#160;&#160;debug mode</li>
-                        <li><span class="key">e</span>&#160;&#160;toggle last error messages on/off</li>
-                    </ul>
-    			</ul>
-    		</div>
-
-        	<div class="slide">
-    			<hgroup>
-    				<h1>Code Examples</h1>
-    			</hgroup>
-    			<ul class="small spacing">
-                    <li>Example code in various languages</li>
-                    <ul>
-                        <li>Java, JavaScript (server-side), xml, command line (bash) and plain text (e.g., BNF-like syntax, regular expressions, etc.)</li>
-                    </ul>
-                    <li>Code colors</li>
-                    <ul>
-                        <li>different colors of the listings' gutters based on the language</li> 
-                    </ul>
-                    <pre class="brush: java">
-                        public String test() {
-                            // this is a Java code
-                        }
-                    </pre>
-                    <pre class="brush: xml">
-                        &lt;test>&lt;!-- this is a XML code -->&lt;/test>
-                    </pre>
-                    <pre class="brush: bash">
-                        echo "this is a bash test"
-                    </pre>   
-    			</ul>
-    		</div>
+	                <li>Web Tier &ndash; HTTP Server</li>
+					<ul>
+						<li>Web Server supports HTTP only</li>
+						<li>HTTP request/response, security, proxy, caching</li>
+					</ul>
+	                <li>Communication models</li>
+	                <ul>
+	                    <li>Blocking I/O (also called synchronous I/O)</li>
+	                    <li>Non-blocking I/O (also called asynchronous I/O)</li>
+	                </ul>
+	            </ul>                
+	        </div>
 
             <div class="slide">
     			<hgroup>
-    				<h1>Tasks from Lectures</h1>
+    				<h1>Java Enterprise Edition &ndash; JEE</h1>
     			</hgroup>
-    			<ul class="small spacing">
-                    <li>Will give you tasks/exercises for home</li>  
+                <ul class="small">
+                    <li>Java Enterprise Edition (JEE)</li>
                     <ul>
-                        <li>They will appear in slides as follows</li>
+                        <li>Collection of technologies for server-side programming</li>
+						<li>Programming of application components</li>
+                        <li>Main technologies</li>
+                        <ul>                        
+                            <li>Servlet technology and Java Server Pages (JSP)</li>
+                            <li>Remote Method Invocation (RMI)</li>
+                            <li>Java Database Connectivity Services (JDBC)</li>
+                            <li>Java Messaging System (JMS)</li>
+                        </ul>
                     </ul>
-                    <li class="task">Tasks</li>
+                    <li>Basis for many application servers such as</li>
+                    <ul class="x-small">
+                        <li>Oracle WebLogic</li>
+                        <li>Google AppEngine (Java)</li>
+                        <li>JBoss</li>
+                        <li>GlassFish</li>
+                        <li>IBM WebSphere</li>
+                    </ul>
+                </ul>
+            </div>
+
+            <div class="slide">
+        		<hgroup>
+    				<h1>Application Server Layers</h1>
+    			</hgroup>
+				<div class="h-drawing" id="17DlmmSs0FHtUNWKTk1y1a0fWotKTB2m91nKjqYVyZiE" style="height: 250px"></div>
+				<ul class="x-small">
+					<li>Features</li>
+					<ul>
+						<li>AS appears as a single process in the OS</li>
+						<ul>
+							<li>you can use standard OS commands to investigate its operation</li>
+							<li>AS listens on a single or multipe IPs (VIPs) and a tcp port</li>
+						</ul>
+						<li>AS is a Java process</li>
+						<ul>
+							<li>you can use Java tools to investigate its operation</li>
+							<li>Garbage collector stats, thread dumps, memory allocations, etc.</li>
+						</ul>
+					</ul>
+				</ul>
+			</div>	
+
+        	<div class="slide outline"></div>
+
+			<section>
+				<header>I/O Communication Models</header>
+
+		        <div class="slide"> 
+					<hgroup> 
+						<h1>Blocking I/O Model</h1> 
+					</hgroup> 
+					<ul class="small">
+						<li>The server creates a thread for every connection</li>
+		                   <ul>                    
+		                       <li>For example, 1K connections = 1K threads, big overhead</li>
+		                   </ul>
+		               </ul>
+		   			<div id="1QP7gZSS1WS3YquzLekSgdZfcmi4BYArm-K9tuWrULQs" class="h-drawing" style="height: 220px"></div>
+		               <ul class="small">
+		                   <li>Characteristics</li>
+		                   <ul>
+		   					<li>the thread is reserved for the connection</li>
+						<li>When processing of the request requires other interactions with DB/FS or network 
+							communication is slow</li>
+		                   <ul>
+		                       <li>scales very bad as the thread's execution is "blocked"</li>
+		                   </ul>
+					</ul>
+				</div>
+
+		        <div class="slide"> 
+		   			<hgroup> 
+						<h1>Non-Blocking I/O Model</h1> 
+					</hgroup> 
+					<ul class="small">
+						<li>Connections maintained by the OS, not the Web app</li>
+		                   <ul>                    
+		                       <li>The Web app registers events, OS triggers events when occur</li>
+		                   </ul>
+		               </ul>
+		   			<div id="1kxkFc3Chl4qFXxH_4f2seuNbpBdENMyZWMRUmxd1p28" class="h-drawing" style="height: 220px"></div>
+		               <ul class="small">
+						<li>Characteristics</li>
+		                   <ul>
+		                       <li>Event examples: new connection, read, write, closed</li>
+						    <li>The app may create working threads, but controls the number!</li>
+		                       <ul>
+						        <li>much less number of working threads as opposed to blocking I/O</li>
+		                       </ul>
+		                   </ul>
+					</ul>
+				</div>
+			</section>
+
+		</section>
+
+        <div class="slide outline"></div>
+
+		<section>
+
+			<header>Servlet Technology</header>
+
+	        <div class="slide"> 
+				<hgroup> 
+					<h1>Overview</h1> 
+				</hgroup> 
+				<ul class="small">
+					<li>Technology to extend application server functionalities</li>
+					<ul>
+						<li>A Java class that can respond to any type of requests</li>
+						<ul>
+							<li>A servlet defines an interface for a specific protocol</li>
+							<li>Your application implements the servlet's interface</li>
+						</ul>
+					</ul>
+					<li>Commonly used to respond to HTTP requests</li>
+					<ul>
+						<li>A basis for an application running on an application server</li>
+						<li>HTTP Servlet Java classes</li>
+						<ul>
+							<li><code>HttpServlet</code> &ndash; provides HTTP protocol interface</li>
+							<li><code>HttpServletRequest</code> &ndash; represents HTTP request</li>
+							<li><code>HttpServletResponse</code> &ndash; represents HTTP response</li>
+						</ul>
+					</ul>
+				</ul>
+			</div>
+
+            <div class="slide">
+        		<hgroup>
+    				<h1>Directory Structure</h1>
+    			</hgroup>
+                <ul class="x-small">
+                    <li>Your application</li>
                     <ul>
-                        <li>Test some implementation to see how it works</li>
-                        <li>Alter existing example code to meet some requirement</li>
-                        <li>Think about changes in some algorithm</li>
-                        <li>And so on...</li>
+                        <li>collection of documents and libraries your application requires</li>
+                        <li>packaged in <code>war</code> or <code>ear</code> archive</li>
+                        <ul>
+                            <li>JAR that includes not only java classes but also additional resources such as 
+                            <code>.xml</code>, <code>.html</code>, <code>.js</code>, <code>.css</code>, <code>.jpg</code> files.</li>
+                        </ul>
                     </ul>
-                    <li>They are optional but for your good</li>
-    			</ul>
-    		</div>
+                    <li>Content of <code>war</code> package</li>
+                    <pre class="brush: bash; gutter: false; class-name: ''">
+                        # web archive root
+                        war
+                         |   # directories and documents accessible through the app root /
+                         |   # such as img, css, js, ...
+                         |-- (public-directory | public-document)*
+                         |   # directories and documents internal to your application
+                         |-- WEB-INF
+                                |-- (private-directory | private-document)*
+                                |   # compiled java classes of your application
+                                |-- classes
+                                |   # all java libraries your application requires
+                                |-- lib
+                                |   # configuration of your application
+                                |-- web.xml
+                                |-- # other platform-specific configurations 
+                                    # such as app-engineweb.xml for GAE
+                    </pre>
+                </ul>
+            </div>
 
-        </section>
-        		
-	</body>
+            <div class="slide">
+                <hgroup>
+    				<h1>Configuration in web.xml</h1>
+    			</hgroup>
+                <ul class="x-small">
+                    <li><code>web.xml</code> defines configuration for</li>
+                    <ul>
+                        <li>list of servlets, mapping of servlets to URL paths, welcome files, filters, EJB references, 
+                        authentication mechanism, etc.</li>
+                        <li>basic configuration example:</li>
+                    </ul>
+                    <pre class="brush: xml">
+                        &lt;?xml version="1.0" encoding="utf-8"?>
+                        &lt;web-app 
+                            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                            xmlns="http://java.sun.com/xml/ns/javaee">
+                    
+                            &lt;servlet>
+                        		&lt;servlet-name>main&lt;/servlet-name>
+                        		&lt;servlet-class>com.vitvar.mdw.main&lt;/servlet-class>
+                        	&lt;/servlet>
+                    
+                        	&lt;servlet-mapping>
+                        		&lt;servlet-name>main&lt;/servlet-name>
+                        		&lt;url-pattern>/&lt;/url-pattern>
+                        	&lt;/servlet-mapping>
+                    
+                        	&lt;welcome-file-list>
+                        		&lt;welcome-file>index.jsp&lt;/welcome-file>
+                        	&lt;/welcome-file-list>
+                        &lt;/web-app>
+                    </pre>
+                </ul>
+            </div>
 
+            <div class="slide">
+            	<hgroup>
+    				<h1>Handling HTTP Requests</h1>
+    			</hgroup>
+                <ul class="x-small">
+                    <li>HTTP Servlets</li>
+                    <ul>
+                        <li>Servlet is a class that extends capabilities of application servers 
+                        via a request-response programming model</li>
+                        <li>HTTP servlets are classes that extend <code>HTTPServlet</code> abstract class</li> 
+                        <li>Example:</li>
+                    </ul>
+                    <pre class="brush: java">
+                        package com.vitvar.mdw;
+                    
+                        import javax.servlet.http.HttpServlet;
+                        import javax.servlet.http.HttpServletRequest;
+                        import javax.servlet.http.HttpServletResponse;
+                    
+                        public class Main extends HttpServlet {
+                            public doGet(HttpServletRequest request, HttpServletResponse response) {
+                                // GET method implementation here
+                            }
+
+                            public doPost(HttpServletRequest request, HttpServletResponse response) {
+                                // POST method implementation here
+                            }
+                        
+                            // other methods such as doPost, doDelete, doOptions
+                        }
+                    </pre>
+                </ul>
+            </div>
+
+            <div class="slide">
+                <hgroup>
+    				<h1>Support for Sessions</h1>
+    			</hgroup>
+                <ul class="x-small">
+                    <li><code>HttpSession</code> interface</li>
+                    <ul>
+                        <li>Allows to store session data in the memory</li>
+                        <li>Java API for <a href="#/state-management">HTTP State Management</a></li>
+                        <ul>
+                            <li>Hides details from developers</li>
+                        </ul>
+                    </ul>
+                    <pre class="brush: java;">
+                        // method doGet in a servlet
+                        public doGet(HttpServletRequest request, HttpServletResponse response) {
+                            // access the session object through the request
+                            HttpSession session = request.getSession();
+                        
+                            // unique identification of the session, the value used for the cookie
+                            String id = session.getId();
+                        
+                            // get the value of the attribute
+                            Object value = session.getAttribute("data");
+
+                            // set the value of the attribute
+                            session.setAttribute("data", new String("some data"));
+                                                    
+                            // this will set a max-age of the session cookie 
+                            session.setMaxInactiveInterval(3600);
+                        }
+                    </pre>
+                </ul>
+            </div>
+
+        </section>		
+    		
+    </body>
 </html>
+
 
