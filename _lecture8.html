@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<!--
+    Middleware and Web Services, CTU course slides
+    (cc) 2010-2012 Tomas Vitvar, http://vitvar.com
+    written for Humla, an open source HTML5 presentation environment
+-->
+<html>  
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> 
+        <meta name="course"   content="Middleware and Web Services"/>
+        <meta name="lecture"  content="Lecture 8"/>
+        <meta name="keywords" content="High Availability, Load Balancer, Replication"/>
+           
+        <link type="text/css" rel="stylesheet" href="css/meta.css"></link>   
+        <link type="text/css" rel="stylesheet" href="css/ctu-fit.css"></link>   
+        <link type="text/css" rel="stylesheet" href="humla/lib/core/humla.css"></link>   
+
+        <script type="text/javascript" src="humla/lib/humla.js"></script>
+        <title>Web Service Description Language</title>
+    </head>
+    
+    <body>
+        <footer>
+            <p><b>#META_LECTURE#: #TITLE#</b>,&nbsp;<span class="meta_semester"/>,&nbsp;
+            <span class="meta_twitter"/></p>
+            <p><b>&#8210; #SLIDE_NO# &#8210;</b></p>
+        </footer>
+
+        <div class="slide intro">
+            <hgroup>
+                <h1><span class="meta_course"/></h1>
+                <h2>#META_LECTURE#: #TITLE#</h2>
+            </hgroup>
+            <div class="author">
+                <p class="meta_author"/>
+                <p><span class="meta_email"/> &bull; <span class="meta_twitter"/> &bull; 
+                <span class="meta_web"/></p>
+            </div>
+            <center><div class="meta_logo"></div></center>
+            <div class="org">
+                <p class="meta_org"/>
+                <p><span class="meta_orgfac"/> &bull; <span class="meta_field"/> 
+                &bull; <span class="meta_orgweb"/></p>
+            </div>
+            <div class="etc">
+                <div class="text-info">
+                    Modified: #LAST_MODIFIED#<br/>
+                    Humla v#HUMLA_VERSION#
+                </div>
+                <a href="http://creativecommons.org/licenses/by-sa/3.0/"><div class="license"></div></a>
+                <div class="oppa"></div>
+            </div>
+        </div>
+        
+        <div class="slide outline"></div>
+
+        <section>
+            <header>Web Service Description Language</header>
+
+            <div class="slide">
+                <hgroup>
+                    <h1>Specifications</h1>
+                </hgroup>
+                <ul class="x-small">
+                    <li>WSDL = Web Service Description Language</li>
+                    <ul>
+                        <li>A standard that allows to describe Web services explicitly (main aspects)</li>
+                        <li>A contract between a requester and a provider</li>
+                    </ul>
+                    <li>Specifications</li>
+                    <ul>
+                        <li>WSDL 1.1 &ndash; still widely used</li>
+                        <ul>
+                            <li><span class="h-ref" id="wsdl11">Web Service Description Language 1.1</span></li>
+                        </ul>
+                        <li>WSDL 2.0 &ndash; An attempt to address several issues with WSDL 1.1</li>
+                        <ul>
+                            <li>SOAP vs. REST, naming, exrpessivity</li>
+                            <li><span class="h-ref" id="wsdl20-primer">WSDL 2.0 Primer (part 0)</span></li>
+                            <li><span class="h-ref" id="wsdl20">WSDL 2.0 Core Language (part 1)</span></li>
+                        </ul>
+                    </ul>            
+                </ul>
+            </div>
+
+            <div class="slide">
+                <hgroup>
+                    <h1>WSDL Overview and WSDL 1.1 Syntax</h1>
+                </hgroup>
+                <ul class="x-small">
+                    <li>Components of WSDL</li>
+                    <ul>
+                        <li>Information model (<code>types</code>)</li>
+                        <ul>
+                            <li>Element types, message declarations (XML Schema)</li>
+                        </ul>
+                        <li>Set of operations (<code>portType</code>)</li>
+                        <ul>
+                            <li>A set of operations is "interface" in the WSDL terminology</li>
+                            <li>operation name, input, output, fault</li>
+                        </ul>
+                        <li>Binding (<code>binding</code>)</li>
+                        <ul>
+                            <li>How messages are transfered over the network using a concrete transport protocol</li>
+                            <li>Transport protocols: HTTP, SMTP, FTP, JMS, ...</li>
+                        </ul>
+                        <li>Endpoint (<code>service</code>)</li>
+                        <ul>
+                            <li>Where the service is physically present on the network</li>
+                        </ul>
+                    </ul>
+                    <li>Types of WSDL documents</li>
+                    <ul>
+                        <li><b>Abstract WSDL</b> &ndash; only information model and a set of operations</li>
+                        <li><b>Concrete WSDL</b> &ndash; everything, a concrete service available in the environment</li>
+                    </ul>
+                </ul>
+            </div>                  
+
+
+            <div class="slide">
+                <hgroup>
+                    <h1>WSDL Components and Dependencies</h1>
+                </hgroup>
+                <img src="img/wsdl-with-links.png" style="height: 490px; margin-top: 10px; margin-left: 200px"></img>
+            </div>                  
+
+            <div class="slide">
+                <hgroup>
+                    <h1>Example</h1>
+                </hgroup>
+                <ul class="x-small">
+                    <li>Order process</li>
+                    <ul>
+                        <li>Extended example from <a href="lecture2.html#/15">Lecture 2</a></li>
+                    </ul>
+                    <div class="h-drawing" id="1OL0gpJAtco_fidFP3audh1wRd_rGXuc6RGuRWiuI4wo"></div>
+                </ul>
+            </div>                  
+
+            <div class="slide">
+                <hgroup>
+                    <h1>Top-level Element and Namespaces</h1>
+                </hgroup>
+                <ul  class="x-small">
+                <li>Example</li>
+                <pre class="brush: xml">
+                &lt;?xml version="1.0" encoding="utf-8"?&gt;
+                &lt;definitions 
+                  xmlns="http://schemas.xmlsoap.org/wsdl/"
+                  targetNamespace="http://mimdw.fit.cvut.cz/mdw_examples/ProcessOrder/OrderProcess" 
+                  xmlns:om="xmlns:om="http://mimdw.fit.cvut.cz/mdw-examples/cdm/order"
+                  xmlns:tns="http://mimdw.fit.cvut.cz/mdw_examples/ProcessOrder/OrderProcess"&gt;
+                  name="OrderProcess"
+                  ...
+                &lt;/definitions&gt;
+                </pre>
+                <ul>
+                    <li><code>definitions</code> is a top-level element</li>
+                    <li>Any un-prefixed elements will be WSDL 2.1 elements (line 3)</li>
+                    <li>Target namespace (line 4)</li>
+                    <ul>
+                        <li>a vocabulary for the order service's parts that this 
+                        WSDL document defines (it is not a XML namespace declaration!)</li>
+                        <li><code>xmlns:tns</code> (line 5) is a prefix definition for this namespace</li>
+                    </ul>
+                </ul>
+            </div>                  
+
+            <div class="slide outline"></div>
+
+            <section>
+                <header>Elements, Types and Messages Definitions</header>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>Type Definitions</h1>
+                    </hgroup>
+                    <ul>
+                        <li>XML Schema</li>
+                        <ul>
+                            <li>Only XML Schema in WSDL 1.1
+                            <li>WSDL 2.0 allows to use other languages too</li>
+                        </ul>
+                        <li>Types for input, output, fault messages</li>
+                        <li>Single elements at the topmost level</li>
+                        <ul>
+                            <li>may contain arbitrary structure</li>
+                        </ul>
+                        <li>Could be defined</li>
+                        <ul>
+                            <li>directly inside the <code>types</code> element</li>
+                            <li>externalally by using XML Schema <code>import</code> mechanism</li>
+                            <ul>
+                                <li>Types to be resued in multiple WSDLs</li>
+                                <li>Definitions of Common Data Model</li>
+                            </ul>
+                        </ul>
+                </div>                  
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>Elements and Types Definitions Example</h1>
+                    </hgroup>
+                    <pre class="brush: 'xml'; class-name: 'xx-small'">
+                        &lt;types>
+                            &lt;schema xmlns="http://www.w3.org/2001/XMLSchema" 
+                                attributeFormDefault="unqualified" 
+                                elementFormDefault="qualified"
+                                xmlns:op="http://mimdw.fit.cvut.cz/mdw-examples/cdm/order" 
+                                targetNamespace="http://.../mdw_examples/ProcessOrder/OrderProcess">
+                            
+                                &lt;import 
+                                    namespace="http://mimdw.fit.cvut.cz/mdw-examples/cdm/order" 
+                                    schemaLocation="http://.../soa-infra/services/mdw-examples/ProcessOrder/apps/MDWMetaData/order.xsd"/>
+                                &lt;element name="OrderProcessRequest" type="op:Order"/>
+                                &lt;element name="OrderProcessResponse" type="string"/>
+                                &lt;element name="StatusRequest" type="op:StatusRequestType"/>
+                                &lt;element name="FaultMessage" type="string"/>
+                                &lt;complexType name="StatusRequestType">
+                                    &lt;sequence>
+                                        &lt;element name="process-id" type="string"/>
+                                    &lt;/sequence>
+                                &lt;/complexType>
+                                &lt;element name="StatusResponse" type="op:StatusResponseType"/>
+                                &lt;complexType name="StatusResponseType">
+                                    &lt;sequence>
+                                        &lt;element name="process-id" type="string"/>
+                                        &lt;element name="status" type="string"/>
+                                    &lt;/sequence>                                    
+                                &lt;/complexType>
+                                <!-- [snip] -->
+                            &lt;/schema>
+                        &lt;/types>
+                    </pre>
+                </div>     
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>Messages Definitions</h1>
+                    </hgroup>
+                    <ul class="x-small">
+                        <li>Definitions of messages</li>
+                        <ul>
+                            <li>Messages flow between a client and a service</li>
+                            <li>They can be request, response or fault</li>
+                            <li>Each message has one or more "parts"</li>
+                            <li>A message part references a single element defined in <code>types</code></li>
+                        </ul> 
+                        <li>Example messages definitions for order process</li>
+                        <ul>
+                            <li>A name can be arbitrary name but a commonly agreed convention is:</li>
+                            <li class="no-bullet"><code>{ServiceName}{Request|Response|Fault}Message</code></li>
+                            <pre class="brush: 'xml'; class-name: 'x-small'">
+                                &lt;message name="OrderProcessRequestMessage">
+                                    &lt;part name="order" element="op:OrderProcessRequest"/>
+                                &lt;/message>
+                                &lt;message name="OrderStatusResponseMessage">
+                                    &lt;part name="status" element="op:StatusResponse"/>
+                                &lt;message>
+                                &lt;message name="OrderProcessFaultMessage">
+                                    &lt;part name="text" element="op:FaultMessage"/>
+                                &lt;message>
+                                &lt;message name="OrderProcessResponseMessage">
+                                    &lt;part name="result" element="op:OrderProcessResult"/>
+                                &lt;message>                        
+                            </pre>
+                        </ul>
+                    </ul>
+
+                </div>  
+            </section>
+            
+            <div class="slide outline"></div>
+
+            <section>
+                <header>Interface and Operations</header>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>Defining Interface</h1>
+                    </hgroup>
+                    <ul class="x-small">
+                        <li>Interface</li>
+                        <ul>
+                            <li>abstract description of a service</li>
+                            <li>separation of</li>
+                            <ul>
+                                <li>abstract functionality (interface definition)</li>
+                                <li>and concrete details on how and where the functionality is offered</li>
+                            </ul>
+                        </ul>
+                        <li>WSDL Interface</li>
+                        <ul>
+                            <li>A set of operations implemented by a service or a client</li>
+                            <ul>
+                                <li>The client may implement the interface for asynchronous callbacks</li>
+                            </ul>
+                        </ul>
+                        <li>Each operation specifies</li>
+                        <ul>
+                            <li>references to messages (input, output, fault)</li>
+                            <li>Exchange pattern</li>
+                            <ul>
+                                <li><b>Request-response</b> &ndash; the most commonly used pattern</li>
+                                <li><b>One-way</b> (also called fire-and-fortget) &ndash; only request from the client</li>
+                                <li><b>Solicit-response</b> &ndash; response-request</li>
+                                <li><b>Notification</b> &ndash; response-only, used in asynchronous callbacks</li>
+                            </ul>
+                        </ul>
+                    </ul>
+                </div>  
+            
+                <div class="slide">
+                    <hgroup>
+                        <h1>Interface Example (1)</h1>
+                    </hgroup>
+                    <ul class="x-small">
+                        <li>Order process complex conversation</li>
+                        <ol>
+                            <li>The client invokes <code>processOrder</code>.</li>
+                            <li>The service responses back <b>synchronously</b> with order status.</li>
+                            <li>The client gets the status of order processing by invoking synchronous <code>getStatus</code> operation (this can be invoked serveral times).</li>
+                            <li>The service responses back <b>asynchronously</b> by invoking <code>processOrderResponse</code> &ndash; callback on client's interface</li> 
+                        </ol>
+                        <li>Interface implemented by the order process service</li>
+                        <ul>
+                            <li><code>getStatus</code> operation must be executed in the same <b>conversation</b> as 
+                                <code>processOrder</code> operation</li>
+                        </ul>
+                        <pre class="brush: xml; class-name: 'x-small'">
+                            &lt;portType name="OrderProcess">
+                                &lt;operation name="processOrder">
+                                    &lt;input message="op:OrderProcessRequestMessage"/>
+                                    &lt;output message="op:OrderStatusResponseMessage"/>
+                                &lt;/operation>
+                                &lt;operation name="getStatus">
+                                    &lt;input message="op:OrderStatusRequestMessage"/>
+                                    &lt;output message="op:OrderStatusResponseMessage"/>
+                                &lt;operation>
+                            &lt;portType>
+                        </pre>
+                        <li>Interface implemented by the client</li>
+                        <pre class="brush: xml; class-name: 'x-small'">
+                            &lt;portType name="OrderProcessCallback">
+                                &lt;operation name="processOrderResponse">
+                                    &lt;input message="op:OrderProcessResponseMessage"/>
+                                    &lt;fault message="op:OrderProcessFaultMessage"/>
+                                &lt;operation>
+                            &lt;/portType>                            
+                        </pre>
+
+                    </ul>
+                </div>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>Interface Example (2)</h1>
+                    </hgroup>
+                    <ul class="x-small">
+                        <li>Interface implemented by the client</li>
+                        <pre class="brush: xml; class-name: 'x-small'">
+                            &lt;portType name="OrderProcessCallback">
+                                &lt;operation name="processOrderResponse">
+                                    &lt;input message="op:OrderProcessResponseMessage"/>
+                                    &lt;fault message="op:OrderProcessFaultMessage"/>
+                                &lt;operation>
+                            &lt;/portType>                            
+                        </pre>
+
+                    </ul>
+                </div>
+            </section>
+            
+            <div class="slide outline"></div>
+            
+            <section>
+                <header>Binding</header>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>Defining a Binding</h1>
+                    </hgroup>
+                    <ul class="xx-small">
+                        <li>Binding is part of a concrete WSDL</li>
+                        <ul>
+                            <li>A WSDL exposed by a service deployed to application server or ESB</li>
+                            <li>One binding for one interface (<code>portType</code>)</li>
+                        </ul>
+                        <li>"How" messages can be exchanged</li>
+                        <ul>
+                            <li>one interface may have one or more bindings</li>
+                            <ul>
+                                <li>such as one for SOAP over HTTP and one for SOAP over SMTP</li>
+                            </ul>
+                        </ul>
+                        <li>Binding specifies</li>
+                        <ul>
+                            <li>details for every operation and fault in the interface</li>
+                            <ul>
+                                <li>concrete message format and transmission protocol</li>
+                                <li>rules for SOAP headers</li>
+                                <li class="no-bullet">(policies, e.g. ws-addressing for asynchronous communication)</li>
+                            </ul>
+                        </ul>
+                        <li>SOAP binding styles</li>
+                        <ul>
+                            <li>RPC/encoded</li>
+                            <li>RPC/literal</li>
+                            <li>Document/encoded &ndash; nobody uses this one</li>
+                            <li>Document/literal</li>
+                            <li>Document/literal wrapped</li>
+                        </ul>
+                    </ul>
+                </div>
+                
+                <div class="slide">
+                    <hgroup>
+                        <h1>Binding Example &ndash; HTTP Transport</h1>
+                    </hgroup>
+                    <ul class="x-small">
+                        <li>Binding to SOAP over HTTP</li>
+                        <ul>
+                            <pre class="brush: xml; class-name: 'x-small'">
+                                &lt;binding name="OrderProcessBinding" type="op:OrderProcess">
+                                    &lt;soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+                                    &lt;PolicyReference xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" 
+                                        URI="#wsaddr_policy" wsdl:required="false"/>
+                                    &lt;operation name="processOrder">
+                                        &lt;soap:operation style="document" soapAction="processOrder"/>
+                                        &lt;input>
+                                            &lt;soap:body use="literal"/>
+                                        &lt;/input>
+                                        &lt;output>
+                                            &lt;soap:body use="literal"/>
+                                        &lt;/output>
+                                    &lt;/operation>
+                                    <!-- snip -->
+                                &lt;/binding>
+                            </pre>
+                            <li>HTTP transport defined by</li>
+                            <ul>
+                                <li>URI <code>http://schemas.xmlsoap.org/soap/http</code> of <code>transport</code> attribute on <code>binding</code> element (line 2)</li>
+                            </ul>
+                            <li>A style <code>document/literal</code> defined by:</li>
+                            <ul>
+                                <li><code>style</code> attribute of <code>soap:operation</code> (line 6)</li>
+                                <li><code>use</code> attribute of <code>soap:body</code> (lines 8,11)</li>
+                            </ul>                            
+                        </ul>
+                    </ul>
+                </div>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>SOAP Binding &ndash; RPC/encoded</h1>
+                    </hgroup>
+                    <ul class="x-small">
+                        <li>WSDL</li>
+                        <ul>
+                            <pre class="brush: xml; class-name: 'x-small tight'; highlight: [2,6]">
+                            &lt;message name="OrderStatusRequestMessage">
+                                &lt;part name="process-id" type="xsd:string"/>
+                            &lt;/message>
+
+                            &lt;portType name="OrderProcess">
+                                &lt;operation name="getStatus">
+                                    &lt;input message="OrderStatusRequestMessage"/>
+                                    &lt;output message="..."/>
+                                &lt;/operation>
+                            &lt;/portType>                                
+                            </pre>
+                        </ul>
+                        <li>SOAP Request</li>
+                        <ul>
+                        <pre class="brush: xml; class-name: 'x-small tight'; highlight: [3,4,5]">    
+                        &lt;soap:envelope>
+                            &lt;soap:body>
+                                &lt;getStatus>
+                                    &lt;process-id xsi:type="xsd:string">5&lt;/process-id>
+                                &lt;/getStatus>
+                            &lt;/soap:body>
+                        &lt;/soap:envelope>       
+                        </pre>                     
+                        </ul>
+                    </ul>
+                </div>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>SOAP Binding &ndash; RPC/literal</h1>
+                    </hgroup>
+                    <ul class="x-small">
+                        <li>WSDL</li>
+                        <ul>
+                            <pre class="brush: xml; class-name: 'x-small tight'">
+                            &lt;message name="OrderStatusRequestMessage">
+                                &lt;part name="process-id" type="xsd:string"/>
+                            &lt;/message>
+
+                            &lt;portType name="OrderProcess">
+                                &lt;operation name="getStatus">
+                                    &lt;input message="OrderStatusRequestMessage"/>
+                                    &lt;output message="..."/>
+                                &lt;/operation>
+                            &lt;/portType>                                
+                            </pre>
+                        </ul>
+                        <li>SOAP Request</li>
+                        <ul>
+                        <pre class="brush: xml; class-name: 'x-small tight'; highlight: [4]">    
+                        &lt;soap:envelope>
+                            &lt;soap:body>
+                                &lt;getStatus>
+                                    &lt;process-id>5&lt;/process-id>
+                                &lt;/getStatus>
+                            &lt;/soap:body>
+                        &lt;/soap:envelope>       
+                        </pre>                     
+                        </ul>
+                    </ul>
+                </div>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>SOAP Binding &ndash; Document/literal</h1>
+                    </hgroup>
+                    <ul class="x-small">
+                        <li>WSDL</li>
+                        <ul>
+                            <pre class="brush: xml; class-name: 'x-small tight'; highlight: [3, 8]">
+                            &lt;types>
+                                &lt;schema>
+                                    &lt;element name="process-id" type="xsd:string"/>
+                                &lt;/schema>
+                            &lt;/types>
+
+                            &lt;message name="OrderStatusRequestMessage">
+                                &lt;part name="payload" element="process-id"/>
+                            &lt;/message>
+
+                            &lt;portType name="OrderProcess">
+                                &lt;operation name="getStatus">
+                                    &lt;input message="OrderStatusRequestMessage"/>
+                                    &lt;output message="..."/>
+                                &lt;/operation>
+                            &lt;/portType>
+                            </pre>
+                        </ul>
+                        <li>SOAP Request</li>
+                        <ul>
+                        <pre class="brush: xml; class-name: 'x-small tight'">   
+                        &lt;soap:envelope>
+                            &lt;soap:body>
+                                &lt;process-id>5&lt;/process-id>
+                            &lt;/soap:body>
+                        &lt;/soap:envelope>                         
+                        </pre>                     
+                        </ul>
+                    </ul>
+                </div>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>SOAP Binding &ndash; Document/literal wrapped</h1>
+                    </hgroup>
+                    <ul class="xx-small">
+                        <li>WSDL</li>
+                        <ul>
+                            <pre class="brush: xml; class-name: 'x-small tight'; highlight: [3,4,11]">
+                            &lt;types>
+                                &lt;schema>
+                                    &lt;element name="StatusRequest" type="StatusRequestType">
+                                    &lt;complexType name="StatusRequestType">
+                                        &lt;element name="process-id" type="xsd:string"/>
+                                    &lt;/complexType>
+                                &lt;/schema>
+                            &lt;/types>
+
+                            &lt;message name="OrderStatusRequestMessage">
+                                &lt;part name="payload" element="StatusRequest"/>
+                            &lt;/message>
+
+                            &lt;portType name="OrderProcess">
+                                &lt;operation name="getStatus">
+                                    &lt;input message="OrderStatusRequestMessage"/>
+                                    &lt;output message="..."/>
+                                &lt;/operation>
+                            &lt;/portType>
+                            </pre>
+                        </ul>
+                        <li>SOAP Request</li>
+                        <ul>
+                        <pre class="brush: xml; class-name: 'x-small tight'; highlight: [3]">   
+                        &lt;soap:envelope>
+                            &lt;soap:body>
+                                &lt;StatusRequest>
+                                    &lt;process-id>5&lt;/process-id>
+                                &lt;/StatusRequest>
+                            &lt;/soap:body>
+                        &lt;/soap:envelope>                         
+                        </pre>                     
+                        </ul>
+                    </ul>
+                </div>
+            </section>
+
+            <div class="slide outline"></div>
+            
+            <section>
+                <header>Service and Endpoint</header>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>Service</h1>
+                    </hgroup>
+                    <ul class="small">
+                        <li>"Where" the service can be accessed</li>
+                        <li>Service element specifies</li>
+                        <ul>
+                            <li>always one interface</li>
+                            <li>list of endpoint locations to access the service</li>
+                            <ul>
+                                <li>each endpoint references a binding</li>
+                                <li>protocols and transmission formats it supports</li>
+                            </ul>
+                        </ul>
+                        <li>Multiple endpoints</li>
+                        <ul>
+                            <li>different protocols for the same service</li>
+                            <li>different security requirements, for example</li>
+                            <ul>
+                                <li>SOAP over HTTPS endpoint</li>
+                                <li>SOAP over HTTP endpoint</li>
+                            </ul>
+                        </ul>
+                    </ul>
+                </div>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>Service Element and SOAP Message</h1>
+                    </hgroup>
+                    <ul class="xx-small">
+                        <li>Service element definition</li>
+                        <pre class="brush: xml; class-name: 'tight'">
+                            &lt;service name="orderprocess_client_ep">
+                                &lt;port name="OrderProcess_pt" binding="op:OrderProcessBinding">
+                                    &lt;soap:address location="http://mimdw.fit.cvut.cz/soa-infra/services/mdw-examples/ProcessOrder/orderprocess_client_ep"/>
+                                &lt;/port>
+                            &lt;/service>                            
+                        </pre>
+                        
+                        <li>Corresponding HTTP request SOAP message example</li>
+                        <pre class="brush: xml; class-name: 'tight'">
+                        > POST /soa-infra/services/mdw-examples/ProcessOrder/orderprocess_client_ep HTTP/1.1
+                        > User-Agent: curl/7.30.0
+                        > Host: midmdw.fit.cvut.cz
+                        > Accept: */*
+                        > Accept-Encoding: gzip,deflate
+                        > Content-Type: text/xml;charset=UTF-8
+                        > SOAPAction: "getStatus"
+                        > Content-Length: 810
+
+                        &lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+                            &lt;soap:Header>
+                            <!-- snip -->
+                            &lt;/soap:Header>
+                            &lt;soap:Body>
+                                &lt;ns1:StatusRequest 
+                                    xmlns:ns1="http://mimdw.fit.cvut.cz/mdw_examples/ProcessOrder/OrderProcess">
+                                    &ltns1:process-id>5&lt;/ns1:process-id>
+                                &lt;/ns1:StatusRequest>
+                            &lt;/soap:Body>
+                        &lt;/soap:Envelope>                                                 
+                        </pre>
+                    </ul>
+                </div>
+                
+            </section>          
+            
+            <div class="slide outline"></div>
+
+            <section>
+                <header>Description</header>
+                
+                <div class="slide">
+                    <hgroup>
+                        <h1>Description</h1>
+                    </hgroup>
+                    <ul class="xx-small">
+                        <li>WSDL does not cover all service descriptions</li>
+                        <ul>
+                            <li>functionality only as a set of operations</li>
+                            <li>no order of operations (e.g., a state diagram)</li>
+                        </ul>
+                        <li>Solution</li>
+                        <ul>
+                            <li>Semantic Annotations for WSDL and XML Schema (SAWSDL)</li>
+                            <ul>
+                                <li>defines links to rich semantic models</li>
+                                <li>can be attached to any WSDL component</li>
+                            </ul>
+                            <li>Textual description in WSDL documentation element</li>
+                            <pre class="brush: xml">
+                                &lt;?xml version="1.0" encoding="utf-8" ?&gt; 
+                                &lt;definitions&gt;
+                                  ...
+                                  &lt;documentation&gt;
+                                        This document describes an order service. Additional 
+                                        application-level requirements for use of this service -- 
+                                        beyond what WSDL is able to describe -- are available 
+                                        at http://company.com/doc/order-documentation.html
+                                  &lt;/documentation&gt;
+                                  ...  
+                                &lt;/definitions&gt;                            
+                            </pre>
+                            <li>Additional WS-* specifications, for example</li>
+                            <ul>
+                                <li>WS-Addressing, WS-Reliability, WS-CDL, etc.</li>
+                            </ul>
+                        </ul>
+                    </ul>
+                </div>          
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>SAWSDL</h1>
+                    </hgroup>
+                    <img src="img/sawsdl.png" style="margin-top: 20px; margin-left: 100px; height: 380px"></img>
+                    <ul class="xx-small">
+                        <li>SAWSDL extension attributes</li>
+                        <ul>
+                            <li><code>modelReference</code>, <code>schemaMappingLowering</code>, 
+                            <code>schemaMappingLifting</code></li>
+                            <li><span class="h-ref" id="sawsdl">SAWSDL W3C Recommendation, 2007</span></li> 
+                        </ul>
+                    </ul>
+                </div>  
+                
+                <div class="slide">
+                    <hgroup>
+                        <h1>Example Interface Annotation</h1>
+                    </hgroup>
+                    <ul class="x-small">
+                        <li>Service classification at <code>http://example.org/classification</code></li>
+                        <pre class="brush: xml; class-name: 'tight'">
+                        &lt;?xml version="1.0" encoding="utf-8"?>
+                        &lt;root xmlns="http://example.org/service-classification-schema">
+                            &lt;order>
+                                &lt;book>
+                                    &lt;adventure/>
+                                    &lt;travel/>
+                                &lt;/book>
+                                &lt;electronics>
+                                    &lt;TV/>
+                                    &lt;computer/>
+                                &lt;/electronics>
+                            &lt;/order>                                
+                            &lt;shipment>&lt;!-- shipment services -->&lt;/shipment>
+                        &lt;/root>                        
+                        </pre>
+                        <li>Example annotation</li>
+                        <ul>
+                            <li>prefix <code>wsdl</code> is <code>http://www.w3.org/ns/wsdl</code></li>
+                            <li>prefix <code>sawsdl</code> is <code>http://www.w3.org/ns/sawsdl</code></li>                            
+                        </ul>
+                        <pre class="brush: xml; class-name: 'xx-small tight'">
+                            &lt;portType name="ProcessOrder"
+                                sawsdl:modelReference="http://example.org/classification/root/order/electronics"/>
+                                ...
+                            &lt;/portType> 
+                        </pre>
+                    </ul>
+                </div>
+                
+            </section>
+        </section>
+        
+        <div class="slide outline"></div>
+        
+        <section>
+            <header>WS-Addressing</header>
+            
+            <div class="slide">
+                <hgroup>
+                    <h1>Overview</h1>
+                </hgroup>
+                <ul class="x-small">
+                    <li>WS-Addressing</li>
+                    <ul>
+                        <li><span class="h-ref" id="ws-addr">W3C Recommendation, May 2006</span></li>
+                        <li>A transport-independent mechanisms for web services 
+                            to communicate addressing information</li>
+                        <li>WSDL describes WS-Addressing as a policy attached to a WSDL binding</li>
+                        <pre class="brush: xml; highlight: [3,4]">
+                            &lt;binding name="OrderProcessBinding" type="op:OrderProcess">
+                                &lt;soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+                                &lt;PolicyReference xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"
+                                    URI="#wsaddr_policy" wsdl:required="false"/>
+                        </pre>
+                    </ul>
+                    <li>Two main purposes</li>
+                    <ol>
+                        <li>Asynchronous communication</li>
+                        <ul>
+                            <li>Client sends an endpoint where the server should send a response asynchronously</li>
+                        </ul>
+                        <li>Relating interactions to a conversation</li>
+                        <ul>
+                            <li>Client and service communicate conversation ID</li>
+                        </ul>
+                    </ul>
+                </ul>
+            </div>
+
+            <div class="slide">
+                <hgroup>
+                    <h1>Order Processing Example</h1>
+                </hgroup>
+                <ul class="x-small">
+                    <li>Asynchronous communication via callback</a>, steps:</li>
+                    <ul>
+                        <li>Client submits an order request</li>
+                        <li>Service processes the order (CRM, OMS, back-office)</li>
+                        <li>Service responds asynchronously with an order response message</li>
+                    </ul>
+                </ul>
+                <div class="h-drawing" id="1nPmejyynnsGNYC_dxe5poTKfiFJiqLgt7nPHD_GEJcc" style="height: 350px"></div>
+            </div>
+
+            <div class="slide">
+                <hgroup>
+                    <h1>ProcessOrder Request Message</h1>
+                </hgroup>
+                <ul class="xx-small">
+                <li>Client sends process order request &ndash; <code>processOrder</code></li>
+                <ul>
+                    <li>it sends addressing information where the client listens for the callback</li>
+                    <li>it sends conversation ID (message ID) to start the conversation on the server</li>
+                    <pre class="brush: xml; highlight: [9,10,11,12,13]; class-name: 'tight'">
+                    > POST /soa-infra/services/mdw-examples/ProcessOrder/orderprocess_client_ep HTTP/1.1
+                    > Host: mimdw.fit.cvut.cz
+                    > Content-Type: text/xml;charset=UTF-8
+                    > SOAPAction: "processOrder"
+                    > Content-Length: 810
+
+                    &lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" 
+                        xmlns:ord="http://mimdw.fit.cvut.cz/mdw-examples/cdm/order">
+                         &lt;soap:Header xmlns:wsa='http://www.w3.org/2005/08/addressing'>
+                            &ltwsa:ReplyTo>
+                                &lt;wsa:Address>http://192.168.94.110:2233/path/to/service&lt;/wsa:Address>
+                            &lt;/wsa:ReplyTo>
+                            &lt;wsa:MessageID>urn:AXYYBA00531111E3BFACA780A7E5AF64&lt;/wsa:MessageID>
+                         &lt;/soap:Header>
+                         &lt;soap:Body>
+                            &lt;ord:Order>
+                                &lt;ord:CustomerId>1&lt;/ord:CustomerId>
+                                &lt;ord:LineItems>
+                                    &lt;ord:item>
+                                        &lt;ord:label>Apple MacBook Pro&lt;/ord:label>
+                                        &lt;ord:action>ADD&lt;/ord:action>
+                                    &lt;/ord:item>
+                                &lt;/ord:LineItems>
+                            &lt;/ord:Order>
+                        &lt;/soap:Body>
+                    &lt;/soap:Envelope>
+                    </pre>
+                </ul>
+            </div>
+
+            <div class="slide">
+                <hgroup>
+                    <h1>GetStatus Request Message</h1>
+                </hgroup>
+                <ul class="xx-small">
+                <li>Client sends get status request &ndash; <code>getStatus</code></li>
+                <ul>
+                    <li>after it invokes <code>processOrder</code> with conversation ID (message ID)</li>
+                    <li>it uses the same conversation ID for get status request too</li>
+                    <ul>
+                        <li>the request will be procesessed by the running service instance</li>
+                    </ul>
+                    <pre class="brush: xml; highlight: [9]">
+                    > POST /soa-infra/services/mdw-examples/ProcessOrder/orderprocess_client_ep HTTP/1.1
+                    > Host: mimdw.fit.cvut.cz
+                    > Content-Type: text/xml;charset=UTF-8
+                    > SOAPAction: "getStatus"
+                    > Content-Length: 472      
+
+                    &lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+                        &lt;soap:Header xmlns:wsa="http://www.w3.org/2005/08/addressing">
+                            &lt;wsa:RelatesTo>urn:AXYYBA00531111E3BFACA780A7E5AF64&lt;/wsa:RelatesTo>
+                        &lt;/soap:Header>
+                        &lt;soap:Body>
+                            &lt;ns1:StatusRequest 
+                                xmlns:ns1="http://mimdw.fit.cvut.cz/mdw_examples/ProcessOrder/OrderProcess">
+                                &lt;ns1:process-id>18a9baec2d5ac0a2:64d155de:1425c4185f1:-7ff2&lt;/ns1:process-id>
+                            &lt;/ns1:StatusRequest>
+                        &lt;/soap:Body>
+                    &lt;/soap:Envelope>                    
+                    </pre>
+                </ul>
+            </div>
+
+            
+        </section>
+
+    </body>
