@@ -201,9 +201,6 @@
         <div class="slide outline">
         </div>
 
-        <div class="slide outline">
-        </div>
-
         <section>
             <header>Data, Functions and Processes</header>
             
@@ -219,34 +216,21 @@
                     <h1>Order Process Example in Telco</h1>
                 </hgroup>
                 <ul  class="small">
-                    <li>Order to Cache Process (O2C)</li>
+                    <li>Order to Cash Process (O2C)</li>
                     <ul>
-                        <li>covers order capture and decomposition</li>
+                        <li>end-to-end (E2E) order process</li>
                     </ul>
                     <div class="h-drawing" style="height: 100px; width: 700px" 
                         id="1yX-8bZn0P2UwA06KeVJOgk4jaZ0EuMkWaIUa-RdMEno"></div>
                     <li style="margin-top: 15px;">Involved applications</li>
                     <ul>
-                        <li>interconnected applications</li>
+                        <li>integrated applications</li>
                     </ul>
                     <div class="h-drawing" style="height: 200px; width: 700px" 
                         id="1JRgVTqa43jbpGM6PYgGQQFk3mBFHqwWu_SGZHbd0fsY"></div>
                 </ul>
             </div>                                  
             
-            <div class="slide">
-                <hgroup>
-                    <h1>Overview of Representations</h1>
-                </hgroup>                
-                <ul>
-                    <li>Languages to realize architectures</li>
-                    <ul>
-                        <li>development levels &#215; architectural views</li>
-                    </ul>
-                </ul>
-                <div class="h-drawing" style="height: 380px" id="1cyaFfMg6nhpS6ZpVkjwca_FaAN-Ff0vgy_Ji6EOuSW8"></div>
-            </div>            
-
             <div class="slide">
                 <hgroup>
                     <h1>Syntax and Domain Semantics</h1>
@@ -267,139 +251,36 @@
                             <li>Through syntax by using the natural language</li>
                             <li>Through some <b>agreement</b> among users of the terms</li>
                         </ul>
-                        <li class="space-before">We use this understanding to implement the meaning in code</li>
-                        <li>We expect users will understand the meaning the same</li>
+                        <li>Every applications can use different semantics</li>
+                        <ul>
+                            <li>Need to mediate data from one application to another</li>
+                        </ul>
                     </ul>
                 </ul>                    
             </div>
-            
+
             <div class="slide">
                 <hgroup>
-                    <h1>Example Data Syntax and Semantics</h1>
-                </hgroup>                
-                <ul class="x-small">
-                    <li>Requirement (conceptual level)</li>
-                    <pre class="brush: plain">
-                        Tomas Vitvar works at Oracle as an Architect.
-                    </pre>
-                    <li>Syntax and semantics (physical Level)</li>
-                    <ul>
-                        <li>XML representation:</li>
-                        <div class="columns-2" style="margin-left: -20px; width: 90%">
-                            <pre class="brush: xml; first-line: 1">
-                                &lt;person>
-                                    &lt;name>Tomas Vitvar&lt;/name>
-                                    &lt;company>Oracle&lt;/company>
-                                    &lt;role>Architect&lt;/role>
-                                &lt;/person>
-                            </pre>
-                            <pre class="brush: xml; first-line: 6">
-                                &lt;staff>
-                                    &lt;name>Tomas Vitvar&lt;/name>
-                                    &lt;works-at>Oracle&lt;/works-at>
-                                    &lt;title>Architect&lt;/title>
-                                &lt;/staff>
-                            </pre>
-                        </div>
-                        <li>JSON representation:</li>
-                        <div class="columns-2" style="margin-left: -20px; width: 90%">
-                            <pre class="brush: js; first-line: 11">
-                                { "person" : {
-                                    "name" : "Tomas Vitvar",
-                                    "company" : "Oracle",
-                                    "role" : "Architect" } }
-                            </pre>
-                            <pre class="brush: js; first-line: 15">
-                                { "staff" : {
-                                    "name" : "Tomas Vitvar",
-                                    "works-at" : "Oracle",
-                                    "title" : "Architect" } }
-                            </pre>
-                        </div>
-                        <li>Problems with meaning of terms <code>name</code>, <code>company</code>, <code>title</code></li>
-                        <li>Problems with meaning of relations: Is Oracle a company that Tomas works or likes? (cf. lines 2,3)
-                    </ul>
-                </ul>
+                    <h1>Simplified Order Type Example</h1>
+                </hgroup>
+                <div class="h-drawing" style="height: 450px; margin-top: 10px" 
+                id="1o2nyoAPa9s78sXjWuRUNXYoh5uulvGiE7yrHpfsgrTw"></div>
             </div>
 
             <div class="slide">
                 <hgroup>
-                    <h1>Example Functions Syntax and Semantics</h1>
+                    <h1>Overview of Representations</h1>
                 </hgroup>                
-                <ul class="x-small">
-                    <li>Requirement (conceptual level)</li>
-                    <pre class="brush: plain">
-                        Users provide data for new orders in the system.
-                    </pre>
-                    <li>Syntax and semantics (physical Level)</li>
+                <ul>
+                    <li>Languages to realize architectures</li>
                     <ul>
-                        <li>Java representation:</li>
-                        <div class="columns-2" style="margin-left: -20px; width: 90%">
-                            <pre class="brush: java; first-line: 1">
-                                class Order {
-                                    public addOrder(data) {
-                                        // add order logic
-                                    }
-                                }
-                            </pre>
-                            <pre class="brush: java; first-line: 6">
-                                class Order {
-                                    public createOrder(data) {
-                                        // create order logic
-                                    }
-                                }
-                            </pre>
-                        </div>
-                        <li>HTTP/URI representation:</li>
-                        <div class="columns-2" style="margin-left: -20px; width: 90%">
-                            <pre class="brush: plain; first-line: 11">
-                                GET /orders/?action=add
-                                HTTP Headers*
-                                
-                                Data...
-                            </pre>
-                            <pre class="brush: plain; first-line: 15">
-                                POST /orders/
-                                HTTP Headers*
-                                
-                                Data...
-                            </pre>
-                        </div>
-                        <li>Problems with meaning of function terms <code>add</code>, <code>create</code> (cf. lines 2,7)</li>
-                        <li>Problems with domain semantics for function names: query string <code>action=add</code> vs. 
-                            HTTP method <code>POST</code> (cf. lines 11,15)</li>
+                        <li>development levels &#215; architectural views</li>
                     </ul>
                 </ul>
-            </div>
+                <div class="h-drawing" style="height: 380px" id="1cyaFfMg6nhpS6ZpVkjwca_FaAN-Ff0vgy_Ji6EOuSW8"></div>
+            </div>            
 
-            <div class="slide">
-                <hgroup>
-                    <h1>Example Process</h1>
-                </hgroup>                
-                <ul class="x-small">
-                    <li>Requirement (conceptual level)</li>
-                    <pre class="brush: plain; class-name: 'tight'">
-                        When a customer is eligible for a discount, a sales person must approve it. 
-                    </pre>
-                    <li>Syntax and semantics (physical Level)</li>
-                    <ul>
-                        <li>Java representation:</li>
-                        <div style="margin-left: -20px; width: 90%">
-                            <pre class="brush: java; first-line: 1; class-name: 'tight'">
-                                    // implementation of addOrder method
-                                    public createOrder(data) {
-                                        if (data.customer.revenue > 10000)
-                                            if (Sales.approveDiscount(data))
-                                                // offer a discount to the customer
-                                        }
-                                        //...further order processing
-                                    }
-                            </pre>
-                        </div>
-                        <li>BPMN representation:</li>
-                        <div id="1sGsBROkCtdhOkhYTiyNIIHj7YUsxl6qXL9dhJytbD8Q" class="h-drawing" style="width:350px"></div> 
-                    </ul>
-                </ul>
+            <div class="slide outline">
             </div>
 
             <section>
@@ -431,10 +312,18 @@
                     
                 <div class="slide">
                     <hgroup>
-                        <h1>Integration Example</h1>
+                        <h1>Integration Example &ndash; O2C</h1>
                     </hgroup>
-                    <div class="h-drawing" style="height: 400px; margin-top: 40px" 
-                    id="1r38Dt-AHQIthHdf4TjYlRw1LxpuSwfK-ZULz9C_eX1M"></div>
+                    <div class="h-drawing" style="height: 350px; margin-top: 60px" 
+                    id="1kSE87erCPlL8_3bKu9a7ufeIH71fU1RROcfB6b2yxA4"></div>
+                </div>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>Example Oracle O2C Technical Flows</h1>
+                    </hgroup>
+                    <div class="h-drawing" style="height: 490px; margin-top: 10px" 
+                    id="1zgNezT0FKt69C2Ngqjeuwp1LNv_vKeDeKInxnULN6z8"></div>
                 </div>
                 
                 <div class="slide">
