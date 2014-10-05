@@ -274,7 +274,7 @@
                             <li>A client performs multiple request-response interactions</li>
                             <ul>
                                 <li>The first interaction initiates a process on the server</li>
-                                <li>Subsequent interaction check for the processing status</li>
+                                <li>Subsequent interactions check for the processing status</li>
                                 <li>The last interaction retrieves the processing result</li>
                             </ul>
                         </ul>
@@ -944,7 +944,6 @@
                             curl -v 127.0.0.1:8080
                             > GET / HTTP/1.1
                             > Host: 127.0.0.1:8080
-                            > Cookie: session-id=3a9c3cdc5ff36434aa1ba860727ca401
                             > 
                             &lt; HTTP/1.1 200 OK
                             &lt; Set-Cookie: session-id=3a9c3cdc5ff36434aa1ba860727ca401;max-age=3600
@@ -965,35 +964,6 @@
                     </ul>
     			</div>
 
-            </section>
-
-            <div class="slide outline"></div>
-
-            <section>
-                <header>Persistent Communication and Pipelining</header>
-                
-        		<div class="slide">
-    				<hgroup>
-    					<h1>Non-Persistent, Persistent, Pipelining</h1>
-    				</hgroup>
-    				<div class="h-drawing" style="height: 250px; margin-bottom: 30px" 
-    					id="1YgCc7gq-k3j4oWy8am9wiEg4ge0UPUk4moO6NV5W-gU"></div>
-    				<ul class="x-small">
-                        <li>HTTP 1.1 improvements over version 1.0</li>
-                        <ul>
-        					<li>non-persistent &#150; one socket for one request&ndash;response (v1.0)</li>
-        					<li><b>persistent</b> &ndash; one socket for multiple interactions</li>
-                            <ul>
-        					    <li>reduces latency (no repeating handshaking)</li>
-                            </ul>
-        					<li><b>pipelining</b> &ndash; multiple requests, no wait for responses</li>
-                            <ul>
-        					    <li>the server must preserve the order of messages when sending responses.</li>
-                            </ul>
-    				    </ul>
-                    </ul>
-    			</div>                                    
-                
             </section>
 
         </section>
