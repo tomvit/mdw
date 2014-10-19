@@ -7,6 +7,8 @@ import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.vitvar.ctu.mdw.commons.Utils;
+
 /** Class for the session management that uses HTTP cookies **/
 public class Sessions<E> {
 	

@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<!--
+    Middleware and Web Services, CTU course slides
+    (cc) 2010-2012 Tomas Vitvar, http://vitvar.com
+    written for Humla, an open source HTML5 presentation environment
+-->
+<html>  
+    <head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> 
+        <meta name="course"   content="Middleware and Web Services"/>
+		<meta name="lecture"  content="Lecture 5"/>
+   		<meta name="keywords" content="Web Server, Application Server, JEE"/>
+           
+        <link type="text/css" rel="stylesheet" href="css/meta.css"></link>   
+        <link type="text/css" rel="stylesheet" href="css/ctu-fit.css"></link>   
+        <link type="text/css" rel="stylesheet" href="humla/lib/core/humla.css"></link>   
+
+        <script type="text/javascript" src="humla/lib/humla.js"></script>
+        <title>Application Server III.</title>
+	</head>
+	
+	<body>
+		<footer>
+			<p><b>#META_LECTURE#: #TITLE#</b>,&nbsp;<span class="meta_semester"/>,&nbsp;
+			<span class="meta_twitter"/></p>
+			<p><b>&#8210; #SLIDE_NO# &#8210;</b></p>
+		</footer>
+
+    	<div class="slide intro">
+			<hgroup>
+				<h1><span class="meta_course"/></h1>
+ 				<h2>#META_LECTURE#: #TITLE#</h2>
+			</hgroup>
+			<div class="author">
+				<p class="meta_author"/>
+				<p><span class="meta_email"/> &bull; <span class="meta_twitter"/> &bull; 
+				<span class="meta_web"/></p>
+			</div>
+			<center><div class="meta_logo"></div></center>
+			<div class="org">
+				<p class="meta_org"/>
+				<p><span class="meta_orgfac"/> &bull; <span class="meta_field"/> 
+				&bull; <span class="meta_orgweb"/></p>
+			</div>
+			<div class="etc">
+        		<div class="text-info">
+    				Modified: #LAST_MODIFIED#<br/>
+					Humla v#HUMLA_VERSION#
+				</div>
+				<a href="http://creativecommons.org/licenses/by-sa/3.0/"><div class="license"></div></a>
+				<div class="oppa"></div>
+			</div>
+		</div>
+		
+        <div class="slide outline"></div>
+
+        <section>
+            <header>Messaging Systems</header>
+
+            <div class="slide">
+                <hgroup>
+                    <h1>Recall: Asynchronous via Intermediary</h1>
+                </hgroup>   
+                <div class="h-drawing" style="height: 220px" 
+                    id="1mh4fk7kNmLyqVT1Cks4rRFRpGjFcU1yStOYQw2uiew8"></div>                                
+                <ul class="x-small">
+                    <li>Intermediary</li>
+                    <ul>
+                        <li>A component that decouples a client-server communication</li>
+                        <li>It increases reliability and performance</li>
+                        <ul>
+                            <li>The server may not be available when a client sends a request</li>
+                            <li>There can be multiple servers that can handle the request</li>
+                        </ul>
+                    </ul>
+                </ul>
+            </div>   
+
+            <div class="slide">
+                <hgroup>
+                    <h1>Messaging Systems</h1>
+                </hgroup>
+                <ul class="small">
+                    <li>Messaging Systems</li>
+                    <ul>
+                        <li>Also "Messaging Middleware" or "Message-Oriented Middleware" (MOM)</li>
+                        <li>Two roles: a message consumer and a message producer</li>
+                        <li>Asynchronous communication</li>
+                        <li>"anonymity" between producers and consumers</li>
+                        <ul>
+                            <li>no matter "who", "where", "when" produced a message</li>
+                        </ul>
+                        <li>Ensures reliability and scalability</li>
+                    </ul>
+                    <li>Loose coupling of applications</li>
+                    <ul>
+                        <li>A producer does not need to know about a consumer</li>
+                        <ul>
+                            <li>Messaging systems decouple a producer and a consumer</li>
+                        </ul>
+                    </ul>
+                    <li>Two types (Messaging Domains)</li>
+                    <ul>
+                        <li>Point-to-Point (message queue &mdash; MQ)</li>
+                        <li>Publish/Subscribe (event-based)</li>
+                    </ul>
+                </ul>
+            </div>
+
+            <div class="slide">
+                <hgroup>
+                    <h1>Java Message Service</h1>
+                </hgroup>
+                <ul class="small">
+                    <li>JMS &ndash; Java Message Service</li>
+                    <ul>
+                        <li>Java API for Message-Oriented Middleware</li>
+                        <li>Java programs to create, send, receive and read messages</li>
+                        <li>Standardized in <a class="ext-link ref" title="JSR 914" 
+                        href="https://jcp.org/aboutJava/communityprocess/final/jsr914/index.html">JSR 914</a></li>
+                    </ul>
+                    <li>Terminology</li>
+                    <ul class="x-small">
+                        <li><b>JMS Provider</b> &ndash; implementation of JMS system, part of application server</li>
+                        <li><b>JMS Client</b> &ndash; application that sends or receives JMS messages</li>
+                        <ul>
+                            <li><b>JMS producer/publisher</b> &ndash; creates and sends messages</li>
+                            <li><b>JMS consumer/subscriber</b> &ndash; receives and processes the messages</li>
+                        </ul>
+                        <li><b>JMS Message</b> &ndash; an object with data (payload) and properties</li>
+                        <li><b>JMS Queue</b> &ndash; storage that contains sent messages that are to be received; messages are processed only once</li>
+                        <li><b>JMS Topic</b> &ndash; storage that distributes messages to multiple subscribes</li>
+                    </ul>
+                </ul>
+            </div>
+
+            <div class="slide outline"></div>
+            
+            <section>
+                <header>Point-to-Point</header>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>Conceptual Architecture</h1>
+                    </hgroup>
+                    <div class="h-drawing" style="height: 300px" 
+                        id="14mdNb1lSNLcI5zvnJe28kJpkZ7alzH3OZjL-saFGCO8"></div>
+                    <ul class="x-small">
+                        <ul>
+                            <li>"1 : 1" relationship between a producer and a consumer<br/>
+                            &rarr; <b>one message must be processed by one consumer</b></li>
+                            <li><b>no time-dependency</b> between message producer and consumer<br/>
+                            &rarr; consumer does not need to exist when producer sends a message</li>
+                            <li>Message exists in the queue until it is used by a consumer</li>
+                            <li>message consumers take as many messages as they are able to serve</li>
+                        </ul>
+                    </ul>
+                </div>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>Basic Types of Queues</h1>
+                    </hgroup>
+                    <ul class="small">
+                        <li>Queues in client-server architecture (request-response)</li>
+                        <li>Input Queue</li>
+                        <ul>
+                            <li>a client places a message to the queue</li>
+                            <li>a server reads the message and process it</li>
+                        </ul>
+                        <li>Output Queue</li>
+                        <ul>
+                            <li>a server places output message (response) to the queue</li>
+                            <li>a client reads the message</li>
+                        </ul>
+                        <li>Error Queue</li>
+                        <ul>
+                            <li>a server reads the message from the input queue</li>
+                            <li>when processing of the message fails, the server places the message to the error queue</li>
+                            <li>there can be several attempts to process the message before it is placed to the error queue</li>
+                        </ul>
+                    </ul>
+                </div>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>JMS Queues</h1>
+                    </hgroup>
+                    <ul class="x-small">
+                        <li>JMS Provider implmented by Weblogic</li>
+                        <li>Configuration</li>
+                        <ol>
+                            <li>Create a <b>JMS server</b>, targeted to a managed server</li>
+                            <ul>
+                                <li>In a cluster, every managed server has its own JMS server</li>
+                                <li>JMS server has a persistent store where it stores messages in&nbsp;queues (persistent store can be file-based or JDBC-based)</li>
+                            </ul>
+                            <li>Create a queue, specify a JNDI name for the queue</li>
+                            <ul>
+                                <li>a <b>queue</b> targeted to a single JMS server</li>
+                                <li>a <b>distributed queue</b> targeted to the cluster (all JMS servers)</li>
+                            </ul>  
+                            <li>Create a <b>connection factory</b> (optional), specify a JNDI name for the connection factory</li>
+                            <ul>
+                                <li>A JMS client uses the connection factory to create a connection with the JMS server</li>
+                            </ul>
+                        </ol>
+                        <li>Run a JMS client</li>
+                        <ul>
+                            <li>a JMS producer &ndash; sends a message to the queue</li>
+                            <li>a JMS consumer &ndash; receives a message from the queue</li>
+                        </ul>
+                    </ul>
+                </div>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>JMS Message</h1>
+                    </hgroup>
+                    <ul class="xx-small">
+                        <li>JMS Message Header</li>
+                        <ul>
+                            <li>Priority</li>
+                            <ul>
+                                <li>priority that will be used to consume the message</li>
+                                <li>normal priority &ndsh; 1-4, high priority 5-9</li>
+                            </ul>
+                            <li>Delivery mode</li>
+                            <ul>
+                                <li>persistent &ndash; message stored in a storage during send operation</li>
+                                <li>non-persistent &ndash; JMS server only stores the message in memory</li>
+                            </ul>
+                            <li>Time to live</li>
+                            <ul>
+                                <li>The time the message stays in the queue, the message is removed after it elapses</li>
+                                <li>The JMS consumer must consume the message before the time elapses</li>
+                            </ul>
+                            <li>Message ID</li>
+                            <ul>
+                                <li>ID of the message set by the client (in request-response communication)</li>
+                            </ul>
+                            <li>Reply To</li>
+                            <ul>
+                                <li>A response queue set by the client</li>
+                            </ul>
+                            <li>Correlation ID</li>
+                            <ul>
+                                <li>ID of the message set by the receiver for response</li>
+                            </ul>
+                        </ul>
+                        <li>Payload (data)</li>
+                        <ul>
+                            <li>text, map message (key-values), byte message, object message (serializable java object)</li>
+                        </ul>
+                    </ul>
+                </div>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>Conversation in Request-Response</h1>
+                    </hgroup>
+                    <div class="h-drawing" style="height: 300px" 
+                        id="1wRXrODedAi_DUaUdmYjspXUo7pCrE3P-k-vrojT8r-0"></div>
+                    <ul class="xx-small">
+                        <li>Steps</li>
+                        <ol>
+                            <li>Client sends a message to the request queue with some message ID1</li>
+                            <li>Server receives it, process it and sends a response to the response queue</li>
+                            <ul>
+                                <li>The response message has its own message ID3 and a correlation ID that has a value of message ID1</li>
+                            </ul>
+                            <li>Client receives the response message and correlates it in a session</li> 
+                        </ol>
+                    </ul>
+                </div>                
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>Example Queues Configuration in Weblogic</h1>
+                    </hgroup>
+                    <div class="h-drawing" style="height: 380px" 
+                        id="1dXuxsVN2FvPF07tmkvq0y8CwtIek8EEWp6Oo4pl_gbU"></div>
+                </div>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>Weblogic Configuration</h1>
+                    </hgroup>
+                    <div class="h-drawing" style="height: 430px; margin-top: 30px" format="png"
+                        id="1OzWBf1J7yk3NJjyByMkETWCa_GfIOnsGchYu9Y3K4VU"></div>
+                </div>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>JMS Producer Example (1)</h1>
+                    </hgroup>
+                    <ul class="xx-small">
+                        <pre class="brush: java; highlight : [];">
+                            public class JMSProducer {
+
+                                // connection factory, connection, session, sender, message
+                                private QueueConnectionFactory qconFactory;
+                                private QueueConnection qcon;
+                                private QueueSession qsession;
+                                private QueueSender qsender;
+                                private Queue queue;
+                                private TextMessage msg;
+
+                                // creates a connection to the WLS using a JNDI context
+                                public void init(Context ctx, String queueName) throws NamingException, JMSException {
+
+                                    // creates connection factory based on JNDI and a connection, creates a session 
+                                    qconFactory = (QueueConnectionFactory) ctx.lookup(Config.JMS_FACTORY);
+                                    qcon = qconFactory.createQueueConnection();
+                                    qsession = qcon.createQueueSession(false, Session.AUTO_ACKNOWLEDGE);
+                                    
+                                    // lookups the queue using the JNDI context
+                                    queue = (Queue) ctx.lookup(queueName);
+                                    
+                                    // create sender and message
+                                    qsender = qsession.createSender(queue);
+                                    msg = qsession.createTextMessage();         
+                                }
+
+                                // close sender, connection and the session
+                                public void close() throws JMSException {
+                                    qsender.close(); qsession.close();
+                                    qcon.close();
+                                }
+                        </pre>
+                    </ul>
+                </div>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>JMS Producer Example (2)</h1>
+                    </hgroup>
+                    <ul class="xx-small">
+                        <pre class="brush: java; first-line: 32; highlight : [];">
+                                // sends the message to the queue
+                                public void send(String queueName, String message) throws Exception {            
+                                    // create a JNDI context to lookup JNDI objects (connection factory and queue)
+                                    Hashtable env = new Hashtable();
+                                    env.put(Context.INITIAL_CONTEXT_FACTORY, Config.JNDI_FACTORY);
+                                    env.put(Context.PROVIDER_URL, Config.PROVIDER_URL);
+
+                                    InitialContext ic = new InitialContext(env);
+                                    init(ic, queueName);
+
+                                    // send the message and close
+                                    try {
+                                        msg.setText(message);
+                                        qsender.send(msg, DeliveryMode.PERSISTENT, 8, 0);
+                                        System.out.println("The message was sent to the destination " + 
+                                                qsender.getDestination().toString());
+                                    } finally {
+                                        close();
+                                    }
+                                }
+                                
+                                public static void main(String[] args) throws Exception {
+                                    // JNDI name of the queue and a text message
+                                    String msg = args[0];
+                                    String queueName = args[1];
+                                    
+                                    // create the producer object and send the message
+                                    JMSProducer producer = new JMSProducer();
+                                    producer.send(msg, queueName);
+                                }
+                            }                            
+                        </pre>
+                    </ul>
+                </div>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>JMS Producer Example (3)</h1>
+                    </hgroup>
+                    <ul class="small">
+                        <li>Send a message to the queue</li>
+                        <ul>
+                            <li>You need to create a VPN connection to the environment</li>
+                            <ul>
+                                <li>JMS Producer connects to the cluster<br/>(or one of the managed servers in the cluster)</li>
+                            </ul>
+                            <li>Arguments: (1) JNDI name of the queue, and (2) text message</li>
+                            <ul>
+                                <li><code>/jms/mdw-queue</code> or <code>/jms/mdw-dist-queue</code></li>
+                            </ul>
+                        </ul>
+                        <pre class="brush: bash; first-line: 1; highlight : [];">
+                            $ ./jmsproducer.sh /jms/mdw-queue message_from_mdw_lecture
+                            $ The message was sent to the destination mdw-module!mdw-queue
+                        </pre>
+                    </ul>
+                </div>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>Monitor the JMS Queue</h1>
+                    </hgroup>
+                    <ul class="xx-small">
+                        <li>How many messages</li>
+                        <ul>
+                            <li><b>Messages current</b></li>
+                            <ul>
+                                <li>number of messages in the queue waiting to be processed (<b>backlog</b>)</li>
+                            </ul>
+                            <li><b>Messages pending</b></li>
+                            <ul>
+                                <li>number of messages being processed (either being sent by a producer or 
+                                    being received by a consumer). Such messages have not been committed (acknowledged)</li>
+                            </ul>
+                        </ul>
+                        <div class="h-drawing" id="1Zj3o-abj6WBQ0_H6UAGhwNMZiUH1Ejf3VnBNX40arug" 
+                            style="margin-top: 30px; width: 700px" format="png"/>
+                    </ul>
+                </div>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>JMS Consumer Example (1)</h1>
+                    </hgroup>
+                    <ul class="xx-small">
+                        <pre class="brush: java; highlight : [];">
+                            public class JMSConsumer implements MessageListener {
+
+                                // connection factory
+                                private QueueConnectionFactory qconFactory;
+                                
+                                // connection to a queue
+                                private QueueConnection qcon;
+                                
+                                // session within a connection
+                                private QueueSession qsession;
+                                
+                                // queue receiver that receives a message to the queue
+                                private QueueReceiver qreceiver;
+                                
+                                // queue where the message will be sent to
+                                private Queue queue;
+                                
+                                // callback when the message exist in the queue
+                                public void onMessage(Message msg) {
+                                    try {
+                                        String msgText;
+                                        if (msg instanceof TextMessage) {
+                                            msgText = ((TextMessage) msg).getText();
+                                        } else {
+                                            msgText = msg.toString();
+                                        }
+                                        System.out.println("Message Received: " + msgText);
+                                    } catch (JMSException jmse) {
+                                        System.err.println("An exception occurred: " + jmse.getMessage());
+                                    }
+                                }
+                        </pre>
+                    </ul>
+                </div>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>JMS Consumer Example (2)</h1>
+                    </hgroup>
+                    <ul class="xx-small">
+                        <pre class="brush: java; first-line: 32; highlight : [];">
+                                // create a connection to the WLS using a JNDI context
+                                public void init(Context ctx, String queueName)
+                                        throws NamingException, JMSException {
+
+                                    qconFactory = (QueueConnectionFactory) ctx.lookup(Config.JMS_FACTORY);
+                                    qcon = qconFactory.createQueueConnection();
+                                    qsession = qcon.createQueueSession(false, Session.AUTO_ACKNOWLEDGE);
+                                    queue = (Queue) ctx.lookup(queueName);
+
+                                    qreceiver = qsession.createReceiver(queue);
+                                    qreceiver.setMessageListener(this); 
+                                    
+                                    qcon.start();
+                                }
+                                
+                                // start receiving messages from the queue
+                                public void receive(String queueName) throws Exception {
+                                    Hashtable env = new Hashtable();
+                                    env.put(Context.INITIAL_CONTEXT_FACTORY, Config.JNDI_FACTORY);
+                                    env.put(Context.PROVIDER_URL, Config.PROVIDER_URL);
+
+                                    InitialContext ic = new InitialContext(env);
+                                    init(ic, queueName);
+                                    
+                                    System.out.println("Connected to " + queue.toString() + ", receiving messages...");
+
+                                    // loop until ctrl+c
+                                    while (true) {
+                                        this.wait();
+                                    }
+                                }                                
+                        </pre>
+                    </ul>
+                </div>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>JMS Consumer Example (3)</h1>
+                    </hgroup>
+                    <ul class="small">
+                        <li>Receive a message from the queue</li>
+                        <ul>
+                            <li>You need to create a VPN connection to the environment</li>
+                            <ul>
+                                <li>JMS Consumer connects to the cluster<br/>(or one of the managed servers in the cluster)</li>
+                            </ul>
+                            <li>Arguments: (1) JNDI name of the queue</li>
+                            <ul>
+                                <li><code>/jms/mdw-queue</code> or <code>/jms/mdw-dist-queue</code></li>
+                            </ul>
+                        </ul>
+                        <pre class="brush: bash; first-line: 1; highlight : [];">
+                            $ ./jmsconsumer.sh /jms/mdw-queue
+                            $ Connected to mdw-module!mdw-queue, receiving messages...
+                              Message Received: message-from-mdw-lecture1
+                              Message Received: message-from-mdw-lecture2
+                        </pre>
+                    </ul>
+                </div>
+
+            </section>
+
+            <div class="slide outline"></div>
+            
+            <section>
+                <header>Error Handling</header>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>Error Handling Using Timeout</h1>
+                    </hgroup>
+                    <div class="h-drawing" style="height: 340px" 
+                        id="1FsBqFbspb4xyX-lZLQo7AiiADFphEybTrmn8UzNUSUU"></div>
+                    <ul class="x-small">
+                        <ul>
+                            <li>message consumers or message processing may fail</li>
+                            <li><b>visibility timeout</b> &ndash; time during which the message exist in the queue,
+                            and need to be deleted by the consumer (~ 30 seconds)</li>
+                            <li>Example technology: Amazon Simple Queue Service (SQS)</li>
+                        </ul>
+                    </ul>
+                </div>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>Error Handling Using Transactions</h1>
+                    </hgroup>
+                    <div class="h-drawing" style="height: 340px" 
+                        id="1xVyCqGNXxxD8XPKs9FNx6tHGgX95mQjjoslEIBbEOkI"></div>
+                    <ul class="x-small" style="padding-top: 20px">
+                        <ul>
+                            <li><b>transaction</b> &ndash; message consumer opens a transaction and deletes the message;
+                                when the processing is succesfull the transaction is committed otherwise it is rolled back and the message appears in the queue again</li>
+                            <li>Example technology: JMS, Weblogic server</li>
+                        </ul>
+                    </ul>
+                </div>
+
+            </section>
+            
+            <div class="slide outline"></div>
+            
+            <section>
+                <header>Publish/Subscribe</header>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>Publish/Subscribe System</h1>
+                    </hgroup>
+                    <div class="h-drawing" style="height: 290px" 
+                        id="1VjuiJ0LVcDFJgmcNfP7wq10-bDJy6m0IHs6SgxD1kvY"></div>
+                    <ul class="x-small">
+                        <ul>
+                            <li>occurrence of a message = event that triggers one or more processes</li>
+                            <li>a "1 : N" relationship between producer and consumer<br/>
+                            &rarr; <b>one message can be processed by many different subscribers</b></li>
+                            <li><b>time-dependency</b> between publisher and subscriber<br/>
+                            &rarr; subscriber must first subscribe to a topic and then publisher can publish a message under that topic</li>
+                            <li>a message is deleted when all its subscribers consume it</li>
+                        </ul>
+                    </ul>
+                </div>
+    
+                <div class="slide">
+                    <hgroup>
+                        <h1>Publish/Subscribe API</h1>
+                    </hgroup>
+                    <ul class="small">
+                        <li><code>lookupTopic</code></li>
+                        <ul>
+                            <li>lookups or creates a topic</li>
+                            <li>called by the subscriber first and then by the publisher</li>
+                        </ul>
+                        <li><code>receiveMessage</code></li>
+                        <ul>
+                            <li>request to receive (read) a message under the topic</li>
+                            <li>called by the subscriber</li>
+                            <li>Implementation specific:</li>
+                            <ul>
+                                <li>synchronous &ndash; blocking, with timeout</li>
+                                <li>asynchronous &ndash; through event listener</li>
+                            </ul>
+                        </ul>
+                        <li><code>publishMessage</code></li>
+                        <ul>
+                            <li>publishes a message under the topic</li>
+                            <li>called by the publisher</li>
+                        </ul>
+                    </ul>                   
+                </div>
+    
+                <div class="slide">
+                    <hgroup>
+                        <h1>Event-driven Communication</h1>
+                    </hgroup>
+                    <ul>
+                        <li>Event</li>
+                        <ul>
+                            <li>Occurrence of a message with certain topic</li>
+                        </ul>
+                        <li>Event-driven Process</li>
+                        <ul>
+                            <li>events trigger actions</li>
+                            <li>one event may trigger more actions</li>
+                            <li>loose coupling &ndash; not all actions need to be known at design time</li>
+                        </ul>
+                    </ul>
+                    </div>
+                </div>
+    
+                <div class="slide">
+                    <hgroup>
+                        <h1>Event&ndash;driven Process Example</h1>
+                    </hgroup>
+                    <ul class="x-small">
+                        <li>Conceptual process</li>
+                        <div class="h-drawing" style="margin-top: -20px; margin-bottom: 10px; height: 100px" 
+                            id="1IUZaGiPpxb20-q8pBRzmhUCjJH1Ociy2sSnhSYH8guM"></div>
+                        <li>Event-driven process implementation</li>
+                        <div class="h-drawing" style="height: 320px" id="1M_yG2aVhSbWJ1iQ3iBuvRNQLg3-QGMDuwshrNj7R9oM"></div>
+                    </ul>
+                    </div>
+                </div>
+    
+            </section>
+            
+        </section>
+
+        <div class="slide outline"></div>
+        
+        <section>
+            <header>Store and Forward</header>
+
+            <div class="slide">
+                <hgroup>
+                    <h1>Store and Forward Agents</h1>
+                </hgroup>
+                <ul class="x-small">
+                    <li>Motivation</li>
+                    <ul>
+                        <li>Several environments (integration middleware, OSM, CRM)</li>
+                        <li>Sending messages across environments</li>
+                        <li>A need to "decouple" environments</li>
+                        <li>Destination (queue) might not be always available</li>
+                        <ul>
+                            <li>Destination environment is down or busy</li>
+                        </ul>
+                    </ul>
+                    <li>SAF = Store and Forward</li>
+                    <ul>
+                        <li>Agent &ndash; a component deployed to an application server instance</li>
+                        <ul>
+                            <li>has a queue and its own storage</li>
+                            <li>has configured a remote destination</li>
+                        </ul>
+                    </ul>
+                    <li>Scenario</li>
+                    <ol class="xx-small">
+                        <li>JMS producer sends a message to the agent's queue</li>
+                        <li>Agent forwards the message to the remote destination</li>
+                        <li>When the remote destination is not available, the agent keeps the message in its queue and 
+                            retries to send the message after some time</li>
+                        <li>As a result of the unavailability, there can be a <b>backlog</b> of messages in the agent's queue</li>
+                    </ol>
+                </ul>
+            </div>
+
+            <div class="slide">
+                <hgroup>
+                    <h1>Example SAF Agents Backlog</h1>
+                </hgroup>
+                <div class="h-drawing" style="height: 350px; margin-top: 30px" format="png"
+                    id="1GrHpsM634SVVc2DteMT1ACYyLPVpQcis8Cd9faWxBeQ"></div>
+                <ul class="xx-small" style="margin-top: 20px">
+                    <ul>
+                        <li class="no-bullet">A performance of the destination system (OSM) is not good enough 
+                            for the number of messages to be pushed across from AIA.</li>  
+                    </ul>
+                </ul>
+            </div>
+
+        </section>
+
+    </body>
+</html>
+
+

@@ -16,4 +16,10 @@ javac -cp $CP -d ../bin ../RMITest/src/com/vitvar/ctu/mdw/RMIClient.java
 javac -cp $CP -d ../bin ../RMITest/src/com/vitvar/ctu/mdw/RMIServer.java
 javac -cp $CP -d ../bin ../RMITest/src/com/vitvar/ctu/mdw/HelloRMIInterface.java
 
+CP="../jms/src:../libs/wlfullclient.jar:../lib/jms-1.1.jar"
+javac -cp $CP -d ../bin ../jms/src/com/vitvar/ctu/mdw/JMSProducer.java
+
+CP="../jms/src:../libs/wlfullclient.jar:../lib/jms-1.1.jar"
+javac -cp $CP -d ../bin ../jms/src/com/vitvar/ctu/mdw/JMSConsumer.java
+
 cd $d
