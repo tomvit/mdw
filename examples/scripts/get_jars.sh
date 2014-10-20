@@ -17,5 +17,9 @@ echo "* Downloading jms API v1.1"
 rm -f jms-1.1jar
 wget -q https://repository.jboss.org/nexus/content/groups/public/javax/jms/jms/1.1/jms-1.1.jar
 
+echo "* Downloading wlfullclient.jar"
+rm -f wlfullclient.jar
+wget -q http://mdw-infra.fit.cvut.cz/downloads/wlfullclient.jar
+
 echo "Done!"
 cd $od
