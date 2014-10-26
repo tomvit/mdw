@@ -57,17 +57,18 @@
 				<h1>Good Performance</h1>
 			</hgroup>
 			<ul class="small">
-				<li>What influences good performance</li>
+				<li>What influences a good performance?</li>
 				<ul>
 					<li>Number of users and concurrent connections</li>
 					<li>Number of messages and messages' sizes</li>
 					<li>Number of services</li>
+					<li>Infrastructure &ndash; capacity, availability, configuration, ...</li>
 				</ul>
-				<li>How we can achieve good performance</li>
+				<li>How can we achieve a good performance?</li>
 				<ul>
 					<li>Infrastructure</li>
 					<ul>
-						<li>Scalability, Cluster Architectures</li>
+						<li>Scalability, failover, cluster architectures</li>
 					</ul>
 					<li>Performance tuning</li>
 					<ul>
@@ -95,12 +96,12 @@
 					<ul>
 						<li>server scalability</li>
                         <ul>
-						    <li>ability of a system to react to changes in loads</li>
-						    <li>users should not feel changes when more users 
+						    <li>ability of a system to scale &ndash; when input load changes</li>
+						    <li>users should not feel a difference when more users 
 						    	access the same application at the same time</li>
 						    <li><b>horizontal scaling</b></li>
 						    <ul>
-						    	<li>adding new server instances</li>
+						    	<li>adding new instances of applications/servers</li>
 						    </ul>
 						    <li><b>vertical scaling</b></li>
 						    <ul>
@@ -197,14 +198,14 @@
 
 			<div class="slide">
 				<hgroup>
-					<h1>Middleware Infrastructure Example</h1>
+					<h1>Infrastructure Example &ndash; Weblogic</h1>
 				</hgroup>
 				<div class="h-drawing" id="18vW_i7-8GeUHUdE9q9dccbAvDbA5b1fuQ-qAovzabTc" style="height: 450px"></div>
 			</div>
 
 			<div class="slide">
 				<hgroup>
-					<h1>Configuration Practices</h1>
+					<h1>Best Configuration Practices</h1>
 				</hgroup>
 				<ul class="x-small">
 					<li>Domain configuration</li>
@@ -243,14 +244,14 @@
 					<hgroup>
 						<h1>Load Balancing</h1>
 					</hgroup>
-					<ul>
-						<li>Distributes load to multiple app instances</li>
+					<ul class="small">
+						<li>Distributes a load to multiple app/object instances</li>
 						<ul>
 							<li>App instances run on different machines</li>
 							<li>Load sharing: equal or with preferences</li>
 							<li>Health checks</li>
 						</ul>
-						<li>Topics</li>
+						<li>Types</li>
 						<ul>
 							<li>DNS-based load balancer</li>
 	                        <ul>
@@ -263,6 +264,12 @@
 								<ul>
 									<li>JSession, JSession-aware load balancer</li>
 								</ul>
+	                        </ul>
+	                        <li>Client-side load balancer</li>
+	                        <ul>
+	                        	<li>LB run by a client
+	                        	<li>a client uses a replica-aware stub of the object 
+	                        		from the server</li>
 	                        </ul>
 						</ul>
 					</ul>
@@ -441,7 +448,7 @@
 						<h1>In-Memory Replication Scenarios</h1>
 					</hgroup>
 					<center>
-					<div class="h-drawing" id="1APKL5IK-WG_8rlF6g__Q5TwxVrwmW9a4KPbK10JiKGU" style="width: 690px" format="png"></div>
+					<div class="h-drawing" id="1APKL5IK-WG_8rlF6g__Q5TwxVrwmW9a4KPbK10JiKGU" style="width: 690px"></div>
 					</center>
 				</div>
 				
@@ -495,6 +502,7 @@
 							<li>Object gets replicated to its targets</li>
 							<ul>
 								<li>Targets can be configured for the object, usually all servers but can be selected servers</li>
+								<li>See <a href="lecture4.html#/30/v1">Lecture 4</a> for the definition of the object</li>
 							</ul>
 						</ul>
 					</ul>
@@ -505,13 +513,34 @@
 
 				<div class="slide">
 					<hgroup>
-						<h1>Failover</h1>
+						<h1>Object Failover</h1>
 					</hgroup>
 					<ul class="x-small">
 						<li>Failover</li>
 						<ul>
-							<li>Failover = ability to relocate the server to another machine without impact on the 
+							<li>Failover = ability to locate an object on another server that holds a copy of the object without an impact on the 
 								performace and configuration</li>
+						</ul>
+					</ul>
+					<center>
+					<div id="1q3-1NEIj6sLX_2FnOUGDxrHiAyHRJac3x-l8tcO88f0" class="h-drawing" style="width: 600px"></div>
+					</center>
+					<ul class="x-small"><ul>
+						<li>A client gets a stub of the object by calling <code>lookup</code> on the context</li>
+						<li>A client uses the stub of the object to access the object on the server</li>
+						<li>When a server fails, replicate-aware stub calls the next server that holds the object copy</li>
+					</ul></ul>
+
+				</div>
+
+				<div class="slide">
+					<hgroup>
+						<h1>Server Failover</h1>
+					</hgroup>
+					<ul class="x-small">
+						<li>Failover</li>
+						<ul>
+							<li>Failover = ability to relocate the server to another machine without an impact on the performance</li>
 						</ul>
 					</ul>
 					<center>
@@ -542,10 +571,23 @@
 
 			<div class="slide">
 				<hgroup>
+					<h1>Example Performance Testing</h1>
+				</hgroup>
+				<div class="h-drawing" id="1gZFMDN1blCkW0p-_tOfrE8mImgOOVSS7ggEmZry0JKI" style="height: 400px" format="png"></div>
+				<ul class="xx-small">
+					<ul>
+						<li>Completed &ndash; number of completed orders</li>
+						<li>MIN, MAX, AVG &ndash; a minimum/maximum/average processing time in 10 minutes</li>
+						<li>At 18:30&ndash;20:20 was a performance issue with OMS environment</li>
+				</ul>
+			</div>			
+
+			<div class="slide">
+				<hgroup>
 					<h1>Tuning &ndash; A Layered Approach</h1>
 				</hgroup>
 				<ul>
-					<li>ESB can be tuned at multiple layers</li>
+					<li>Application server can be tuned at multiple layers</li>
 					<ul>
 						<li>Service configuration optimization</li>
 						<li>Transport-level tuning</li>
@@ -610,7 +652,7 @@
 						<li>GC full runs too often, this has a negative impact on performance</li>
 					</ul>
 				</ul>
-				<div class="h-drawing" id="15ZZC64x6TXSgkQBFeoNfGZnaQMjqUu-ODOA7IfnDMDg"></div>
+				<div class="h-drawing" id="15ZZC64x6TXSgkQBFeoNfGZnaQMjqUu-ODOA7IfnDMDg" format="png"></div>
 			</div>
 
 			<div class="slide">
@@ -712,7 +754,7 @@
 							
 		</section>
 
-		<div class="slide outline"></div>
+	<!--	<div class="slide outline"></div>
 
 		<section>
 			<header>Troubleshooting</header>
@@ -750,7 +792,7 @@
 				</ul>
 			</div>			
 				
-		</section>			
+		</section>		-->	
 			
 			
 
