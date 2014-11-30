@@ -8,7 +8,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> 
         <meta name="course"   content="Middleware and Web Services"/>
-        <meta name="lecture"  content="Lecture 9"/>
+        <meta name="lecture"  content="Lecture 10"/>
         <meta name="keywords" content="High Availability, Load Balancer, Replication"/>
            
         <link type="text/css" rel="stylesheet" href="css/meta.css"></link>   
@@ -90,16 +90,18 @@
 				</ul>
 				<li>ESB Application</li>
 				<ul>
-					<li>Application running in some application server</li>
+					<li>Application running on an application server</li>
 					<li>Exposes functionality via Web service interface</li>
 					<li>Allows to communicate with various messaging protocols</li>
 				</ul>
-				<li>Design Patterns</li>
+				<li>Integration Patterns</li>
 				<ul>
 					<li>Technical-level interoperability &ndash; message broker</li>
 					<li>Location transparency</li>
 					<li>Dynamic routing</li>
-					<li>Data transformations &ndash; mediator</li>					
+					<li>Data transformations &ndash; mediator</li>
+					<li>Resequencing of messages</li>
+					<li>Session pooling</li>					
 					<li>Service orchestrations &ndash; BPMN, BPEL</li>
 					<li>Message enrichment</li>
 				</ul>
@@ -206,10 +208,10 @@
 
 	            <div class="slide">
 	                <hgroup>
-	    				<h1>Order Process &ndash; Architecture Overview</h1>
+	    				<h1>Simplified Order Process</h1>
 	    			</hgroup>
 	                <ul class="x-small">
-	                	<li>Example Order Process (<a href="lecture8.html#/6">Lecture 8</a>)</li>
+	                	<li>Example from <a href="lecture9.html#/6">Lecture 9</a></li>
 	                	<div class="h-drawing" id="1OL0gpJAtco_fidFP3audh1wRd_rGXuc6RGuRWiuI4wo"></div>
 	                </ul>
 	            </div>
@@ -418,7 +420,7 @@
 							</ul>
 							<li>Transaction management</li>
 							<ul>
-								<li>JCA adapters can participate in a <a href="lecture5.html#/22/v1">distributed transaction (Lecture 5)</a></li>
+								<li>JCA adapters can participate in a distributed transaction</li>
 							</ul>
 						</ul>
 	            	</ul>
@@ -528,29 +530,7 @@
 							</ul>
 						</ul>
 	            	</ul>
-	        	</div>        	            	    
-	        	
-	        	<div class="slide">
-					<hgroup>
-						<h1>Presentation Services</h1>
-					</hgroup>
-					<ul class="small">
-						<li>Purpose</li>
-						<ul>
-							<li>Shared presentation logic</li>
-							<li>Typical for client-server Web applications</li>
-						</ul>
-						<li>Example technologies</li>
-						<ul>
-							<li>JSPs, Servlets</li>
-							<li>Shared portlets</li>
-							<ul>
-								<li>Reusable components for UI development</li>
-								<li>Dashboards</li>
-							</ul>
-						</ul>
-	            	</ul>
-	        	</div>        	        
+	        	</div>        	            	    	        	
 	        </div>
         	
         </section>
@@ -560,7 +540,7 @@
 
     <section>
     	<header>
-			Design Patterns        		
+			Integration Patterns        		
     	</header>
     	
 		<div class="slide">
@@ -577,6 +557,7 @@
 					<li>Deals with technical aspects of service communication</li>
 					<li>Message broker &ndash; technical-level interoperability</li>
 					<li>Location transparency</li>
+					<li>Session pooling</li>
 				</ul>
 				<li>Business patterns</li>
 				<ul>								
@@ -585,6 +566,7 @@
 					<li>Data transformations &ndash; mediator</li>					
 					<li>Service orchestrations &ndash; BPMN, BPEL</li>
 					<li>Message enrichment</li>
+					<li>Resequencing of messages</li>
 				</ul>
         	</ul>
     	</div>    
@@ -616,6 +598,21 @@
 			</ul>
 			<div class="h-drawing" id="1yyj2VBgauYs_zVWoSR1R2Hugf8pLG-HmDq8-2bF-vNI" style="height: 200px"></div>
     	</div>       
+
+		<div class="slide">
+			<hgroup>
+				<h1>Session Pooling</h1>
+			</hgroup>
+			<ul class="small">
+				<li>Session Pooling</li>
+				<ul>
+					<li>ESB can maintain a pool of connections (session tokens) to a back-end app When creating a new connection is expensive</li>
+					<li>A single session token can be reused by multiple instances of business processes</li>
+				</ul>
+			</ul>
+			<div class="h-drawing" id="1O06u_GmbgK_hAPqwWJcQsFz7XtugVx6q1t5gCurn-3Y" style="height: 450px"></div>
+    	</div>       
+
     	
 		<div class="slide">
 			<hgroup>
@@ -692,21 +689,6 @@
         		id="1CBgOZj-fXVvjKgrolqX72qhVRZigGSzHIdlrIe7hghA"></div>
         </div>
         
-        <div class="slide">
-        	<hgroup>
-        		<h1>Transformation Patterns Example</h1>
-        	</hgroup>
-        	<ul class="x-small">
-        		<li>SOA Architecture with Common Data Model</li>
-        		<li>Oracle OSB and SOA Suite technologies</li>
-        		<ul>
-        			<li>Multiple technologies used in the environment</li>
-        			<li>Need to distinguish which technology should be used for what</li>
-        		</ul>
-        	</ul>
-        	<div class="h-drawing" id="1YEIYWDZXWpTdCZVvf6oryYrrWt_Ti4YDZQOE5noluhg" style="height: 320px"></div>
-        </div>
-
 		<div class="slide">
 			<hgroup>
 				<h1>Service Orchestration</h1>
