@@ -128,7 +128,7 @@
 					<li>Business Process Execution Language (BPEL)</li>
 					<ul>
 						<li>Only execution language for ESB, not suitable for modeling higher levels of business processes</li>
-						<li>Architets need to translate from BPMN (or another language) to BPEL</li>
+						<li>Architets need to translate from BPMN (or other language) to BPEL</li>
 						<ul>
 							<li>Part of technical SOA design</li>
 						</ul>
@@ -163,7 +163,7 @@
 						<li>Forward-chaining algorithm (inference)</li>
 						<ol>
 							<li>A user defines a goal &ndash; described as a state (memory content)</li>
-							<li>Rule engine finds a rule which condition matches the memory'c content</li>
+							<li>Rule engine finds a rule which condition matches content in the memory</li>
 							<li>Rule's action is executed; the result may add or modify data in the memory</li>
 							<li>When the memory content matches the goal, execution stops otherwise go to 2</li>
 						</ol>
@@ -181,7 +181,7 @@
 							<code>if customer.type=='premium' then order.discount=0.1</code></li>
 							<li>B: if a customer is a gold customer, give them 5% discount<br/>
 							<code>if customer.type=='gold' then order.discount=0.05</code></li>
-							<li>C: if a customer spends is 1,000 or more, make them a premium customer<br/>
+							<li>C: if customer spends 1,000 or more, make them a premium customer<br/>
 							<code>if customer.revenue>1000 then customer.type='premium'</code></li>	
 							<li>Note: actions are memory modifications but can be results of service calls</li>						
 						</ul>
@@ -326,10 +326,25 @@
 							<li>End Signal &ndash; ends a process by signalling an event</li>
 							<li>End Error &ndash; ends a process by throwing an error (fault)</li>
 							<li>Throw Message &ndash; throws a message during process execution</li>
-							<li>Throw Signal &ndash; throws an EDN event during process execution</li>
+							<li>Throw Signal &ndash; throws an event during process execution</li>
 						</ul>
 					</ul>
 				</ul>
+			</div>
+
+        	<div class="slide">
+				<hgroup>
+					<h1>Throw and Catch Events</h1>
+				</hgroup>
+				<ul class="xx-small">
+					<li>Broadcasting a signal</li>
+					<ul>
+						<li>Process A throws a signal, processes B, C, and D catch the signal and start</li>
+					</ul>
+				</ul>
+				<div id="1wcKCCYTAolFyg4-VvP-jcx7MRINHgbKmiwX5skYA9m8" 
+					style="height: 400px;" format="png"						
+					class="h-drawing"></div>
 			</div>
 			
 			<div class="slide">
@@ -524,7 +539,7 @@
 								<li>a <b>sub-process</b> to the main process, e.g. <code>checkStatus</code></li>
 							</ul>
 							<li>WS-Addressing defines <code>MessageID</code> element that is a conversation ID</code></li>
-							<li>See details in <a href="lecture8.html#/30">lecture 8</a>
+							<li>See details in <a href="lecture9.html#/30">lecture 8</a>
 						</ul>
 					</ul>
 				</div>
@@ -537,7 +552,7 @@
 						<li>Definition</li>
 						<ul>
 							<li>Correlation associates a client interaction with a running process instance by using 
-								correlation keys and data in an nput message.</li>
+								correlation keys and data in an input message.</li>
 							<li>A process may have one or more correlations defined</li>
 						</ul>
 						<li>Correlation keys and properties</li>
@@ -545,7 +560,7 @@
 							<li>Correlations are defined by so called <b>correlation keys</b></li>
 							<li>A key may have one or more properties</li>
 							<ul>
-								<li>Each property value is defined by an xpath on a message structure</li>
+								<li>Each property value is defined by xpath on a message structure</li>
 							</ul>
 						</ul>
 						<li>Example</li>
