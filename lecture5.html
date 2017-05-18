@@ -700,16 +700,18 @@
 
             <div class="slide">
                 <hgroup>
-                    <h1>Example SAF Agents Backlog</h1>
+                    <h1>Example SAF Agent Backlog</h1>
                 </hgroup>
-                <div class="h-drawing" style="height: 350px; margin-top: 30px" format="png"
-                    id="1GrHpsM634SVVc2DteMT1ACYyLPVpQcis8Cd9faWxBeQ"></div>
-                <ul class="xx-small" style="margin-top: 20px">
-                    <ul>
-                        <li class="no-bullet">A performance of the destination system (OSM) is not good enough 
-                            for the number of messages to be pushed across from AIA.</li>  
-                    </ul>
-                </ul>
+		<img src="img/backlog-example.png" style="margin: 30px 0px 10px 10px; zoom: 0.75"></img>
+                <ul class="xx-small" style="margin-top: 0px">
+			<li>Messages received</li>
+				<ul><li>number of messages received to the SAF agent queue in every hour</li></ul>
+			<li>Backlog</li>
+				<ul>
+					<li>number of messages waiting to be sent across to the destination queue</li>
+					<li>Destination system cannot catch up with number of messages being sent across</li>
+				</ul>
+		</ul>
             </div>
 
         </section>
