@@ -8,11 +8,15 @@ help:
 	@echo "clean	cleans all temporary directories."
 	@echo "pdf	creates a pdf document for every lecture file."
 	@echo "toc	creates a table of contents in JSON for all lecture files." 
+	@echo "gcache	fetches all google drawings from all lectures and stores them in the cache."
 	@echo "all	cleans everything and creates all pdf files and toc." 
 	@echo ""
 
 http:
 	humla/bin/http-server.sh
+
+gcache:
+	humla/bin/fetchall-drawings.sh
 
 clean:
 	rm -fr cache
