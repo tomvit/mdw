@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <!--
     Middleware and Web Services, CTU course slides
-    (cc) 2010-2012 Tomas Vitvar, http://vitvar.com
+    (cc) 2010-2013 Tomas Vitvar, http://vitvar.com
     written for Humla, an open source HTML5 presentation environment
 -->
 <html>  
@@ -9,14 +9,14 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> 
         <meta name="course"   content="Middleware and Web Services"/>
 		<meta name="lecture"  content="Lecture 1"/>
-   		<meta name="keywords" content="Web Server, Application Server, JEE"/>
+   		<meta name="keywords" content="enterprise architecture, system integration, roles, software architecture"/>
            
         <link type="text/css" rel="stylesheet" href="css/meta.css"></link>   
         <link type="text/css" rel="stylesheet" href="css/ctu-fit.css"></link>   
         <link type="text/css" rel="stylesheet" href="humla/lib/core/humla.css"></link>   
 
         <script type="text/javascript" src="humla/lib/humla.js"></script>
-        <title>Introduction to Application Server</title>
+        <title>Introduction to Architectures</title>
 	</head>
 	
 	<body>
@@ -51,325 +51,590 @@
 				<div class="oppa"></div>
 			</div>
 		</div>
-		
-        <div class="slide outline"></div>
         
-        <section>
-            <header>Architecture</header>
-            
-	        <div class="slide">
-	            <hgroup>
-	                <h1>Application Server Overview</h1>
-	            </hgroup>  
-	            <ul class="x-small">
-	                <li>An environment that runs an application logic</li>
-	                <ul>
-	                    <li>A client communicates with the server using an application protocol</li>
-	                </ul>
-	                <li>Application Server</li>
-                 	<ul>
-                        <li>A modular environment</li>
-						<ul>
-							<li>provides technology to realize enterprise systems</li>
-							<li>JEE containers &ndash; Java technology for AS components</li>
-							<li>Supports a variety of objects such as Servlets, JPSs, JMS</li>
-						</ul>
-						<li>Provides services such as naming and directory, performance, failover</li>
-                        <li>Provides Web server capabilities</li>
-						<li>Can be a single server or multiple servers</li>
-					</ul>
-	                <li>Web Tier &ndash; HTTP Server</li>
-					<ul>
-						<li>Web Server supports HTTP only</li>
-						<li>HTTP request/response, security, proxy, caching</li>
-					</ul>
-	                <li>Communication models</li>
-	                <ul>
-	                    <li>Blocking I/O (also called synchronous I/O)</li>
-	                    <li>Non-blocking I/O (also called asynchronous I/O)</li>
-	                </ul>
-	            </ul>                
-	        </div>
+		<div class="slide outline"></div>
+        
+    	<section>
+			<header>Architecture Overview</header>
 
-            <div class="slide">
-    			<hgroup>
-    				<h1>Java Enterprise Edition &ndash; JEE</h1>
-    			</hgroup>
-                <ul class="small">
-                    <li>Java Enterprise Edition (JEE)</li>
+			<div class="slide">
+				<hgroup>
+					<h1>Global Architecture</h1>
+				</hgroup>
+				<ul class="x-small x-spacing">
+					<li>A <b>structure</b> and a <b>behavior</b> of system's parts</li>
+					<li>Complexity &#150; views on the global architecture</li>
+					<ul>
+						<li>basic architectural views (also called dimensions): <br/>enterprise, data, 
+						functional, process, software, hardware.</li>
+					</ul>
+                    <li>Development</li>
                     <ul>
-                        <li>Collection of technologies for server-side programming</li>
-						<li>Programming of application components</li>
-                        <li>Main technologies</li>
-                        <ul>                        
-                            <li>Servlet technology and Java Server Pages (JSP)</li>
-                            <li>Remote Method Invocation (RMI)</li>
-                            <li>Java Database Connectivity Services (JDBC)</li>
-                            <li>Java Messaging System (JMS)</li>
-                        </ul>
+                        <li>basic <b>methodology</b> and <b>actors</b>:<br/>
+                        ~ analysis, design, implementation, testing, maintenance<br/>
+                        ~ end-user, architect, developer, administrator</li> 
+    					<li>basic architectural <b>development levels</b>:<br/>
+						~ conceptual, logical, physical.
+						</li>
                     </ul>
-                    <li>Basis for many application servers such as</li>
-                    <ul class="x-small">
-                        <li>Oracle WebLogic</li>
-                        <li>Google AppEngine (Java)</li>
-                        <li>JBoss</li>
-                        <li>GlassFish</li>
-                        <li>IBM WebSphere</li>
-                    </ul>
-                </ul>
-            </div>
-
-            <div class="slide">
-        		<hgroup>
-    				<h1>Application Server Layers</h1>
-    			</hgroup>
-				<div class="h-drawing" id="17DlmmSs0FHtUNWKTk1y1a0fWotKTB2m91nKjqYVyZiE" style="height: 250px"></div>
-				<ul class="x-small">
-					<li>Features</li>
+					<li>Global architecture and cloud computing</li>
 					<ul>
-						<li>AS appears as a single process in the OS</li>
-						<ul>
-							<li>you can use standard OS commands to investigate its operation</li>
-							<li>AS listens on a single or multipe IPs (VIPs) and a tcp port</li>
-						</ul>
-						<li>AS is a Java process</li>
-						<ul>
-							<li>you can use Java tools to investigate its operation</li>
-							<li>Garbage collector stats, thread dumps, memory allocations, etc.</li>
-						</ul>
+    					<li>data, functions, processes are application (domain) specific</li>
+    					<li>software architecture defines a <b>software platform</b></li>
+    					<li>hardware architecture defines an <b>infrastructure</b></li>
 					</ul>
-				</ul>
-			</div>	
-
-        	<div class="slide outline"></div>
-
-			<section>
-				<header>I/O Communication Models</header>
-
-		        <div class="slide"> 
-					<hgroup> 
-						<h1>Blocking I/O Model</h1> 
-					</hgroup> 
-					<ul class="small">
-						<li>The server creates a thread for every connection</li>
-		                   <ul>                    
-		                       <li>For example, 1K connections = 1K threads, big overhead</li>
-		                   </ul>
-		               </ul>
-		   			<div id="1QP7gZSS1WS3YquzLekSgdZfcmi4BYArm-K9tuWrULQs" class="h-drawing" style="height: 220px"></div>
-		               <ul class="small">
-		                   <li>Characteristics</li>
-		                   <ul>
-		   					<li>the thread is reserved for the connection</li>
-						<li>When processing of the request requires other interactions with DB/FS or network 
-							communication is slow</li>
-		                   <ul>
-		                       <li>scales very bad as the thread's execution is "blocked"</li>
-		                   </ul>
-					</ul>
-				</div>
-
-		        <div class="slide"> 
-		   			<hgroup> 
-						<h1>Non-Blocking I/O Model</h1> 
-					</hgroup> 
-					<ul class="small">
-						<li>Connections maintained by the OS, not the Web app</li>
-		                   <ul>                    
-		                       <li>The Web app registers events, OS triggers events when occur</li>
-		                   </ul>
-		               </ul>
-		   			<div id="1kxkFc3Chl4qFXxH_4f2seuNbpBdENMyZWMRUmxd1p28" class="h-drawing" style="height: 220px"></div>
-		               <ul class="small">
-						<li>Characteristics</li>
-		                   <ul>
-		                       <li>Event examples: new connection, read, write, closed</li>
-						    <li>The app may create working threads, but controls the number!</li>
-		                       <ul>
-						        <li>much less number of working threads as opposed to blocking I/O</li>
-		                       </ul>
-		                   </ul>
-					</ul>
-				</div>
-			</section>
-
-		</section>
-
-        <div class="slide outline"></div>
-
-		<section>
-
-			<header>Servlet Technology</header>
-
-	        <div class="slide"> 
-				<hgroup> 
-					<h1>Overview</h1> 
-				</hgroup> 
-				<ul class="small">
-					<li>Technology to extend application server functionalities</li>
-					<ul>
-						<li>A Java class that can respond to any type of requests</li>
-						<ul>
-							<li>A servlet defines an interface for a specific protocol</li>
-							<li>Your application implements the servlet's interface</li>
-						</ul>
-					</ul>
-					<li>Commonly used to respond to HTTP requests</li>
-					<ul>
-						<li>A basis for an application running on an application server</li>
-						<li>HTTP Servlet Java classes</li>
-						<ul>
-							<li><code>HttpServlet</code> &ndash; provides HTTP protocol interface</li>
-							<li><code>HttpServletRequest</code> &ndash; represents HTTP request</li>
-							<li><code>HttpServletResponse</code> &ndash; represents HTTP response</li>
-						</ul>
-					</ul>
+					
 				</ul>
 			</div>
 
-            <div class="slide">
-        		<hgroup>
-    				<h1>Directory Structure</h1>
-    			</hgroup>
-                <ul class="x-small">
-                    <li>Your application</li>
-                    <ul>
-                        <li>collection of documents and libraries your application requires</li>
-                        <li>packaged in <code>war</code> or <code>ear</code> archive</li>
+			<div class="slide">
+				<hgroup>
+					<h1>Views</h1>
+				</hgroup>
+				<div class="h-drawing" style="height: 450px; margin-top: 25px" 
+					id="1Ju9pP6mgYoFJuzhhqLP6JibZAXLM-UEgUDd_8rQp8og"></div>
+			</div>
+
+			<div class="slide">
+				<hgroup>
+					<h1>Enterprise Architecture</h1>
+				</hgroup>
+				<div class="h-drawing" style="height: 450px; margin-top: 25px" 
+				    id="1OdjNMgIXF5iKeBELzxGZmDLVQhVbteYoWLjNV29BfxA"></div>
+			</div>
+    
+    		<div class="slide">
+				<hgroup>
+					<h1>Enterprise Architecture Levels</h1>
+				</hgroup>
+				<ul class="x-small">
+					<li>Defines a structure of an enterprise system</li>
+					<ul>
+						<li>Abstracts from data, functions, processes, software, hardware</li>
+                        <li>divides enterprise system into functional blocks &#150; <b>applications</b></li>
                         <ul>
-                            <li>JAR that includes not only java classes but also additional resources such as 
-                            <code>.xml</code>, <code>.html</code>, <code>.js</code>, <code>.css</code>, <code>.jpg</code> files.</li>
+                            <li>Order Management System (OMS)</li>
+                            <li>Customer Relationship System (CRM)</li>
+                            <li>Billing and Revenue Management (BRM)</li>
                         </ul>
-                    </ul>
-                    <li>Content of <code>war</code> package</li>
-                    <pre class="brush: bash; gutter: false; class-name: ''">
-                        # web archive root
-                        war
-                         |   # directories and documents accessible through the app root /
-                         |   # such as img, css, js, ...
-                         |-- (public-directory | public-document)*
-                         |   # directories and documents internal to your application
-                         |-- WEB-INF
-                                |-- (private-directory | private-document)*
-                                |   # compiled java classes of your application
-                                |-- classes
-                                |   # all java libraries your application requires
-                                |-- lib
-                                |   # configuration of your application
-                                |-- web.xml
-                                |-- # other platform-specific configurations 
-                                    # such as app-engineweb.xml for GAE
-                    </pre>
-                </ul>
+                        <li>applications correspond to <b>domains</b> such as sales, finance, procurement, production, etc.</li>
+					</ul>
+					<li>Enterprise architecture levels</li>
+					<ul>
+						<li>Operational Support Systems (OSS)</li> 
+                        <li>Business Support System (BSS)</li>
+                        <li>Executive Information Systems (EIS)</li> 
+						<li class="space-before">Office Information Systems (OIS)</li>
+                        <li>Integration</li>
+                        <ul>
+                            <li>Business-to-Business (B2B)</li>
+                            <li>Enterprise Application Integration (EAI)</li>
+                        </ul>
+					</ul>
+				</ul>
+			</div>        
+
+    		<div class="slide">
+				<hgroup>
+					<h1>Enterprise Architecture Representation</h1>
+				</hgroup>
+				<div class="h-drawing" style="height: 470px" alt="Enterprise Architecture as a Pyramid"
+                    id="1OkBUAAuC4sMc_paN2OYYyJLaLdvr4qzttqRPr0uhN9A"></div>
+			</div>
+        
+    		<div class="slide">
+				<hgroup>
+					<h1>Organization Types</h1>
+				</hgroup>
+				<ul class="spacing">
+					<li>Customer</li>
+					<ul>
+						<li>user needs: support for business processes</li>
+						<li>defines business requirements</li>
+						<li>roles: enterprise architect, developers, admins, users</li>
+					</ul>
+					<li>Supplier (enterprise system/application provider)</li>
+					<ul>
+						<li>solutions and customization according to requirements</li>
+						<li>roles: technical and solution architects, developers, admins</li>  
+					</ul>
+					<li>Vendor (technology provider)</li>
+					<ul>
+						<li>product development according to market needs</li>
+						<li>roles: product managers, developers, reference users</li>						
+					</ul>
+				</ul>  
+			</div>
+
+    		<div class="slide">
+				<hgroup>
+					<h1>Architect Roles</h1>
+				</hgroup>
+				<ul class="spacing small">
+					<li>Technical Architect</li>
+					<ul>
+						<li>Technical architecture design</li>
+						<li>technology configurations, performance</li>
+					</ul>
+					<li>Solution Architect</li>
+					<ul>
+						<li>Requirements gathering, analysis</li>
+						<li>Solution design (data, functions, process)</li>
+					</ul>
+					<li>Enterprise Architect</li>
+					<ul>
+						<li>High-level enterprise architecture design</li>
+						<ul>
+							<li>Applications, processes, data models</li>
+						</ul>
+						<li>Should be aligned with industry standards</li>
+						<ul>
+							<li>APQC &ndash; American Productivity &amp; Quality Center (Process Classification Framework)</li>
+							<li>TM Forum &ndash; eTOM &ndash; Enhanced Telekom Operations Map (Business Process Framework)</li>																
+						</ul>
+					</ul>
+				</ul>  
+			</div>				
+				
+        </section>
+
+        <div class="slide outline">
+        </div>
+
+        <section>
+            <header>Data, Functions and Processes</header>
+            
+            <div class="slide">
+                <hgroup>
+                    <h1>Process Classification Framework</h1>
+                </hgroup>
+                <div class="h-drawing" id="1ou4lOAvwaFP2MJo1RQbJOTF-DavfYjcUF6MELE6cWws"></div>
             </div>
 
             <div class="slide">
                 <hgroup>
-    				<h1>Configuration in web.xml</h1>
-    			</hgroup>
-                <ul class="x-small">
-                    <li><code>web.xml</code> defines configuration for</li>
+                    <h1>Order Process Example in Telco</h1>
+                </hgroup>
+                <ul  class="small">
+                    <li>Order to Cash Process (O2C)</li>
                     <ul>
-                        <li>list of servlets, mapping of servlets to URL paths, welcome files, filters, EJB references, 
-                        authentication mechanism, etc.</li>
-                        <li>basic configuration example:</li>
+                        <li>end-to-end (E2E) order process</li>
                     </ul>
-                    <pre class="brush: xml">
-                        &lt;?xml version="1.0" encoding="utf-8"?>
-                        &lt;web-app 
-                            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                            xmlns="http://java.sun.com/xml/ns/javaee">
-                    
-                            &lt;servlet>
-                        		&lt;servlet-name>main&lt;/servlet-name>
-                        		&lt;servlet-class>com.vitvar.mdw.main&lt;/servlet-class>
-                        	&lt;/servlet>
-                    
-                        	&lt;servlet-mapping>
-                        		&lt;servlet-name>main&lt;/servlet-name>
-                        		&lt;url-pattern>/&lt;/url-pattern>
-                        	&lt;/servlet-mapping>
-                    
-                        	&lt;welcome-file-list>
-                        		&lt;welcome-file>index.jsp&lt;/welcome-file>
-                        	&lt;/welcome-file-list>
-                        &lt;/web-app>
-                    </pre>
+                    <div class="h-drawing" style="height: 100px; width: 700px" 
+                        id="1yX-8bZn0P2UwA06KeVJOgk4jaZ0EuMkWaIUa-RdMEno"></div>
+                    <li style="margin-top: 15px;">Involved applications</li>
+                    <ul>
+                        <li>integrated applications</li>
+                    </ul>
+                    <div class="h-drawing" style="height: 200px; width: 700px" 
+                        id="1JRgVTqa43jbpGM6PYgGQQFk3mBFHqwWu_SGZHbd0fsY"></div>
                 </ul>
-            </div>
-
+            </div>                                  
+            
             <div class="slide">
-            	<hgroup>
-    				<h1>Handling HTTP Requests</h1>
-    			</hgroup>
-                <ul class="x-small">
-                    <li>HTTP Servlets</li>
+                <hgroup>
+                    <h1>Syntax and Domain Semantics</h1>
+                </hgroup>                
+                <ul class="small">
+                    <li>Syntax</li>
                     <ul>
-                        <li>Servlet is a class that extends capabilities of application servers 
-                        via a request-response programming model</li>
-                        <li>HTTP servlets are classes that extend <code>HTTPServlet</code> abstract class</li> 
-                        <li>Example:</li>
+                        <li>Data format, representation, serialization</li>
+                        <li>Various languages at various architectural levels:<br/>
+                        XML, JSON, Class/object models in a specific programming language, SQL, DB native structures, ...</li>
+                        <li>They have formal grammars, can be checked for the correct syntax</li>
                     </ul>
-                    <pre class="brush: java">
-                        package com.vitvar.mdw;
-                    
-                        import javax.servlet.http.HttpServlet;
-                        import javax.servlet.http.HttpServletRequest;
-                        import javax.servlet.http.HttpServletResponse;
-                    
-                        public class Main extends HttpServlet {
-                            public doGet(HttpServletRequest request, HttpServletResponse response) {
-                                // GET method implementation here
-                            }
-
-                            public doPost(HttpServletRequest request, HttpServletResponse response) {
-                                // POST method implementation here
-                            }
-                        
-                            // other methods such as doPost, doDelete, doOptions
-                        }
-                    </pre>
-                </ul>
+                    <li>Domain semantics</li>
+                    <ul>
+                        <li>Meaning of terms in a domain they are being used</li>
+                        <li>We understand meaning of terms:</li>
+                        <ul>
+                            <li>Through syntax by using the natural language</li>
+                            <li>Through some <b>agreement</b> among users of the terms</li>
+                        </ul>
+                        <li>Every applications can use different semantics</li>
+                        <ul>
+                            <li>Need to mediate data from one application to another</li>
+                        </ul>
+                    </ul>
+                </ul>                    
             </div>
 
             <div class="slide">
                 <hgroup>
-    				<h1>Support for Sessions</h1>
-    			</hgroup>
-                <ul class="x-small">
-                    <li><code>HttpSession</code> interface</li>
-                    <ul>
-                        <li>Allows to store session data in the memory</li>
-                        <li>Java API for <a href="#/state-management">HTTP State Management</a></li>
-                        <ul>
-                            <li>Hides details from developers</li>
-                        </ul>
-                    </ul>
-                    <pre class="brush: java;">
-                        // method doGet in a servlet
-                        public doGet(HttpServletRequest request, HttpServletResponse response) {
-                            // access the session object through the request
-                            HttpSession session = request.getSession();
-                        
-                            // unique identification of the session, the value used for the cookie
-                            String id = session.getId();
-                        
-                            // get the value of the attribute
-                            Object value = session.getAttribute("data");
-
-                            // set the value of the attribute
-                            session.setAttribute("data", new String("some data"));
-                                                    
-                            // this will set a max-age of the session cookie 
-                            session.setMaxInactiveInterval(3600);
-                        }
-                    </pre>
-                </ul>
+                    <h1>Simplified Order Type Example</h1>
+                </hgroup>
+                <div class="h-drawing" style="height: 450px; margin-top: 10px" 
+                id="1o2nyoAPa9s78sXjWuRUNXYoh5uulvGiE7yrHpfsgrTw" format="png"></div>
             </div>
 
-        </section>		
-    		
+            <div class="slide">
+                <hgroup>
+                    <h1>Overview of Representations</h1>
+                </hgroup>                
+                <ul>
+                    <li>Languages to realize architectures</li>
+                    <ul>
+                        <li>development levels &#215; architectural views</li>
+                    </ul>
+                </ul>
+                <div class="h-drawing" style="height: 380px" id="1cyaFfMg6nhpS6ZpVkjwca_FaAN-Ff0vgy_Ji6EOuSW8"></div>
+            </div>            
+
+            <div class="slide outline">
+            </div>
+
+            <section>
+                <header>Integration</header>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>Integrating Applications</h1>
+                    </hgroup>  
+                    <ul class="x-small">
+                        <li>Intra-Enterprise Integration</li>
+                        <ul>
+                            <li>Applications exist in a specific area</li>
+                            <li>Functions and data often overlap across areas</li>
+                            <li>There is a need to integrate applications within enterprise:</li>
+                            <ul>
+                                <li>Applications need to share the same data that are often in different formats.</li>
+                                <li>Applications need to communicate &#150; a result of one process may trigger another one.</li>
+                            </ul>
+                        </ul>
+                        <li>Inter-Enterprise Integration</li>
+                        <ul>
+							<li>Also called Business-to-Business Integration (B2B)</li>
+                            <li>Automation support for communication and collaboration among enterprises</li>
+                            <li>For example, B2B automates customers' orders processing, tracking orders, etc.</li>
+                        </ul>                       
+                    </ul>               
+                </div>
+                    
+                <div class="slide">
+                    <hgroup>
+                        <h1>Integration Example &ndash; O2C</h1>
+                    </hgroup>
+                    <div class="h-drawing" style="height: 350px; margin-top: 60px" 
+                    id="1kSE87erCPlL8_3bKu9a7ufeIH71fU1RROcfB6b2yxA4" format="png"></div>
+                </div>
+
+              <!--  <div class="slide">
+                    <hgroup>
+                        <h1>Example Oracle O2C Technical Flows</h1>
+                    </hgroup>
+                    <div class="h-drawing" style="height: 490px; margin-top: 10px" 
+                    id="1zgNezT0FKt69C2Ngqjeuwp1LNv_vKeDeKInxnULN6z8" format="png"></div>
+                </div> -->
+                
+                <div class="slide">
+                    <hgroup>
+                        <h1>Integration Issues</h1>
+                    </hgroup>
+                    <ul class="x-small">
+                        <li>Key to integration = <b>interface</b></li>
+                        <ul>
+                            <li>standards &#150; data, functions, processes, technical aspects</li>
+                            <ul>
+                                <li>enterprise standards, committee standards</li>
+                                <li>unified environment from a single vendor</li> 
+                            </ul>
+                            <li>mediators</li>
+                            <ul>
+                                <li>where standard do not work out</li>
+                            </ul>
+                        </ul>
+                        <li>Data</li>
+                        <ul>
+                            <li>Message exchange formats, data representation</li>
+                            <ul>
+                                <li>often standardized</li>
+                            </ul>
+                            <li>Semantics of data</li>
+                            <ul>
+                                <li>also standardized, more difficult</li>
+                            </ul>
+                        </ul>
+                        <li>Functions and processes</li>
+                        <ul>
+                            <li>how apps' functionalities should be consumed and orchestrated, protocols, naming issues</li>
+                            <li>A service concept</li>
+                        </ul>
+                    </ul>               
+                </div>
+            </section>
+
+        </section>
+                        
+        <div class="slide outline">
+        </div>
+        
+        <section>
+            <header>Software Architecture</header>
+
+			<section>
+				<header>Types, Separation of Concerns, Interface</header>
+
+        		<div class="slide">
+    				<hgroup>
+    					<h1>Software Architecture Types</h1>
+    				</hgroup>
+    				<ul class="x-small spacing">
+    					<li>Centralized &#150; Client/Server (C/S)</li>
+    					<ul>
+    						<li>Central server, a bunch of clients</li>
+    						<li>monolithic, <b>two&ndash;</b>, <b>three&ndash;</b>, <b>multi&ndash;tier</b> architectures</li> 
+    						<li>Single point of failure!</li>
+                            <ul>
+    						    <li>when a server fails the whole system fails</li>
+    						    <li>need for a scalable and <b>highly reliable</b> server-side solutions</li>
+                            </ul>
+    						<li>Enterprise systems (mostly) use centralized solutions</li>
+                            <ul>
+                                <li>But, enhanced with peer-to-peer principles</li>
+                            </ul>
+    					</ul>
+    					<li>Decentralized &#150; Peer-to-Peer (P2P)</li>
+    					<ul>
+    						<li>Reliability</li>
+                            <ul>
+                                <li>when a node fails, other nodes take up its function</li>
+                            </ul>
+    						<li>Scalability</li>
+                            <ul>
+    						    <li>multiple nodes can share the load</li>
+                                <li>such as messaging systems in enterprise systems</li>
+                            </ul>
+    					</ul>
+    				</ul>
+    			</div>		
+
+				<div class="slide">
+					<hgroup>
+						<h1>Separation of Concerns</h1>
+					</hgroup>
+					<ul class="small">
+						<li>Separation of Concerns</li>
+						<ul>
+                            <li>also called Separation of Layers</li>
+							<li>Concern &#150; any piece of interest (part) in the application</li>
+                            <ul>
+							    <li>concerns should overlap in functionality as little as possible</li>
+                            </ul>
+							<li>Basic application concerns: data manipulation, data integrity, 
+							application logic, user-interactions</li>
+                            <li>Software architecture separates concerns into layers</li>
+                            <ul>
+                                <li>presentation, application, data</li>
+                            </ul>
+						</ul>
+						<li><b>Interface</b></li>
+						<ul>
+    						<li class="no-bullet">&#8764; agreement on "how layers should communicate"</li>
+							<li>most important artifact in Separation of Concerns</li>
+                            <li class="space-before">If an interface is in place, application development and innovation can happen <b>independently</b> 
+						    at each layer</li>
+                        </ul>
+					</ul>
+				</div>		
+	
+				<div class="slide">
+					<hgroup>
+						<h1>Software Architecture Layers</h1>
+					</hgroup>	
+					<div class="h-drawing" style="height: 430px; margin-top: 30px"
+						id="1g2Jzp4zb6VvmEmeGMGnb0JXnvzV2tVvOqu1SFLQwfhY"></div>
+				</div>
+					
+				<div class="slide">
+					<hgroup>
+						<h1>Interface</h1>
+					</hgroup>	
+					<ul class="small">
+						<li>Definition</li>
+						<ul>
+							<li>Agreement (contract) between two or more layers during communication</li>
+                        </ul>
+						<li>May be achieved by</li>
+                        <ul>
+						    <li>Through standards (accepted or enforced),</li>
+                            <li>Through a social agreement during design</li>
+                            <li>A dominant position of a technology on the market</li>
+                        </ul>
+						<li>Interface includes subsets of domain architectures</li>
+						<ul>
+							<li>Subsets that are subject to communication between layers</li>
+							<li class="space-before"><b>data</b> &#150; defines communication language (syntax, semantics),</li>
+							<li><b>functions</b> &#150; defines entry points (operations),</li>
+							<li><b>processes</b> &#150; defines valid states and transitions between them</li>
+							<li><b>technical details</b> &#150; protocols, ports, IP addresses, etc.</li>							
+						</ul>
+					</ul>
+				</div>
+
+                <div class="slide">
+					<hgroup>
+						<h1>Interface Scope</h1>
+					</hgroup>	
+					<div class="h-drawing" style="height: 230px; margin-top: 10px"
+						id="1xGYhVmeOaF09PpQ9J-u4e_Zaabvy6lzxkRrgbRCm8dg"></div>
+					<ul class="x-small">
+						<li>Scope</li>
+						<ul>
+							<li>local: layer A and B on one machine</li>
+							<li>network: layer A and B on separated machines (client/server)</li>
+						</ul>
+						<li>Application Programming Interface (API) ~ local scope</li>
+						<ul>
+							<li>OS/complex apps' interface for extension development</li>
+                        </ul>
+                        <li>Web Services and Web API (network scope)</li>
+                        <ul>
+                            <li>Web API is a new term &#150; API of Web Applications</li>
+                        </ul>
+					</ul>
+				</div>
+	
+				<div class="slide">
+					<hgroup>
+						<h1>Complex Interfaces</h1>
+					</hgroup>	
+					<div class="h-drawing" style="height: 300px; margin-top: 10px"
+						id="1duolAS2N0L7UFhk75xuky5eV9V9x6isGos76S9MGBLE"></div>
+					<ul class="x-small">
+						<li>More levels of interfaces</li>
+						<ol>
+							<li>DBMS native interface</li>
+							<li>JDBC &#150; universal connectors for various DBMS systems</li>
+							<li>JDO &#150; mapping of Java classes to data objects</li>
+							<li>Domain Object Model (OM) &#150; app-specific (~API, SDK)</li>
+                            <ul>
+							    <li>try to be as universal as possible; cover many technologies</li> 
+							</ul>
+						</ol>
+					</ul>
+				</div>
+			</section>
+				
+    		<div class="slide outline"></div>
+				
+			<section>
+				<header>Client/Server Architectures</header>
+
+				<div class="slide">
+					<hgroup>
+						<h1>Monolithic Architecture</h1>
+					</hgroup>	
+					<div class="h-drawing" style="height: 150px" 
+						id="1LEdNt_g1CLOcf1sKpyHgQx93iAD9iHDrJRH3GUN00Ps"></div>
+					<ul class="x-small">
+						<li>All layers on a single machine</li>
+						<ul>
+							<li>usually non-portable apps; specific OS</li>
+							<li>first types of computer systems, typical for 90-ties</li>
+							<li>single-user only; standalone apps, minimal integration</li>
+							<li>technologies: third-gen programming languages, local storage systems</li>
+						</ul>
+						<li>Drawbacks</li>
+						<ul>
+							<li>hard to maintain (updates, distribution of new versions)</li>
+							<li>data security issues</li>
+							<li>performance and scalability issues</li> 
+						</ul>
+					</ul>
+				</div>
+
+				<div class="slide">
+					<hgroup>
+						<h1>Two-tier Client/Server Architecture</h1>
+					</hgroup>	
+					<div class="h-drawing" style="height: 150px; margin-top: 20px" 
+						id="1Hjo1rvLZShCzhrRfTXwohQfdHmb8-ivomul0HQ98qs0"></div>
+					<ul class="x-small">
+						<li>Presentation and app layers separated with data</li>
+						<ul>
+							<li>Thick client &#150; desktop application, OS-dependent</li>
+							<li>Data on a separate server (DBMS)</li>
+							<li>Multi-user system, all sharing a database</li>
+							<li>Storage system of high performance, transactions 
+								support</li>
+							<li>SQL technology; native OS desktop application</li>
+						</ul>
+						<li>Drawbacks</li>
+						<ul>
+							<li>Thick client hard to maintain (reinstallation with every update)</li>
+							<li>No app logic sharing (only through copies)</li>
+							<li>Data-oriented integration (integrity in the app logic!)</li>
+						</ul>
+					</ul>
+				</div>
+
+				<div class="slide">
+					<hgroup>
+						<h1>Three-tier Client/Server Architecture</h1>
+					</hgroup>	
+					<div class="h-drawing" style="height: 150px; margin-top: 20px" 
+						id="1zSrBDm5DGLfV5XIKMzKvEMQY31y38KkHuawB9a0bhrA"></div>
+					<ul class="x-small">
+						<li>All layers on separated machines</li>
+						<ul>
+							<li>Thin client &#150; desktop application or interpreted code</li>
+							<li>Multi-user system, all sharing app logic and a database</li>
+							<li>App server of high performance, scalability</li>
+						</ul>
+    					<li>Drawbacks</li>
+						<ul>
+							<li>Spaghetti integration (see <a href="lecture1.html#/spaghetti">Lecture 1</a>)</li>
+							<li>Limited, single app server scalability</li>
+						</ul>
+					</ul>
+				</div>
+                
+				<div class="slide">
+					<hgroup>
+						<h1>Multi-tier Client/Server Architecture</h1>
+					</hgroup>	
+					<div class="h-drawing" style="height: 120px; margin-top: 20px; margin-bottom: 20px" 
+						id="1COkmR7I_1RUdIcrQw8_NYTA-qzY_rBrrZm5JdjkIFaY"></div>
+					<ul class="y-small">
+						<li>Additional middleware layer</li>
+						<ul>
+							<li>loose coupling, shift towards peer-to-peer architectures</li> 
+							<li>provides value-added services for communications</li>
+							<li>individual servers or a compact solution (e.g., Enterprise Service Bus)</li>
+						</ul>
+                    </ul>
+                </div>
+                
+                <div class="slide">
+    				<hgroup>
+						<h1>Types of Middleware</h1>
+					</hgroup>	
+                    <ul class="x-small spacing">
+                        <li>Scalability</li>
+                        <ul>
+                            <li>They help to achieve high performance through better scalability</li>
+                            <li class="space-before">Messaging Servers (message queues, publish/subscribe)</li>
+                            <li>Load Balancers</li>
+                            <li>Proxy servers, reverse proxy</li>
+                        </ul>
+                        <li>Functional</li>
+                        <ul>
+                            <li>They help to achieve more flexible integration</li>
+                            <li class="space-before">Process servers</li>
+                            <li>Repositories, registries of services/components</li>
+                            <li>Mediators &#150; data interoperability, process interoperability, technical interoperability (SOAP server)</li>
+                            <li>Monitors for analytics of apps usages</li>
+                        </ul>
+                        <li>Security</li>
+                        <ul>
+                            <li>Firewalls, Gateways, ...</li>
+                        </ul>
+					</ul>
+				</div>
+			</section>            
+            
+        </section>
+
+        
     </body>
 </html>
-
-
