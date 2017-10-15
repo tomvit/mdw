@@ -338,18 +338,19 @@
 
                 <div class="slide">
                     <hgroup>
-                        <h1>Proxy Server</h1>
+                        <h1>Forward Proxy</h1>
                     </hgroup>
                     <div class="h-drawing" id="1zt7pfPYpd5cdHu92rimaRelwjKHkHeeA7AhHnrerI74" 
                         style="height: 270px"></div>
                     <ul class="xx-small">
-                        <li>Proxy Server</li>
+                        <li>Forward Proxy</li>
                         <ul>
                             <li>Centralized access control based on content</li>
+			    <li>The client knows about the site it wants to access</li>
                             <li>Perfoms request on behalf of the client</li>
                             <ul>
                                 <li>Caches content to increase performance, limits network traffic</li>
-                                <li>Filters requests based on their destinations</li>
+                                <li>Filters requests or controls access based on destinations or origins</li>
                             </ul> 
                             <li>Widely used in private networks in companies</li>
                             <li>Most of the proxy servers today are Web proxy servers</li>
@@ -359,22 +360,22 @@
 
                 <div class="slide">
                     <hgroup>
-                        <h1>Reverse Proxy Server</h1>
+                        <h1>Reverse Proxy</h1>
                     </hgroup>
                     <div class="h-drawing" id="1RpfjNLhFSzu7mDdWVvV3ZldHEhzx9rLB1KpHpdL9bno" 
                         style="height: 270px"></div>
                     <ul class="xx-small">
-                        <li>Reverse Proxy Server</li>
+                        <li>Reverse Proxy</li>
                         <ul>
                             <li>Aggregates multiple request-response interactions with back-end systems</li>
                             <li>Processes the request on behalf of the client</li>
-                            <li>Provides additional values to communication</li>
+			    <li>The client does not know about the back-end systems</li>
+                            <li>May provide additional capabilities</li>
                             <ul>
                                 <li>Data transformations</li>
                                 <li>Security &ndash; authentication, authorization</li>
                                 <li>Orchestration of communication with back-end systems</li>
                             </ul>
-                            <li>Examples: Enterprise Service Bus, Security Gateway</li>
                         </ul>
                     </ul>
                 </div>
