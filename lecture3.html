@@ -83,51 +83,27 @@
 						<li>Web Server supports HTTP only</li>
 						<li>HTTP request/response, security, proxy, caching</li>
 					</ul>
-	                <li>Communication models</li>
-	                <ul>
-	                    <li>Blocking I/O (also called synchronous I/O)</li>
-	                    <li>Non-blocking I/O (also called asynchronous I/O)</li>
-	                </ul>
-	            </ul>                
+	            </ul>
 	        </div>
 
             <div class="slide">
     			<hgroup>
-    				<h1>Java Enterprise Edition &ndash; JEE</h1>
+    				<h1>Standard Java Technology Stack</h1>
     			</hgroup>
                 <ul class="small">
-                    <li>Java Enterprise Edition (JEE)</li>
-                    <ul>
-                        <li>Collection of technologies for server-side programming</li>
-						<li>Programming of application components</li>
-                        <li>Main technologies</li>
-                        <ul>                        
-                            <li>Servlet technology and Java Server Pages (JSP)</li>
-                            <li>Remote Method Invocation (RMI)</li>
-                            <li>Java Database Connectivity Services (JDBC)</li>
-                            <li>Java Messaging System (JMS)</li>
-                        </ul>
-                    </ul>
-                    <li>Basis for many application servers such as</li>
-                    <ul class="x-small">
-                        <li>Oracle WebLogic</li>
-                        <li>Google AppEngine (Java)</li>
-                        <li>JBoss</li>
-                        <li>GlassFish</li>
-                        <li>IBM WebSphere</li>
-                    </ul>
+					<img src="img/java-stack.png" style="margin-left: -20px; padding-top: 30px"/>
                 </ul>
             </div>
 
-            <div class="slide">
-        		<hgroup>
-    				<h1>Application Server Layers</h1>
-    			</hgroup>
-				<div class="h-drawing" id="17DlmmSs0FHtUNWKTk1y1a0fWotKTB2m91nKjqYVyZiE" style="height: 250px"></div>
-				<ul class="x-small">
+			<div class="slide">
+				<hgroup>
+					<h1>Application Server Layers</h1>
+				</hgroup>
+				<div class="h-drawing" id="17DlmmSs0FHtUNWKTk1y1a0fWotKTB2m91nKjqYVyZiE" style="height: 300px"></div>
+				<ul class="xx-small">
 					<li>Features</li>
 					<ul>
-						<li>AS appears as a single process in the OS</li>
+						<li>AS instance appears as a single process in the OS</li>
 						<ul>
 							<li>you can use standard OS commands to investigate its operation</li>
 							<li>AS listens on a single or multipe IPs (VIPs) and a tcp port</li>
@@ -139,59 +115,120 @@
 						</ul>
 					</ul>
 				</ul>
-			</div>	
+			</div>
 
-        	<div class="slide outline"></div>
+			<div class="slide">
+				<hgroup>
+					<h1>Example Weblogic Infrastructure</h1>
+				</hgroup>
+				<div class="h-drawing" id="1ORdelV4uCzUHHsMlh7W0oGMfKL9Y3MLqYnm15CMgb5I" style="height: 450px"></div>
+			</div>
 
-			<section>
-				<header>I/O Communication Models</header>
-
-		        <div class="slide"> 
-					<hgroup> 
-						<h1>Blocking I/O Model</h1> 
-					</hgroup> 
-					<ul class="small">
-						<li>The server creates a thread for every connection</li>
-		                   <ul>                    
-		                       <li>For example, 1K connections = 1K threads, big overhead</li>
-		                   </ul>
-		               </ul>
-		   			<div id="1QP7gZSS1WS3YquzLekSgdZfcmi4BYArm-K9tuWrULQs" class="h-drawing" style="height: 220px"></div>
-		               <ul class="small">
-		                   <li>Characteristics</li>
-		                   <ul>
-		   					<li>the thread is reserved for the connection</li>
-						<li>When processing of the request requires other interactions with DB/FS or network 
-							communication is slow</li>
-		                   <ul>
-		                       <li>scales very bad as the thread's execution is "blocked"</li>
-		                   </ul>
+			<div class="slide">
+				<hgroup>
+					<h1>Terminology</h1>
+				</hgroup>
+				<ul class="xx-small">
+					<li>Domain</li>
+					<ul>
+						<li>A group of servers with specific configuration of applications and objects</li>
 					</ul>
-				</div>
-
-		        <div class="slide"> 
-		   			<hgroup> 
-						<h1>Non-Blocking I/O Model</h1> 
-					</hgroup> 
-					<ul class="small">
-						<li>Connections maintained by the OS, not the Web app</li>
-		                   <ul>                    
-		                       <li>The Web app registers events, OS triggers events when occur</li>
-		                   </ul>
-		               </ul>
-		   			<div id="1kxkFc3Chl4qFXxH_4f2seuNbpBdENMyZWMRUmxd1p28" class="h-drawing" style="height: 220px"></div>
-		               <ul class="small">
-						<li>Characteristics</li>
-		                   <ul>
-		                       <li>Event examples: new connection, read, write, closed</li>
-						    <li>The app may create working threads, but controls the number!</li>
-		                       <ul>
-						        <li>much less number of working threads as opposed to blocking I/O</li>
-		                       </ul>
-		                   </ul>
+					<li>Administration Server</li>
+					<ul>
+						<li>An instance of application server that manages the domain</li>
 					</ul>
-				</div>
-			</section>
+					<li>Managed Server</li>
+					<ul>
+						<li>An instance of application server running instances of applications and objects</li>
+					</ul>
+					<li>Cluster</li>
+					<ul>
+						<li>A group of managed servers; they contain the same copy of applications and objects</li>
+					</ul>
+					<li>Machine</li>
+					<ul>
+						<li>A physical machine and OS running one or more servers (Admin or Managed)</li>
+					</ul>
+					<li>Node Manager</li>
+					<ul>
+						<li>A process that provides an access to admin and managed servers on the machine</li>
+					</ul>
+					<li>Load Balancer</li>
+					<ul>
+						<li>A network element that distributes client requests to managed servers based on a specific algorithm</li>
+					</ul>
+				</ul>
+			</div>
+
+			<div class="slide">
+				<hgroup>
+					<h1>Console Example &ndash; Weblogic Server</h1>
+				</hgroup>
+				<div class="h-drawing" id="18_IxASaDBUOGplwP64NihWC4669RkSEmnM5Y0HdQyZI" format="png" style="height: 450px" ></div>
+			</div>
+
+			<div class="slide">
+				<hgroup>
+					<h1>Application Server from the OS View</h1>
+				</hgroup>
+				<ul class="xx-small">
+					<li>Process ID, command line arguments</li>
+					<pre class="brush: bash; class-name: 'xx-small tight'; first-line: 5">
+						$ ps ax | grep WLS_SOA
+						 1820 ?        Sl   289:15 /opt/oracle/jrockit/bin/java -jrockit
+						 -Xms768m -Xmx1536m -Dweblogic.Name=WLS_SOA1 -Djava.security.policy=
+						 /opt/oracle/11g/fmw/wlserver_10.3/server/lib/weblogic.policy
+						 -Dweblogic.ProductionModeEnabled=true
+						 ...</pre>
+					<li>Open files by the process</li>
+					<pre class="brush: bash; class-name: 'xx-small tight'; first-line: 5">
+						$ ll -l /proc/1820/fd
+						 lr-x------ 1 oracle oinstall 64 Oct 12 16:53 0 -> /dev/null
+						 l-wx------ 1 oracle oinstall 64 Oct 12 16:53 1 -> /opt/oracle/11g/domains/soa_domain/servers/WLS_SOA1/logs/WLS_SOA1.out
+						 lr-x------ 1 oracle oinstall 64 Oct 12 16:53 10 -> /opt/oracle/11g/fmw/oracle_common/modules/oracle.jdbc_11.1.1/ojdbc6dms.jar
+						 lr-x------ 1 oracle oinstall 64 Oct 12 16:53 100 -> /opt/oracle/11g/fmw/modules/com.bea.core.common.engine.api_1.0.0.0_6-2-0-0.jar
+						 ...</pre>
+					<li>Open sockets by the process</li>
+					<pre class="brush: bash; class-name: 'xx-small tight'; first-line: 5">
+						$ netstat -anp | grep 1820
+						tcp  0 0 192.168.94.52:8001      0.0.0.0:*              LISTEN      1820/java
+						tcp  0 0 192.168.94.10:8088      0.0.0.0:*              LISTEN      1820/java
+						tcp  0 0 192.168.94.10:39763     192.168.94.20:33001    ESTABLISHED 1820/java
+						tcp  0 0 192.168.94.52:8001      192.168.94.20:59589    ESTABLISHED 1820/java
+						tcp  0 0 192.168.94.10:33498     192.168.94.20:33001    ESTABLISHED 1820/java
+						tcp  0 0 192.168.94.10:33504     192.168.94.20:33001    ESTABLISHED 1820/java
+						 ...</pre>
+				</ul>
+			</div>
+
+			<div class="slide">
+				<hgroup>
+					<h1>Application Server from the JVM View</h1>
+				</hgroup>
+				<ul class="x-small">
+					<li>Thread dumps</li>
+					<ul>
+						<li>All threads that the application server uses, a snapshot on all the threads</li>
+						<li>Prints stack trace of currently run threads</li>
+					</ul>
+					<pre class="brush: bash; class-name: 'xx-small tight'; first-line: 5">
+						$ jrockit 1820 print_threads</pre>
+					<li>Command line arguments</li>
+					<ul>
+						<li>Prints all command line arguments of the JVM process</li>
+						<ul>
+							<li>Memory settings, log file locations, etc.</li>
+						</ul>
+					</ul>
+					<pre class="brush: bash; class-name: 'xx-small tight'; first-line: 5">
+						$ jrockit 1820 command_line</pre>
+					<li>Java flight recordings</li>
+					<ul>
+						<li>Recordings of the JVM process in time (usually 5 minutes)</li>
+						<li>Shows memory usages, garbage collections phases, threads statuses, etc.</li>
+					</ul>
+				</ul>
+			</div>
 
 		</section>
 
