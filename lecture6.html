@@ -476,18 +476,49 @@
 								<li>objects: applications, JMS destinations, RMI objects</li>
 							</ul>
 						</ul>
-						<li>Communication in the cluster</li>
+						<li>Cluster Messaging Protocols</li>
 						<ul>
-							<li>peer-to-peer communication using IP sockets</li>
-							<li>IP multicast which servers use to broadcast availability of objects and heartbeats</li>
-						</ul>
-						<li>Configurations</li>
-						<ul>
-							<li>Objects deployed to to all servers in a cluster</li>
+							<li><b>Unicast</b> - one-to-one communication using IP sockets</li>
+							<li><b>Multicast</b> - one-to-many communication</li>
+							<li>Cluster services that rely on the cluster messaging protocol</li>
 							<ul>
-								<li>Cluster-wide JNDI tree allows to look-up clustered objects</li>
+								<li>Cluster Membership</li>
+								<li>JNDI Replication</li>
 							</ul>
-							<li>Servers in a cluster may get replicated through migration</li>
+						</ul>
+					</ul>
+				</div>
+
+				<div class="slide">
+					<hgroup>
+						<h1>Cluster Services</h1>
+					</hgroup>
+					<ul class="x-small">
+						<li>Cluster Membership</li>
+						<ul>
+							<li>Cluster members maintain their view on what servers are in the cluster</li>
+							<li>Each server sends heartbeat messages to the cluster</li>
+							<ul>
+								<li>others know it is alive</li>
+							</ul>
+							<li>Each server receives heartbeat messages</li>
+							<ul>
+								<li>When a server misses a number of messages from a cluster, it removes the servver from the list
+								until it receives the next heartbeat message.</li>
+							</ul>
+						</ul>
+						<li>JNDI Replication</li>
+						<ul>
+							<li>Provides each server with a cluster-wide view of the JNDI tree.</li>
+							<li>Servers send JNDI update messages to the cluster when an object is bound or removed to their local tree.</li>
+							<li>When a server leaves the cluster</li>
+							<ul>
+								<li>other members remove its JNDI bindings from their three.</li>
+							</ul>
+							<li>When a server joins the cluster</li>
+							<ul>
+								<li>The server asks other server for a JNDI state dump.</li>
+							</ul>
 						</ul>
 					</ul>
 				</div>
@@ -637,7 +668,7 @@
 					<li>A memory leak or inadequate heap allocation</li>
 					<ul>
 						<li>Old is out of space &rarr; full GC will run often (or continously)</li>
-						<li>High CPU utilization, ESB will not be able to process/respond to requests</li>
+						<li>High CPU utilization, The server will not be able to process/respond to requests</li>
 					</ul>
 				</ul>
 			</div>			
