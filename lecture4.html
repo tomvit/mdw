@@ -457,6 +457,25 @@
 	                    style="height: 450px" class="h-drawing" format="png"></div>
 	            </div>        
 
+				<div class="slide">
+					<hgroup>
+						<h1>Deployment to Cluster</h1>
+					</hgroup>
+					<ul class="x-small">
+						<li>Deployment of an object</li>
+						<ul>
+							<li>Client deploys to one managed server in the cluster</li>
+							<li>Object gets replicated to its targets</li>
+							<ul>
+								<li>Targets can be configured for the object, usually all servers but can be selected servers</li>
+							</ul>
+						</ul>
+					</ul>
+					<center>
+					<div id="1f_D8YEP87vmI-ZLR8wGx9yMRFAsJkCDwVm0mltz5xiw" class="h-drawing" style="width: 550px"></div>
+					</center>
+				</div>
+
 	            <div class="slide">
 	                <hgroup>
 	                    <h1>Cluster-wide JNDI Tree</h1>
@@ -468,6 +487,7 @@
 	                		<li>Servers in a cluster sync up their JNDI trees as per the target configuration</li>
 	                		<ul>
 	                			<li>A stub of the object appears in every managed server's JNDI tree</li>
+	                			<li>They use <a href="lecture6.html#/22">JNDI replication service</a> (see Lecture 6)</li>
 	                		</ul>
 	                	</ul>
 	                	<li>When a client retrieves an object from the tree</li>
@@ -475,11 +495,32 @@
 	                		<li>Client connects to the cluster using the cluster address</li>
 	                		<li>Client creates an initial context (represents a naming service)</li>
 	                		<li>Client uses the initial context to lookup objects</li>
-	                		<li>The naming service can failover to a next available managed server when lookup fails</li>
+	                		<li>Client uses the stub of the object to call the service</li>
 	                	</ol>
 	                </ul>
 	            </div>        
 
+				<div class="slide">
+					<hgroup>
+						<h1>Object Failover</h1>
+					</hgroup>
+					<ul class="x-small">
+						<li>Failover</li>
+						<ul>
+							<li>Failover = ability to locate an object on another server that holds a copy of the object without impact on the 
+								performace and configuration</li>
+						</ul>
+					</ul>
+					<center>
+					<div id="1q3-1NEIj6sLX_2FnOUGDxrHiAyHRJac3x-l8tcO88f0" class="h-drawing" style="width: 600px"></div>
+					</center>
+					<ul class="x-small"><ul>
+						<li>A client gets a stub of the object by calling <code>lookup</code> on the context</li>
+						<li>A client uses the stub of the object to access the object on the server</li>
+						<li>When a server fails, replicate-aware stub calls the next server that holds the object copy</li>
+					</ul></ul>
+
+				</div>
 
 	            <div class="slide">
 	                <hgroup>
