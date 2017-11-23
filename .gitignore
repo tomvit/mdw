@@ -1,0 +1,8 @@
+pdf
+cache
+toc.json
+.idea
+.DS_Store
+*.swp
+*.iml
+
