@@ -57,14 +57,14 @@
 				<h1>Good Performance</h1>
 			</hgroup>
 			<ul class="small">
-				<li>What influences a good performance?</li>
+				<li>What influences good performance?</li>
 				<ul>
 					<li>Number of users and concurrent connections</li>
 					<li>Number of messages and messages' sizes</li>
 					<li>Number of services</li>
 					<li>Infrastructure &ndash; capacity, availability, configuration, ...</li>
 				</ul>
-				<li>How can we achieve a good performance?</li>
+				<li>How can we achieve good performance?</li>
 				<ul>
 					<li>Infrastructure</li>
 					<ul>
@@ -297,14 +297,6 @@
 							<li>IP address in cache, could take hours to re-assign</li>
 							<li>No information about servers' loads and health</li>
 						</ul>
-						<!--<li>Variation of DNS Round robin</li>
-						<ul>
-							<li>a load balancer assigns domain names</li>
-	                        <ul>
-	                            <li>each domain has a different IP in DNS</li>
-	                        </ul>
-							<li>a health-check is possible, IP re-assignment problem remains</li> 
-						</ul>-->
 					</ul>
 				</div>
 	
@@ -364,34 +356,54 @@
 
 				<div class="slide">
 					<hgroup>
-						<h1>Round-Robin Algorithm with Health Check</h1>
+						<h1>Round-Robin Algorithm</h1>
 					</hgroup>
-					<ul class="x-small">
+					<ul class="xx-small">
 						<li>Uses</li>
-						<ul>
-							<li>request &ndash; client request with or without a cookie information</li>
-							<li>server list &ndash; a list of servers that can process the request</li>
-							<ul>
-								<li>e.g. <code>WebLogicCluster</code> value (see previous slide)</li> 
-							</ul>
-							<li>unhealthy treshhold &ndash; a number of negative consecutive health checks 
+						<ul class="no-bullet">
+							<li><code>request</code> &ndash; client request with or without a cookie information</li>
+							<li><code>server_list</code> &ndash; a list of servers that can process the request</li>
+							<li><code>rbinx</code> &ndash; round robin index</li>
+							<li><code>sticky_sessions</code> &ndash; associative array of pairs <code>&lt;session_id,server&gt;</code></li> 
+							<li><code>unhealthy_treshhold</code> &ndash; a number of negative consecutive health checks 
 							before moving the server to the "unhealthy" state.</li>
 						</ul>
-						<li>Steps</li>
+						<li>Round Robin Algorithm</li>
 						<ul>
-							<li><b>if a cookie exist in the request that identifies a server</b></li>
-							<li>always use that server</li>
-
-							<li class="space-before"><b>health check</b></li>
-							<li>LB polls the servers' heatlhcheck endpoints</li>
-							<li>if a number of health checks exceeds the unhealthy threshold</li>
-	                        <ul>
-							    <li>LB removes the server from the server list</li>
-	                        </ul>
-							<li>if a server was unhealthy and a there was a successful healthcheck</li>
+							<li>if <code>session_id</code> exist in the <code>request</code> and in <code>sticky_sessions</code></li>
 							<ul>
-	                            <li>LB adds the server to the server list</li>
-	                        </ul>							
+								<li>send the <code>request</code> to the server <code>sticky_sessions[session_id]</code></li>
+							</ul>
+							<li>otherwise</li>
+							<ul> 
+								<li>send the <code>request</code> to the <code>rbinx</code> server in the <code>server_list</code></li>
+								<li>extract <code>session_id</code> from the response from the server</li>
+								<li>if the <code>session_id</code> exist, add a pair <code>&lt;session_id;server_list[rbinx]&gt;</code> to <code>sticky_sessions</code></li> 
+								<li>increase <code>rbinx</code> by one or reset it to <code>0</code> if it exceeds the length of <code>server_list</code></li>
+							</ul>
+						</ul>
+					</ul>
+				</div>
+
+
+				<div class="slide">
+					<hgroup>
+						<h1>Health Check</h1>
+					</hgroup>
+					<ul class="xx-small">
+						<li>Health Check</li>
+						<ul>
+							<li>For each server in the <code>server_list</code></li>
+							<ul>
+							<li>call the server's heatlhcheck endpoint</li>
+							<li>if a number of failed health checks for the server exceeds the <code>unhealthy_threshold</code></li>
+                        	<ul>
+						    	<li>remove the server from the <code>server_list</code></li>
+                        	</ul>
+							<li>if the server was unhealthy and a there was a successful healthcheck</li>
+							<ul>
+                            	<li>add the server back to the <code>server_list</code></li>
+                        	</ul>
 						</ul>
 					</ul>
 				</div>				
@@ -464,30 +476,67 @@
 					<hgroup>
 						<h1>Overview</h1>
 					</hgroup>
-					<ul class="x-small">
-						<li>Cluster</li>
+					<ul class="xx-small">
+						<li>Cluster capabilities</li>
 						<ul>
-							<li>A group of servers that act together to serve client requests</li>
-							<li>Cluster appears to clients as a single application server</li>
+							<li>A group of servers (aka cluster members) act together to serve clients' requests</li>
+							<li>Cluster is transparent to clients</li>
 							<li>Servers can run on the same machines or on different machines</li>
 							<li>Cluster's capacity can be increased by adding servers to the cluster</li>
 							<li>Servers in a cluster may have the same copy of objects and they are aware of each other objects</li>
 							<ul>
 								<li>objects: applications, JMS destinations, RMI objects</li>
+								<li>See <a href="lecture4.html#/23">Cluster-wide JNDI tree</a> in Lecture 4</li>
 							</ul>
 						</ul>
 						<li>Cluster Messaging Protocols</li>
 						<ul>
-							<li><b>Unicast</b> - one-to-one communication using IP sockets</li>
+							<li>When servers need to send messages to other members of the cluster</li>
+							<li><b>Unicast</b> - one-to-one communication using TCP/IP sockets</li>
 							<li><b>Multicast</b> - one-to-many communication</li>
 							<li>Cluster services that rely on the cluster messaging protocol</li>
 							<ul>
 								<li>Cluster Membership</li>
 								<li>JNDI Replication</li>
 							</ul>
+							<li>There are services using persistent RMI connections between cluster members</li>
+							<ul>
+								<li>such as during in-memory replication of HTTP session information</li>
+							</ul>
 						</ul>
 					</ul>
 				</div>
+
+				<div class="slide">
+					<hgroup>
+						<h1>Unicast</h1>
+					</hgroup>
+					<ul class="xx-small">
+						<li>Overview</li>
+						<ul>
+							<li>Uses standard TCP/IP sockets to send messages across cluster members</li>
+							<li>Uses a <b>group leader strategy</b> to limit the number of sockets required to send messages within the cluster</li>	
+						</ul>
+						<li>Groups in the cluster</li>
+						<ul>
+							<li>Cluster is split into <code>M</code> groups with <code>N</code> servers, each group has a leader</li>
+							<li>Servers communicate with the group leader, group leaders communicate with servers in the group and other group leaders</li>
+							<li>When a group leader dies, the group elects another group leader</li>
+							<li>There is up to <code>MxN</code> network messages for every cluster message</li> 
+						
+						</ul>
+						<div class="h-drawing" id="1i4d-qdauj-3SpRGH6pTLcq52WxFuPPi_SYwtwOL293o" style="width: 550px"></div>
+					</ul>
+				</div>
+
+				<!--<div class="slide">
+					<hgroup>
+						<h1>Multicast</h1>
+					</hgroup>
+					<ul class="x-small">
+					</ul>
+				</div>-->
+
 
 				<div class="slide">
 					<hgroup>
@@ -522,69 +571,6 @@
 						</ul>
 					</ul>
 				</div>
-
-				<div class="slide">
-					<hgroup>
-						<h1>Deployment to Cluster</h1>
-					</hgroup>
-					<ul class="x-small">
-						<li>Deployment of an object</li>
-						<ul>
-							<li>Client deploys to one managed server in the cluster</li>
-							<li>Object gets replicated to its targets</li>
-							<ul>
-								<li>Targets can be configured for the object, usually all servers but can be selected servers</li>
-								<li>See <a href="lecture4.html#/30/v1">Lecture 4</a> for the definition of the object</li>
-							</ul>
-						</ul>
-					</ul>
-					<center>
-					<div id="1f_D8YEP87vmI-ZLR8wGx9yMRFAsJkCDwVm0mltz5xiw" class="h-drawing" style="width: 550px"></div>
-					</center>
-				</div>
-
-				<div class="slide">
-					<hgroup>
-						<h1>Object Failover</h1>
-					</hgroup>
-					<ul class="x-small">
-						<li>Failover</li>
-						<ul>
-							<li>Failover = ability to locate an object on another server that holds a copy of the object without an impact on the 
-								performace and configuration</li>
-						</ul>
-					</ul>
-					<center>
-					<div id="1q3-1NEIj6sLX_2FnOUGDxrHiAyHRJac3x-l8tcO88f0" class="h-drawing" style="width: 600px"></div>
-					</center>
-					<ul class="x-small"><ul>
-						<li>A client gets a stub of the object by calling <code>lookup</code> on the context</li>
-						<li>A client uses the stub of the object to access the object on the server</li>
-						<li>When a server fails, replicate-aware stub calls the next server that holds the object copy</li>
-					</ul></ul>
-
-				</div>
-
-				<div class="slide">
-					<hgroup>
-						<h1>Server Failover</h1>
-					</hgroup>
-					<ul class="x-small">
-						<li>Failover</li>
-						<ul>
-							<li>Failover = ability to relocate the server to another machine without an impact on the performance</li>
-						</ul>
-					</ul>
-					<center>
-					<div id="1oL9qq_e6rKx3hJeTWMaOc4xhliMfUB1TgYJl_Ph8a70" class="h-drawing" style="width: 550px"></div>
-					</center>
-					<ul class="x-small"><ul>
-						<li>Managed server listens on <code>virtual_IP:port</code></li>
-						<li>A load balancer forwards a request to <code>virtual_IP:port</code></li>
-						<li>When the server moves, <code>virtual_IP:port</code> remains the same</li>
-					</ul></ul>
-
-				</div>
 				
 			</section>
 		</section>
@@ -603,14 +589,57 @@
 
 			<div class="slide">
 				<hgroup>
-					<h1>Example Performance Testing</h1>
+					<h1>Monitoring</h1>
 				</hgroup>
-				<div class="h-drawing" id="1gZFMDN1blCkW0p-_tOfrE8mImgOOVSS7ggEmZry0JKI" style="height: 400px" format="png"></div>
 				<ul class="xx-small">
+					<li>Important to understand performance</li>
 					<ul>
-						<li>Completed &ndash; number of completed orders</li>
-						<li>MIN, MAX, AVG &ndash; a minimum/maximum/average processing time in 10 minutes</li>
-						<li>At 18:30&ndash;20:20 was a performance issue with OMS environment</li>
+						<li>DevOps monitoring trends</li>
+					</ul>
+					<li>What you need</li>
+					<ul>
+						<li>Collect &rarr; Filter &rarr; Store &rarr; View &rarr; <b>Tune</b></li>
+						<li>Metrics, dashboards, alerting, log management, reporting, tracing capabilities</li>
+						<li>It is necessary to organize metrics well in order to understand what is going on</li>
+						<li>Start from a high-level process, detail to technical components</li>
+					</ul>
+					<li>Source</li>
+					<ul>
+						<li>Application server</li>
+						<ul>
+							<li>usually management beans with JMX interfaces</li>
+							<li>log files (access logs, server logs, etc.)</li>
+						</ul>
+						<li>OS</li>
+						<ul>
+							<li>many utilities available out of the box</li>
+							<li>open sockets, memory, context switches, I/O performance, CPU usage</li>
+						</ul>
+						<li>Database</li>
+						<ul>
+							<li>applications may write metrics to the DB</li>
+							<li>SQL scripts to collect metrics</li>
+						</ul>
+					</ul>
+				</ul>
+			</div>			
+
+			<div class="slide">
+				<hgroup>
+					<h1>Monitoring Tools</h1>
+				</hgroup>
+				<ul class="x-small">
+					<li>Commercial Monitoring Solutions</li>
+					<ul>
+						<li>Application server vendor usually offers a monitoring solution</li>
+						<li>AppDynamics, Oracle Enterprise Manager, Splunk</li>
+						<li>Google stackdriver, Amazon AWS CloudWatch</li>
+					</ul>
+					<li>Open source examples</li>
+					<ul>
+						<li>Elasticsearch + LogStash + Kibana</li>
+						<li>InfluxDB + Telegraph + DataGraph</li>
+					</ul>
 				</ul>
 			</div>			
 
