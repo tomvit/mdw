@@ -8,15 +8,15 @@
     <head>
     	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> 
         <meta name="course"   content="Middleware and Web Services"/>
-		<meta name="lecture"  content="Lecture 6"/>
-   		<meta name="keywords" content="SOA, Service concepts"/>
+		<meta name="lecture"  content="Lecture 7"/>
+   		<meta name="keywords" content="SOA, service concepts, service technologies, SOAP, REST, WSDL"/>
            
         <link type="text/css" rel="stylesheet" href="css/meta.css"></link>   
         <link type="text/css" rel="stylesheet" href="css/ctu-fit.css"></link>   
         <link type="text/css" rel="stylesheet" href="humla/lib/core/humla.css"></link>   
 
         <script type="text/javascript" src="humla/lib/humla.js"></script>
-        <title>Service Concepts</title>
+        <title>Service Concepts and Technologies</title>
 	</head>
 	
 	<body>
@@ -216,8 +216,6 @@
                     <li><b>ESB provides both Web service and ETL capabilities</b></li>
                 </ul>
             </div>
-
-
         </section>
         
         <div class="slide outline"></div>
@@ -296,524 +294,882 @@
 				  style="height: 420px"></div>
 			</div>
             
-            <div class="slide outline"></div>            
-            
-			<section>
-				<header>Definition of a Service</header>
-
-				<div class="slide" id="service-definition">
-					<hgroup>
-						<h1>Service</h1>
-					</hgroup>
-					<ul class="small">
-                        <li>Difficult to agree on one definition</li>
-						<li>Business definition</li>
-						<ul>
-							<li>A service realizes an effect that brings a business value
-							to a service consumer</li>
-                            <ul>
-							    <li>for example, to pay for and deliver a book</li>
-                            </ul>
-						</ul>
-						<li>Conceptual definition</li>
-						<ul>
-							<li>service characteristics</li>
-                            <ul>
-							    <li>encapsulation, reusability, loose coupling, contracting, 
-							    abstraction, discoverability, composability</li>
-                            </ul>
-						</ul>
-						<li>Logical definition</li>
-						<ul>
-							<li>service interface, description and implementation</li>
-							<li>service usage process</li>
-							<ul>
-                                <li>service use tasks, service types</li>
-                            </ul>
-						</ul>
-					</ul>
-				</div>
-
-    			<div class="slide">
-					<hgroup>
-						<h1>Interface, Description and Implementation</h1>
-					</hgroup>
-                    <div class="h-drawing" style="height: 240px" id="1i1A6rM7K34IVVLrJK_ETV7-shOTl9fuzPYjOfpUMrwY"></div>
-                    <ul class="x-small">
-                        <li>Terminology clarification</li>
+			<div class="slide" id="service-definition">
+				<hgroup>
+					<h1>Service</h1>
+				</hgroup>
+				<ul class="xx-small">
+                    <li>Difficult to agree on one definition</li>
+					<li>Business definition</li>
+					<ul>
+						<li>A service realizes an effect that brings a business value
+						to a service consumer</li>
                         <ul>
-                            <li>service ~ service interface + service implementation</li>
-                            <li>WSDL service ~ service description in WSDL language</li>
-                            <li>SOAP service ~ a service interface is possible to access through SOAP protocol; 
-                            there is a WSDL description usually available too.</li>
-                            <li>REST/RESTful service ~ service interface that conforms to REST architectural style and HTTP protocol</li>
+						    <li>for example, to pay for and deliver a book</li>
+                        </ul>
+					</ul>
+					<li>Conceptual definition</li>
+					<ul>
+						<li>service characteristics</li>
+                        <ul>
+						    <li>encapsulation, reusability, loose coupling, contracting, 
+						    abstraction, discoverability, composability</li>
+                        </ul>
+					</ul>
+					<li>Logical definition</li>
+					<ul>
+						<li>service interface, description and implementation</li>
+						<li>service usage process</li>
+						<ul>
+                            <li>service use tasks, service types</li>
+                        </ul>
+					</ul>
+                    <li>Architectural definition</li>
+                    <ul>
+                        <li>business service (also application service)</li>
+                        <ul>
+                           <li>external, exposed functionality of an application</li>
+                        </ul>
+                        <li>infrastructure service</li>
+                        <ul>
+                            <li>internal/technical, supports processing of requests</li>
                         </ul>
                     </ul>
-				</div>					
+				</ul>
+			</div>
 
-				<div class="slide" id="service-characteristics">
-					<hgroup>
-						<h1>Service Characteristics</h1>
-					</hgroup>
-					<div class="h-drawing" id="1z7ZDZ2Eh-B_4H3DszyzTmaAdvTdUCy6Ig2PCRynUgmg"
-					  style="height: 420px; margin-top: 40px"></div>
-				</div>					
-
-    			<div class="slide">
-					<hgroup>
-						<h1>Service Description</h1>
-					</hgroup>
-					<ul class="x-small">
-						<li>Standards-driven</li>
-						<ul>
-							<li>Standards that define service description</li>
-							<li>They give a space for variability</li>
-                            <ul>
-                                <li>too much &ndash; big flexibility but increases complexity (~WSDL)</li>
-							    <li>limited &ndash; enforce agreement and interoperability (~REST)<br/> 
-                                (as long as parties correctly implement the standard)</li>
-                            </ul>
-						</ul>
-						<li>Languages to describe service interfaces</li>
-						<ul>
-							<li>formal &ndash; machine processable</li>
-                            <li>textual &ndash; natural text description</li>
-						</ul>
-                        <li>Comparison of WSDL and REST models for service interfaces</li>
-    					<table style="zoom: 1; width: 700px; margin-top: 15px; font-size: 13px">
-    						<thead>
-    							<tr><th>Model</th><th>Standards-driven</th><th>Languages</th></tr>
-    						</thead>
-    						<tbody>
-    							<tr><td><b>WSDL</b></td>
-    							  <td>XML-based WSDL, XML Schema for input/output/fault messages;
-    							    big space for variations (operations, exchange patterns, protocols)</td>
-    							  <td>WSDL+XML, textual description for rules of public processes</td>
-    							</tr>
-    							<tr><td><b>REST</b></td>
-    							  <td>Web Architecture, HTTP, XML Schema, JSON; little space for variations
-    							    (uniform interface, statelessness, etc.)</td>
-    							  <td>HTML &ndash; mostly textual description, AtomPub, WADL</td>
-    							</tr>
-    						</tbody>
-    					</table>
+			<div class="slide">
+				<hgroup>
+					<h1>Interface, Description and Implementation</h1>
+				</hgroup>
+                <div class="h-drawing" style="height: 240px" id="1i1A6rM7K34IVVLrJK_ETV7-shOTl9fuzPYjOfpUMrwY"></div>
+                <ul class="x-small">
+                    <li>Terminology clarification</li>
+                    <ul>
+                        <li>service ~ service interface + service implementation</li>
+                        <li>WSDL service ~ service description in WSDL language</li>
+                        <li>SOAP service ~ a service interface is possible to access through SOAP protocol; 
+                        there is a WSDL description usually available too.</li>
+                        <li>REST/RESTful service ~ service interface that conforms to REST architectural style and HTTP protocol</li>
                     </ul>
-				</div>				
-            </section>
+                </ul>
+			</div>					
+
+			<div class="slide" id="service-characteristics">
+				<hgroup>
+					<h1>Service Characteristics</h1>
+				</hgroup>
+				<div class="h-drawing" id="1z7ZDZ2Eh-B_4H3DszyzTmaAdvTdUCy6Ig2PCRynUgmg"
+				  style="height: 420px; margin-top: 40px"></div>
+			</div>					
+
+        </section>
+
+        <div class="slide outline"></div>
+
+        <section>
+            <header>Web Service Technologies</header>
+            
+            <section>
+                <header>SOAP</header>
+            
+                <div class="slide">
+                    <hgroup>
+                        <h1>Web Service Architecture</h1>
+                    </hgroup>
+                    <ul class="small">
+                        <li>WSDL, SOAP and UDDI</li>
+                        <div class="h-drawing" style="height: 250px"
+                            id="1G0jfLQn6lIVx_DaBDh89hV_K4hxK5QIyYtGF3uoOcok"></div>
+                        <ul>
+                            <li class="space-before">Realization of SOA</li>
+                            <li>Message-Oriented view</li>
+                            <ul>
+                                <li>SOAP messaging (header, body)</li>
+                                <li>types of messages &ndash; input, output, fault</li>
+                            </ul>
+                        </ul>
+                    </ul>
+                </div>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>SOAP Protocol</h1>
+                    </hgroup>
+                    <ul class="small">
+                        <li>SOAP defines a messaging framework</li>
+                        <div class="h-drawing" style="height: 180px; margin-left: -30px; margin-bottom: 20px" 
+                            id="1yzA6Qa4NlvUBLrDtefeo3_Ud9eT6fl--qOwawlH9F_M"></div>
+                        <ul>
+                            <li>XML-based protocol</li>
+                            <li>a layer over transport protocols</li>
+                            <ul>
+                                <li>binding to HTTP, SMTP, JMS, ...</li>
+                            </ul>
+                            <li>involves multiple nodes (message path)</li>
+                            <ul>
+                                <li>sender, receiver, intermediary</li>
+                            </ul>
+                        </ul>
+                    </ul>
+                </div>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>SOAP Message</h1>
+                    </hgroup>
+                    <ul class="x-small">
+                        <li>Envelope</li>
+                        <ul>
+                            <li>A container of a message</li>
+                        </ul>
+                        <li>Header</li>
+                        <ul>
+                            <li>Metadata &ndash; describe a message, organized in header blocks</li>
+                            <ul>
+                                <li>routing information</li>
+                                <li>security measures implemented in the message</li>
+                                <li>reliability rules related to delivery of the message</li>
+                                <li>context and transaction management</li>
+                                <li>correlation information (request and response message relation)</li>
+                            </ul>
+                            <li>WS extensions (WS-*) utilize the message header</li> 
+                        </ul>
+                        <li>Body (payload)</li>
+                        <ul>
+                            <li>Actual contents of the message, XML formatted</li>
+                            <li>Contains also faults for exception handling</li>
+                        </ul>
+                        <li>Attachment</li>
+                        <ul>
+                            <li>Data that cannot be serialized into XML such as binary data</li>
+                        </ul>
+                    </ul>
+                </div>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>Endpoint</h1>
+                    </hgroup>
+                    <ul class="small">
+                        <li>SOAP service endpoint definition</li>
+                        <div class="h-drawing" style="height: 300px" 
+                            id="1PYfoC9B77CJ83zO22c2-k8yWf-wZ1ChZ8lZNkqcDl_I"></div>
+                        <ul class="xx-small">
+                            <li>Endpoint &ndash; a network address used for communication</li>
+                            <li>Communication &ndash; request-response, SOAP messages over a communication (application) protocol</li>
+                            <li>Synchronous communication &ndash; only service defines endpoint</li>
+                            <li>Asynchronous communication &ndash; service and client define endpoints</li>
+                        </ul>
+                    </ul>
+                </div>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>Service Invocation Example (1)</h1>
+                    </hgroup>
+                    <ul class="x-small">
+                        <li>Example service implementation</li>
+                        <ul>
+                            <li>A service that evaluates an expression</li>
+                            <li>Uses SOAP over HTTP</li>
+                            <ul>
+                                <li>We can use standard HTTP tools to invoke the service</li>
+                            </ul>
+                        </ul>
+                        <li>SOAP request message</li>
+                            <ul class="no-bullet">
+                                <li><code>evaluate-input.xml</code></li>
+                            </ul>
+                        <pre class="brush: xml">
+                        &lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+                                &lt;soap:Body>
+                                        &lt;ns1:evaluateRequest 
+                                        xmlns:ns1="http://xmlns.oracle.com/mdw_examples/Evaluate/evaluate">
+                                                &lt;ns1:x>12&lt;/ns1:x>
+                                                &lt;ns1:y>18&lt;/ns1:y>
+                                        &lt;/ns1:evaluateRequest>
+                                &lt;/soap:Body>
+                        &lt;/soap:Envelope>
+                        </pre>
+                        <li>Invoking the service using <code>curl</code></li>
+                        <pre class="brush: 'bash'">
+                            curl -s -X POST --header "Content-Type: text/xml;charset=UTF-8" \
+                            --header "SOAPAction: \"evaluate\"" --data @evaluate-input.xml \
+                            http://mimdw.fit.cvut.cz/soa-infra/services/mdw-examples/Evaluate/evaluate_client_ep
+                        </pre>
+                    </ul>
+                </div>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>Service Invocation Example (2)</h1>
+                    </hgroup>
+                    <ul class="x-small">
+                        <li>Invocation result</li>
+                        <pre class="brush: 'bash'">
+                            * About to connect() to mimdw.fit.cvut.cz port 80 (#0)
+                            *   Trying 147.32.233.55... connected
+                            * Connected to sb.vitvar.com (147.32.233.55) port 80 (#0)
+                            > POST /soa-infra/services/mdw-examples/Evaluate/evaluate_client_ep HTTP/1.1
+                            > User-Agent: curl/7.19.7 (x86_64-redhat-linux-gnu) libcurl/7.19.7 NSS/3.14.0.0 zlib/1.2.3 libidn/1.18 libssh2/1.4.2
+                            > Host: mimdw.fit.cvut.cz
+                            > Accept: */*
+                            > Content-Type: text/xml;charset=UTF-8
+                            > SOAPAction: "evaluate"
+                            > Content-Length: 302
+                            > 
+                            } [data not shown]
+                            < HTTP/1.1 200 OK
+                            < Date: Sun, 17 Nov 2013 11:24:59 GMT
+                            < Server: Oracle-Application-Server-11g
+                            < Content-Length: 569
+                            < X-ORACLE-DMS-ECID: 004upqiWhdD0zkWVLybQ8A0005uX0004Y^
+                            < SOAPAction: ""
+                            < X-Powered-By: Servlet/2.5 JSP/2.1
+                            < Content-Type: text/xml; charset=UTF-8
+                            < Content-Language: en
+                        </pre>
+                    </ul>
+                </div>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>Service Invocation Example (3)</h1>
+                    </hgroup>
+                    <ul class="x-small">
+                        <li>SOAP response message</li>
+                        <pre class="brush: 'xml'">
+                            &lt;?xml version="1.0"?>
+                            &lt;env:Envelope xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" 
+                                xmlns:wsa="http://www.w3.org/2005/08/addressing">
+                              &lt;env:Header>
+                                &lt;wsa:MessageID>urn:E42018C04F7A11E3BFD5D1953058407C&lt;/wsa:MessageID>
+                              &lt;/env:Header>
+                              &lt;env:Body>
+                                &lt;evaluateResponse 
+                                    xmlns="http://xmlns.oracle.com/mdw_examples/Evaluate/evaluate">
+                                  &lt;result>30&lt;/result>
+                                &lt;/evaluateResponse>
+                              &lt;/env:Body>
+                            &lt;/env:Envelope>
+                        </pre>
+                    </ul>
+                </div>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>Client Implementation</h1>
+                    </hgroup>
+                    <ul class="x-small">
+                        <li>WSDL &ndash; Web Service Description Language</li>
+                        <ul>
+                            <li>definitions for the client to know how to communicate with the service</li>
+                            <ul>
+                                <li>which operations it can use</li>
+                                <li>data formats for input (request), output (response) and fault messages</li>
+                                <li>how to serialize the data as payloads of a communication protocol (binding)</li>
+                                <li>where the service is physically present on the network</li>
+                            </ul>
+                        </ul>
+                        <li>Clients' environments</li>
+                        <ul>
+                            <li>Clients implemented in a language such as Java</li>
+                            <ul>
+                                <li>Tools to generate service API for the client, e.g. WSDL2Java</li>
+                                <li>Can be written manually too, e.g. our example in bash</li>
+                            </ul>
+                            <li>Clients reside on the middleware, e.g. on an Enterprise Service Bus</li>
+                            <ul>
+                                <li>They provide added values in end-to-end communication, proxy services, SOAP intermediaries</li>
+                            </ul>
+                        </ul>
+                    </ul>
+                </div>
+
+        </section>
+
+        <div class="slide outline"></div>
+
+        <section>
+            <header>WSDL</header>
+
+            <div class="slide">
+                <hgroup>
+                    <h1>Specifications</h1>
+                </hgroup>
+                <ul class="x-small">
+                    <li>WSDL = Web Service Description Language</li>
+                    <ul>
+                        <li>A standard that allows to describe Web services explicitly (main aspects)</li>
+                        <li>A contract between a requester and a provider</li>
+                    </ul>
+                    <li>Specifications</li>
+                    <ul>
+                        <li>WSDL 1.1 &ndash; still widely used</li>
+                        <ul>
+                            <li><span class="h-ref" id="wsdl11">Web Service Description Language 1.1</span></li>
+                        </ul>
+                        <li>WSDL 2.0 &ndash; An attempt to address several issues with WSDL 1.1</li>
+                        <ul>
+                            <li>SOAP vs. REST, naming, exrpessivity</li>
+                            <li><span class="h-ref" id="wsdl20-primer">WSDL 2.0 Primer (part 0)</span></li>
+                            <li><span class="h-ref" id="wsdl20">WSDL 2.0 Core Language (part 1)</span></li>
+                        </ul>
+                    </ul>            
+                </ul>
+            </div>
+
+            <div class="slide">
+                <hgroup>
+                    <h1>WSDL Overview and WSDL 1.1 Syntax</h1>
+                </hgroup>
+                <ul class="x-small">
+                    <li>Components of WSDL</li>
+                    <ul>
+                        <li>Information model (<code>types</code>)</li>
+                        <ul>
+                            <li>Element types, message declarations (XML Schema)</li>
+                        </ul>
+                        <li>Set of operations (<code>portType</code>)</li>
+                        <ul>
+                            <li>A set of operations is "interface" in the WSDL terminology</li>
+                            <li>operation name, input, output, fault</li>
+                        </ul>
+                        <li>Binding (<code>binding</code>)</li>
+                        <ul>
+                            <li>How messages are transfered over the network using a concrete transport protocol</li>
+                            <li>Transport protocols: HTTP, SMTP, FTP, JMS, ...</li>
+                        </ul>
+                        <li>Endpoint (<code>service</code>)</li>
+                        <ul>
+                            <li>Where the service is physically present on the network</li>
+                        </ul>
+                    </ul>
+                    <li>Types of WSDL documents</li>
+                    <ul>
+                        <li><b>Abstract WSDL</b> &ndash; only information model and a set of operations</li>
+                        <li><b>Concrete WSDL</b> &ndash; everything, a concrete service available in the environment</li>
+                    </ul>
+                </ul>
+            </div>                  
+
+            <div class="slide">
+                <hgroup>
+                    <h1>WSDL Components and Dependencies</h1>
+                </hgroup>
+                <img src="img/wsdl-with-links.png" style="height: 490px; margin-top: 10px; margin-left: 200px"></img>
+            </div>                  
+
+        </section>
+
+        <div class="slide outline"></div>
+        
+        <section>
+            <header>WS-Addressing</header>
+            
+            <div class="slide">
+                <hgroup>
+                    <h1>Overview</h1>
+                </hgroup>
+                <ul class="x-small">
+                    <li>WS-Addressing</li>
+                    <ul>
+                        <li><span class="h-ref" id="ws-addr">W3C Recommendation, May 2006</span></li>
+                        <li>A transport-independent mechanisms for web services 
+                            to communicate addressing information</li>
+                        <li>WSDL describes WS-Addressing as a policy attached to a WSDL binding</li>
+                        <pre class="brush: xml; highlight: [3,4]">
+                            &lt;binding name="OrderProcessBinding" type="op:OrderProcess">
+                                &lt;soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+                                &lt;PolicyReference xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"
+                                    URI="#wsaddr_policy" wsdl:required="false"/>
+                        </pre>
+                    </ul>
+                    <li>Two main purposes</li>
+                    <ol>
+                        <li>Asynchronous communication</li>
+                        <ul>
+                            <li>Client sends an endpoint where the server should send a response asynchronously</li>
+                        </ul>
+                        <li>Relating interactions to a conversation</li>
+                        <ul>
+                            <li>Client and service communicate conversation ID</li>
+                        </ul>
+                    </ul>
+                </ul>
+            </div>
+
+            <div class="slide">
+                <hgroup>
+                    <h1>Order Processing Example</h1>
+                </hgroup>
+                <ul class="x-small">
+                    <li>Asynchronous communication via callback</a>, steps:</li>
+                    <ul>
+                        <li>Client submits an order request</li>
+                        <li>Service starts processing of the order (CRM, OMS, back-office)</li>
+                        <li>Client can retrieve the order status</li>
+                        <li>Service responds asynchronously with an order response message</li>
+                    </ul>
+                </ul>
+                <div class="h-drawing" id="1nPmejyynnsGNYC_dxe5poTKfiFJiqLgt7nPHD_GEJcc" style="height: 350px"></div>
+            </div>
+
+            <div class="slide">
+                <hgroup>
+                    <h1>Interface Example (1)</h1>
+                </hgroup>
+                <ul class="x-small">
+                    <li>Order process complex conversation</li>
+                    <ol>
+                        <li>The client invokes <code>processOrder</code>.</li>
+                        <li>The service responses back <b>synchronously</b> with order status.</li>
+                        <li>The client gets the status of order processing by invoking synchronous <code>getStatus</code> operation (this can be invoked serveral times).</li>
+                        <li>The service responses back <b>asynchronously</b> by invoking <code>processOrderResponse</code> &ndash; callback on client's interface</li> 
+                    </ol>
+                    <li>Interface implemented by the order process service</li>
+                    <ul>
+                        <li><code>getStatus</code> operation must be executed in the same <b>conversation</b> as 
+                            <code>processOrder</code> operation</li>
+                    </ul>
+                    <pre class="brush: xml; class-name: 'x-small'">
+                        &lt;portType name="OrderProcess">
+                            &lt;operation name="processOrder">
+                                &lt;input message="op:OrderProcessRequestMessage"/>
+                                &lt;output message="op:OrderStatusResponseMessage"/>
+                            &lt;/operation>
+                            &lt;operation name="getStatus">
+                                &lt;input message="op:OrderStatusRequestMessage"/>
+                                &lt;output message="op:OrderStatusResponseMessage"/>
+                            &lt;operation>
+                        &lt;portType>
+                    </pre>
+                    <li>Interface implemented by the client</li>
+                    <pre class="brush: xml; class-name: 'x-small'">
+                        &lt;portType name="OrderProcessCallback">
+                            &lt;operation name="processOrderResponse">
+                                &lt;input message="op:OrderProcessResponseMessage"/>
+                                &lt;fault message="op:OrderProcessFaultMessage"/>
+                            &lt;operation>
+                        &lt;/portType>                            
+                    </pre>
+
+                </ul>
+            </div>
+
+            <div class="slide">
+                <hgroup>
+                    <h1>Interface Example (2)</h1>
+                </hgroup>
+                <ul class="x-small">
+                    <li>Interface implemented by the client</li>
+                    <pre class="brush: xml; class-name: 'x-small'">
+                        &lt;portType name="OrderProcessCallback">
+                            &lt;operation name="processOrderResponse">
+                                &lt;input message="op:OrderProcessResponseMessage"/>
+                                &lt;fault message="op:OrderProcessFaultMessage"/>
+                            &lt;operation>
+                        &lt;/portType>                            
+                    </pre>
+
+                </ul>
+            </div>
+
+
+            <div class="slide">
+                <hgroup>
+                    <h1>ProcessOrder Request Message</h1>
+                </hgroup>
+                <ul class="xx-small">
+                <li>Client sends process order request &ndash; <code>processOrder</code></li>
+                <ul>
+                    <li>it sends addressing information where the client listens for the callback</li>
+                    <li>it sends conversation ID (message ID) to start the conversation on the server</li>
+                    <pre class="brush: xml; highlight: [9,10,11,12,13]; class-name: 'tight'">
+                    > POST /soa-infra/services/mdw-examples/ProcessOrder/orderprocess_client_ep HTTP/1.1
+                    > Host: mimdw.fit.cvut.cz
+                    > Content-Type: text/xml;charset=UTF-8
+                    > SOAPAction: "processOrder"
+                    > Content-Length: 810
+
+                    &lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" 
+                        xmlns:ord="http://mimdw.fit.cvut.cz/mdw-examples/cdm/order">
+                         &lt;soap:Header xmlns:wsa='http://www.w3.org/2005/08/addressing'>
+                            &ltwsa:ReplyTo>
+                                &lt;wsa:Address>http://192.168.94.110:2233/path/to/service&lt;/wsa:Address>
+                            &lt;/wsa:ReplyTo>
+                            &lt;wsa:MessageID>urn:AXYYBA00531111E3BFACA780A7E5AF64&lt;/wsa:MessageID>
+                         &lt;/soap:Header>
+                         &lt;soap:Body>
+                            &lt;ord:Order>
+                                &lt;ord:CustomerId>1&lt;/ord:CustomerId>
+                                &lt;ord:LineItems>
+                                    &lt;ord:item>
+                                        &lt;ord:label>Apple MacBook Pro&lt;/ord:label>
+                                        &lt;ord:action>ADD&lt;/ord:action>
+                                    &lt;/ord:item>
+                                &lt;/ord:LineItems>
+                            &lt;/ord:Order>
+                        &lt;/soap:Body>
+                    &lt;/soap:Envelope>
+                    </pre>
+                </ul>
+            </div>
+
+            <div class="slide">
+                <hgroup>
+                    <h1>GetStatus Request Message</h1>
+                </hgroup>
+                <ul class="xx-small">
+                <li>Client sends get status request &ndash; <code>getStatus</code></li>
+                <ul>
+                    <li>after it invokes <code>processOrder</code> with conversation ID (message ID)</li>
+                    <li>it uses the same conversation ID for get status request too</li>
+                    <ul>
+                        <li>the request will be procesessed by the running service instance</li>
+                    </ul>
+                    <pre class="brush: xml; highlight: [9]">
+                    > POST /soa-infra/services/mdw-examples/ProcessOrder/orderprocess_client_ep HTTP/1.1
+                    > Host: mimdw.fit.cvut.cz
+                    > Content-Type: text/xml;charset=UTF-8
+                    > SOAPAction: "getStatus"
+                    > Content-Length: 472      
+
+                    &lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+                        &lt;soap:Header xmlns:wsa="http://www.w3.org/2005/08/addressing">
+                            &lt;wsa:RelatesTo>urn:AXYYBA00531111E3BFACA780A7E5AF64&lt;/wsa:RelatesTo>
+                        &lt;/soap:Header>
+                        &lt;soap:Body>
+                            &lt;ns1:StatusRequest 
+                                xmlns:ns1="http://mimdw.fit.cvut.cz/mdw_examples/ProcessOrder/OrderProcess">
+                                &lt;ns1:process-id>18a9baec2d5ac0a2:64d155de:1425c4185f1:-7ff2&lt;/ns1:process-id>
+                            &lt;/ns1:StatusRequest>
+                        &lt;/soap:Body>
+                    &lt;/soap:Envelope>                    
+                    </pre>
+                </ul>
+            </div>
+
+            
+        </section>        
+
+        <div class="slide outline"></div>
+
+            <section>
+                <header>REST</header>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>REST</h1>
+                    </hgroup>
+                    <ul class="small spacing">
+                        <li>REST</li>
+                        <ul>
+                            <li>Representational State Transfer</li>
+                        </ul>
+                        <li>Architecture Style</li>
+                        <ul>
+                            <li>Roy Fielding &ndash; co-author of HTTP</li>
+                            <li>He coined REST in his <span class="h-ref" id="rest">PhD thesis</span>.</li>
+                            <ul>
+                                <li>The thesis abstracts from HTTP technical details</li>
+                                <li>HTTP is one of the REST implementation &rarr; <b>RESTful</b></li>
+                                <li>REST is a leading programming model for Web APIs</li>
+                            </ul>
+                        </ul>
+                        <li>REST (RESTful) proper design</li>
+                        <ul>
+                            <li>people break principles often</li>
+                            <li>See <span class="h-ref" id="rest-anti">REST Anti-Patterns</span> for some details.<br/>
+                        </ul>
+                        <li>REST and Web Service Architecture</li>
+                        <ul>
+                            <li>REST is a realization of WSA resource-oriented model</li>
+                        </ul>
+                    </ul>           
+                </div>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>REST Core Principles</h1>
+                    </hgroup>
+                    <ul class="small">
+                        <li>REST architectural style defines constraints</li>
+                        <ul>
+                            <li>if you follow them, they help you to achieve a good design, 
+                            interoperability and scalability.</li>
+                        </ul>
+                        <li>Constraints</li>
+                        <ul>
+                            <li>Client/Server</li>
+                            <li>Statelessness</li>
+                            <li>Cacheability</li>
+                            <li>Layered system</li>
+                            <li>Uniform interface</li>
+                        </ul>
+                        <li>Guiding principles</li>                        
+                        <ul>    
+                            <li>Identification of resources</li>
+                            <li>Representations of resources and self-descriptive messages</li>
+                            <li>Hypermedia as the engine of application state (HATEOAS)</li> 
+                        </ul>
+                    </ul>
+                </div>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>Resource</h1>
+                    </hgroup>
+                    <ul class="x-small">
+                        <li>A resource can be anything such as</li>
+                        <ul>
+                            <li>A real object: car, dog, Web page, printed document</li>
+                            <li>An abstract thing such as address, name, etc. &rarr; RDF</li>
+                        </ul>
+                        <li>A resource in REST</li>
+                        <ul>
+                            <li>A resource corresponds to one or more entities of a data model</li>
+                            <li>A representation of a resource can be conveyed in a message electronically (information resource)</li>
+                            <li>A resource has an identifier (URI) and a representation (XML, JSON, ...) and a client can apply an access to it (use HTTP methods)</li>
+                        </ul>
+                    </ul>
+                    <div class="h-drawing" style="height: 200px" 
+                        id="1sSCJVFnKU0UgLek_FlFdQfKVeT9myKf-34IYyw5FQps"></div>
+                </div>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>Resources over Entities</h1>
+                    </hgroup>                
+                    <ul class="x-small">
+                        <li>Application's data model</li>
+                        <ul>
+                            <li>Entities and properties that the app uses for its data</li>
+                        </ul>
+                        <div class="h-drawing" style="height: 290px" id="1zT46lCNzfiaw9d5HfA6fzDZFAj2GQG8sRAg1QRWPPfQ"></div>
+                        <li>URI identifies a resource within the app's data model</li>
+                        <ul>
+                            <li><code>path</code> &ndash; a "view" on the data model</li>
+                            <ul>
+                                <li>data model is a graph</li>
+                                <li>URI identifies a resource using a path in a tree with some root</li>
+                            </ul>
+                        </ul>
+                    </ul>
+                </div>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>Examples of Views</h1>
+                    </hgroup>                
+                    <ul class="x-small">
+                        <li>View 1</li>
+                        <ul>
+                            <li>all customers: <code>/customers</code></li>
+                            <li>a particular customer: <code>/customers/{customer-id}</code>
+                            <li>All orders of a customer: <code>/customers/{customer-id}/orders</code>
+                            <li>A particular order: <code>/customers/{customer-id}/orders/{order-id}</code>
+                        </ul>
+                        <li>View 2</li>
+                        <ul>
+                            <li>all orders: <code>/orders</code></li>
+                            <li>All orders of a customer: <code>/orders/{customer-id}</code>
+                            <li>A particular order: <code>/orders/{customer-id}/{order-id}</code>
+                        </ul>
+                        <li>Various views represented by <b>URL path</b></li>
+                    </ul>
+                </div>            
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>Uniform Interface</h1>
+                    </hgroup>
+                    <ul class="x-small">
+                        <li>Finite set of operations</li>
+                        <ul>
+                            <li>They are not dependent on the domain semantics</li>
+                            <li>They only define how to manipulate with resources</li>
+                        </ul>
+                        <li>RESTful service &ndash; HTTP methods</li>
+                        <ul>
+                            <li>GET &ndash; reads a resource (+ HEAD, OPTIONS)</li>
+                            <li>PUT &ndash; updates or creates a resource (+ PATCH)</li>
+                            <li>POST &ndash; creates a new resource</li>
+                            <li>DELETE &ndash; deletes a resource</li>
+                        </ul>
+                        <li>HTTP methods' properties</li>
+                        <ul>
+                            <li>a method is <b>safe</b></li>
+                            <ul>
+                                <li>It does not change the application state (it does not modify the data)</li>
+                                <li>GET, OPTIONS, HEAD</li>
+                                <li>Results can be cached by intermediaries (e.g. proxy servers)</li>                            
+                            </ul>
+                            <li>a method is <b>idempotent</b></li>
+                            <ul>
+                                <li>Every method invocation will always have the same effect</li>
+                                <li>GET, PUT, DELETE</li>
+                            </ul>
+                        </ul>
+                    </ul>
+                </div>          
+                
+                <div class="slide">
+                    <hgroup>
+                        <h1>Examples</h1>
+                    </hgroup>
+                    <ul class="xx-small">
+                        <li>Operation <code>getCustomerOrder(customerId, OrderId)</code></li>
+                        <ul>
+                            <li>Retrieves a representation of the order resource that belongs to a particular customer</li>
+                        </ul>
+                        <pre class="brush: 'bash'; class-name: 'tight'">
+                            > GET /customers/{cutomerId}/orders/{orderId}
+                        </pre>
+                        <li>Operation <code>openOrder(customerId)</code></li>
+                        <ul>
+                            <li>Creates a new order for a customer</li>
+                        </ul>
+                        <pre class="brush: 'bash'; class-name: 'tight'">
+                            > POST /customers/{cutomerId}/orders
+                            &lt; Location: /customers/{customerId}/orders/{orderId}
+
+                            > GET /customers/{customerId}/orders/{orderId}
+                        </pre>
+                        <li>Operation <code>addLineItem(customerId, orderId)</code></li>
+                        <ul>
+                            <li>Adds a new item to the order</li>
+                        </ul>
+                        <pre class="brush: 'bash'; class-name: 'tight'">
+                            > POST /customers/{customerId}/orders/{orderId}
+                            &lt; Location: /customers/{customerId}/orders/{orderId}/items/{itemId}
+
+                            > GET /customers/{customerId}/orders/{orderId}/items/{itemId}
+                        </pre>
+                        <li>Operation <code>closeOrder(customerId, orderId)</code></li>
+                        <ul>
+                            <li>Closes the order (i.e., changes a state of the order resource)</li>
+                        </ul>
+                        <pre class="brush: 'bash'; class-name: 'tight'">
+                            > PUT /customers/{customerId}/orders/{orderId}
+                            > &lt;status>CLOSED&lt;/status>
+                        </pre>
+
+                    </ul>
+                </div>  
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>Examples &ndash; evaluate operation</h1>
+                    </hgroup>
+                    <ul class="xx-small">
+                        <li>Example REST implementation of the SOAP service <a href="#7">evaluate</a></li> 
+                        <li>Operation <code>evaluate(n1, n2)</code></li>
+                        <ul>
+                            <li>Evaluates expression such that the result is <code>n1+n2</code></li>
+                        </ul>
+                        <pre class="brush: 'bash'; class-name: 'tight'">
+                            > POST /evaluate/additions/
+                            > &lt;parameters>
+                            >  &lt;n1>{n1}&lt;/n1>
+                            >  &lt;n2>{n2}&lt;/n2>
+                            > &lt;/parameters>
+                            &lt; Location: /evaluations/additions/{n1}+{n2}
+
+                            > GET /evaluations/additions/{n1}+{n2} 
+                        </pre>
+                    </ul>
+                </div>  
+            </section>      
 
             <div class="slide outline"></div>
-                
+
             <section>
-                <header>Service Interface Components</header>
-                
-				<div class="slide">
-					<hgroup>
-						<h1>Service Interface</h1>
-					</hgroup>
-					<ul class="x-small">
-                        <li>They correspond to interface definition</li>
-                        <li>Service interface components</li>
-                        <ul>
-    						<li>Information</li>
-    						<ul>
-    							<li>data used by the service</li>
-                                <li>for example, input and output messages, resource representations</li>
-    						</ul>
-    						<li>Functional</li>
-    						<ul>
-    							<li>capability: operations, preconditions, effects</li>
-    							<li>pointer to a classification hierarchy</li>
-    						</ul>
-        					<li>Behavioral</li>
-    						<ul>
-    							<li>public process: how to consume the service's functionality</li>
-    							<li>orchestration: realization of service's functionality</li>
-    						</ul>
-    						<li>Non-Functional</li>
-    						<ul>
-    							<li>security, financial, descriptive info (author, date)</li>
-    						</ul>
-    						<li>Technical</li>
-    						<ul>
-                                <li>technical details such as IP addresses, ports, protocols, etc.</li>
-    						</ul>
-                        </ul>
-					</ul>
-				</div>	
-                
-                <div class="slide" id="service-description">
-    				<hgroup>
-						<h1>Running Example</h1>
-					</hgroup>
-                    <ul class="x-small">
-                        <li>Textual service description</li>
-                        <ul>
-                            <li>Service name: Order Book Service</li>
-                            <pre class="brush: plain; gutter: true; class-name: 'tight'">
-                                * the service provides three operations: 'open', 'add', 'close'
-                                * operation 'open' opens the order
-                                    - input: none
-                                    - output: text informing that the order was opened
-                                    
-                                * operation 'add' adds an item to the order
-                                    - input: an item name, the syntax is [0-9A-Za-z\-]+
-                                    - output: text informing that the item was added to the order
-                                    
-                                * operation 'close' closes the order and returns all items in the order
-                                    - input: none
-                                    - output: list of all items previously added to the order
-                                
-                                * the public process is: S0--open--S1, S1--add--S1, S1--close--S0, where
-                                  S0, S1 are states such that S0 = order is closed, and S1 = order is opened.               
-                                  
-                                * protocol is HTTP, method POST for all operations, 
-                                  running localy, tcp/8080, stateful server
-                            </pre>
-                        </ul>
-                        <li>Service implementation</li>
-                        <ul class="xx-small">
-                            <li>Will go through the code in Java</li>
-                            <li>Will use the <a href="lecture3.html#/session-object">session object</a> (see Lecture 3) for 
-                            the state management</li>
-                        </ul>
-                    </ul>
-                </div>
-                
-    			<div class="slide">
-					<hgroup>
-						<h1>Information Component</h1>
-					</hgroup>
-                    <div class="h-drawing" style="height: 270px; margin-bottom: -10px" id="1b-3UnInahn13QfTqJRWqZlqTE7Bmx2bZu5pHoip-LV0"></div>
-                    <ul class="xx-small">
-                        <li>Information Component</li>
-                        <ul>
-                            <li>Defines models for all data used by the service as input/output messages, states</li>
-                            <li>Data in formats mostly XML and JSON or plain text (our example)</li>
-                            <li>Languages: XML Schema, or other&mdash;regular grammars or plain text.</li>
-                        </ul>
-                        <li>Tasks</li>
-                        <ul>
-                            <li>Validation &ndash; check the syntax and validates the data against rules</li>
-                            <li>Processing and manipulation &ndash; process and manipulates the data</li>
-                            <li>Serialization &ndash; transforms the data to transportation formats (XML, JSON, text)</li>
-                        </ul>
-                    </ul>
-				</div>	
-                
-            	<div class="slide">
-					<hgroup>
-						<h1>Example</h1>
-					</hgroup>
-                    <ul class="x-small">
-                        <li>Description</li>
-                        <pre class="brush: plain; gutter: true; class-name: ''; highlight: [3,4]; first-line: '1'">
-                            ...
-                            * operation 'add' adds an item to the order
-                                - input: an item name, the syntax is [0-9A-Za-z\-]+
-                                - output: text informing that the item was added to the order
-                            ...
-                        </pre>
-                        <li>Service implementation</li>
-                        <ul>
-                            <li>Validation &ndash; syntax checking</li>
-                        </ul>
-                        <pre class="brush: js; highlight: [2,4]">
-                        	// check the syntax of the item name
-							if (item.matches("[a-zA-Z0-9\\-]+"))
-								// ... process operation	
-								return "Item added.";	
-							else
-								throw new Exception("Invalid item name.");
-                        </pre>
-                        <li class="task">Tasks</li>
-                        <ul class="xx-small">
-                            <li>Describe a complex item using XML Schema and learn how to validate 
-                            it in Java.</li>
-                        </ul>
-                        
-                    </ul>
-                </div>
-                
-        		<div class="slide">
-					<hgroup>
-						<h1>Functional Component</h1>
-					</hgroup>
-                    <div class="h-drawing" style="height: 270px; margin-bottom: -10px" id="1m1g6yq8PyLjS7pr1gOF0z5n8eDWtFN_W2P1UD-PSBIs"></div>
-                    <ul class="xx-small">
-                        <li>Functional component</li>
-                        <ul>
-                            <li>Service has a set of operations</li>
-                            <ul>
-                                <li>each operation has input and output data from the information model</li>
-                                <li>each operation has a capability (a precondition and an effect)</li>
-                            </ul>
-                            <li>Service has a functional category &ndash; pointer to a classification hierarchy</li>
-                            <li>Service has a capability (a precondition and an effect)</li>
-                        </ul>
-                        <li>Tasks</li>
-                        <ul>
-                            <li>Validation &ndash; checks a precondition holds in a state before processing</li>
-                        </ul>
-                    </ul>
-				</div>	
-
-            	<div class="slide" id="effects">
-					<hgroup>
-						<h1>Preconditions and Effects</h1>
-					</hgroup>
-                    <ul class="x-small">
-                        <li>Preconditions and effects on an operation</li>
-                        <ul>
-                            <li class="no-bullet">(Note that preconditions and effects on a service are analogical)</li>
-                        </ul>
-                    </ul>
-                    <div class="h-drawing" style="height: 415px" id="1I1OVuy4H_wJ9Bxt0ZlC-Zy7pznXeub9QYHgEcqdAqz4"></div>
-				</div>	
+                <header>Comparision</header>
 
                 <div class="slide">
-					<hgroup>
-						<h1>Example</h1>
-					</hgroup>
-                    <ul class="x-small">
-                        <li>Description</li>
-                        <pre class="brush: plain; gutter: true; class-name: ''; highlight: [1,3,4]; first-line: '1'">
-                            * the service provides three operations: 'open', 'add', 'close'
-                            ...                            
-                            * the public process is: S0--open--S1, S1--add--S1, S1--close--S0, where
-                              S0, S1 are states such that S0 = order is closed, and S1 = order is opened.               
-                            ...  
-                        </pre>
-                        <ul>
-                            <li class="no-bullet">&rArr;&nbsp;There is an order of operations such that</li>
-                            <ul>
-                                <li>before invoking <code>add</code>, the client must invoke <code>open</code></li>
-                            </ul>
-                            <li class="no-bullet">&rArr;&nbsp;operation <code>add</code> has</li>
-                            <ul>
-                                <li>precondition <code>order.isOpen()==true</code></li>
-                                <li>effect <code>item in order.items</code></li>                            
-                            </ul>
-                        </ul>
-                        <pre class="brush: js; highlight: [1,3,6]">
-						if (order.isOpen()) {
-							// ... 				
-							order.getItems().add(item);
-							return "Item added.";
-						} else
-							throw new Exception("An order must be opened before adding the item!");                        
-                       </pre>
-                    </ul>
-				</div>	
-
-                <div class="slide" id="functional-category">
-        			<hgroup>
-						<h1>Functional Category Example</h1>
-					</hgroup>
-                    <ul class="x-small">
-                        <li>Classification schema</li>
-                        <ul>
-                            <li>Describes taxonomy of services (outside of service interface)</li>
-                            <li>Functional category points to a term in the taxonomy</li>
-                        </ul>
-                        <li>Example</li>
-                        <ul>
-                            <li>Classification schema in XML</li>
-                            <pre class="brush: xml">
-                                &lt;?xml version="1.0" encoding="utf-8"?>
-                                &lt;root xmlns="http://example.org/service-classification-schema">
-                                    &lt;order>
-                                        &lt;book>
-                                            &lt;adventure/>
-                                            &lt;travel/>
-                                        &lt;/book>
-                                        &lt;electronics>
-                                            &lt;TV/>
-                                            &lt;computer/>
-                                        &lt;/electronics>
-                                    &lt;/order>
-                                    &lt;shipment><!-- shipment services --></shipment>
-                                &lt;/root>              
-                            </pre>                        
-                            <li>functional category as XPath expression: <code>/root/order/book</code></li>
-                            <li>implicit assumption: XML hierarchy is a <code>sub-class-of</code> hierarchy</li>
-                        </ul>
-                    </ul>
-				</div>	
-
-            	<div class="slide">
-					<hgroup>
-						<h1>Behavioral Component</h1>
-					</hgroup>
-                    <div class="h-drawing" style="height: 270px" id="1wzzq_aBjtzkc8pCeEs2cZhtvJSOnKM3SFDuupCBYLoE"></div>
-                    <ul class="xx-small">
-                        <li>Behavioral component</li>
-                        <ul>
-                            <li>public process</li>
-                            <ul>
-                                <li>order of operations for the correct functionality consumption</li>
-                                <li>can be derived from preconditions of service operations</li>
-                                <ul>
-                                    <li>Note that not all operations must participate in the public process</li>
-                                    <li>A service can have more than one public processes</li> 
-                                </ul>
-                            </ul>
-                            <li>orchestration</li>
-                            <ul>
-                                <li>How service's functionality is composed out of other services</li>
-                            </ul>
-                        </ul>
-                    </ul>
-				</div>
-                
-                <div class="slide" id="public-process">
-                	<hgroup>
-    					<h1>Example</h1>
-    				</hgroup>
-                    <ul class="xx-small">
-                        <li><code>processOrder</code> method implements a public process</li>
-                        <pre class="brush: java; highlight: [2,10,19]; ">
-						public String processOrder(String op, String item, SessionData sessionData) throws Exception {		
-							if (op.equals("open")) {
-								if (sessionData.isOpen())
-									throw new Exception("Order was already open");
-								else {
-									sessionData.open();
-									return "The new order has been opened";
-								}
-							}							
-							if (op.equals("add")) {
-								if (sessionData.isOpen()) {
-									if (item.matches("[a-zA-Z0-9\\-]+")) 				
-										sessionData.getItems().add(item);
-									else throw new Exception("Invalid item name.");
-									return "Item added.";
-								} else
-									throw new Exception("An order must be openned before adding the item!");
-							}
-							if (op.equals("close")) {
-								if (sessionData.isOpen()) {
-									String response = "The order has been closed, the ordered items are:\n";
-									for (String i : sessionData.getItems())
-										response += "  " + i + "\n";
-									return response;
-								} else
-									throw new Exception("Cannot close an order thas has not been openned!");
-							}
-							throw new Exception("Invalid operation: " + op);
-						}
-                        </pre>
-                    </ul>
-    			</div>
-
-                <div class="slide">
-                	<hgroup>
-    					<h1>Example (Cont.)</h1>
-    				</hgroup>
-                    <ul class="xx-small">
-                        <li><code>RequestHandler</code> implementation</li>  
-                        <pre class="brush: java; highlight: [13,14]">
-						public void handleRequest(HttpServletRequest request, 
-								HttpServletResponse response) throws IOException, ServletException {
-							// get the session id and create the new session data if none exist
-							String sid = sessions.getSessionID(request);
-							SessionData sessionData = sessions.getData(sid);
-							if (sessionData == null) {
-								sessionData = new SessionData();
-								sessions.setData(sid, sessionData);
-							}
-					
-							try {
-								if (request.getMethod().equals("POST")) {
-									String responseText = processOrder(request.getParameter("op"), 
-											request.getParameter("item"), sessionData);
-									response.setStatus(200);
-									response.setHeader("cookie", "session-id="+sid);
-									response.setContentType("text/plain");
-									response.getWriter().write(responseText);
-								} else {
-									response.setStatus(405); // Method not allowed
-									response.setHeader("Allow", "POST");				
-								}
-							} catch (Exception e) {
-								response.setStatus(400); // client-side error
-								response.setContentType("text/plain");
-								response.getWriter().write(e.getMessage());
-							}
-							response.flushBuffer();
-						}
-                        </pre>
-                    </ul>
-    			</div>    
-
-                <div class="slide" id="evaluation">
                     <hgroup>
-    					<h1>Evaluation</h1>
-    				</hgroup>
+                        <h1>Service Description</h1>
+                    </hgroup>
                     <ul class="x-small">
-                        <li>How "good" is our Order service?</li>
+                        <li>Standards-driven</li>
                         <ul>
-                            <li>Analysis of the service by service characteristics.</li> 
+                            <li>Standards that define service description</li>
+                            <li>They give a space for variability</li>
+                            <ul>
+                                <li>too much &ndash; big flexibility but increases complexity (~WSDL)</li>
+                                <li>limited &ndash; enforce agreement and interoperability (~REST)<br/> 
+                                (as long as parties correctly implement the standard)</li>
+                            </ul>
                         </ul>
-                        
-                        <style>
-                            .fr:last-child td,
-                            .fr > td:first-child {
-                                background-color: white;                            
-                                border-bottom: 1px solid whitesmoke;
-                            }
-                            .fr > td:first-child {
-                                border-right: 1px solid LightSteelBlue;
-                                background-color: LightSteelBlue;
-                                color: white;
-                                font-weight: bold;
-                            }
-                            .fr:last-child td {                            
-                                border-bottom: 1px solid LightSteelBlue;
-                            }                            
-                        </style>
-                        
-                        <table style="width: 890px" class="first-col-header">
+                        <li>Languages to describe service interfaces</li>
+                        <ul>
+                            <li>formal &ndash; machine processable</li>
+                            <li>textual &ndash; natural text description</li>
+                        </ul>
+                        <li>Comparison of WSDL and REST models for service interfaces</li>
+                        <table style="zoom: 1; width: 700px; margin-top: 15px; font-size: 13px">
                             <thead>
-                                <th style="width: 160px">Principle</th><th style="width: 30px">&plus;/&minus;</th><th>Comment</th>
+                                <tr><th>Model</th><th>Standards-driven</th><th>Languages</th></tr>
                             </thead>
                             <tbody>
-                                <tr class="fr">
-                                    <td rowspan="3">Loose Coupling</td>
-                                    <td>&nbsp;&plus;</td><td>Uses standard response codes.</td></tr>
-                                <tr><td>&nbsp;&minus;</td><td>Unforeseen clients will have to know the service's public process to 
-                                    work with it.</td></tr>
-                                <tr><td>&nbsp;&minus;</td><td>Uses operation names that clients must understand.</td></tr>
-                                
-                                        
-                                <tr class="fr">
-                                    <td rowspan="1">Reusability</td>
-                                    <td>&nbsp;&minus;</td><td>Can be reused but is subject to loose coupling issues.</td>
+                                <tr><td><b>WSDL</b></td>
+                                  <td>XML-based WSDL, XML Schema for input/output/fault messages;
+                                    big space for variations (operations, exchange patterns, protocols)</td>
+                                  <td>WSDL+XML, textual description for rules of public processes</td>
                                 </tr>
-
-
-                                <tr class="fr">
-                                    <td rowspan="1">Contracting and Discoverability</td>
-                                    <td>&nbsp;&minus;</td><td>Textual description is informal, it is hard to agree on the service interface.</td>
+                                <tr><td><b>REST</b></td>
+                                  <td>Web Architecture, HTTP, XML Schema, JSON; little space for variations
+                                    (uniform interface, statelessness, etc.)</td>
+                                  <td>HTML &ndash; mostly textual description, AtomPub, WADL</td>
                                 </tr>
-
-                                <tr class="fr">
-                                    <td rowspan="1">Composability</td>
-                                    <td>&nbsp;</td><td>N/A</td>
-                                </tr>
-
-                                <tr class="fr">
-                                    <td rowspan="1">Abstraction</td>
-                                    <td>&nbsp;&plus;</td><td>Service description can be implemented by various implementation technologies.</td></tr>
-
-                                <tr class="fr">
-                                    <td rowspan="1">Encapsulation</td>
-                                    <td>&nbsp;&plus;</td><td>Distinguishes interface from implementation, processing logic is not exposed 
-                                        to clients throught the interface.</td></tr>
                             </tbody>
-                        </table>                        
+                        </table>
                     </ul>
-    			</div>                 
-            </section>                            
+                </div>              
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>SOAP vs. REST</h1>
+                    </hgroup>
+                    <ul class="xx-small">
+                        <li style="margin-top: 15px; margin-bottom: -8px">SOAP uses input and output messages in operations</li>
+                        <li>REST uses resources and defines access on them</li>
+                        <li style="margin-top: 15px; margin-bottom: -8px">SOAP can use more protocols</li>
+                        <li>REST uses HTTP</li>
+                        <ul>
+                            <li>Pratically, most of the SOAP implementations use SOAP over HTTP</li>
+                        </ul>
+                        <li style="margin-top: 15px; margin-bottom: -8px">Operations in SOAP are domain-specific</li>
+                        <li>HTTP operations are independent on domain semantics</li>
+                        <ul>
+                            <li>REST operations' semantics is defined by HTTP method + resource semantics</li>
+                        </ul>
+                        <li style="margin-top: 15px; margin-bottom: -8px">SOAP uses XML and XML Schema</li>
+                        <li>REST can use many representation formats</li>
+                        <ul>
+                            <li>For example, XML, JSON, YAML, etc.</li>
+                        </ul>
+                        <li style="margin-top: 15px; margin-bottom: -8px">SOAP is defined by WSDL</li>
+                        <li>REST is described in text or HTML</li>
+                        <li style="margin-top: 15px; margin-bottom: -8px">Client libraries can be generated from WSDL</li>
+                        <li>REST vendor provides client libraries</li>
+                    </ul>
+                </div>
+                        
+                <div class="slide">
+                    <hgroup>
+                        <h1>SOAP vs. REST</h1>
+                    </hgroup>
+                    <ul class="xx-small">
+                        <li style="margin-top: 15px; margin-bottom: -8px">SOAP clients must hard-code service's public process</li>
+                        <li>REST clients can follow links in hypertext for application states</li>
+                        <li style="margin-top: 15px; margin-bottom: -8px">SOAP services are used for inter/intra-enterprise integration</li>
+                        <li>REST services are used for Web APIs for integration on the Web</li>  
+                    </ul>
+                </div>            
+            </section>
         </section>
             
         
