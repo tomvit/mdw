@@ -1059,28 +1059,6 @@
                     </ul>
                 </div>  
 
-                <div class="slide">
-                    <hgroup>
-                        <h1>Examples &ndash; evaluate operation</h1>
-                    </hgroup>
-                    <ul class="xx-small">
-                        <li>Example REST implementation of the SOAP service <a href="#7">evaluate</a></li> 
-                        <li>Operation <code>evaluate(n1, n2)</code></li>
-                        <ul>
-                            <li>Evaluates expression such that the result is <code>n1+n2</code></li>
-                        </ul>
-                        <pre class="brush: 'bash'; class-name: 'tight'">
-                            > POST /evaluate/additions/
-                            > &lt;parameters>
-                            >  &lt;n1>{n1}&lt;/n1>
-                            >  &lt;n2>{n2}&lt;/n2>
-                            > &lt;/parameters>
-                            &lt; Location: /evaluations/additions/{n1}+{n2}
-
-                            > GET /evaluations/additions/{n1}+{n2} 
-                        </pre>
-                    </ul>
-                </div>  
             </section>      
 
             <div class="slide outline"></div>
