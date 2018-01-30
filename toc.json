@@ -7,7 +7,7 @@
 
   http://localhost:9009/humla/lib/core/humla-core.js:111 in error
   http://localhost:9009/humla/lib/ext/drawing.js:25 in onerror
-{"title":"Application Protocols","slide-url":"lecture2.html#/1","sections":[{"title":"Introduction to Application Protocols","slide-url":"lecture2.html#/2","sections":[{"title":"Synchronous and Asynchronous Communication","slide-url":"lecture2.html#/9","sections":[]},{"title":"Selected Networking Concepts","slide-url":"lecture2.html#/13","sections":[]}]},{"title":"Introduction to HTTP","slide-url":"lecture2.html#/18","sections":[{"title":"State Management","slide-url":"lecture2.html#/26","sections":[]}]}],"lastModified":"Thu Nov 23 2017, 11:19:27"}
+{"title":"Application Protocols","slide-url":"lecture2.html#/1","sections":[{"title":"Introduction to Application Protocols","slide-url":"lecture2.html#/2","sections":[{"title":"Synchronous and Asynchronous Communication","slide-url":"lecture2.html#/9","sections":[]},{"title":"Selected Networking Concepts","slide-url":"lecture2.html#/13","sections":[]}]},{"title":"Introduction to HTTP","slide-url":"lecture2.html#/18","sections":[{"title":"State Management","slide-url":"lecture2.html#/26","sections":[]}]}],"lastModified":"Tue Jan 30 2018, 10:26:51"}
 ,
 {"title":"Introduction to Application Server","slide-url":"lecture3.html#/1","sections":[{"title":"Architecture","slide-url":"lecture3.html#/2","sections":[]},{"title":"I/O Communication","slide-url":"lecture3.html#/11","sections":[]},{"title":"Servlet Technology","slide-url":"lecture3.html#/15","sections":[]}],"lastModified":"Sun Oct 29 2017, 22:57:53"}
 ,
