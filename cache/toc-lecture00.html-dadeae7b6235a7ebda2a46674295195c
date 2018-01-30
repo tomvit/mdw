@@ -1,5 +1,1 @@
-<a href="#/3">Slide 3</a>: error getting the drawing with id 1oyGz6GdF-K_hln9g_l3Cp1eNK843S4NKE4tO8HMUYGw.
-
-  http://localhost:9009/humla/lib/core/humla-core.js:111 in error
-  http://localhost:9009/humla/lib/ext/drawing.js:25 in onerror
 {"title":"Motivation and Course Overview","slide-url":"lecture0.html#/1","sections":[{"title":"Course at a Glance","slide-url":"lecture0.html#/9","sections":[{"title":"Motivation and Scope","slide-url":"lecture0.html#/4","sections":[]},{"title":"Requirements and Organization","slide-url":"lecture0.html#/9","sections":[]}]},{"title":"Assessment","slide-url":"lecture0.html#/15","sections":[]},{"title":"Communication and Resources","slide-url":"lecture0.html#/18","sections":[]}],"lastModified":"Tue Oct 03 2017, 20:14:11"}
