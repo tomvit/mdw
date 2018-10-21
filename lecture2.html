@@ -1126,13 +1126,98 @@
                     <ul class="x-small">
                         <li>Sessions to store the application state</li>
                         <ul>
-                            <li>Recall HTTP state management in MDW</li>
                             <li>The app uses a server memory to remember the state</li>
                             <li>When the server restarts, the app state is lost</li>
                         </ul>
                     </ul>
                     <div class="h-drawing" style="height: 350px" 
                         id="1CcGvRSm-RMa00XbHLlk2YhU8Wqz9Bl7nuWrynaFG3Sk"></div>                    
+                </div>
+
+                <div class="slide" id="state-management">
+                    <hgroup>
+                        <h1>State Management</h1>
+                    </hgroup>
+                    <ul class="small">
+                        <li>HTTP is a stateless protocol &#150; original design</li>
+                        <ul>
+                            <li>No information to relate multiple interactions at server-side</li>
+                            <ul>
+                                <li>Except <code>Authorization</code> header is copied in every request</li> 
+                                <li>IP addresses do not work, one public IP can be shared by multiple clients</li>
+                            </ul>
+                        </ul>
+                        <li>Solutions to check for a valid state at server-side</li>
+                        <ul>
+                            <li><b>Cookies</b> &ndash; obvious and the most common workaround</li>
+                            <ul>
+                                <li><span class="h-ref" id="rfc-2109">RFC 2109 &ndash; HTTP State Management Mechanism</span></li>
+                                <li>Allow clients and servers to talk in a context called <b>sessions</b></li>
+                            </ul>
+                            <li><b>Hypertext</b> &ndash; original HTTP design principle</li>
+                            <ul>
+                                <li>App states represented by resources (hypermedia), links define transitions between states</li>
+                                <li>Adopted by the REST principle <b>statelessness</b></li>                        
+                            </ul>
+                        </ul>
+                    </ul>
+                </div>
+                
+                <div class="slide">
+        			<hgroup>
+    					<h1>Interaction with Cookies</h1>
+    				</hgroup>
+                    <ul class="small">
+                        <li>Request-response interaction with cookies</li>
+                        <ul>
+                            <li>Session is a logical channel maintained by the server</li>
+                        </ul>
+                        <div class="h-drawing" style="height: 250px" id="1mVCe8EtqVApZVRV_RHYQKtqDNELKdo84qzCqGvAs7iA"></div>
+                        <li>Stateful Server</li>
+                        <ul>
+                            <li>Server remembers the session information in a server memory</li>
+                            <li>Server memory is a non-persistent storage, when server restarts the memory content is lost!</li>
+                        </ul>
+                    </ul>
+                </div>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>Set-Cookie and Cookie Headers</h1>
+                    </hgroup>
+                    <ul class="xx-small">
+                        <li><code>Set-Cookie</code> response header</li>
+                        <pre class="brush: plain; ">
+                            set-cookie = "Set-Cookie:" cookie ("," cookie)*
+                              cookie    = NAME "=" VALUE (";" cookie-av)*
+                              cookie-av = "Comment" "=" value
+                                        | "Domain" "=" value
+                                        | "Max-Age" "=" value
+                                        | "Path" "=" value
+                        </pre>
+                        <ul>
+                            <li><code>domain</code> &ndash; a domain for which the cookie is applied</li>
+                            <li><code>Max-Age</code> &ndash; number of seconds the cookie is valid</li>
+                            <li><code>Path</code> &ndash; URL path for which the cookie is applied</li>
+                        </ul>
+                        <li><code>Cookie</code> request header. A client sends the cookie in a request if:</li>
+                        <ul>
+                            <li><code>domain</code> matches the origin server's fully-qualified host name</li>
+                            <li><code>path</code> matches a prefix of the request-URI</li>
+                            <li><code>Max-Age</code> has not expired</li>
+                        </ul>
+                        <pre class="brush: plain;">
+                            cookie  = "Cookie:" cookie-value (";" cookie-value)*
+                              cookie-value    = NAME "=" VALUE [";" path] [";" domain]
+                              path            = "$Path" "=" value
+                              domain          = "$Domain" "=" value                        
+                        </pre>
+                        <ul>
+                            <li><code>domain</code>, and <code>path</code> are values from corresponding attributes of 
+                            the <code>Set-Cookie</code> header</li>
+                        </ul>
+                        
+                    </ul>                    
                 </div>
 
                 <div class="slide">
@@ -1275,7 +1360,6 @@
                         </ul>                       
                     </ul>
                 </div>          
-            </section>
             
             <div class="slide">
                 <hgroup>
@@ -1318,6 +1402,751 @@
 
         </section>
             
+        <div class="slide outline"></div>
+            
+        <section>
+            <header>Uniform Interface</header>
+
+            <div class="slide">
+                <hgroup>
+                    <h1>Uniform Interface</h1>
+                </hgroup>
+                <ul class="small">
+                    <li>Uniform interface = finite set of operations</li>
+                    <ul>
+                        <li>Resource manipulation</li>
+                        <ul>
+                            <li>CRUD &ndash; Create (POST/PUT), Read (GET), Update (PUT/PATCH), Delete (DELETE)</li>
+                        </ul>
+                        <li>operations are not domain-specific</li>
+                        <ul>
+                            <li>For example, <code>GET /orders</code> and not <code>getOrders()</code></li>
+                            <li>This reduces complexity when solving interoperability</li>
+                        </ul>
+                    </ul>
+                    <li>Integration issues examples</li>
+                </ul>
+                <div class="h-drawing" style="height: 190px"
+                    id="1hLogh6s5Az0vXhCW6e05l2MRMLPDtnYbxlPEctjJTAk"></div>
+            </div>
+
+            <div class="slide">
+                <hgroup>
+                    <h1>Safe and Unsafe Operations</h1>
+                </hgroup>
+                <ul class="small">
+                    <li>Safe operations</li>
+                    <ul>
+                        <li>Do not change the resource state</li>
+                        <li>Usually "read-only" or "lookup" operation</li>
+                        <li>Clients can cache the results and refresh the cache freely</li>
+                    </ul>
+                    <li>Unsafe operations</li>
+                    <ul>
+                        <li>May change the state of the resource</li>
+                        <li>Transactions such as buy a ticket, post a message</li>
+                        <li>Unsafe does not mean dangerous!</li>
+                    </ul>
+                    <li>Unsafe interactions and transaction results</li>
+                    <ul>
+                        <li><code>POST</code> response may include transaction results</li>
+                        <ul>
+                            <li>you buy a ticket and submit a purchase data</li>
+                            <li>you get transaction results</li>
+                            <li>and you cannot bookmark this..., why?</li>
+                        </ul>
+                        <li>Should be referable with a persistent URI</li>
+                    </ul>
+                </ul>
+            </div>
+                
+            <div class="slide">
+                <hgroup>
+                    <h1>Idempotence</h1>
+                </hgroup>
+                <ul>
+                    <li>Idempotent operation</li>
+                    <ul>
+                        <li>Invoking a method on the same resource always has the same effect</li>
+                        <li>Operations <code>GET</code>, <code>PUT</code>, <code>DELETE</code></li>
+                    </ul>
+                    <li>Non-idempotent operation</li>
+                    <ul>
+                        <li>Invoking a method on the same resource may have different effects</li>
+                        <li>Operation <code>POST</code></li>
+                    </ul>
+                    <li>Effect = a state change</li>
+                    <ul>
+                        <li>recall the effect definition in MDW</li>
+                    </ul>
+                </ul>
+            </div>
+                
+              <div class="slide">
+                  <hgroup>
+                      <h1>GET</h1>
+                  </hgroup>
+                  <ul class="small">
+                      <li>Reading</li>
+                      <ul>
+                          <li><code>GET</code> retrieves a representation of a state of a resource</li>
+                          <pre class="brush: plain; gutter: 'false'">
+                              &gt; GET /orders HTTP/1.1
+                              &gt; Accept: application/xml
+
+                              &lt; HTTP/1.1 200 OK
+                              &lt; Content-Type: application/xml
+                              &lt;
+                              &lt; ...resource representation in xml...
+                          </pre>
+                          <li>It is read-only operation</li>
+                          <li>It is <b>safe</b></li>
+                          <li>It is <b>idempotent</b></li>
+                          <li class="space-before"><code>GET</code> retrieves different states over time but
+                          the effect is always the same, cf.
+                          <a href="lecture2.html#/resource-state">resource state</a> hence it is idempotent.</li>
+                          <li>Invocation of <code>GET</code> involves content negotiation</li>
+                      </ul>
+                  </ul>
+              </div>
+
+              <div class="slide" id="PUT">
+                  <hgroup>
+                      <h1>PUT</h1>
+                  </hgroup>
+                  <ul class="small">
+                      <li>Updating or Inserting</li>
+                      <ul>
+                          <li><code>PUT</code> updates or inserts a representation of a state of a resource</li>
+                          <li>Updating the resource is a <b>complete replacement of the resource</b></li>
+                          <pre class="brush: xml; gutter: 'false'">
+                              &gt; PUT /orders/4456 HTTP/1.1
+                              &gt; Content-Type: application/xml
+                              &gt;
+                              &gt; &lt;order>...&lt;/order>
+
+                              &lt; HTTP/1.1 CODE
+                          </pre>
+                          <li>where CODE is:</li>
+                          <ul>
+                              <li><code>200 OK</code> or <code>204 No Content</code> for updating:
+                              A resource with id <code>4456</code> <b>exists</b>, the client
+                                  sends an updated resource</li>
+                              <li><code>201 Created</code> for inserting: A resource <b>does not exist</b>, the client
+                                  generates the id <code>4456</code> and sends a representation of it.</li>
+                          </ul>
+                          <li>It is <b>not safe</b> and it is <b>idempotent</b></li>
+                      </ul>
+                  </ul>
+              </div>
+
+              <div class="slide">
+              <hgroup>
+                  <h1>PATCH</h1>
+              </hgroup>
+                  <ul class="x-small">
+                      <li><code>PATCH</code> to partial update a resource</li>
+                      <ul>
+                          <li>IETF specification, see <span id="rfc-5789" class="h-ref"></span></li>
+                      </ul>
+                      <li>Use in GData Protocol</li>
+                      <ul>
+                          <li>To add, modify or delete selected elements of an Atom feed entry</li>
+                          <li>Example to delete a description element and add a new title element
+                          <br/><code>gd:fields</code> uses the partial response syntax</li>
+                          <pre class="brush: xml; class-name: 'tight'">
+                              PATCH /myFeed/1/1/
+                              Content-Type: application/xml
+
+                              &lt;entry xmlns='http://www.w3.org/2005/Atom'
+                                  xmlns:gd='http://schemas.google.com/g/2005'
+                                  gd:fields='description'>
+                                &lt;title>New title&lt;/title>
+                              &lt;/entry></pre>
+                          <li>Rules</li>
+                          <ul>
+                              <li>Fields not already present are added</li>
+                              <li>Non-repeating fields already present are updated</li>
+                              <li>Repeating fields already present are appended</li>
+                          </ul>
+                      </ul>
+                  </ul>
+              </div>
+
+              <div class="slide">
+                  <hgroup>
+                      <h1>POST</h1>
+                  </hgroup>
+                  <ul class="small">
+                      <li>Inserting</li>
+                      <ul>
+                          <li><code>POST</code> inserts a new resource</li>
+                          <li>A server generates a new resource ID, client only supplies a content and a resource URI where the new
+                          resource will be inserted.</li>
+                          <pre class="brush: xml; gutter: 'false'">
+                              &gt; POST /orders HTTP/1.1
+                              &gt; Content-Type: application/xml
+                              &gt;
+                              &gt; &lt;order>...&lt;/order>
+
+                              &lt; HTTP/1.1 201 Created
+                              &lt; Location: /orders/4456
+                          </pre>
+                          <li>It is <b>not safe</b> an it is <b>not idempotent</b><br/>
+                          <li class="space-before">A client may "suggest" a resource's id using the <code>Slug</code> header</li>
+                          <ul>
+                              <li>Defined in <span class="h-ref" id="rfc-5023">AtomPub protocol</li></li>
+                          </ul>
+                      </ul>
+                  </ul>
+              </div>
+
+              <div class="slide">
+                  <hgroup>
+                      <h1>DELETE</h1>
+                  </hgroup>
+                  <ul class="small">
+                      <li>Deleting</li>
+                      <ul>
+                          <li><code>DELETE</code> deletes a resource with specified URI</li>
+                          <pre class="brush: plain; gutter: 'false'">
+                          &gt; DELETE /orders/4456 HTTP/1.1
+
+                          &lt; HTTP/1.1 CODE
+                          </pre>
+                          <li>where CODE is:</li>
+                          <ul>
+                              <li><code>200 OK</code>: the response body contains an entity describing a result of the operation.</li>
+                              <li><code>204 No Content</code>: there is no response body.</li>
+                          </ul>
+                          <li class="space-before">It is <b>not safe</b> and it is <b>idempotent</b></li>
+                          <ul>
+                              <li>Multiple invocation of <code>DELETE /orders/4456</code> has always the same effect &ndash; the resource
+                              <code>/orders/4456</code> does not exist.</li>
+                          </ul>
+                      </ul>
+                  </ul>
+              </div>
+
+              <div class="slide">
+                  <hgroup>
+                      <h1>Other</h1>
+                  </hgroup>
+                  <ul class="small">
+                      <li>HEAD</li>
+                      <ul>
+                          <li>same as <code>GET</code> but only retrieves HTTP headers</li>
+                          <li>It is <b>safe</b> and <b>idempotent</b></li>
+                      </ul>
+                      <li>OPTIONS</li>
+                      <ul>
+                          <li>queries the resource for resource configuration</li>
+                          <li>It is <b>safe</b> and <b>idempotent</b></li>
+                      </ul>
+                  </ul>
+              </div>
+
+              <div class="slide">
+                  <hgroup>
+                      <h1>Types of Errors</h1>
+                  </hgroup>
+                  <ul class="x-small">
+                      <li>Client-side &ndash; status code <code>4xx</code></li>
+                      <ul>
+                          <li><code>400 Bad Request</code></li>
+                          <ul>
+                              <li>generic client-side error</li>
+                              <li>invalid format, such as syntax or validation error</li>
+                          </ul>
+                          <li><code>404 Not Found</code></li>
+                          <ul>
+                              <li>server can't map URI to a resource</li>
+                          </ul>
+                          <li><code>401 Unauthorized</code></li>
+                          <ul>
+                              <li>wrong credentials (such as user/pass, or API key)</li>
+                              <li>the response contains <code>WWW-Authenticate</code> indicating what kind of authentication
+                              the service accepts</li>
+                          </ul>
+                          <li><code>405 Method Not Allowed</code></li>
+                          <ul>
+                              <li>the resource does not support the HTTP method the client used</li>
+                              <li>the response contains <code>Allow</code> header to indicate methods it supports</li>
+                          </ul>
+                          <li><code>406 Not Acceptable</code></li>
+                          <ul>
+                              <li>so many restrictions on acceptable content types (using <code>Accept-*</code>)</li>
+                              <li>server cannot serialize the resource to requested content types</li>
+                          </ul>
+                      </ul>
+                  </ul>
+              </div>
+
+              <div class="slide">
+                  <hgroup>
+                      <h1>Types of Errors (Cont.)</h1>
+                  </hgroup>
+                  <ul class="x-small">
+                      <li>Server-side &ndash; status code <code>5xx</code></li>
+                      <ul>
+                          <li><code>500 Internal Server Error</code></li>
+                          <ul>
+                              <li>generic server-side error</li>
+                              <li>usually not expressive, logs a message for system admins</li>
+                          </ul>
+                          <li><code>503 Service Not Available</code></li>
+                          <ul>
+                              <li>server is overloaded or is under maintenance</li>
+                              <li>the response contains <code>Retry-After</code> header</li>
+                          </ul>
+                      </ul>
+                  </ul>
+              </div>
+
+              <div class="slide">
+                  <hgroup>
+                      <h1>Use of Status Codes</h1>
+                  </hgroup>
+                  <ul class="small">
+                      <li>Service should respect semantics of status codes!</li>
+                      <ul>
+                          <pre class="brush: js; gutter: 'false''">
+                              &gt; GET /orders HTTP/1.1
+                              &gt; Accept: application/json
+
+                              &lt; HTTP/1.1 200 OK
+                              &lt; Content-Type: application/json
+                              &lt;
+                              &lt; { "error" :
+                              &lt;    { "error_text" :
+                              &lt;        "you do not have rights to access this resource " }
+                              &lt; }
+                          </pre>
+                          <li>Client must understand the semantics of the response.</li>
+                          <li>This breaks loose coupling and reusability service principles</li>
+                          <li>The response should be:</li>
+                          <pre class="brush: plain; gutter: 'false'">
+                              &lt; HTTP/1.1 401 Unauthorized
+                              &lt; ...
+
+                              &lt; ...optional text describing the error...
+                          </pre>
+                      </ul>
+                  </ul>
+              </div>
+
+            </section>
+
+            <div class="slide outline"></div>
+
+            <section>
+                <header>Advanced Design Issues</header>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>Respect HTTP Semantics</h1>
+                    </hgroup>
+                    <ul class="small">
+                        <li>Do not overload semantics of HTTP methods</li>
+                        <ul>
+                            <li>For example, <code>GET</code> is read-only method and idempotent</li>
+                            <li>REST Anti-pattern:</li>
+                            <li class="no-bullet">&nbsp;&nbsp;&nbsp;<code>GET /orders/?add=new_order</code></li>
+                            <ul>
+                                <li>This is not REST!</li>
+                                <li>This breaks both safe and idempotent principles</li>
+                            </ul>
+                        </ul>
+                        <li>Consequences</li>
+                        <ul>
+                            <li>Result of <code>GET</code> can be cached by proxy servers</li>
+                            <li>They can revalidate their caches freely</li>
+                            <li>You can end up with new entries in your storage without you knowing!</li>
+                        </ul>
+                        <li>The same is true for other methods</li>
+                    </ul>
+                </div>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>Change Order Status</h1>
+                    </hgroup>
+                    <ul class="small">
+                        <li><code>status</code> property of <code>/orders/{order-id}</code> resource</li>
+                        <ul>
+                            <li>reflects a state of the process</li>
+                            <li>No need to use a stateful service, state is communicated through the order representation</li>
+                        </ul>
+                        <li>How do you implement a canceling an order?</li>
+                        <ul>
+                            <li>You can delete it using <code>DELETE</code></li>
+                            <li>But you may want to cancel it in order to:</li>
+                            <ul>
+                                <li>maintain a list of canceled orders</li>
+                                <li>have a possibility to "roll-back" canceled orders</li>
+                            </ul>
+                        </ul>
+                    </ul>
+                </div>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>DELETE to cancel</h1>
+                    </hgroup>
+                    <ul class="small">
+                        <li>A bad solution to cancel the order</li>
+                        <ul>
+                            <li>to cancel with DELETE<br/>
+                            <code>DELETE /orders/3454/?cancel=true</code>
+                            <li>you overload the meaning of DELETE</li>
+                            <li>you violate the uniform interface principle</li>
+                        </ul>
+                        <li>Always ask a question:</li>
+                        <ul>
+                            <li><b>Is the operation a state of the resource?</b></li>
+                            <li>if yes, the operation should be:</li>
+                            <ul>
+                                <li>modeled within the data format</li>
+                                <li>or as a separated resource (sub-resource)</li>
+                            </ul>
+                        </ul>
+                        <li>No verbs in <code>path</code> and <code>query</code> components!</li>
+                        <ul>
+                            <li><code>/cancelOrder</code>, <code>/orders/{order-id}/?action=delete</code>, etc.</li>
+                            <li>Verbs in URIs indicate that a resource is actually an operation!</li>
+                        </ul>
+                    </ul>
+                </div>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>PUT to cancel</h1>
+                    </hgroup>
+                    <ul class="small">
+                        <li>A RESTful solution to cancel an order</li>
+                        <ol>
+                            <li>first, have an order's status</li>
+                            <ul>
+                                <li>as part of the Order representation format</li>
+                                <li>we extend "open" and "close" with "cancel"</li>
+                            </ul>
+                            <li>Use PUT to cancel an order</li>
+                            <pre class="brush: js">
+                            &gt; PUT /orders/{order-id}
+                            &gt; Content-Type: application/json
+                            &gt;
+                            &gt; { "status" : "cancel" }
+
+                            &lt; HTTP/1.1 204 No Content
+                            </pre>
+                        </ol>
+                        <li>Clean-up all cancelled orders</li>
+                        <ul>
+                            <li>you can have a resource "all valid orders": <code>/orders/valid</code><br/>
+                            (~ all orders that are not canceled)</li>
+                            <ul>
+                                <li><code>GET /orders/valid</code> will return all non-canceled orders</li>
+                                <li><code>POST /orders/valid</code> will purge all cancelled orders</li>
+                            </ul>
+                        </ul>
+                    </ul>
+                </div>
+            </section>
+
+            <div class="slide outline"></div>
+            
+            <section>
+                <header>Caching and Revalidation</header>
+                
+                <div class="slide">
+                    <hgroup>
+                        <h1>Scalability</h1>
+                    </hgroup>
+                    <ul>
+                        <li>Need for scalability</li>
+                        <ul>
+                            <li>Huge amount of requests on the Web every day</li>
+                            <li>Huge amount of data downloaded</li>
+                        </ul>
+                        <li>Some examples</li>
+                        <ul>
+                            <li>Google, Facebook: 5 billion API calls/day</li>
+                            <li>Twitter: 3 billions of API calls/day (75% of all the traffic)<br/>
+                              &rarr; 50 million tweets a day</li>
+                            <li>eBay: 8 billion API calls/month</li>
+                            <li>Bing: 3 billion API calls/month</li>
+                            <li>Amazon WS: over 100 billion objects stored in S3</li>
+                        </ul>
+                        <li>Scalability in REST</li>
+                        <ul>
+                            <li>Caching and revalidation</li>
+                            <li>Concurrency control</li>
+                        </ul>
+                    </ul>
+                </div>
+                            
+                <div class="slide">
+                    <hgroup>
+                        <h1>Caching</h1>
+                    </hgroup>
+                    <div class="h-drawing" id="1nc-u-R3NUvur4WBAB1yxSqtj3PfmsSWF8iMo0aLT-Nc"
+                        style="height: 200px"></div>
+                    <ul class="x-small">
+                        <li>Your service should cache:</li>
+                        <ul>
+                            <li>anytime there is a static resource</li>
+                            <li>even there is a dynamic resource</li>
+                            <ul>
+                                <li>with chances it updates often</li>
+                                <li>you can force clients to always revalidate</li>
+                            </ul>
+                        </ul>
+                        <li>three steps:</li>
+                        <ul>
+                            <li>client GETs the resource representation</li>
+                            <li>server controls how it should cache through <code>Cache-Control</code>
+                            header</li>
+                            <li>client revalidates the content via conditional GET</li>
+                        </ul>
+                    </ul>
+                </div>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>Cache Headers</h1>
+                    </hgroup>
+                    <ul class="x-small">
+                        <li><code>Cache-Control</code> response header</li>
+                        <ul>
+                            <li>controls over local and proxy caches</li>
+                            <li><code>private</code> &ndash; no proxy should cache, only clients can</li>
+                            <li><code>public</code> &ndash; any intermediary can cache (proxies and clients)</li>
+                            <li><code>no-cache</code> &ndash; the response should not be cached. 
+                            If it is cached, the content should always be revalidated.</li>
+                            <li><code>no-store</code> &ndash; can cache but should not store persistently. When a client restarts, content is lost</li>
+                            <li><code>no-transform</code> &ndash; no transformation of cached data; e.g. compressions</li>
+                            <li><code>max-age</code>, <code>s-maxage</code> a time in seconds how long the cache is valid; 
+                            <code>s-maxage</code> for proxies</li>
+                        </ul>
+                        <li><code>Last-Modified</code> and <code>ETag</code> response headers</li>
+                        <ul>
+                            <li>Content last modified date and a content entity tag</li> 
+                        </ul>
+                        <li><code>If-Modified-Since</code> and <code>If-None-Match</code> request headers</li>
+                        <ul>
+                            <li>Content revalidation (conditional GET)</li> 
+                        </ul>
+                    </ul>
+                </div>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>Example Date Revalidation</h1>
+                    </hgroup>
+                    <ul class="x-small">
+                        <li>Cache control example:</li>
+                        <ul>
+                            <pre class="brush: plain; gutter: 'false'">
+                            &gt; GET /orders HTTP/1.1
+                            &gt; ...
+                            
+                            &lt; HTTP/1.1 200 OK
+                            &lt; Content-Type: application/xml
+                            &lt; Cache-Control: private, no-store, max-age=200
+                            &lt; Last-Modified: Sun, 7 Nov 2011, 09:40 CET
+                            &lt;
+                            &lt; ...data...
+                            </pre>
+                            <li>only client can cache, must not be stored on the disk, 
+                              the cache is valid for 200 seconds.</li>
+                        </ul>
+                        <li>Revalidation (conditional GET) example:</li>
+                        <ul>
+                            <li>A client revalidates the cache after <code>200</code> seconds.</li>
+                            <pre class="brush: plain; gutter: 'false'">
+                            &gt; GET /orders HTTP/1.1
+                            &gt; If-Modified-Since: Sun, 7 Nov 2011, 09:40 CET
+                            
+                            &lt; HTTP/1.1 304 Not Modified
+                            &lt; Cache-Control: private, no-store, max-age=200
+                            &lt; Last-Modified: Sun, 7 Nov 2011, 09:40 CET
+                            </pre>
+                        </ul>
+                    </ul>
+                </div>
+                
+                <div class="slide">
+                    <hgroup>
+                        <h1>Entity Tags</h1>
+                    </hgroup>
+                        <ul class="x-small">
+                            <li>Signature of the response body</li>
+                            <ul>
+                                <li>A hash such as MD5</li>
+                                <li>A sequence number that changes with any modification of the content</li>
+                            </ul>
+                            <li>Types of tag</li>
+                            <ul>
+                                <li>Strong ETag: reflects the content bit by bit</li>
+                                <li>Weak ETag: reflects the content "semantically"</li>
+                                <ul>
+                                    <li>The app defines the meaning of its weak tags</li>
+                                </ul>
+                            </ul>
+                            <li>Example content revalidation with <code>ETag</code></li>
+                            <pre class="brush: plain; gutter: 'false'; class-name: 'tight'">
+                            &lt; HTTP/1.1 200 OK
+                            &lt; Cache-Control: private, no-store, max-age=200
+                            &lt; Last-Modified: Sun, 7 Nov 2011, 09:40 CET
+                            &lt; ETag: "4354a5f6423b43a54d"
+                            
+                            &gt; GET /orders HTTP/1.1
+                            &gt; If-None-Match: "4354a5f6423b43a54d"
+                            
+                            &lt; HTTP/1.1 304 Not Modified
+                            &lt; Cache-Control: private, no-store, max-age=200
+                            &lt; Last-Modified: Sun, 7 Nov 2011, 09:40 CET
+                            &lt; ETag: "4354a5f6423b43a54d"
+                            </pre>
+                        </ul>
+                    </ul>
+                </div>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>Design Suggestions</h1>
+                    </hgroup>
+                    <ul class="small">
+                        <li>Composed resources use weak ETags</li>
+                        <ul>
+                            <li>For example <code>/orders</code></li>
+                            <ul>
+                                <li>a composed resource that contains a summary information</li>
+                                <li>changes to an order's items will not change semantics of <code>/orders</code></li>
+                            </ul>
+                            <li>It is usually not possible to perform updates on these resources</li>
+                        </ul>
+                        <li>Non-composed resources use strong ETags</li>
+                        <ul>
+                            <li>For example <code>/orders/{order-id}</code></li>
+                            <li>They can be updated</li>
+                        </ul>
+                        <li>Further notes</li>
+                        <ul class="small">
+                            <li>Server should send both <code>Last-Modified</code> and
+                            <code>ETag</code> headers</li>
+                            <li>If client sends both <code>If-Modified-Since</code> and <code>If-None-Match</code>,<br/>
+                            <code>ETag</code> validation takes preference</li>
+                        </ul>                        
+                    </ul>
+                </div>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>Weak ETag Example</h1>
+                    </hgroup>
+                    <ul class="x-small">
+                        <li>App specific, <code>/orders</code> resource example</li>
+                        <pre class="brush: js; class-name: 'tight'">
+                        { 
+                            "orders" : 
+                                [
+                                    { "id"        : 2245,
+                                      "customer"  : "Tomas",
+                                      "descr"     : "Stuff to build a house.",
+                                      "items"     : [...] },
+                                    { "id"        : 5546,
+                                      "customer"  : "Peter",
+                                      "descr"     : "Things to build a pipeline.",
+                                      "items"     : [...] }
+                                ] 
+                        }
+                        </pre>
+                        <li>Weak ETag compute function example</li>
+                        <ul>
+                            <li>Any modification to an order's items is not significant for <code>/orders</code>:</li>
+                        </ul>
+                        <pre class="brush: js; class-name: 'tight'">
+                            var crypto = require("crypto");
+                        
+                            function computeWeakETag(orders) {
+                                var content = "";
+                                for (var i = 0; i < orders.length; i++)
+                                    content += orders[i].id + orders[i].customer + orders[i].descr;
+                                return crypto.createHash('md5').update(content).digest("hex");
+                            }
+                        </pre>
+                    </ul>
+                </div>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>Weak ETag Revalidation</h1>
+                    </hgroup>
+                    <ul class="x-small">
+                        <li>Updating <code>/orders</code> resource</li>
+                        <ul>
+                            <li><code>POST /orders/{order-id}</code> inserts a new item to an order</li>
+                            <li>Any changes to orders' items will not change the Weak ETag</li>
+                        </ul>
+                    </ul>
+                    <div class="h-drawing" id="1n1jGatYjOc_kgMhWSuXyReptynOFn1CEDELB75Qj_3A"
+                        style="height: 380px"></div>
+                </div>
+                                    
+            </section>
+                
+            <div class="slide outline"></div>
+            
+            <section>
+                <header>Concurrency Control</header>
+                
+                <div class="slide">
+                    <hgroup>
+                        <h1>Concurrency</h1>
+                    </hgroup>
+                    <ul class="x-small">
+                        <li>Two clients may update the same resource</li>
+                        <ul class="no-bullet">
+                            <li>1) a client GETs a resource <code>GET /orders/5545</code></li>
+                            <li>2) the client modifies the resource</li>
+                            <li>3) the client updates the resource via <code>PUT /orders/5545 HTTP/1.1</code></li>
+                            <li class="space-before">What happens if another client updates the 
+                            resource between 1) and 3) ?</li>
+                        </ul>
+                        
+                        <li>Concurrency control</li>
+                        <ul>
+                            <li>Conditional <code>PUT</code></li>
+                            <ul>
+                                <li>Update the resource only if it has not changed since a specified date or 
+                                a specified ETag matches the resource content</li>
+                            </ul>
+                            <li><code>If-Unmodified-Since</code> and <code>If-Match</code> headers</li>
+                            <li>Response to conditional <code>PUT</code>:</li>
+                            <ul>
+                                <li><code>200 OK</code> if the <code>PUT</code> was successful</li>
+                                <li><code>412 Precondition Failed</code> if the resource was updated in the meantime.</li>
+                            </ul>
+                        </ul>                        
+                    </ul>
+                </div>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>Concurrency Control Protocol</h1>
+                    </hgroup>
+                    <div class="h-drawing" id="1D9w_NKq3AqIl14fn0vGFBmVlbNMrAQqeYljjOYLcqCo"
+                        style="height: 380px"></div>
+                    <ul class="x-small">
+                        <li>Conditional PUT and ETags</li>
+                        <ul>
+                            <li>Conditional PUT must always use strong entity tags or date validation</li>
+                        </ul>
+                    </ul>
+                </div>
+
+        </section>
             
             
         </section>
