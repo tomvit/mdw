@@ -450,10 +450,11 @@
 
         </section>
 
+        <div class="slide outline"></div>
+
         <section>
             <header>REST</header>
 
-            <div class="slide outline"></div>
             
             <section>
                 <header>Introduction to REST</header>
@@ -1595,7 +1596,7 @@
                           <li>It is <b>not safe</b> an it is <b>not idempotent</b><br/>
                           <li class="space-before">A client may "suggest" a resource's id using the <code>Slug</code> header</li>
                           <ul>
-                              <li>Defined in <span class="h-ref" id="rfc-5023">AtomPub protocol</li></li>
+                              <li>Defined in <span class="h-ref" id="rfc-5023">AtomPub protocol</span></li>
                           </ul>
                       </ul>
                   </ul>
@@ -1735,13 +1736,6 @@
                   </ul>
               </div>
 
-            </section>
-
-            <div class="slide outline"></div>
-
-            <section>
-                <header>Advanced Design Issues</header>
-
                 <div class="slide">
                     <hgroup>
                         <h1>Respect HTTP Semantics</h1>
@@ -1767,96 +1761,12 @@
                     </ul>
                 </div>
 
-                <div class="slide">
-                    <hgroup>
-                        <h1>Change Order Status</h1>
-                    </hgroup>
-                    <ul class="small">
-                        <li><code>status</code> property of <code>/orders/{order-id}</code> resource</li>
-                        <ul>
-                            <li>reflects a state of the process</li>
-                            <li>No need to use a stateful service, state is communicated through the order representation</li>
-                        </ul>
-                        <li>How do you implement a canceling an order?</li>
-                        <ul>
-                            <li>You can delete it using <code>DELETE</code></li>
-                            <li>But you may want to cancel it in order to:</li>
-                            <ul>
-                                <li>maintain a list of canceled orders</li>
-                                <li>have a possibility to "roll-back" canceled orders</li>
-                            </ul>
-                        </ul>
-                    </ul>
-                </div>
-
-                <div class="slide">
-                    <hgroup>
-                        <h1>DELETE to cancel</h1>
-                    </hgroup>
-                    <ul class="small">
-                        <li>A bad solution to cancel the order</li>
-                        <ul>
-                            <li>to cancel with DELETE<br/>
-                            <code>DELETE /orders/3454/?cancel=true</code>
-                            <li>you overload the meaning of DELETE</li>
-                            <li>you violate the uniform interface principle</li>
-                        </ul>
-                        <li>Always ask a question:</li>
-                        <ul>
-                            <li><b>Is the operation a state of the resource?</b></li>
-                            <li>if yes, the operation should be:</li>
-                            <ul>
-                                <li>modeled within the data format</li>
-                                <li>or as a separated resource (sub-resource)</li>
-                            </ul>
-                        </ul>
-                        <li>No verbs in <code>path</code> and <code>query</code> components!</li>
-                        <ul>
-                            <li><code>/cancelOrder</code>, <code>/orders/{order-id}/?action=delete</code>, etc.</li>
-                            <li>Verbs in URIs indicate that a resource is actually an operation!</li>
-                        </ul>
-                    </ul>
-                </div>
-
-                <div class="slide">
-                    <hgroup>
-                        <h1>PUT to cancel</h1>
-                    </hgroup>
-                    <ul class="small">
-                        <li>A RESTful solution to cancel an order</li>
-                        <ol>
-                            <li>first, have an order's status</li>
-                            <ul>
-                                <li>as part of the Order representation format</li>
-                                <li>we extend "open" and "close" with "cancel"</li>
-                            </ul>
-                            <li>Use PUT to cancel an order</li>
-                            <pre class="brush: js">
-                            &gt; PUT /orders/{order-id}
-                            &gt; Content-Type: application/json
-                            &gt;
-                            &gt; { "status" : "cancel" }
-
-                            &lt; HTTP/1.1 204 No Content
-                            </pre>
-                        </ol>
-                        <li>Clean-up all cancelled orders</li>
-                        <ul>
-                            <li>you can have a resource "all valid orders": <code>/orders/valid</code><br/>
-                            (~ all orders that are not canceled)</li>
-                            <ul>
-                                <li><code>GET /orders/valid</code> will return all non-canceled orders</li>
-                                <li><code>POST /orders/valid</code> will purge all cancelled orders</li>
-                            </ul>
-                        </ul>
-                    </ul>
-                </div>
             </section>
 
             <div class="slide outline"></div>
             
             <section>
-                <header>Caching and Revalidation</header>
+                <header>Caching, Revalidation, Concurrency Control</header>
                 
                 <div class="slide">
                     <hgroup>
@@ -2094,13 +2004,6 @@
                         style="height: 380px"></div>
                 </div>
                                     
-            </section>
-                
-            <div class="slide outline"></div>
-            
-            <section>
-                <header>Concurrency Control</header>
-                
                 <div class="slide">
                     <hgroup>
                         <h1>Concurrency</h1>
@@ -2147,6 +2050,542 @@
                 </div>
 
         </section>
+        
+        <div class="slide outline"></div>
+        
+        <section>
+            <header>Richardson Maturiy Model</header>
+            
+            <div class="slide">
+                <hgroup>
+                    <h1>Steps towards REST</h1>
+                </hgroup>
+                <img src="img/maturity-model.png" style="margin-top: 40px; margin-left: 50px"></img>
+                <ul class="xx-small">
+                  <li class="no-bullet">See <span class="h-ref" id="rmm">Richardson Maturiy Model</span> details.</li>
+                </ul>
+            </div>
+
+            <div class="slide">
+                <hgroup>
+                    <h1>Levels</h1>
+                </hgroup>
+                <ul class="small">
+                  <li>LEVEL 0 &ndash; POX (Plain Old XML)</li>
+                  <ul>
+                    <li>HTTP as a tunneling mechanism</li>
+                    <li>URL defines a service endpoint</li> 
+                    <li>No Web principles</li>
+                  </ul>
+                  <li>LEVEL 1 &ndash; Resources</li>
+                  <ul>
+                    <li>Take advantages of reosources and URIs</li> 
+                  </ul>
+                  <li>LEVEL 2 &ndash; HTTP Verbs</li>
+                  <ul>
+                    <li>Use HTTP methods and respect their semantics</li>
+                  </ul>
+                  <li>LEVEL 3 &ndash; Hypermedia Conrols</li>
+                  <ul>
+                    <li>HATEOS</li>
+                  </ul>
+                </ul>
+            </div>
+
+        </section>
+            
+            
+        </section>
+      
+        <section>
+            <header>SOAP and WSDL</header>
+
+            <div class="slide outline"></div>
+            
+            <section>
+                <header>Introduction to SOAP</header>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>Web Service Architecture</h1>
+                    </hgroup>
+                    <ul class="small">
+                        <li>WSDL, SOAP and UDDI</li>
+                        <div class="h-drawing" style="height: 250px"
+                            id="1G0jfLQn6lIVx_DaBDh89hV_K4hxK5QIyYtGF3uoOcok"></div>
+                        <ul>
+                            <li class="space-before">Realization of SOA</li>
+                            <li>Message-Oriented view</li>
+                            <ul>
+                                <li>SOAP messaging (header, body)</li>
+                                <li>types of messages &ndash; input, output, fault</li>
+                            </ul>
+                        </ul>
+                    </ul>
+                </div>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>SOAP Protocol</h1>
+                    </hgroup>
+                    <ul class="small">
+                        <li>SOAP defines a messaging framework</li>
+                        <div class="h-drawing" style="height: 180px; margin-left: -30px; margin-bottom: 20px" 
+                            id="1yzA6Qa4NlvUBLrDtefeo3_Ud9eT6fl--qOwawlH9F_M"></div>
+                        <ul>
+                            <li>XML-based protocol</li>
+                            <li>a layer over transport protocols</li>
+                            <ul>
+                                <li>binding to HTTP, SMTP, JMS, ...</li>
+                            </ul>
+                            <li>involves multiple nodes (message path)</li>
+                            <ul>
+                                <li>sender, receiver, intermediary</li>
+                            </ul>
+                        </ul>
+                    </ul>
+                </div>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>SOAP Message</h1>
+                    </hgroup>
+                    <ul class="x-small">
+                        <li>Envelope</li>
+                        <ul>
+                            <li>A container of a message</li>
+                        </ul>
+                        <li>Header</li>
+                        <ul>
+                            <li>Metadata &ndash; describe a message, organized in header blocks</li>
+                            <ul>
+                                <li>routing information</li>
+                                <li>security measures implemented in the message</li>
+                                <li>reliability rules related to delivery of the message</li>
+                                <li>context and transaction management</li>
+                                <li>correlation information (request and response message relation)</li>
+                            </ul>
+                            <li>WS extensions (WS-*) utilize the message header</li> 
+                        </ul>
+                        <li>Body (payload)</li>
+                        <ul>
+                            <li>Actual contents of the message, XML formatted</li>
+                            <li>Contains also faults for exception handling</li>
+                        </ul>
+                        <li>Attachment</li>
+                        <ul>
+                            <li>Data that cannot be serialized into XML such as binary data</li>
+                        </ul>
+                    </ul>
+                </div>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>Endpoint</h1>
+                    </hgroup>
+                    <ul class="small">
+                        <li>SOAP service endpoint definition</li>
+                        <div class="h-drawing" style="height: 300px" 
+                            id="1PYfoC9B77CJ83zO22c2-k8yWf-wZ1ChZ8lZNkqcDl_I"></div>
+                        <ul class="xx-small">
+                            <li>Endpoint &ndash; a network address used for communication</li>
+                            <li>Communication &ndash; request-response, SOAP messages over a communication (application) protocol</li>
+                            <li>Synchronous communication &ndash; only service defines endpoint</li>
+                            <li>Asynchronous communication &ndash; service and client define endpoints</li>
+                        </ul>
+                    </ul>
+                </div>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>Service Invocation Example (1)</h1>
+                    </hgroup>
+                    <ul class="x-small">
+                        <li>Example service implementation</li>
+                        <ul>
+                            <li>A service that evaluates an expression</li>
+                            <li>Uses SOAP over HTTP</li>
+                            <ul>
+                                <li>We can use standard HTTP tools to invoke the service</li>
+                            </ul>
+                        </ul>
+                        <li>SOAP request message</li>
+                            <ul class="no-bullet">
+                                <li><code>evaluate-input.xml</code></li>
+                            </ul>
+                        <pre class="brush: xml">
+                        &lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+                                &lt;soap:Body>
+                                        &lt;ns1:evaluateRequest 
+                                        xmlns:ns1="http://xmlns.oracle.com/mdw_examples/Evaluate/evaluate">
+                                                &lt;ns1:x>12&lt;/ns1:x>
+                                                &lt;ns1:y>18&lt;/ns1:y>
+                                        &lt;/ns1:evaluateRequest>
+                                &lt;/soap:Body>
+                        &lt;/soap:Envelope>
+                        </pre>
+                        <li>Invoking the service using <code>curl</code></li>
+                        <pre class="brush: 'bash'">
+                            curl -s -X POST --header "Content-Type: text/xml;charset=UTF-8" \
+                            --header "SOAPAction: \"evaluate\"" --data @evaluate-input.xml \
+                            http://mimdw.fit.cvut.cz/soa-infra/services/mdw-examples/Evaluate/evaluate_client_ep
+                        </pre>
+                    </ul>
+                </div>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>Service Invocation Example (2)</h1>
+                    </hgroup>
+                    <ul class="x-small">
+                        <li>Invocation result</li>
+                        <pre class="brush: 'bash'">
+                            * About to connect() to mimdw.fit.cvut.cz port 80 (#0)
+                            *   Trying 147.32.233.55... connected
+                            * Connected to sb.vitvar.com (147.32.233.55) port 80 (#0)
+                            > POST /soa-infra/services/mdw-examples/Evaluate/evaluate_client_ep HTTP/1.1
+                            > User-Agent: curl/7.19.7 (x86_64-redhat-linux-gnu) libcurl/7.19.7 NSS/3.14.0.0 zlib/1.2.3 libidn/1.18 libssh2/1.4.2
+                            > Host: mimdw.fit.cvut.cz
+                            > Accept: */*
+                            > Content-Type: text/xml;charset=UTF-8
+                            > SOAPAction: "evaluate"
+                            > Content-Length: 302
+                            > 
+                            } [data not shown]
+                            < HTTP/1.1 200 OK
+                            < Date: Sun, 17 Nov 2013 11:24:59 GMT
+                            < Server: Oracle-Application-Server-11g
+                            < Content-Length: 569
+                            < X-ORACLE-DMS-ECID: 004upqiWhdD0zkWVLybQ8A0005uX0004Y^
+                            < SOAPAction: ""
+                            < X-Powered-By: Servlet/2.5 JSP/2.1
+                            < Content-Type: text/xml; charset=UTF-8
+                            < Content-Language: en
+                        </pre>
+                    </ul>
+                </div>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>Service Invocation Example (3)</h1>
+                    </hgroup>
+                    <ul class="x-small">
+                        <li>SOAP response message</li>
+                        <pre class="brush: 'xml'">
+                            &lt;?xml version="1.0"?>
+                            &lt;env:Envelope xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" 
+                                xmlns:wsa="http://www.w3.org/2005/08/addressing">
+                              &lt;env:Header>
+                                &lt;wsa:MessageID>urn:E42018C04F7A11E3BFD5D1953058407C&lt;/wsa:MessageID>
+                              &lt;/env:Header>
+                              &lt;env:Body>
+                                &lt;evaluateResponse 
+                                    xmlns="http://xmlns.oracle.com/mdw_examples/Evaluate/evaluate">
+                                  &lt;result>30&lt;/result>
+                                &lt;/evaluateResponse>
+                              &lt;/env:Body>
+                            &lt;/env:Envelope>
+                        </pre>
+                    </ul>
+                </div>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>Client Implementation</h1>
+                    </hgroup>
+                    <ul class="x-small">
+                        <li>WSDL &ndash; Web Service Description Language</li>
+                        <ul>
+                            <li>definitions for the client to know how to communicate with the service</li>
+                            <ul>
+                                <li>which operations it can use</li>
+                                <li>data formats for input (request), output (response) and fault messages</li>
+                                <li>how to serialize the data as payloads of a communication protocol (binding)</li>
+                                <li>where the service is physically present on the network</li>
+                            </ul>
+                        </ul>
+                        <li>Clients' environments</li>
+                        <ul>
+                            <li>Clients implemented in a language such as Java</li>
+                            <ul>
+                                <li>Tools to generate service API for the client, e.g. WSDL2Java</li>
+                                <li>Can be written manually too, e.g. our example in bash</li>
+                            </ul>
+                            <li>Clients reside on the middleware, e.g. on an Enterprise Service Bus</li>
+                            <ul>
+                                <li>They provide added values in end-to-end communication, proxy services, SOAP intermediaries</li>
+                            </ul>
+                        </ul>
+                    </ul>
+                </div>
+        
+        
+            </section>
+            
+            <div class="slide outline"></div>
+
+            <section>
+                <header>WSDL</header>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>Specifications</h1>
+                    </hgroup>
+                    <ul class="x-small">
+                        <li>WSDL = Web Service Description Language</li>
+                        <ul>
+                            <li>A standard that allows to describe Web services explicitly (main aspects)</li>
+                            <li>A contract between a requester and a provider</li>
+                        </ul>
+                        <li>Specifications</li>
+                        <ul>
+                            <li>WSDL 1.1 &ndash; still widely used</li>
+                            <ul>
+                                <li><span class="h-ref" id="wsdl11">Web Service Description Language 1.1</span></li>
+                            </ul>
+                            <li>WSDL 2.0 &ndash; An attempt to address several issues with WSDL 1.1</li>
+                            <ul>
+                                <li>SOAP vs. REST, naming, exrpessivity</li>
+                                <li><span class="h-ref" id="wsdl20-primer">WSDL 2.0 Primer (part 0)</span></li>
+                                <li><span class="h-ref" id="wsdl20">WSDL 2.0 Core Language (part 1)</span></li>
+                            </ul>
+                        </ul>            
+                    </ul>
+                </div>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>WSDL Overview and WSDL 1.1 Syntax</h1>
+                    </hgroup>
+                    <ul class="x-small">
+                        <li>Components of WSDL</li>
+                        <ul>
+                            <li>Information model (<code>types</code>)</li>
+                            <ul>
+                                <li>Element types, message declarations (XML Schema)</li>
+                            </ul>
+                            <li>Set of operations (<code>portType</code>)</li>
+                            <ul>
+                                <li>A set of operations is "interface" in the WSDL terminology</li>
+                                <li>operation name, input, output, fault</li>
+                            </ul>
+                            <li>Binding (<code>binding</code>)</li>
+                            <ul>
+                                <li>How messages are transfered over the network using a concrete transport protocol</li>
+                                <li>Transport protocols: HTTP, SMTP, FTP, JMS, ...</li>
+                            </ul>
+                            <li>Endpoint (<code>service</code>)</li>
+                            <ul>
+                                <li>Where the service is physically present on the network</li>
+                            </ul>
+                        </ul>
+                        <li>Types of WSDL documents</li>
+                        <ul>
+                            <li><b>Abstract WSDL</b> &ndash; only information model and a set of operations</li>
+                            <li><b>Concrete WSDL</b> &ndash; everything, a concrete service available in the environment</li>
+                        </ul>
+                    </ul>
+                </div>                  
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>WSDL Components and Dependencies</h1>
+                    </hgroup>
+                    <img src="img/wsdl-with-links.png" style="height: 490px; margin-top: 10px; margin-left: 200px"></img>
+                </div>                  
+
+            </section>
+
+            <div class="slide outline"></div>
+            
+            <section>
+                <header>WS-Addressing</header>
+                
+                <div class="slide">
+                    <hgroup>
+                        <h1>Overview</h1>
+                    </hgroup>
+                    <ul class="x-small">
+                        <li>WS-Addressing</li>
+                        <ul>
+                            <li><span class="h-ref" id="ws-addr">W3C Recommendation, May 2006</span></li>
+                            <li>A transport-independent mechanisms for web services 
+                                to communicate addressing information</li>
+                            <li>WSDL describes WS-Addressing as a policy attached to a WSDL binding</li>
+                            <pre class="brush: xml; highlight: [3,4]">
+                                &lt;binding name="OrderProcessBinding" type="op:OrderProcess">
+                                    &lt;soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+                                    &lt;PolicyReference xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"
+                                        URI="#wsaddr_policy" wsdl:required="false"/>
+                            </pre>
+                        </ul>
+                        <li>Two main purposes</li>
+                        <ol>
+                            <li>Asynchronous communication</li>
+                            <ul>
+                                <li>Client sends an endpoint where the server should send a response asynchronously</li>
+                            </ul>
+                            <li>Relating interactions to a conversation</li>
+                            <ul>
+                                <li>Client and service communicate conversation ID</li>
+                            </ul>
+                        </ul>
+                    </ul>
+                </div>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>Order Processing Example</h1>
+                    </hgroup>
+                    <ul class="x-small">
+                        <li>Asynchronous communication via callback</a>, steps:</li>
+                        <ul>
+                            <li>Client submits an order request</li>
+                            <li>Service starts processing of the order (CRM, OMS, back-office)</li>
+                            <li>Client can retrieve the order status</li>
+                            <li>Service responds asynchronously with an order response message</li>
+                        </ul>
+                    </ul>
+                    <div class="h-drawing" id="1nPmejyynnsGNYC_dxe5poTKfiFJiqLgt7nPHD_GEJcc" style="height: 350px"></div>
+                </div>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>Interface Example (1)</h1>
+                    </hgroup>
+                    <ul class="x-small">
+                        <li>Order process complex conversation</li>
+                        <ol>
+                            <li>The client invokes <code>processOrder</code>.</li>
+                            <li>The service responses back <b>synchronously</b> with order status.</li>
+                            <li>The client gets the status of order processing by invoking synchronous <code>getStatus</code> operation (this can be invoked serveral times).</li>
+                            <li>The service responses back <b>asynchronously</b> by invoking <code>processOrderResponse</code> &ndash; callback on client's interface</li> 
+                        </ol>
+                        <li>Interface implemented by the order process service</li>
+                        <ul>
+                            <li><code>getStatus</code> operation must be executed in the same <b>conversation</b> as 
+                                <code>processOrder</code> operation</li>
+                        </ul>
+                        <pre class="brush: xml; class-name: 'x-small'">
+                            &lt;portType name="OrderProcess">
+                                &lt;operation name="processOrder">
+                                    &lt;input message="op:OrderProcessRequestMessage"/>
+                                    &lt;output message="op:OrderStatusResponseMessage"/>
+                                &lt;/operation>
+                                &lt;operation name="getStatus">
+                                    &lt;input message="op:OrderStatusRequestMessage"/>
+                                    &lt;output message="op:OrderStatusResponseMessage"/>
+                                &lt;operation>
+                            &lt;portType>
+                        </pre>
+                        <li>Interface implemented by the client</li>
+                        <pre class="brush: xml; class-name: 'x-small'">
+                            &lt;portType name="OrderProcessCallback">
+                                &lt;operation name="processOrderResponse">
+                                    &lt;input message="op:OrderProcessResponseMessage"/>
+                                    &lt;fault message="op:OrderProcessFaultMessage"/>
+                                &lt;operation>
+                            &lt;/portType>                            
+                        </pre>
+
+                    </ul>
+                </div>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>Interface Example (2)</h1>
+                    </hgroup>
+                    <ul class="x-small">
+                        <li>Interface implemented by the client</li>
+                        <pre class="brush: xml; class-name: 'x-small'">
+                            &lt;portType name="OrderProcessCallback">
+                                &lt;operation name="processOrderResponse">
+                                    &lt;input message="op:OrderProcessResponseMessage"/>
+                                    &lt;fault message="op:OrderProcessFaultMessage"/>
+                                &lt;operation>
+                            &lt;/portType>                            
+                        </pre>
+
+                    </ul>
+                </div>
+
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>ProcessOrder Request Message</h1>
+                    </hgroup>
+                    <ul class="xx-small">
+                    <li>Client sends process order request &ndash; <code>processOrder</code></li>
+                    <ul>
+                        <li>it sends addressing information where the client listens for the callback</li>
+                        <li>it sends conversation ID (message ID) to start the conversation on the server</li>
+                        <pre class="brush: xml; highlight: [9,10,11,12,13]; class-name: 'tight'">
+                        > POST /soa-infra/services/mdw-examples/ProcessOrder/orderprocess_client_ep HTTP/1.1
+                        > Host: mimdw.fit.cvut.cz
+                        > Content-Type: text/xml;charset=UTF-8
+                        > SOAPAction: "processOrder"
+                        > Content-Length: 810
+
+                        &lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" 
+                            xmlns:ord="http://mimdw.fit.cvut.cz/mdw-examples/cdm/order">
+                             &lt;soap:Header xmlns:wsa='http://www.w3.org/2005/08/addressing'>
+                                &ltwsa:ReplyTo>
+                                    &lt;wsa:Address>http://192.168.94.110:2233/path/to/service&lt;/wsa:Address>
+                                &lt;/wsa:ReplyTo>
+                                &lt;wsa:MessageID>urn:AXYYBA00531111E3BFACA780A7E5AF64&lt;/wsa:MessageID>
+                             &lt;/soap:Header>
+                             &lt;soap:Body>
+                                &lt;ord:Order>
+                                    &lt;ord:CustomerId>1&lt;/ord:CustomerId>
+                                    &lt;ord:LineItems>
+                                        &lt;ord:item>
+                                            &lt;ord:label>Apple MacBook Pro&lt;/ord:label>
+                                            &lt;ord:action>ADD&lt;/ord:action>
+                                        &lt;/ord:item>
+                                    &lt;/ord:LineItems>
+                                &lt;/ord:Order>
+                            &lt;/soap:Body>
+                        &lt;/soap:Envelope>
+                        </pre>
+                    </ul>
+                </div>
+
+                <div class="slide">
+                    <hgroup>
+                        <h1>GetStatus Request Message</h1>
+                    </hgroup>
+                    <ul class="xx-small">
+                    <li>Client sends get status request &ndash; <code>getStatus</code></li>
+                    <ul>
+                        <li>after it invokes <code>processOrder</code> with conversation ID (message ID)</li>
+                        <li>it uses the same conversation ID for get status request too</li>
+                        <ul>
+                            <li>the request will be procesessed by the running service instance</li>
+                        </ul>
+                        <pre class="brush: xml; highlight: [9]">
+                        > POST /soa-infra/services/mdw-examples/ProcessOrder/orderprocess_client_ep HTTP/1.1
+                        > Host: mimdw.fit.cvut.cz
+                        > Content-Type: text/xml;charset=UTF-8
+                        > SOAPAction: "getStatus"
+                        > Content-Length: 472      
+
+                        &lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+                            &lt;soap:Header xmlns:wsa="http://www.w3.org/2005/08/addressing">
+                                &lt;wsa:RelatesTo>urn:AXYYBA00531111E3BFACA780A7E5AF64&lt;/wsa:RelatesTo>
+                            &lt;/soap:Header>
+                            &lt;soap:Body>
+                                &lt;ns1:StatusRequest 
+                                    xmlns:ns1="http://mimdw.fit.cvut.cz/mdw_examples/ProcessOrder/OrderProcess">
+                                    &lt;ns1:process-id>18a9baec2d5ac0a2:64d155de:1425c4185f1:-7ff2&lt;/ns1:process-id>
+                                &lt;/ns1:StatusRequest>
+                            &lt;/soap:Body>
+                        &lt;/soap:Envelope>                    
+                        </pre>
+                    </ul>
+                </div>
+
+                
+            </section>        
             
             
         </section>
