@@ -8,7 +8,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> 
         <meta name="course"   content="Middleware and Web Services"/>
-        <meta name="lecture"  content="Lecture 8"/>
+        <meta name="lecture"  content="Lecture 6"/>
         <meta name="keywords" content="High Availability, Load Balancer, Replication"/>
            
         <link type="text/css" rel="stylesheet" href="css/meta.css"></link>   
@@ -16,7 +16,7 @@
         <link type="text/css" rel="stylesheet" href="humla/lib/core/humla.css"></link>   
 
         <script type="text/javascript" src="humla/lib/humla.js"></script>
-        <title>Enterprise Service Bus</title>
+        <title>Integration Patterns</title>
     </head>
     
     <body>
@@ -52,38 +52,12 @@
             </div>
         </div>
 
-<!--        <div class="slide intro">
-            <hgroup>
-                <h1><span class="meta_course"/></h1>
-                <h2>#META_LECTURE#: #TITLE#</h2>
-            </hgroup>
-            <div class="author">
-                <p class="meta_author"/>
-                <p><span class="meta_email"/> &bull; <span class="meta_twitter"/> &bull; 
-                <span class="meta_web"/></p>
-            </div>
-            <center><div class="meta_logo"></div></center>
-            <div class="org">
-                <p class="meta_org"/>
-                <p><span class="meta_orgfac"/> &bull; <span class="meta_field"/> 
-                &bull; <span class="meta_orgweb"/></p>
-            </div>
-            <div class="etc">
-                <div class="text-info">
-                    Modified: #LAST_MODIFIED#<br/>
-                    Humla v#HUMLA_VERSION#
-                </div>
-                <a href="http://academy.oracle.com"><div class="oracle-academy"></div></a>
-                <div class="oppa"></div>
-            </div>
-        </div>-->
-        
     	<div class="slide">
 			<hgroup>
-				<h1>Overview</h1>
+				<h1>Enterprise Service Bus</h1>
 			</hgroup>
 			<ul class="x-small">
-				<li>Central intermediary in SOA</li>
+				<li>ESB is a central intermediary in SOA</li>
 				<ul>
 					<li>Types of services: shared and infrastructure</li>
 					<li>Types of processes: Technical and Business</li>
@@ -110,7 +84,7 @@
 
     	<div class="slide">
 			<hgroup>
-				<h1>ESB Vendors</h1>
+				<h1>Major Vendors</h1>
 			</hgroup>
 			<ul class="x-small">
 				<li>Oracle</li>
@@ -141,7 +115,7 @@
             </ul>
         </div>
 
-        <div class="slide outline"></div>
+        <!-- <div class="slide outline"></div>
         
         <section>
         	<header>
@@ -532,9 +506,9 @@
 	        </div>
         	
         </section>
-    </section>
+    </section> -->
 
-    <div class="slide outline"></div>
+    <!-- <div class="slide outline"></div> -->
 
     <section>
     	<header>
@@ -543,7 +517,7 @@
     	
 		<div class="slide">
 			<hgroup>
-				<h1>Overview</h1>
+				<h1>Integration Patterns</h1>
 			</hgroup>
 			<ul class="x-small">
 				<li>Applied in implementation of business services and processes</li>
@@ -716,6 +690,39 @@
         	</ul>
     	</div>        	
 
+      <div class="slide">
+    <hgroup>
+      <h1>Key Mapping</h1>
+    </hgroup>
+    <ul class="x-small">
+      <li>What is key mapping</li>
+      <ul>
+        <li>Key = identifier of en entity in a back-end application</li>
+        <li>Key Mapping = a mapping of an ID of an entity in one system to an ID of the same entity in another system.</li>
+        <li>Key mapping is realized using universal IDs (UID)</li>
+      </ul>      			
+      <li>Example</li>
+      <ul>
+        <li>A customer MOON exists in CRM and OMS systems</li>
+        <li>In CRM system, MOON has an <code>CRM-ID=AB1</code></li>
+        <li>In OMS system, MOON has an <code>CRM-ID=45A</code></li>
+        <li>Key mappig allows to map the <code>CRM-ID AB1</code> to the <code>OMS-ID 45A</code></li>
+        <li>Key mapping is a table</li>
+        <ul class="no-bullet">
+          <li><code>CRM-ID &rarr; UID &rarr; OMS-ID</code></li>
+        </ul>
+      </ul>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <hgroup>
+      <h1>Key Mapping Example</h1>
+    </hgroup>
+    <div id="1G4XbrYDV4ptT6GvXzWHio5bp2tfRpZd8MwrOpCcIR0U" class="h-drawing" style="height: 410px; margin-top: 60px"></div>
+    </div>        	
+
+
     	<div class="slide">
 			<hgroup>
 				<h1>Message Sequencing</h1>
@@ -732,12 +739,6 @@
         		id="1M2-c2-2QVfEGlBnH1IQslZ58W0w5D1xgb-mN2MMazQI"></div>
         </div>        	    	        
 
-
-    	<div class="slide">
-			<hgroup>
-				<h1>Message Aggregation</h1>
-			</hgroup>
-        </div>        	    	        
 
     </section>
 
