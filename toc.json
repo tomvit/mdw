@@ -11,5 +11,7 @@
 ,
 {"title":"High Availability and Performance","slide-url":"lecture5.html#/1","sections":[{"title":"Infrastructure","slide-url":"lecture5.html#/3","sections":[{"title":"Load Balancers","slide-url":"lecture5.html#/10","sections":[]},{"title":"Cluster Architecture","slide-url":"lecture5.html#/21","sections":[]}]},{"title":"Performance Tuning","slide-url":"lecture5.html#/25","sections":[]}],"lastModified":"Sun Nov 25 2018, 21:42:58"}
 ,
-{"title":"Integration Patterns","slide-url":"lecture6.html#/1","sections":[{"title":"\n\t\t\tIntegration Patterns        \t\t\n    \t","slide-url":"lecture6.html#/4","sections":[]}],"lastModified":"Sun Sep 30 2018, 21:19:19"}
+{"title":"Integration Patterns","slide-url":"lecture6.html#/1","sections":[{"title":"\n\t\t\tIntegration Patterns        \t\t\n    \t","slide-url":"lecture6.html#/4","sections":[]}],"lastModified":"Sun Dec 09 2018, 22:25:29"}
+,
+{"title":"Cloud Architectures","slide-url":"lecture7.html#/1","sections":[{"title":"Introduction","slide-url":"lecture7.html#/2","sections":[]},{"title":"Cloud Architecture","slide-url":"lecture7.html#/17","sections":[{"title":"Service Models","slide-url":"lecture7.html#/10","sections":[]},{"title":"Multitenancy","slide-url":"lecture7.html#/17","sections":[]}]}],"lastModified":"Sun Sep 30 2018, 21:19:19"}
 ]}
