@@ -4,719 +4,1191 @@
     (cc) 2010-2012 Tomas Vitvar, http://vitvar.com
     written for Humla, an open source HTML5 presentation environment
 -->
-<html>  
-    <head>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> 
-        <meta name="course"   content="Middleware and Web Services"/>
-		<meta name="lecture"  content="Lecture 4"/>
-   		<meta name="keywords" content="Web Server, Application Server, JEE"/>
-           
-        <link type="text/css" rel="stylesheet" href="css/meta.css"></link>   
-        <link type="text/css" rel="stylesheet" href="css/ctu-fit.css"></link>   
-        <link type="text/css" rel="stylesheet" href="humla/lib/core/humla.css"></link>   
+<html>
 
-        <script type="text/javascript" src="humla/lib/humla.js"></script>
-        <title>Messaging Systems</title>
-	</head>
-	
-	<body>
-		<footer>
-			<p><b>#META_LECTURE#: #TITLE#</b>,&nbsp;<span class="meta_semester"/>,&nbsp;
-			<span class="meta_twitter"/></p>
-			<p><b>&#8210; #SLIDE_NO# &#8210;</b></p>
-		</footer>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="course" content="Middleware and Web Services" />
+  <meta name="lecture" content="Lecture 4" />
+  <meta name="keywords" content="SOA, service concepts, service technologies, SOAP, REST, WSDL" />
 
-    	<div class="slide intro">
-			<hgroup>
-				<h1><span class="meta_course"/></h1>
- 				<h2>#META_LECTURE#: #TITLE#</h2>
-			</hgroup>
-			<div class="author">
-				<p class="meta_author"/>
-				<p><span class="meta_email"/> &bull; <span class="meta_twitter"/> &bull; 
-				<span class="meta_web"/></p>
-			</div>
-			<center><div class="meta_logo"></div></center>
-			<div class="org">
-				<p class="meta_org"/>
-				<p><span class="meta_orgfac"/> &bull; <span class="meta_field"/> 
-				&bull; <span class="meta_orgweb"/></p>
-			</div>
-			<div class="etc">
-        		<div class="text-info">
-    				Modified: #LAST_MODIFIED#<br/>
-					Humla v#HUMLA_VERSION#
-				</div>
-				<a href="http://creativecommons.org/licenses/by-sa/3.0/"><div class="license"></div></a>
-				<div class="oppa"></div>
-			</div>
-		</div>
-		
-        <div class="slide outline"></div>
+  <link type="text/css" rel="stylesheet" href="css/meta.css">
+  </link>
+  <link type="text/css" rel="stylesheet" href="css/ctu-fit.css">
+  </link>
+  <link type="text/css" rel="stylesheet" href="humla/lib/core/humla.css">
+  </link>
 
-        <section>
-            <header>Messaging Systems</header>
+  <script type="text/javascript" src="humla/lib/humla.js"></script>
+  <title>Advanced Service Concepts and Technologies</title>
+</head>
 
-            <div class="slide">
-                <hgroup>
-                    <h1>Recall: Asynchronous via Intermediary</h1>
-                </hgroup>   
-                <div class="h-drawing" style="height: 220px" 
-                    id="1mh4fk7kNmLyqVT1Cks4rRFRpGjFcU1yStOYQw2uiew8"></div>                                
-                <ul class="x-small">
-                    <li>Intermediary</li>
-                    <ul>
-                        <li>A component that decouples a client-server communication</li>
-                        <li>It increases reliability and performance</li>
-                        <ul>
-                            <li>The server may not be available when a client sends a request</li>
-                            <li>There can be multiple servers that can handle the request</li>
-                        </ul>
-                    </ul>
-                </ul>
-            </div>   
+<body>
+  <footer>
+    <p><b>#META_LECTURE#: #TITLE#</b>,&nbsp;<span class="meta_semester" />,&nbsp;
+      <span class="meta_twitter" /></p>
+    <p><b>&#8210; #SLIDE_NO# &#8210;</b></p>
+  </footer>
 
-            <div class="slide">
-                <hgroup>
-                    <h1>Messaging Systems</h1>
-                </hgroup>
-                <ul class="small">
-                    <li>Messaging Systems</li>
-                    <ul>
-                        <li>Also "Messaging Middleware" or "Message-Oriented Middleware" (MOM)</li>
-                        <li>Two roles: a message consumer and a message producer</li>
-                        <li>Asynchronous communication</li>
-                        <li>"anonymity" between producers and consumers</li>
-                        <ul>
-                            <li>no matter "who", "where", "when" produced a message</li>
-                        </ul>
-                        <li>Ensures reliability and scalability</li>
-                    </ul>
-                    <li>Loose coupling of applications</li>
-                    <ul>
-                        <li>A producer does not need to know about a consumer</li>
-                        <ul>
-                            <li>Messaging systems decouple a producer and a consumer</li>
-                        </ul>
-                    </ul>
-                    <li>Two types (Messaging Domains)</li>
-                    <ul>
-                        <li>Point-to-Point (message queue &mdash; MQ)</li>
-                        <li>Publish/Subscribe (event-based)</li>
-                    </ul>
-                </ul>
-            </div>
+  <div class="slide intro">
+    <hgroup>
+      <h1><span class="meta_course" /></h1>
+      <h2>#META_LECTURE#: #TITLE#</h2>
+    </hgroup>
+    <div class="author">
+      <p class="meta_author" />
+      <p><span class="meta_email" /> &bull; <span class="meta_twitter" /> &bull;
+        <span class="meta_web" /></p>
+    </div>
+    <center>
+      <div class="meta_logo"></div>
+    </center>
+    <div class="org">
+      <p class="meta_org" />
+      <p><span class="meta_orgfac" /> &bull; <span class="meta_field" />
+        &bull; <span class="meta_orgweb" /></p>
+    </div>
+    <div class="etc">
+      <div class="text-info">
+        Modified: #LAST_MODIFIED#<br />
+        Humla v#HUMLA_VERSION#
+      </div>
+      <a href="http://creativecommons.org/licenses/by-sa/3.0/">
+        <div class="license"></div>
+      </a>
+      <div class="oppa"></div>
+    </div>
+  </div>
 
-            <div class="slide">
-                <hgroup>
-                    <h1>Java Message Service</h1>
-                </hgroup>
-                <ul class="small">
-                    <li>JMS &ndash; Java Message Service</li>
-                    <ul>
-                        <li>Java API for Message-Oriented Middleware</li>
-                        <li>Java programs to create, send, receive and read messages</li>
-                        <li>Standardized in <a class="ext-link ref" title="JSR 914" 
-                        href="https://jcp.org/aboutJava/communityprocess/final/jsr914/index.html">JSR 914</a></li>
-                    </ul>
-                    <li>Terminology</li>
-                    <ul class="x-small">
-                        <li><b>JMS Provider</b> &ndash; implementation of JMS system, part of application server</li>
-                        <li><b>JMS Client</b> &ndash; application that sends or receives JMS messages</li>
-                        <ul>
-                            <li><b>JMS producer/publisher</b> &ndash; creates and sends messages</li>
-                            <li><b>JMS consumer/subscriber</b> &ndash; receives and processes the messages</li>
-                        </ul>
-                        <li><b>JMS Message</b> &ndash; an object with data (payload) and properties</li>
-                        <li><b>JMS Queue</b> &ndash; storage that contains sent messages that are to be received; messages are processed only once</li>
-                        <li><b>JMS Topic</b> &ndash; storage that distributes messages to multiple subscribes</li>
-                    </ul>
-                </ul>
-            </div>
+  <div class="slide outline"></div>
 
-            <div class="slide outline"></div>
-            
-            <section>
-                <header>Point-to-Point</header>
+  <section>
+    <header>HATEOAS</header>
 
-                <div class="slide">
-                    <hgroup>
-                        <h1>Conceptual Architecture</h1>
-                    </hgroup>
-                    <div class="h-drawing" style="height: 300px" 
-                        id="14mdNb1lSNLcI5zvnJe28kJpkZ7alzH3OZjL-saFGCO8"></div>
-                    <ul class="x-small">
-                        <ul>
-                            <li>"1 : 1" relationship between a producer and a consumer<br/>
-                            &rarr; <b>one message must be processed by one consumer</b></li>
-                            <li><b>no time-dependency</b> between message producer and consumer<br/>
-                            &rarr; consumer does not need to exist when producer sends a message</li>
-                            <li>Message exists in the queue until it is used by a consumer</li>
-                            <li>message consumers take as many messages as they are able to serve</li>
-                        </ul>
-                    </ul>
-                </div>
+    <div class="slide">
+      <hgroup>
+        <h1>HATEOAS</h1>
+      </hgroup>
+      <ul>
+        <li>HATEOAS = Hypertext as the Engine for Application State</li>
+        <ul>
+          <li>The REST core principle</li>
+          <li><b>Hypertext</b></li>
+          <ul>
+            <li>Hypertext is a representation of a resource with <b>links</b></li>
+            <li>A link is an URI of a resource</li>
+            <li>Applying an access to a resource via its link = state transition</li>
+          </ul>
+        </ul>
+        <li>Statelessness</li>
+        <ul>
+          <li>A service does not use a memory to remember a state</li>
+          <li>HATEOAS enables stateless implementation of services</li>
+        </ul>
+      </ul>
+    </div>
 
-                <div class="slide">
-                    <hgroup>
-                        <h1>Basic Types of Queues</h1>
-                    </hgroup>
-                    <ul class="small">
-                        <li>Queues in client-server architecture (request-response)</li>
-                        <li>Input Queue</li>
-                        <ul>
-                            <li>a client places a message to the queue</li>
-                            <li>a server reads the message and process it</li>
-                        </ul>
-                        <li>Output Queue</li>
-                        <ul>
-                            <li>a server places output message (response) to the queue</li>
-                            <li>a client reads the message</li>
-                        </ul>
-                        <li>Error Queue</li>
-                        <ul>
-                            <li>a server reads the message from the input queue</li>
-                            <li>when processing of the message fails, the server places the message to the error queue</li>
-                            <li>there can be several attempts to process the message before it is placed to the error queue</li>
-                        </ul>
-                    </ul>
-                </div>
+    <div class="slide">
+      <hgroup>
+        <h1>Stateful server</h1>
+      </hgroup>
+      <ul class="x-small">
+        <li>Sessions to store the application state</li>
+        <ul>
+          <li>The app uses a server memory to remember the state</li>
+          <li>When the server restarts, the app state is lost</li>
+        </ul>
+      </ul>
+      <div class="h-drawing" style="height: 350px" id="1CcGvRSm-RMa00XbHLlk2YhU8Wqz9Bl7nuWrynaFG3Sk"></div>
+    </div>
 
-                <div class="slide">
-                    <hgroup>
-                        <h1>JMS Queues</h1>
-                    </hgroup>
-                    <ul class="x-small">
-                        <li>JMS Provider implmented by Weblogic</li>
-                        <li>Configuration</li>
-                        <ol>
-                            <li>Create a <b>JMS server</b>, targeted to a managed server</li>
-                            <ul>
-                                <li>In a cluster, every managed server has its own JMS server</li>
-                                <li>JMS server has a persistent store where it stores messages in&nbsp;queues (persistent store can be file-based or JDBC-based)</li>
-                            </ul>
-                            <li>Create a queue, specify a JNDI name for the queue</li>
-                            <ul>
-                                <li>a <b>queue</b> targeted to a single JMS server</li>
-                                <li>a <b>distributed queue</b> targeted to the cluster (all JMS servers)</li>
-                            </ul>  
-                            <li>Create a <b>connection factory</b> (optional), specify a JNDI name for the connection factory</li>
-                            <ul>
-                                <li>A JMS client uses the connection factory to create a connection with the JMS server</li>
-                            </ul>
-                        </ol>
-                        <li>Run a JMS client</li>
-                        <ul>
-                            <li>a JMS producer &ndash; sends a message to the queue</li>
-                            <li>a JMS consumer &ndash; receives a message from the queue</li>
-                        </ul>
-                    </ul>
-                </div>
+    <div class="slide" id="state-management">
+      <hgroup>
+        <h1>State Management</h1>
+      </hgroup>
+      <ul class="small">
+        <li>HTTP is a stateless protocol &#150; original design</li>
+        <ul>
+          <li>No information to relate multiple interactions at server-side</li>
+          <ul>
+            <li>Except <code>Authorization</code> header is copied in every request</li>
+            <li>IP addresses do not work, one public IP can be shared by multiple clients</li>
+          </ul>
+        </ul>
+        <li>Solutions to check for a valid state at server-side</li>
+        <ul>
+          <li><b>Cookies</b> &ndash; obvious and the most common workaround</li>
+          <ul>
+            <li><span class="h-ref" id="rfc-2109">RFC 2109 &ndash; HTTP State Management Mechanism</span></li>
+            <li>Allow clients and servers to talk in a context called <b>sessions</b></li>
+          </ul>
+          <li><b>Hypertext</b> &ndash; original HTTP design principle</li>
+          <ul>
+            <li>App states represented by resources (hypermedia), links define transitions between states</li>
+            <li>Adopted by the REST principle <b>statelessness</b></li>
+          </ul>
+        </ul>
+      </ul>
+    </div>
 
-                <div class="slide">
-                    <hgroup>
-                        <h1>JMS Message</h1>
-                    </hgroup>
-                    <ul class="xx-small">
-                        <li>JMS Message Header</li>
-                        <ul>
-                            <li>Priority</li>
-                            <ul>
-                                <li>priority that will be used to consume the message</li>
-                                <li>normal priority &ndash; 1-4, high priority 5-9</li>
-                            </ul>
-                            <li>Delivery mode</li>
-                            <ul>
-                                <li>persistent &ndash; message stored in a storage during send operation</li>
-                                <li>non-persistent &ndash; JMS server only stores the message in memory</li>
-                            </ul>
-                            <li>Time to live</li>
-                            <ul>
-                                <li>The time the message stays in the queue, the message is removed after it elapses</li>
-                                <li>The JMS consumer must consume the message before the time elapses</li>
-                            </ul>
-                            <li>Message ID</li>
-                            <ul>
-                                <li>ID of the message set by the client (in request-response communication)</li>
-                            </ul>
-                            <li>Reply To</li>
-                            <ul>
-                                <li>A response queue set by the client</li>
-                            </ul>
-                            <li>Correlation ID</li>
-                            <ul>
-                                <li>ID of the message set by the receiver for response</li>
-                            </ul>
-                        </ul>
-                        <li>Payload (data)</li>
-                        <ul>
-                            <li>text, map message (key-values), byte message, object message (serializable java object)</li>
-                        </ul>
-                    </ul>
-                </div>
+    <div class="slide">
+      <hgroup>
+        <h1>Interaction with Cookies</h1>
+      </hgroup>
+      <ul class="small">
+        <li>Request-response interaction with cookies</li>
+        <ul>
+          <li>Session is a logical channel maintained by the server</li>
+        </ul>
+        <div class="h-drawing" style="height: 250px" id="1mVCe8EtqVApZVRV_RHYQKtqDNELKdo84qzCqGvAs7iA"></div>
+        <li>Stateful Server</li>
+        <ul>
+          <li>Server remembers the session information in a server memory</li>
+          <li>Server memory is a non-persistent storage, when server restarts the memory content is lost!</li>
+        </ul>
+      </ul>
+    </div>
 
-                <div class="slide">
-                    <hgroup>
-                        <h1>Conversation in Request-Response</h1>
-                    </hgroup>
-                    <div class="h-drawing" style="height: 300px" 
-                        id="1wRXrODedAi_DUaUdmYjspXUo7pCrE3P-k-vrojT8r-0"></div>
-                    <ul class="xx-small">
-                        <li>Steps</li>
-                        <ol>
-                            <li>Client sends a message to the request queue with some message ID1</li>
-                            <li>Server receives it, process it and sends a response to the response queue</li>
-                            <ul>
-                                <li>The response message has its own message ID3 and a correlation ID that has a value of message ID1</li>
-                            </ul>
-                            <li>Client receives the response message and correlates with the request message</li> 
-                        </ol>
-                    </ul>
-                </div>                
-
-                <div class="slide">
-                    <hgroup>
-                        <h1>Example Queues Configuration in Weblogic</h1>
-                    </hgroup>
-                    <div class="h-drawing" style="height: 380px" 
-                        id="1dXuxsVN2FvPF07tmkvq0y8CwtIek8EEWp6Oo4pl_gbU"></div>
-                </div>
-
-                <div class="slide">
-                    <hgroup>
-                        <h1>Weblogic Configuration</h1>
-                    </hgroup>
-                    <div class="h-drawing" style="height: 430px; margin-top: 30px" format="png"
-                        id="1OzWBf1J7yk3NJjyByMkETWCa_GfIOnsGchYu9Y3K4VU"></div>
-                </div>
-
-                <div class="slide">
-                    <hgroup>
-                        <h1>JMS Producer Example (1)</h1>
-                    </hgroup>
-                    <ul class="xx-small">
-                        <pre class="brush: java; highlight : [];">
-                            public class JMSProducer {
-
-                                // connection factory, connection, session, sender, message
-                                private QueueConnectionFactory qconFactory;
-                                private QueueConnection qcon;
-                                private QueueSession qsession;
-                                private QueueSender qsender;
-                                private Queue queue;
-                                private TextMessage msg;
-
-                                // creates a connection to the WLS using a JNDI context
-                                public void init(Context ctx, String queueName) throws NamingException, JMSException {
-
-                                    // creates connection factory based on JNDI and a connection, creates a session 
-                                    qconFactory = (QueueConnectionFactory) ctx.lookup(Config.JMS_FACTORY);
-                                    qcon = qconFactory.createQueueConnection();
-                                    qsession = qcon.createQueueSession(false, Session.AUTO_ACKNOWLEDGE);
-                                    
-                                    // lookups the queue using the JNDI context
-                                    queue = (Queue) ctx.lookup(queueName);
-                                    
-                                    // create sender and message
-                                    qsender = qsession.createSender(queue);
-                                    msg = qsession.createTextMessage();         
-                                }
-
-                                // close sender, connection and the session
-                                public void close() throws JMSException {
-                                    qsender.close(); qsession.close();
-                                    qcon.close();
-                                }
+    <div class="slide">
+      <hgroup>
+        <h1>Set-Cookie and Cookie Headers</h1>
+      </hgroup>
+      <ul class="xx-small">
+        <li><code>Set-Cookie</code> response header</li>
+        <pre class="brush: plain; ">
+                            set-cookie = "Set-Cookie:" cookie ("," cookie)*
+                              cookie    = NAME "=" VALUE (";" cookie-av)*
+                              cookie-av = "Comment" "=" value
+                                        | "Domain" "=" value
+                                        | "Max-Age" "=" value
+                                        | "Path" "=" value
                         </pre>
-                    </ul>
-                </div>
-
-                <div class="slide">
-                    <hgroup>
-                        <h1>JMS Producer Example (2)</h1>
-                    </hgroup>
-                    <ul class="xx-small">
-                        <pre class="brush: java; first-line: 32; highlight : [];">
-                                // sends the message to the queue
-                                public void send(String queueName, String message) throws Exception {            
-                                    // create a JNDI context to lookup JNDI objects (connection factory and queue)
-                                    Hashtable env = new Hashtable();
-                                    env.put(Context.INITIAL_CONTEXT_FACTORY, Config.JNDI_FACTORY);
-                                    env.put(Context.PROVIDER_URL, Config.PROVIDER_URL);
-
-                                    InitialContext ic = new InitialContext(env);
-                                    init(ic, queueName);
-
-                                    // send the message and close
-                                    try {
-                                        msg.setText(message);
-                                        qsender.send(msg, DeliveryMode.PERSISTENT, 8, 0);
-                                        System.out.println("The message was sent to the destination " + 
-                                                qsender.getDestination().toString());
-                                    } finally {
-                                        close();
-                                    }
-                                }
-                                
-                                public static void main(String[] args) throws Exception {
-                                    // JNDI name of the queue and a text message
-                                    String msg = args[0];
-                                    String queueName = args[1];
-                                    
-                                    // create the producer object and send the message
-                                    JMSProducer producer = new JMSProducer();
-                                    producer.send(msg, queueName);
-                                }
-                            }                            
+        <ul>
+          <li><code>domain</code> &ndash; a domain for which the cookie is applied</li>
+          <li><code>Max-Age</code> &ndash; number of seconds the cookie is valid</li>
+          <li><code>Path</code> &ndash; URL path for which the cookie is applied</li>
+        </ul>
+        <li><code>Cookie</code> request header. A client sends the cookie in a request if:</li>
+        <ul>
+          <li><code>domain</code> matches the origin server's fully-qualified host name</li>
+          <li><code>path</code> matches a prefix of the request-URI</li>
+          <li><code>Max-Age</code> has not expired</li>
+        </ul>
+        <pre class="brush: plain;">
+                            cookie  = "Cookie:" cookie-value (";" cookie-value)*
+                              cookie-value    = NAME "=" VALUE [";" path] [";" domain]
+                              path            = "$Path" "=" value
+                              domain          = "$Domain" "=" value                        
                         </pre>
-                    </ul>
-                </div>
+        <ul>
+          <li><code>domain</code>, and <code>path</code> are values from corresponding attributes of
+            the <code>Set-Cookie</code> header</li>
+        </ul>
 
-                <div class="slide">
-                    <hgroup>
-                        <h1>JMS Producer Example (3)</h1>
-                    </hgroup>
-                    <ul class="small">
-                        <li>Send a message to the queue</li>
-                        <ul>
-                            <li>You need to create a VPN connection to the environment</li>
-                            <ul>
-                                <li>JMS Producer connects to the cluster<br/>(or one of the managed servers in the cluster)</li>
-                            </ul>
-                            <li>Arguments: (1) JNDI name of the queue, and (2) text message</li>
-                            <ul>
-                                <li><code>/jms/mdw-queue</code> or <code>/jms/mdw-dist-queue</code></li>
-                            </ul>
-                        </ul>
-                        <pre class="brush: bash; first-line: 1; highlight : [];">
-                            $ ./jmsproducer.sh /jms/mdw-queue message_from_mdw_lecture
-                            $ The message was sent to the destination mdw-module!mdw-queue
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Stateless server</h1>
+      </hgroup>
+      <ul class="x-small">
+        <li>HTTP and hypermedia to transfer the app state</li>
+        <ul>
+          <li>Does not use a server memory to remember the app state</li>
+          <li>State transferred between a client and a service via HTTP metadata and resources' representations</li>
+        </ul>
+      </ul>
+      <div class="h-drawing" style="height: 350px" id="1ZZsczsf7O-4HLuf_Flk0Ruttv5buKRmM7afQvgGWK8w"></div>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Persistent Storage and Session Memory</h1>
+      </hgroup>
+      <ul class="small">
+        <li>Persistent Storage</li>
+        <ul>
+          <li>Contains the app data</li>
+          <li>Data is serialized into resource representation formats</li>
+          <li>All sessions may access the data via resource IDs</li>
+        </ul>
+        <li>Session Memory</li>
+        <ul>
+          <li>Server memory that contains a state of the app</li>
+          <li>A session may only access its session memory</li>
+          <li>Access through cookies</li>
+          <li>Note</li>
+          <ul>
+            <li>A session memory may be implemented via a persistent storage (such as in Google AppEngine)</li>
+          </ul>
+        </ul>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Link</h1>
+      </hgroup>
+      <ul class="small">
+        <li>Service operation</li>
+        <ul>
+          <li>Applying an access to a link (GET, PUT, POST, DELETE)</li>
+          <li>Link: HTTP method + resource URI + optional link semantics</li>
+        </ul>
+        <li>Example: <code>getOrder</code>, <code>addOrder</code>, and <code>updateItem</code></li>
+      </ul>
+      <div class="h-drawing" id="16vcb0AGdT3N5Jd4FFw9YADqYoF_QQlP46UsYngjfTKs" style="height: 320px"></div>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Atom Links</h1>
+      </hgroup>
+      <ul class="small">
+        <li>Atom Syndication Format</li>
+        <ul>
+          <li>XML-based document format; Atom feeds</li>
+          <li>Atom links becoming popular for RESTful applications</li>
+          <pre class="brush: xml; highlight : [2,3,4,5]">
+                            &lt;order a:xmlns="http://www.w3.org/2005/Atom" xmlns="..."&gt;
+                                &lt;a:link 
+                                    rel="next" 
+                                    href="http://company.com/orders/5543" 
+                                    type="application/xml"/>
+                                &lt;customer&gt;Tomas&lt;/customer>
+                                &lt;items&gt;...&lt;/items>
+                            &lt;/order>
+                            </pre>
+          <li>Link structure</li>
+          <ul class="no-bullet">
+            <li><code>rel</code> &ndash; name of the link<br />
+              ~ semantics of an operation behind the link</li>
+            <li><code>href</code> &ndash; URI to the resource described by the link</li>
+            <li><code>type</code> &ndash; media type of the resource the link points to</li>
+          </ul>
+        </ul>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Link Semantics</h1>
+      </hgroup>
+      <ul class="small">
+        <li>Standard <code>rel</code> values</li>
+        <ul>
+          <li>Navigation: <code>next</code>, <code>previous</code>, <code>self</code></li>
+          <li>Does not reflect a HTTP method you can use</li>
+        </ul>
+        <li>Extension <code>rel</code> values</li>
+        <ul>
+          <li>You can use <code>rel</code> to indicate a semantics of an operation</li>
+          <li>Example: add item, delete order, update order, etc.</li>
+          <li>A client associates this semantics with an operation it may apply at a particular state</li>
+          <li>The semantics should be defined by using an URI</li>
+          <pre class="brush: xml;">
+                            &lt;order a:xmlns="http://www.w3.org/2005/Atom" xmlns="..."&gt;
+                                &lt;id>2324&lt;/id>
+                                &lt;a:link rel="http://company.com/op/addItem" 
+                                    href="http://company.com/orders/2324"/>
+                                &lt;a:link rel="http://company.com/op/deleteOrder" 
+                                    href="http://company.com/orders/2324"/>
+                            &lt;/order>
+                            </pre>
+        </ul>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Link Headers</h1>
+      </hgroup>
+      <ul class="small">
+        <li>An alternative to Atom links in resource representations</li>
+        <ul>
+          <li>links defined in HTTP Link header, <span class="h-ref" id="rfc-5988">Web Linking IETF spec</a></li>
+          <li>They have the same semantics as Atom Links</li>
+          <li>Example:</li>
+          <pre class="brush: plain; gutter: 'false'">
+                                &gt; HEAD /orders HTTP/1.1
+                                
+                                &lt; Content-Type: application/xml
+                                &lt; Link: &lt;http://company.com/orders/?page=2&amp;size=10&gt;; rel="next"
+                                &lt; Link: &lt;http://company.com/orders/?page=10&amp;size=10&gt;; rel="last"
+                            </pre>
+        </ul>
+        <li>Advantages</li>
+        <ul>
+          <li>no need to get the entire document</li>
+          <li>no need to parse the document to retrieve links</li>
+          <li>use HTTP HEAD only</li>
+        </ul>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Preconditions and HATEOAS</li>
+      </hgroup>
+      <ul class="x-small">
+        <li>Preconditions in HATEOAS</li>
+        <ul>
+          <li>Service in a current state generates only valid transitions
+            that it includes in the representation of the resource.</li>
+          <li>Transition logic is realized at the server-side</li>
+        </ul>
+      </ul>
+      <div class="h-drawing" style="height: 230px" id="1H_GfN8C1DZObNC_9HcRLa6Nk-EuJUEr0h6-65HhHs0U"></div>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Advantages</h1>
+      </hgroup>
+      <ul class="x-small">
+        <li>Location transparency</li>
+        <ul>
+          <li>only "entry-level" links published to the World</li>
+          <li>other links within documents can change without changing client's logic</li>
+          <li>Hypertext represents the current user's view, i.e. rights or other context</li>
+        </ul>
+        <li>Loose coupling</li>
+        <ul>
+          <li>no need for a logic to construct the links</li>
+          <li>Clients know to which states they can move via links</li>
+        </ul>
+        <li>Statelessness and Cloud</li>
+        <ul>
+          <li>Better implementation of scalability</li>
+        </ul>
+      </ul>
+    </div>
+
+  </section>
+
+  <div class="slide outline"></div>
+
+  <section>
+    <header>Caching, Revalidation, Concurrency Control</header>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Scalability</h1>
+      </hgroup>
+      <ul>
+        <li>Need for scalability</li>
+        <ul>
+          <li>Huge amount of requests on the Web every day</li>
+          <li>Huge amount of data downloaded</li>
+        </ul>
+        <li>Some examples</li>
+        <ul>
+          <li>Google, Facebook: 5 billion API calls/day</li>
+          <li>Twitter: 3 billions of API calls/day (75% of all the traffic)<br />
+            &rarr; 50 million tweets a day</li>
+          <li>eBay: 8 billion API calls/month</li>
+          <li>Bing: 3 billion API calls/month</li>
+          <li>Amazon WS: over 100 billion objects stored in S3</li>
+        </ul>
+        <li>Scalability in REST</li>
+        <ul>
+          <li>Caching and revalidation</li>
+          <li>Concurrency control</li>
+        </ul>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Caching</h1>
+      </hgroup>
+      <div class="h-drawing" id="1nc-u-R3NUvur4WBAB1yxSqtj3PfmsSWF8iMo0aLT-Nc" style="height: 200px"></div>
+      <ul class="x-small">
+        <li>Your service should cache:</li>
+        <ul>
+          <li>anytime there is a static resource</li>
+          <li>even there is a dynamic resource</li>
+          <ul>
+            <li>with chances it updates often</li>
+            <li>you can force clients to always revalidate</li>
+          </ul>
+        </ul>
+        <li>three steps:</li>
+        <ul>
+          <li>client GETs the resource representation</li>
+          <li>server controls how it should cache through <code>Cache-Control</code>
+            header</li>
+          <li>client revalidates the content via conditional GET</li>
+        </ul>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Cache Headers</h1>
+      </hgroup>
+      <ul class="x-small">
+        <li><code>Cache-Control</code> response header</li>
+        <ul>
+          <li>controls over local and proxy caches</li>
+          <li><code>private</code> &ndash; no proxy should cache, only clients can</li>
+          <li><code>public</code> &ndash; any intermediary can cache (proxies and clients)</li>
+          <li><code>no-cache</code> &ndash; the response should not be cached.
+            If it is cached, the content should always be revalidated.</li>
+          <li><code>no-store</code> &ndash; can cache but should not store persistently. When a client restarts, content is lost</li>
+          <li><code>no-transform</code> &ndash; no transformation of cached data; e.g. compressions</li>
+          <li><code>max-age</code>, <code>s-maxage</code> a time in seconds how long the cache is valid;
+            <code>s-maxage</code> for proxies</li>
+        </ul>
+        <li><code>Last-Modified</code> and <code>ETag</code> response headers</li>
+        <ul>
+          <li>Content last modified date and a content entity tag</li>
+        </ul>
+        <li><code>If-Modified-Since</code> and <code>If-None-Match</code> request headers</li>
+        <ul>
+          <li>Content revalidation (conditional GET)</li>
+        </ul>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Example Date Revalidation</h1>
+      </hgroup>
+      <ul class="x-small">
+        <li>Cache control example:</li>
+        <ul>
+          <pre class="brush: plain; gutter: 'false'">
+                            &gt; GET /orders HTTP/1.1
+                            &gt; ...
+                            
+                            &lt; HTTP/1.1 200 OK
+                            &lt; Content-Type: application/xml
+                            &lt; Cache-Control: private, no-store, max-age=200
+                            &lt; Last-Modified: Sun, 7 Nov 2011, 09:40 CET
+                            &lt;
+                            &lt; ...data...
+                            </pre>
+          <li>only client can cache, must not be stored on the disk,
+            the cache is valid for 200 seconds.</li>
+        </ul>
+        <li>Revalidation (conditional GET) example:</li>
+        <ul>
+          <li>A client revalidates the cache after <code>200</code> seconds.</li>
+          <pre class="brush: plain; gutter: 'false'">
+                            &gt; GET /orders HTTP/1.1
+                            &gt; If-Modified-Since: Sun, 7 Nov 2011, 09:40 CET
+                            
+                            &lt; HTTP/1.1 304 Not Modified
+                            &lt; Cache-Control: private, no-store, max-age=200
+                            &lt; Last-Modified: Sun, 7 Nov 2011, 09:40 CET
+                            </pre>
+        </ul>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Entity Tags</h1>
+      </hgroup>
+      <ul class="x-small">
+        <li>Signature of the response body</li>
+        <ul>
+          <li>A hash such as MD5</li>
+          <li>A sequence number that changes with any modification of the content</li>
+        </ul>
+        <li>Types of tag</li>
+        <ul>
+          <li>Strong ETag: reflects the content bit by bit</li>
+          <li>Weak ETag: reflects the content "semantically"</li>
+          <ul>
+            <li>The app defines the meaning of its weak tags</li>
+          </ul>
+        </ul>
+        <li>Example content revalidation with <code>ETag</code></li>
+        <pre class="brush: plain; gutter: 'false'; class-name: 'tight'">
+                            &lt; HTTP/1.1 200 OK
+                            &lt; Cache-Control: private, no-store, max-age=200
+                            &lt; Last-Modified: Sun, 7 Nov 2011, 09:40 CET
+                            &lt; ETag: "4354a5f6423b43a54d"
+                            
+                            &gt; GET /orders HTTP/1.1
+                            &gt; If-None-Match: "4354a5f6423b43a54d"
+                            
+                            &lt; HTTP/1.1 304 Not Modified
+                            &lt; Cache-Control: private, no-store, max-age=200
+                            &lt; Last-Modified: Sun, 7 Nov 2011, 09:40 CET
+                            &lt; ETag: "4354a5f6423b43a54d"
+                            </pre>
+      </ul>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Design Suggestions</h1>
+      </hgroup>
+      <ul class="small">
+        <li>Composed resources use weak ETags</li>
+        <ul>
+          <li>For example <code>/orders</code></li>
+          <ul>
+            <li>a composed resource that contains a summary information</li>
+            <li>changes to an order's items will not change semantics of <code>/orders</code></li>
+          </ul>
+          <li>It is usually not possible to perform updates on these resources</li>
+        </ul>
+        <li>Non-composed resources use strong ETags</li>
+        <ul>
+          <li>For example <code>/orders/{order-id}</code></li>
+          <li>They can be updated</li>
+        </ul>
+        <li>Further notes</li>
+        <ul class="small">
+          <li>Server should send both <code>Last-Modified</code> and
+            <code>ETag</code> headers</li>
+          <li>If client sends both <code>If-Modified-Since</code> and <code>If-None-Match</code>,<br />
+            <code>ETag</code> validation takes preference</li>
+        </ul>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Weak ETag Example</h1>
+      </hgroup>
+      <ul class="x-small">
+        <li>App specific, <code>/orders</code> resource example</li>
+        <pre class="brush: js; class-name: 'tight'">
+                        { 
+                            "orders" : 
+                                [
+                                    { "id"        : 2245,
+                                      "customer"  : "Tomas",
+                                      "descr"     : "Stuff to build a house.",
+                                      "items"     : [...] },
+                                    { "id"        : 5546,
+                                      "customer"  : "Peter",
+                                      "descr"     : "Things to build a pipeline.",
+                                      "items"     : [...] }
+                                ] 
+                        }
                         </pre>
-                    </ul>
-                </div>
-
-                <div class="slide">
-                    <hgroup>
-                        <h1>Monitor the JMS Queue</h1>
-                    </hgroup>
-                    <ul class="xx-small">
-                        <li>How many messages</li>
-                        <ul>
-                            <li><b>Messages current</b></li>
-                            <ul>
-                                <li>number of messages in the queue waiting to be processed (<b>backlog</b>)</li>
-                            </ul>
-                            <li><b>Messages pending</b></li>
-                            <ul>
-                                <li>number of messages being processed (either being sent by a producer or 
-                                    being received by a consumer). Such messages have not been committed (acknowledged)</li>
-                            </ul>
-                        </ul>
-                        <div class="h-drawing" id="1Zj3o-abj6WBQ0_H6UAGhwNMZiUH1Ejf3VnBNX40arug" 
-                            style="margin-top: 30px; width: 700px" format="png"/>
-                    </ul>
-                </div>
-
-                <div class="slide">
-                    <hgroup>
-                        <h1>JMS Consumer Example (1)</h1>
-                    </hgroup>
-                    <ul class="xx-small">
-                        <pre class="brush: java; highlight : [];">
-                            public class JMSConsumer implements MessageListener {
-
-                                // connection factory
-                                private QueueConnectionFactory qconFactory;
-                                
-                                // connection to a queue
-                                private QueueConnection qcon;
-                                
-                                // session within a connection
-                                private QueueSession qsession;
-                                
-                                // queue receiver that receives a message to the queue
-                                private QueueReceiver qreceiver;
-                                
-                                // queue where the message will be sent to
-                                private Queue queue;
-                                
-                                // callback when the message exist in the queue
-                                public void onMessage(Message msg) {
-                                    try {
-                                        String msgText;
-                                        if (msg instanceof TextMessage) {
-                                            msgText = ((TextMessage) msg).getText();
-                                        } else {
-                                            msgText = msg.toString();
-                                        }
-                                        System.out.println("Message Received: " + msgText);
-                                    } catch (JMSException jmse) {
-                                        System.err.println("An exception occurred: " + jmse.getMessage());
-                                    }
-                                }
+        <li>Weak ETag compute function example</li>
+        <ul>
+          <li>Any modification to an order's items is not significant for <code>/orders</code>:</li>
+        </ul>
+        <pre class="brush: js; class-name: 'tight'">
+                            var crypto = require("crypto");
+                        
+                            function computeWeakETag(orders) {
+                                var content = "";
+                                for (var i = 0; i < orders.length; i++)
+                                    content += orders[i].id + orders[i].customer + orders[i].descr;
+                                return crypto.createHash('md5').update(content).digest("hex");
+                            }
                         </pre>
-                    </ul>
-                </div>
+      </ul>
+    </div>
 
-                <div class="slide">
-                    <hgroup>
-                        <h1>JMS Consumer Example (2)</h1>
-                    </hgroup>
-                    <ul class="xx-small">
-                        <pre class="brush: java; first-line: 32; highlight : [];">
-                                // create a connection to the WLS using a JNDI context
-                                public void init(Context ctx, String queueName)
-                                        throws NamingException, JMSException {
+    <div class="slide">
+      <hgroup>
+        <h1>Weak ETag Revalidation</h1>
+      </hgroup>
+      <ul class="x-small">
+        <li>Updating <code>/orders</code> resource</li>
+        <ul>
+          <li><code>POST /orders/{order-id}</code> inserts a new item to an order</li>
+          <li>Any changes to orders' items will not change the Weak ETag</li>
+        </ul>
+      </ul>
+      <div class="h-drawing" id="1n1jGatYjOc_kgMhWSuXyReptynOFn1CEDELB75Qj_3A" style="height: 380px"></div>
+    </div>
 
-                                    qconFactory = (QueueConnectionFactory) ctx.lookup(Config.JMS_FACTORY);
-                                    qcon = qconFactory.createQueueConnection();
-                                    qsession = qcon.createQueueSession(false, Session.AUTO_ACKNOWLEDGE);
-                                    queue = (Queue) ctx.lookup(queueName);
+    <div class="slide">
+      <hgroup>
+        <h1>Concurrency</h1>
+      </hgroup>
+      <ul class="x-small">
+        <li>Two clients may update the same resource</li>
+        <ul class="no-bullet">
+          <li>1) a client GETs a resource <code>GET /orders/5545</code></li>
+          <li>2) the client modifies the resource</li>
+          <li>3) the client updates the resource via <code>PUT /orders/5545 HTTP/1.1</code></li>
+          <li class="space-before">What happens if another client updates the
+            resource between 1) and 3) ?</li>
+        </ul>
 
-                                    qreceiver = qsession.createReceiver(queue);
-                                    qreceiver.setMessageListener(this); 
-                                    
-                                    qcon.start();
-                                }
-                                
-                                // start receiving messages from the queue
-                                public void receive(String queueName) throws Exception {
-                                    Hashtable env = new Hashtable();
-                                    env.put(Context.INITIAL_CONTEXT_FACTORY, Config.JNDI_FACTORY);
-                                    env.put(Context.PROVIDER_URL, Config.PROVIDER_URL);
+        <li>Concurrency control</li>
+        <ul>
+          <li>Conditional <code>PUT</code></li>
+          <ul>
+            <li>Update the resource only if it has not changed since a specified date or
+              a specified ETag matches the resource content</li>
+          </ul>
+          <li><code>If-Unmodified-Since</code> and <code>If-Match</code> headers</li>
+          <li>Response to conditional <code>PUT</code>:</li>
+          <ul>
+            <li><code>200 OK</code> if the <code>PUT</code> was successful</li>
+            <li><code>412 Precondition Failed</code> if the resource was updated in the meantime.</li>
+          </ul>
+        </ul>
+      </ul>
+    </div>
 
-                                    InitialContext ic = new InitialContext(env);
-                                    init(ic, queueName);
-                                    
-                                    System.out.println("Connected to " + queue.toString() + ", receiving messages...");
+    <div class="slide">
+      <hgroup>
+        <h1>Concurrency Control Protocol</h1>
+      </hgroup>
+      <div class="h-drawing" id="1D9w_NKq3AqIl14fn0vGFBmVlbNMrAQqeYljjOYLcqCo" style="height: 380px"></div>
+      <ul class="x-small">
+        <li>Conditional PUT and ETags</li>
+        <ul>
+          <li>Conditional PUT must always use strong entity tags or date validation</li>
+        </ul>
+      </ul>
+    </div>
 
-                                    // loop until ctrl+c
-                                    while (true) {
-                                        this.wait();
-                                    }
-                                }                                
+  </section>
+
+  <div class="slide outline"></div>
+
+  <section>
+    <header>Richardson Maturiy Model</header>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Steps towards REST</h1>
+      </hgroup>
+      <img src="img/maturity-model.png" style="margin-top: 40px; margin-left: 50px"></img>
+      <ul class="xx-small">
+        <li class="no-bullet">See <span class="h-ref" id="rmm">Richardson Maturiy Model</span> details.</li>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Levels</h1>
+      </hgroup>
+      <ul class="small">
+        <li>LEVEL 0 &ndash; POX (Plain Old XML)</li>
+        <ul>
+          <li>HTTP as a tunneling mechanism</li>
+          <li>URL defines a service endpoint</li>
+          <li>No Web principles</li>
+        </ul>
+        <li>LEVEL 1 &ndash; Resources</li>
+        <ul>
+          <li>Take advantages of reosources and URIs</li>
+        </ul>
+        <li>LEVEL 2 &ndash; HTTP Verbs</li>
+        <ul>
+          <li>Use HTTP methods and respect their semantics</li>
+        </ul>
+        <li>LEVEL 3 &ndash; Hypermedia Conrols</li>
+        <ul>
+          <li>HATEOS</li>
+        </ul>
+      </ul>
+    </div>
+
+  </section>
+
+
+  </section>
+
+  <section>
+    <header>SOAP and WSDL</header>
+
+    <div class="slide outline"></div>
+
+    <section>
+      <header>Introduction to SOAP</header>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Web Service Architecture</h1>
+        </hgroup>
+        <ul class="small">
+          <li>WSDL, SOAP and UDDI</li>
+          <div class="h-drawing" style="height: 250px" id="1G0jfLQn6lIVx_DaBDh89hV_K4hxK5QIyYtGF3uoOcok"></div>
+          <ul>
+            <li class="space-before">Realization of SOA</li>
+            <li>Message-Oriented view</li>
+            <ul>
+              <li>SOAP messaging (header, body)</li>
+              <li>types of messages &ndash; input, output, fault</li>
+            </ul>
+          </ul>
+        </ul>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>SOAP Protocol</h1>
+        </hgroup>
+        <ul class="small">
+          <li>SOAP defines a messaging framework</li>
+          <div class="h-drawing" style="height: 180px; margin-left: -30px; margin-bottom: 20px" id="1yzA6Qa4NlvUBLrDtefeo3_Ud9eT6fl--qOwawlH9F_M"></div>
+          <ul>
+            <li>XML-based protocol</li>
+            <li>a layer over transport protocols</li>
+            <ul>
+              <li>binding to HTTP, SMTP, JMS, ...</li>
+            </ul>
+            <li>involves multiple nodes (message path)</li>
+            <ul>
+              <li>sender, receiver, intermediary</li>
+            </ul>
+          </ul>
+        </ul>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>SOAP Message</h1>
+        </hgroup>
+        <ul class="x-small">
+          <li>Envelope</li>
+          <ul>
+            <li>A container of a message</li>
+          </ul>
+          <li>Header</li>
+          <ul>
+            <li>Metadata &ndash; describe a message, organized in header blocks</li>
+            <ul>
+              <li>routing information</li>
+              <li>security measures implemented in the message</li>
+              <li>reliability rules related to delivery of the message</li>
+              <li>context and transaction management</li>
+              <li>correlation information (request and response message relation)</li>
+            </ul>
+            <li>WS extensions (WS-*) utilize the message header</li>
+          </ul>
+          <li>Body (payload)</li>
+          <ul>
+            <li>Actual contents of the message, XML formatted</li>
+            <li>Contains also faults for exception handling</li>
+          </ul>
+          <li>Attachment</li>
+          <ul>
+            <li>Data that cannot be serialized into XML such as binary data</li>
+          </ul>
+        </ul>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Endpoint</h1>
+        </hgroup>
+        <ul class="small">
+          <li>SOAP service endpoint definition</li>
+          <div class="h-drawing" style="height: 300px" id="1PYfoC9B77CJ83zO22c2-k8yWf-wZ1ChZ8lZNkqcDl_I"></div>
+          <ul class="xx-small">
+            <li>Endpoint &ndash; a network address used for communication</li>
+            <li>Communication &ndash; request-response, SOAP messages over a communication (application) protocol</li>
+            <li>Synchronous communication &ndash; only service defines endpoint</li>
+            <li>Asynchronous communication &ndash; service and client define endpoints</li>
+          </ul>
+        </ul>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Service Invocation Example (1)</h1>
+        </hgroup>
+        <ul class="x-small">
+          <li>Example service implementation</li>
+          <ul>
+            <li>A service that evaluates an expression</li>
+            <li>Uses SOAP over HTTP</li>
+            <ul>
+              <li>We can use standard HTTP tools to invoke the service</li>
+            </ul>
+          </ul>
+          <li>SOAP request message</li>
+          <ul class="no-bullet">
+            <li><code>evaluate-input.xml</code></li>
+          </ul>
+          <pre class="brush: xml">
+                        &lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+                                &lt;soap:Body>
+                                        &lt;ns1:evaluateRequest 
+                                        xmlns:ns1="http://xmlns.oracle.com/mdw_examples/Evaluate/evaluate">
+                                                &lt;ns1:x>12&lt;/ns1:x>
+                                                &lt;ns1:y>18&lt;/ns1:y>
+                                        &lt;/ns1:evaluateRequest>
+                                &lt;/soap:Body>
+                        &lt;/soap:Envelope>
                         </pre>
-                    </ul>
-                </div>
-
-                <div class="slide">
-                    <hgroup>
-                        <h1>JMS Consumer Example (3)</h1>
-                    </hgroup>
-                    <ul class="small">
-                        <li>Receive a message from the queue</li>
-                        <ul>
-                            <li>You need to create a VPN connection to the environment</li>
-                            <ul>
-                                <li>JMS Consumer connects to the cluster<br/>(or one of the managed servers in the cluster)</li>
-                            </ul>
-                            <li>Arguments: (1) JNDI name of the queue</li>
-                            <ul>
-                                <li><code>/jms/mdw-queue</code> or <code>/jms/mdw-dist-queue</code></li>
-                            </ul>
-                        </ul>
-                        <pre class="brush: bash; first-line: 1; highlight : [];">
-                            $ ./jmsconsumer.sh /jms/mdw-queue
-                            $ Connected to mdw-module!mdw-queue, receiving messages...
-                              Message Received: message-from-mdw-lecture1
-                              Message Received: message-from-mdw-lecture2
+          <li>Invoking the service using <code>curl</code></li>
+          <pre class="brush: 'bash'">
+                            curl -s -X POST --header "Content-Type: text/xml;charset=UTF-8" \
+                            --header "SOAPAction: \"evaluate\"" --data @evaluate-input.xml \
+                            http://mimdw.fit.cvut.cz/soa-infra/services/mdw-examples/Evaluate/evaluate_client_ep
                         </pre>
-                    </ul>
-                </div>
+        </ul>
+      </div>
 
-            </section>
+      <div class="slide">
+        <hgroup>
+          <h1>Service Invocation Example (2)</h1>
+        </hgroup>
+        <ul class="x-small">
+          <li>Invocation result</li>
+          <pre class="brush: 'bash'">
+                            * About to connect() to mimdw.fit.cvut.cz port 80 (#0)
+                            *   Trying 147.32.233.55... connected
+                            * Connected to sb.vitvar.com (147.32.233.55) port 80 (#0)
+                            > POST /soa-infra/services/mdw-examples/Evaluate/evaluate_client_ep HTTP/1.1
+                            > User-Agent: curl/7.19.7 (x86_64-redhat-linux-gnu) libcurl/7.19.7 NSS/3.14.0.0 zlib/1.2.3 libidn/1.18 libssh2/1.4.2
+                            > Host: mimdw.fit.cvut.cz
+                            > Accept: */*
+                            > Content-Type: text/xml;charset=UTF-8
+                            > SOAPAction: "evaluate"
+                            > Content-Length: 302
+                            > 
+                            } [data not shown]
+                            < HTTP/1.1 200 OK
+                            < Date: Sun, 17 Nov 2013 11:24:59 GMT
+                            < Server: Oracle-Application-Server-11g
+                            < Content-Length: 569
+                            < X-ORACLE-DMS-ECID: 004upqiWhdD0zkWVLybQ8A0005uX0004Y^
+                            < SOAPAction: ""
+                            < X-Powered-By: Servlet/2.5 JSP/2.1
+                            < Content-Type: text/xml; charset=UTF-8
+                            < Content-Language: en
+                        </pre>
+        </ul>
+      </div>
 
-            <div class="slide outline"></div>
-            
-            <section>
-                <header>Error Handling</header>
+      <div class="slide">
+        <hgroup>
+          <h1>Service Invocation Example (3)</h1>
+        </hgroup>
+        <ul class="x-small">
+          <li>SOAP response message</li>
+          <pre class="brush: 'xml'">
+                            &lt;?xml version="1.0"?>
+                            &lt;env:Envelope xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" 
+                                xmlns:wsa="http://www.w3.org/2005/08/addressing">
+                              &lt;env:Header>
+                                &lt;wsa:MessageID>urn:E42018C04F7A11E3BFD5D1953058407C&lt;/wsa:MessageID>
+                              &lt;/env:Header>
+                              &lt;env:Body>
+                                &lt;evaluateResponse 
+                                    xmlns="http://xmlns.oracle.com/mdw_examples/Evaluate/evaluate">
+                                  &lt;result>30&lt;/result>
+                                &lt;/evaluateResponse>
+                              &lt;/env:Body>
+                            &lt;/env:Envelope>
+                        </pre>
+        </ul>
+      </div>
 
-                <div class="slide">
-                    <hgroup>
-                        <h1>Error Handling Using Timeout</h1>
-                    </hgroup>
-                    <div class="h-drawing" style="height: 340px" 
-                        id="1FsBqFbspb4xyX-lZLQo7AiiADFphEybTrmn8UzNUSUU"></div>
-                    <ul class="x-small">
-                        <ul>
-                            <li>message consumers or message processing may fail</li>
-                            <li><b>visibility timeout</b> &ndash; time during which the message exist in the queue,
-                            and need to be deleted by the consumer (~ 30 seconds)</li>
-                            <li>Example technology: Amazon Simple Queue Service (SQS)</li>
-                        </ul>
-                    </ul>
-                </div>
+      <div class="slide">
+        <hgroup>
+          <h1>Client Implementation</h1>
+        </hgroup>
+        <ul class="x-small">
+          <li>WSDL &ndash; Web Service Description Language</li>
+          <ul>
+            <li>definitions for the client to know how to communicate with the service</li>
+            <ul>
+              <li>which operations it can use</li>
+              <li>data formats for input (request), output (response) and fault messages</li>
+              <li>how to serialize the data as payloads of a communication protocol (binding)</li>
+              <li>where the service is physically present on the network</li>
+            </ul>
+          </ul>
+          <li>Clients' environments</li>
+          <ul>
+            <li>Clients implemented in a language such as Java</li>
+            <ul>
+              <li>Tools to generate service API for the client, e.g. WSDL2Java</li>
+              <li>Can be written manually too, e.g. our example in bash</li>
+            </ul>
+            <li>Clients reside on the middleware, e.g. on an Enterprise Service Bus</li>
+            <ul>
+              <li>They provide added values in end-to-end communication, proxy services, SOAP intermediaries</li>
+            </ul>
+          </ul>
+        </ul>
+      </div>
 
-                <div class="slide">
-                    <hgroup>
-                        <h1>Error Handling Using Transactions</h1>
-                    </hgroup>
-                    <div class="h-drawing" style="height: 340px" 
-                        id="1xVyCqGNXxxD8XPKs9FNx6tHGgX95mQjjoslEIBbEOkI"></div>
-                    <ul class="x-small" style="padding-top: 20px">
-                        <ul>
-                            <li><b>transaction</b> &ndash; message consumer opens a transaction and deletes the message;
-                                when the processing is succesfull the transaction is committed otherwise it is rolled back and the message appears in the queue again</li>
-                            <li>Example technology: JMS, Weblogic server</li>
-                        </ul>
-                    </ul>
-                </div>
 
-            </section>
-            
-            <div class="slide outline"></div>
-            
-            <section>
-                <header>Publish/Subscribe</header>
+    </section>
 
-                <div class="slide">
-                    <hgroup>
-                        <h1>Publish/Subscribe System</h1>
-                    </hgroup>
-                    <div class="h-drawing" style="height: 290px" 
-                        id="1VjuiJ0LVcDFJgmcNfP7wq10-bDJy6m0IHs6SgxD1kvY"></div>
-                    <ul class="x-small">
-                        <ul>
-                            <li>occurrence of a message = event that triggers one or more processes</li>
-                            <li>a "1 : N" relationship between producer and consumer<br/>
-                            &rarr; <b>one message can be processed by many different subscribers</b></li>
-                            <li><b>time-dependency</b> between publisher and subscriber<br/>
-                            &rarr; subscriber must first subscribe to a topic and then publisher can publish a message under that topic</li>
-                            <li>a message is deleted when all its subscribers consume it</li>
-                        </ul>
-                    </ul>
-                </div>
-    
-                <div class="slide">
-                    <hgroup>
-                        <h1>Publish/Subscribe API</h1>
-                    </hgroup>
-                    <ul class="small">
-                        <li><code>lookupTopic</code></li>
-                        <ul>
-                            <li>lookups or creates a topic</li>
-                            <li>called by the subscriber first and then by the publisher</li>
-                        </ul>
-                        <li><code>receiveMessage</code></li>
-                        <ul>
-                            <li>request to receive (read) a message under the topic</li>
-                            <li>called by the subscriber</li>
-                            <li>Implementation specific:</li>
-                            <ul>
-                                <li>synchronous &ndash; blocking, with timeout</li>
-                                <li>asynchronous &ndash; through event listener</li>
-                            </ul>
-                        </ul>
-                        <li><code>publishMessage</code></li>
-                        <ul>
-                            <li>publishes a message under the topic</li>
-                            <li>called by the publisher</li>
-                        </ul>
-                    </ul>                   
-                </div>
-    
-                <div class="slide">
-                    <hgroup>
-                        <h1>Event-driven Communication</h1>
-                    </hgroup>
-                    <ul>
-                        <li>Event</li>
-                        <ul>
-                            <li>Occurrence of a message with certain topic</li>
-                        </ul>
-                        <li>Event-driven Process</li>
-                        <ul>
-                            <li>events trigger actions</li>
-                            <li>one event may trigger more actions</li>
-                            <li>loose coupling &ndash; not all actions need to be known at design time</li>
-                        </ul>
-                    </ul>
-                    </div>
-                </div>
-    
-                <div class="slide">
-                    <hgroup>
-                        <h1>Event&ndash;driven Process Example</h1>
-                    </hgroup>
-                    <ul class="x-small">
-                        <li>Conceptual process</li>
-                        <div class="h-drawing" style="margin-top: -20px; margin-bottom: 10px; height: 100px" 
-                            id="1IUZaGiPpxb20-q8pBRzmhUCjJH1Ociy2sSnhSYH8guM"></div>
-                        <li>Event-driven process implementation</li>
-                        <div class="h-drawing" style="height: 320px" id="1M_yG2aVhSbWJ1iQ3iBuvRNQLg3-QGMDuwshrNj7R9oM"></div>
-                    </ul>
-                    </div>
-                </div>
-    
-            </section>
-            
-        </section>
+    <div class="slide outline"></div>
 
-        <div class="slide outline"></div>
-        
-        <section>
-            <header>Store and Forward</header>
+    <section>
+      <header>WSDL</header>
 
-            <div class="slide">
-                <hgroup>
-                    <h1>Store and Forward Agents</h1>
-                </hgroup>
-                <ul class="x-small">
-                    <li>Motivation</li>
-                    <ul>
-                        <li>Several environments (integration middleware, OSM, CRM)</li>
-                        <li>Sending messages across environments</li>
-                        <li>A need to "decouple" environments</li>
-                        <li>Destination (queue) might not be always available</li>
-                        <ul>
-                            <li>Destination environment is down or busy</li>
-                        </ul>
-                    </ul>
-                    <li>SAF = Store and Forward</li>
-                    <ul>
-                        <li>Agent &ndash; a component deployed to an application server instance</li>
-                        <ul>
-                            <li>has a queue and its own storage</li>
-                            <li>has configured a remote destination</li>
-                        </ul>
-                    </ul>
-                    <li>Scenario</li>
-                    <ol class="xx-small">
-                        <li>JMS producer sends a message to the agent's queue</li>
-                        <li>Agent forwards the message to the remote destination</li>
-                        <li>When the remote destination is not available, the agent keeps the message in its queue and 
-                            retries to send the message after some time</li>
-                        <li>As a result of the unavailability, there can be a <b>backlog</b> of messages in the agent's queue</li>
-                    </ol>
-                </ul>
-            </div>
+      <div class="slide">
+        <hgroup>
+          <h1>Specifications</h1>
+        </hgroup>
+        <ul class="x-small">
+          <li>WSDL = Web Service Description Language</li>
+          <ul>
+            <li>A standard that allows to describe Web services explicitly (main aspects)</li>
+            <li>A contract between a requester and a provider</li>
+          </ul>
+          <li>Specifications</li>
+          <ul>
+            <li>WSDL 1.1 &ndash; still widely used</li>
+            <ul>
+              <li><span class="h-ref" id="wsdl11">Web Service Description Language 1.1</span></li>
+            </ul>
+            <li>WSDL 2.0 &ndash; An attempt to address several issues with WSDL 1.1</li>
+            <ul>
+              <li>SOAP vs. REST, naming, exrpessivity</li>
+              <li><span class="h-ref" id="wsdl20-primer">WSDL 2.0 Primer (part 0)</span></li>
+              <li><span class="h-ref" id="wsdl20">WSDL 2.0 Core Language (part 1)</span></li>
+            </ul>
+          </ul>
+        </ul>
+      </div>
 
-           <div class="slide">
-                <hgroup>
-                    <h1>Example SAF Agent Architecture</h1>
-                </hgroup>
-		<img src="img/jms_saf.gif" style="margin: 30px 0px 10px 72px; zoom: 0.9"></img>
-           </div>
+      <div class="slide">
+        <hgroup>
+          <h1>WSDL Overview and WSDL 1.1 Syntax</h1>
+        </hgroup>
+        <ul class="x-small">
+          <li>Components of WSDL</li>
+          <ul>
+            <li>Information model (<code>types</code>)</li>
+            <ul>
+              <li>Element types, message declarations (XML Schema)</li>
+            </ul>
+            <li>Set of operations (<code>portType</code>)</li>
+            <ul>
+              <li>A set of operations is "interface" in the WSDL terminology</li>
+              <li>operation name, input, output, fault</li>
+            </ul>
+            <li>Binding (<code>binding</code>)</li>
+            <ul>
+              <li>How messages are transfered over the network using a concrete transport protocol</li>
+              <li>Transport protocols: HTTP, SMTP, FTP, JMS, ...</li>
+            </ul>
+            <li>Endpoint (<code>service</code>)</li>
+            <ul>
+              <li>Where the service is physically present on the network</li>
+            </ul>
+          </ul>
+          <li>Types of WSDL documents</li>
+          <ul>
+            <li><b>Abstract WSDL</b> &ndash; only information model and a set of operations</li>
+            <li><b>Concrete WSDL</b> &ndash; everything, a concrete service available in the environment</li>
+          </ul>
+        </ul>
+      </div>
 
-            <div class="slide">
-                <hgroup>
-                    <h1>Example SAF Agent Backlog</h1>
-                </hgroup>
-		<img src="img/backlog-example.png" style="margin: 30px 0px 10px 10px; zoom: 0.75"></img>
-                <ul class="xx-small" style="margin-top: 0px">
-			<li>Messages received</li>
-				<ul><li>number of messages received to the SAF agent queue in every hour</li></ul>
-			<li>Backlog</li>
-				<ul>
-					<li>number of messages waiting to be sent across to the destination queue</li>
-					<li>Destination system cannot catch up with number of messages being sent across</li>
-				</ul>
-		</ul>
-            </div>
+      <div class="slide">
+        <hgroup>
+          <h1>WSDL Components and Dependencies</h1>
+        </hgroup>
+        <img src="img/wsdl-with-links.png" style="height: 490px; margin-top: 10px; margin-left: 200px"></img>
+      </div>
 
-        </section>
+    </section>
 
-    </body>
+    <div class="slide outline"></div>
+
+    <section>
+      <header>WS-Addressing</header>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Overview</h1>
+        </hgroup>
+        <ul class="x-small">
+          <li>WS-Addressing</li>
+          <ul>
+            <li><span class="h-ref" id="ws-addr">W3C Recommendation, May 2006</span></li>
+            <li>A transport-independent mechanisms for web services
+              to communicate addressing information</li>
+            <li>WSDL describes WS-Addressing as a policy attached to a WSDL binding</li>
+            <pre class="brush: xml; highlight: [3,4]">
+                                &lt;binding name="OrderProcessBinding" type="op:OrderProcess">
+                                    &lt;soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+                                    &lt;PolicyReference xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"
+                                        URI="#wsaddr_policy" wsdl:required="false"/>
+                            </pre>
+          </ul>
+          <li>Two main purposes</li>
+          <ol>
+            <li>Asynchronous communication</li>
+            <ul>
+              <li>Client sends an endpoint where the server should send a response asynchronously</li>
+            </ul>
+            <li>Relating interactions to a conversation</li>
+            <ul>
+              <li>Client and service communicate conversation ID</li>
+            </ul>
+        </ul>
+        </ul>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Order Processing Example</h1>
+        </hgroup>
+        <ul class="x-small">
+          <li>Asynchronous communication via callback</a>, steps:</li>
+          <ul>
+            <li>Client submits an order request</li>
+            <li>Service starts processing of the order (CRM, OMS, back-office)</li>
+            <li>Client can retrieve the order status</li>
+            <li>Service responds asynchronously with an order response message</li>
+          </ul>
+        </ul>
+        <div class="h-drawing" id="1nPmejyynnsGNYC_dxe5poTKfiFJiqLgt7nPHD_GEJcc" style="height: 350px"></div>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Interface Example (1)</h1>
+        </hgroup>
+        <ul class="x-small">
+          <li>Order process complex conversation</li>
+          <ol>
+            <li>The client invokes <code>processOrder</code>.</li>
+            <li>The service responses back <b>synchronously</b> with order status.</li>
+            <li>The client gets the status of order processing by invoking synchronous <code>getStatus</code> operation (this can be invoked serveral times).</li>
+            <li>The service responses back <b>asynchronously</b> by invoking <code>processOrderResponse</code> &ndash; callback on client's interface</li>
+          </ol>
+          <li>Interface implemented by the order process service</li>
+          <ul>
+            <li><code>getStatus</code> operation must be executed in the same <b>conversation</b> as
+              <code>processOrder</code> operation</li>
+          </ul>
+          <pre class="brush: xml; class-name: 'x-small'">
+                            &lt;portType name="OrderProcess">
+                                &lt;operation name="processOrder">
+                                    &lt;input message="op:OrderProcessRequestMessage"/>
+                                    &lt;output message="op:OrderStatusResponseMessage"/>
+                                &lt;/operation>
+                                &lt;operation name="getStatus">
+                                    &lt;input message="op:OrderStatusRequestMessage"/>
+                                    &lt;output message="op:OrderStatusResponseMessage"/>
+                                &lt;operation>
+                            &lt;portType>
+                        </pre>
+          <li>Interface implemented by the client</li>
+          <pre class="brush: xml; class-name: 'x-small'">
+                            &lt;portType name="OrderProcessCallback">
+                                &lt;operation name="processOrderResponse">
+                                    &lt;input message="op:OrderProcessResponseMessage"/>
+                                    &lt;fault message="op:OrderProcessFaultMessage"/>
+                                &lt;operation>
+                            &lt;/portType>                            
+                        </pre>
+
+        </ul>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Interface Example (2)</h1>
+        </hgroup>
+        <ul class="x-small">
+          <li>Interface implemented by the client</li>
+          <pre class="brush: xml; class-name: 'x-small'">
+                            &lt;portType name="OrderProcessCallback">
+                                &lt;operation name="processOrderResponse">
+                                    &lt;input message="op:OrderProcessResponseMessage"/>
+                                    &lt;fault message="op:OrderProcessFaultMessage"/>
+                                &lt;operation>
+                            &lt;/portType>                            
+                        </pre>
+
+        </ul>
+      </div>
+
+
+      <div class="slide">
+        <hgroup>
+          <h1>ProcessOrder Request Message</h1>
+        </hgroup>
+        <ul class="xx-small">
+          <li>Client sends process order request &ndash; <code>processOrder</code></li>
+          <ul>
+            <li>it sends addressing information where the client listens for the callback</li>
+            <li>it sends conversation ID (message ID) to start the conversation on the server</li>
+            <pre class="brush: xml; highlight: [9,10,11,12,13]; class-name: 'tight'">
+                        > POST /soa-infra/services/mdw-examples/ProcessOrder/orderprocess_client_ep HTTP/1.1
+                        > Host: mimdw.fit.cvut.cz
+                        > Content-Type: text/xml;charset=UTF-8
+                        > SOAPAction: "processOrder"
+                        > Content-Length: 810
+
+                        &lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" 
+                            xmlns:ord="http://mimdw.fit.cvut.cz/mdw-examples/cdm/order">
+                             &lt;soap:Header xmlns:wsa='http://www.w3.org/2005/08/addressing'>
+                                &ltwsa:ReplyTo>
+                                    &lt;wsa:Address>http://192.168.94.110:2233/path/to/service&lt;/wsa:Address>
+                                &lt;/wsa:ReplyTo>
+                                &lt;wsa:MessageID>urn:AXYYBA00531111E3BFACA780A7E5AF64&lt;/wsa:MessageID>
+                             &lt;/soap:Header>
+                             &lt;soap:Body>
+                                &lt;ord:Order>
+                                    &lt;ord:CustomerId>1&lt;/ord:CustomerId>
+                                    &lt;ord:LineItems>
+                                        &lt;ord:item>
+                                            &lt;ord:label>Apple MacBook Pro&lt;/ord:label>
+                                            &lt;ord:action>ADD&lt;/ord:action>
+                                        &lt;/ord:item>
+                                    &lt;/ord:LineItems>
+                                &lt;/ord:Order>
+                            &lt;/soap:Body>
+                        &lt;/soap:Envelope>
+                        </pre>
+          </ul>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>GetStatus Request Message</h1>
+        </hgroup>
+        <ul class="xx-small">
+          <li>Client sends get status request &ndash; <code>getStatus</code></li>
+          <ul>
+            <li>after it invokes <code>processOrder</code> with conversation ID (message ID)</li>
+            <li>it uses the same conversation ID for get status request too</li>
+            <ul>
+              <li>the request will be procesessed by the running service instance</li>
+            </ul>
+            <pre class="brush: xml; highlight: [9]">
+                        > POST /soa-infra/services/mdw-examples/ProcessOrder/orderprocess_client_ep HTTP/1.1
+                        > Host: mimdw.fit.cvut.cz
+                        > Content-Type: text/xml;charset=UTF-8
+                        > SOAPAction: "getStatus"
+                        > Content-Length: 472      
+
+                        &lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+                            &lt;soap:Header xmlns:wsa="http://www.w3.org/2005/08/addressing">
+                                &lt;wsa:RelatesTo>urn:AXYYBA00531111E3BFACA780A7E5AF64&lt;/wsa:RelatesTo>
+                            &lt;/soap:Header>
+                            &lt;soap:Body>
+                                &lt;ns1:StatusRequest 
+                                    xmlns:ns1="http://mimdw.fit.cvut.cz/mdw_examples/ProcessOrder/OrderProcess">
+                                    &lt;ns1:process-id>18a9baec2d5ac0a2:64d155de:1425c4185f1:-7ff2&lt;/ns1:process-id>
+                                &lt;/ns1:StatusRequest>
+                            &lt;/soap:Body>
+                        &lt;/soap:Envelope>                    
+                        </pre>
+          </ul>
+      </div>
+
+
+    </section>
+
+
+  </section>
+
+
+</body>
+
 </html>
-
-
