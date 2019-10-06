@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<!--
+    Middleware and Web Services, CTU course slides
+    (cc) 2010-2011 Tomas Vitvar, http://vitvar.com
+    written for Humla, an open source HTML5 presentation environment
+-->
+<html>  
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> 
+        <meta name="course"   content="Middleware and Web Services"/>
+        <meta name="lecture"  content="Lecture 8"/>
+        <meta name="keywords" content="High Availability, Load Balancer, Replication"/>
+           
+        <link type="text/css" rel="stylesheet" href="css/meta.css"></link>   
+        <link type="text/css" rel="stylesheet" href="css/ctu-fit.css"></link>   
+        <link type="text/css" rel="stylesheet" href="humla/lib/core/humla.css"></link>   
+
+        <script type="text/javascript" src="humla/lib/humla.js"></script>
+        <title>High Availability and Performance</title>
+    </head>
+    
+    <body>
+        <footer>
+            <p><b>#META_LECTURE#: #TITLE#</b>,&nbsp;<span class="meta_semester"/>,&nbsp;
+            <span class="meta_twitter"/></p>
+            <p><b>&#8210; #SLIDE_NO# &#8210;</b></p>
+        </footer>
+
+        <div class="slide intro">
+            <hgroup>
+                <h1><span class="meta_course"/></h1>
+                <h2>#META_LECTURE#: #TITLE#</h2>
+            </hgroup>
+            <div class="author">
+                <p class="meta_author"/>
+                <p><span class="meta_email"/> &bull; <span class="meta_twitter"/> &bull; 
+                <span class="meta_web"/></p>
+            </div>
+            <center><div class="meta_logo"></div></center>
+            <div class="org">
+                <p class="meta_org"/>
+                <p><span class="meta_orgfac"/> &bull; <span class="meta_field"/> 
+                &bull; <span class="meta_orgweb"/></p>
+            </div>
+            <div class="etc">
+                <div class="text-info">
+                    Modified: #LAST_MODIFIED#<br/>
+                    Humla v#HUMLA_VERSION#
+                </div>
+                <a href="http://creativecommons.org/licenses/by-sa/3.0/"><div class="license"></div></a>
+                <div class="oppa"></div>
+            </div>
+        </div>
+
+		<div class="slide">
+			<hgroup>
+				<h1>Good Performance</h1>
+			</hgroup>
+			<ul class="small">
+				<li>What influences good performance?</li>
+				<ul>
+					<li>Number of users and concurrent connections</li>
+					<li>Number of messages and messages' sizes</li>
+					<li>Number of services</li>
+					<li>Infrastructure &ndash; capacity, availability, configuration, ...</li>
+				</ul>
+				<li>How can we achieve good performance?</li>
+				<ul>
+					<li>Infrastructure</li>
+					<ul>
+						<li>Scalability, failover, cluster architectures</li>
+					</ul>
+					<li>Performance tuning</li>
+					<ul>
+						<li>Application Server, JVM memory, OS-level tuning, Work managers configuration</li>
+					</ul>
+					<li>Service configuration</li>
+					<ul>
+						<li>Parallel processing, process optimization</li>
+					</ul>
+				</ul>
+			</ul>
+		</div>					
+        
+        <div class="slide outline"></div>
+
+		<section>
+			<header>Infrastructure</header>
+			
+			<div class="slide">
+				<hgroup>
+					<h1>Definitions</h1>
+				</hgroup>
+				<ul class="x-small">
+					<li>Scalability</li>
+					<ul>
+						<li>server scalability</li>
+                        <ul>
+						    <li>ability of a system to scale &ndash; when input load changes</li>
+						    <li>users should not feel a difference when more users 
+						    	access the same application at the same time</li>
+						    <li><b>horizontal scaling</b></li>
+						    <ul>
+						    	<li>adding new instances of applications/servers</li>
+						    </ul>
+						    <li><b>vertical scaling</b></li>
+						    <ul>
+						    	<li>adding new resources (CPU, memory) to a server instance</li>
+						    </ul>
+                        </ul>
+						<li>network traffic</li>
+                        <ul>
+						    <li>bandwidth capacity influences performance too</li>
+						    <li>service should limit the network traffic through caching</li>
+                        </ul>
+					</ul>
+					<li>Availability</li>
+					<ul>
+						<li>probability that a service is operational at a particular time</li>
+						<ul>
+                            <li>e.g., 99.9987% availability &ndash; downtime ~44 seconds/year</li>
+                        </ul>
+					</ul>
+				</ul>
+			</div>
+
+			<div class="slide">
+				<hgroup>
+					<h1>Definitions (Cont.)</h1>
+				</hgroup>
+				<ul class="x-small">
+					<li>High Availability</li>
+					<ul>
+						<li>When a server instance fails, operation of the application can continue</li>
+						<li>Failures should affect application availability and performance as little as possible</li>
+					</ul>
+					<li>Application Failover</li>
+					<ul>
+						<li>When an application component performing a job becomes unavailable, 
+						a copy of the failed object finishes the job.</li>
+						<li>Issues</li>
+						<ul>
+							<li>A copy of the failed object must be available</li>
+							<li>A location and operational status of available objects must be available</li>
+							<li>A processing state must be replicated</li>
+						</ul>
+					</ul>
+					<li>Load Balancing</li>
+					<ul>
+						<li>Distribution of incoming requests across server instances</li>
+					</ul>					
+				</ul>
+			</div>
+			
+	
+			<div class="slide">
+				<hgroup>
+					<h1>Performance Metrics</h1>
+				</hgroup>
+				<ul class="x-small">
+					<li>Response Time</li>
+					<ul>
+						<li>A client-side metric</li>
+					</ul>
+					<div class="h-drawing" style="height: 300px" id="1rgjQBi7cWEbNSjNYmnhaFTqcoXNi6JbLaGmNajArRUY"></div>
+				</ul>
+				<ul class="xx-small">
+					<ul>
+						<li>CPU intensive service or a bad configuration of a service</li>
+                        <ul>
+						    <li>consider asynchronous processing when CPU intensive</li>
+                        </ul>
+						<li>Writing to a data store</li>
+					</ul>
+				</ul>
+			</div>
+
+			<div class="slide">
+				<hgroup>
+					<h1>Performance Metrics</h1>
+				</hgroup>
+				<ul class="x-small">
+					<li>Queries/Requests per Second (QPS)</li>
+					<ul>
+						<li>A server-side metric</li>
+					</ul>
+					<div class="h-drawing" style="height: 300px" id="1BhopVXexuS5coYLBbcrBi1SiUY3YNcr-K4usFXU6IwM"></div>
+				</ul>
+				<ul class="xx-small">
+					<ul>
+						<li>Caching may improve performance</li>
+                        <ul>
+						    <li>even if data changes often, with high QPS caching improves a lot</li>
+                        </ul>
+					</ul>
+				</ul>
+			</div>
+
+			<div class="slide">
+				<hgroup>
+					<h1>Infrastructure Example &ndash; Weblogic</h1>
+				</hgroup>
+				<div class="h-drawing" id="18vW_i7-8GeUHUdE9q9dccbAvDbA5b1fuQ-qAovzabTc" style="height: 450px"></div>
+			</div>
+
+			<div class="slide">
+				<hgroup>
+					<h1>Best Configuration Practices</h1>
+				</hgroup>
+				<ul class="x-small">
+					<li>Domain configuration</li>
+					<ul>
+						<li>A server is an admin server or a managed server</li>
+						<li>Each server is running on a separated JVM</li>
+						<li>A physical machine may run one or more servers</li>
+						<li>There should be at least two managed servers running on one machine</li>
+						<ul>
+							<li>This provides a better performance <br/>(as opposed to one server running on one machine)</li>
+						</ul>
+						<li>A domain can have clustered or unclustered servers</li>
+					</ul>
+					<li>Load balancers (LB)</li>
+					<ul>
+						<li>Load Balancers are not part of the domain</li>
+						<ul>
+							<li>They are external to Weblogic server</li>
+							<li>There is usually one HW LB and several SW LBs</li>
+						<li>Software LB</li>
+						<ul>
+							<li>Realized by the Web Tier (Apache HTTP server)</li>
+							<li>Redirects requests too all managed servers in a domain (across multiple machines)</li>
+						</ul>
+					</ul>
+				</ul>
+			</div>
+			
+			<div class="slide outline"></div>
+			
+			<section>
+			
+				<header>Load Balancers</header>
+				
+				<div class="slide">
+					<hgroup>
+						<h1>Load Balancing</h1>
+					</hgroup>
+					<ul class="small">
+						<li>Distributes a load to multiple app/object instances</li>
+						<ul>
+							<li>App instances run on different machines</li>
+							<li>Load sharing: equal or with preferences</li>
+							<li>Health checks</li>
+						</ul>
+						<li>Types</li>
+						<ul class="x-small">
+							<li>DNS-based load balancer</li>
+	                        <ul>
+							    <li>DNS Round Robin</li>
+	                        </ul>
+							<li>NAT-based load balancer (Layer-4)</li>
+							<li><b>Reverse-proxy load balancer</b> (Layer-7)</li>
+							<ul>   
+	                            <li>application layer</li>
+								<li>Sticky sessions</li>
+								<ul>
+									<li>JSession, JSession-aware load balancer</li>
+								</ul>
+	                        </ul>
+	                        <li>Client-side load balancer</li>
+	                        <ul>
+	                        	<li>LB run by a client
+	                        	<li>a client uses a replica-aware stub of the object 
+	                        		from the server</li>
+	                        </ul>
+						</ul>
+					</ul>
+				</div>
+	
+	            <div class="slide">
+					<hgroup>
+						<h1>DNS-based Load Balancer</h1>
+					</hgroup>
+					<ul class="x-small">
+						<li>DNS Round Robin</li>
+						<ul>
+							<li>A DNS record has multiple assigned IP addresses</li>
+							<li>DNS system delivers different IP addresses from the list</li>
+							<li>Example DNS A Record:<br/>
+	                        <code>company.com A 147.32.100.71 147.32.100.72 147.32.100.73</code></li>
+						</ul>
+						<li>Advantages</li>
+						<ul>
+							<li>Very simple, easy to implement</li>
+						</ul>
+						<li>Disadvantages</li>
+						<ul>
+							<li>IP address in cache, could take hours to re-assign</li>
+							<li>No information about servers' loads and health</li>
+						</ul>
+					</ul>
+				</div>
+	
+				<div class="slide">
+					<hgroup>
+						<h1>Reverse Proxy Load Balancer</h1>
+					</hgroup>
+					<div class="h-drawing" style="margin-top: 40px; height: 450px" 
+					  id="1QtCAcD0R571rYmeP1hrofveZ3x6F7P61rfUpEswxOl0"></div>
+				</div>
+				
+				<div class="slide">
+					<hgroup>
+						<h1>HTTP Sticky Sessions Example</h1>
+					</hgroup>
+					<div class="h-drawing" id="1hzFB_41gJmkKQHpcSODvengGnHW98UYv1x1xZHt4XMA"
+						style="height: 320px; margin: 20px"></div>
+					<ul class="x-small">
+						<li>How to identify a server that hosts the session state</li>
+						<ul>
+							<li>Passive cookie persistence &ndash; LB uses a cookie from the server</li>
+							<li>Active cookie persistence &ndash; LB adds its own cookie</li>
+						</ul>
+					</ul>
+				</div>
+
+				<div class="slide">
+					<hgroup>
+						<h1>Types of Load Balancers</h1>
+					</hgroup>
+					<ul class="x-small">
+						<li>Software</li>
+						<ul>
+							<li>Apache <code>mod_proxy_balancer</code></li>
+							<ul>
+								<li>HTTP Session persistence &ndash; sticky sessions</li>
+							</ul>
+							<li>WebLogic proxy plug-in</li>
+							<pre class="brush: xml">
+								&lt;Location /soa-infra>
+    								SetHandler weblogic-handler
+    								WebLogicCluster czfmwapp03-vf:8001,czfmwapp04-vf:8001,czfmwapp05-vf:8001
+								&lt;/Location> 
+							</pre>
+							<ul class="no-bullet">
+								<li><code>/soa-infra</code> is a first part of an URL path that rules in this <code>Location</code> will be applied (this is a standard Apache configuration mechanism)</li> 
+								<li><code>czfmwapp{N}</code> is a hostname that corresponds to a virtual IP to which the managed server JVM processes is bounded (using the tcp port <code>8001</code>).
+								<li><code>WebLogicCluster</code> specifies the list of servers for load balancing</li>
+							</ul>
+						</ul>
+						<li>Hardware</li>
+						<ul>
+							<li>Cisco, Avaya, Barracude</li>
+						</ul>
+					</ul>
+				</div>
+
+				<div class="slide">
+					<hgroup>
+						<h1>Round-Robin Algorithm</h1>
+					</hgroup>
+					<ul class="xx-small">
+						<li>Uses</li>
+						<ul class="no-bullet">
+							<li><code>request</code> &ndash; client request with or without a cookie information</li>
+							<li><code>server_list</code> &ndash; a list of servers that can process the request</li>
+							<li><code>rbinx</code> &ndash; round robin index</li>
+							<li><code>sticky_sessions</code> &ndash; associative array of pairs <code>&lt;session_id,server&gt;</code></li> 
+							<li><code>unhealthy_treshhold</code> &ndash; a number of negative consecutive health checks 
+							before moving the server to the "unhealthy" state.</li>
+						</ul>
+						<li>Round Robin Algorithm</li>
+						<ul>
+							<li>if <code>session_id</code> exist in the <code>request</code> and in <code>sticky_sessions</code></li>
+							<ul>
+								<li>send the <code>request</code> to the server <code>sticky_sessions[session_id]</code></li>
+							</ul>
+							<li>otherwise</li>
+							<ul> 
+								<li>send the <code>request</code> to the <code>rbinx</code> server in the <code>server_list</code></li>
+								<li>extract <code>session_id</code> from the response from the server</li>
+								<li>if the <code>session_id</code> exist, add a pair <code>&lt;session_id;server_list[rbinx]&gt;</code> to <code>sticky_sessions</code></li> 
+								<li>increase <code>rbinx</code> by one or reset it to <code>0</code> if it exceeds the length of <code>server_list</code></li>
+							</ul>
+						</ul>
+					</ul>
+				</div>
+
+
+				<div class="slide">
+					<hgroup>
+						<h1>Health Check</h1>
+					</hgroup>
+					<ul class="xx-small">
+						<li>Health Check</li>
+						<ul>
+							<li>For each server in the <code>server_list</code></li>
+							<ul>
+							<li>call the server's heatlhcheck endpoint</li>
+							<li>if a number of failed health checks for the server exceeds the <code>unhealthy_threshold</code></li>
+                        	<ul>
+						    	<li>remove the server from the <code>server_list</code></li>
+                        	</ul>
+							<li>if the server was unhealthy and a there was a successful healthcheck</li>
+							<ul>
+                            	<li>add the server back to the <code>server_list</code></li>
+                        	</ul>
+						</ul>
+					</ul>
+				</div>				
+				
+				<div class="slide">
+					<hgroup>
+						<h1>Session State Persistence and Replication</h1>
+					</hgroup>
+					<ul class="xx-small">
+						<div class="h-drawing" style="height: 290px" id="1PiI-1CeVkQTYUgOPHyk3wqJufQl9cYQz5vlNziERE74"></div>
+						<li>Session persistence</li>
+						<ul>
+							<li>Session information is maintained in the database</li>
+							<li>Does not require sticky sessions</li>
+							<li>Implements <code>HttpSession</code> interface that writes data to the DB</li>
+						</ul>
+						<li>In-memory replication</li>
+						<ul>
+							<li>A <b>primary server</b> holds a session state, the <b>secondary server</b>
+							holds its replica.</li>
+							<li>Information about primary and secondary servers are part of JSession</li>
+						</ul>					
+					</ul>
+				</div>
+
+				<div class="slide">
+					<hgroup>
+						<h1>In-Memory Replication</h1>
+					</hgroup>
+					<ul class="x-small">
+						<li>Session format</li>
+						<ul>
+							<li>It's a cookie</li>
+							<li><code>JSESSIONID=SESSION_ID!PRIM_SERVER_ID!SEC_SERVER_ID!CREATION_TIME</code></li>
+							<ul class="no-bullet">
+								<li><code>SESSION_ID</code> &ndash; session id, generated by the server to identify memory associated with 
+									the session on the server</li>
+								<li><code>PRIM_SERVER_ID</code> &ndash; ID of the managed server holding the session data</li>
+								<li><code>SEC_SERVER_ID</code> &ndash; ID of the managed server holding the session replica</li>
+								<li><code>CREATION_TIME</code> &ndash; time the session data was created/updated</li> 
+							</ul>
+						</ul>
+						<li>How LB uses this information</li>
+						<ul>
+							<li>LB has information whether the server is running or not (via healthchecks)</li>
+							<li>if the primary server is running, it redirects the request there</li>
+							<li>if the primary server is not running, it redirects the request to the secondary server directly</li>
+							<li>if primary and secondary servers are not running, it redirect the request to any other server it has in the list &ndash; this may cause side effects!</li>
+						</ul>
+					</ul>	
+				</div>
+
+				<div class="slide">
+					<hgroup>
+						<h1>In-Memory Replication Scenarios</h1>
+					</hgroup>
+					<center>
+					<div class="h-drawing" id="1APKL5IK-WG_8rlF6g__Q5TwxVrwmW9a4KPbK10JiKGU" style="width: 690px"></div>
+					</center>
+				</div>
+				
+			</section>
+			
+			 <div class="slide outline"></div>
+
+			<section>
+				<header>Cluster Architecture</header>
+
+				<div class="slide">
+					<hgroup>
+						<h1>Overview</h1>
+					</hgroup>
+					<ul class="xx-small">
+						<li>Cluster capabilities</li>
+						<ul>
+							<li>A group of servers (aka cluster members) act together to serve clients' requests</li>
+							<li>Cluster is transparent to clients</li>
+							<li>Servers can run on the same machines or on different machines</li>
+							<li>Cluster's capacity can be increased by adding servers to the cluster</li>
+							<li>Servers in a cluster may have the same copy of objects and they are aware of each other objects</li>
+							<ul>
+								<li>objects: applications, JMS destinations, RMI objects</li>
+								<li>See <a href="lecture4.html#/23">Cluster-wide JNDI tree</a> in Lecture 4</li>
+							</ul>
+						</ul>
+						<li>Cluster Messaging Protocols</li>
+						<ul>
+							<li>When servers need to send messages to other members of the cluster</li>
+							<li><b>Unicast</b> - one-to-one communication using TCP/IP sockets</li>
+							<li><b>Multicast</b> - one-to-many communication</li>
+							<li>Cluster services that rely on the cluster messaging protocol</li>
+							<ul>
+								<li>Cluster Membership</li>
+								<li>JNDI Replication</li>
+							</ul>
+							<li>There are services using persistent RMI connections between cluster members</li>
+							<ul>
+								<li>such as during in-memory replication of HTTP session information</li>
+							</ul>
+						</ul>
+					</ul>
+				</div>
+
+				<div class="slide">
+					<hgroup>
+						<h1>Unicast</h1>
+					</hgroup>
+					<ul class="xx-small">
+						<li>Overview</li>
+						<ul>
+							<li>Uses standard TCP/IP sockets to send messages across cluster members</li>
+							<li>Uses a <b>group leader strategy</b> to limit the number of sockets required to send messages within the cluster</li>	
+						</ul>
+						<li>Groups in the cluster</li>
+						<ul>
+							<li>Cluster is split into <code>M</code> groups with <code>N</code> servers, each group has a leader</li>
+							<li>Servers communicate with the group leader, group leaders communicate with servers in the group and other group leaders</li>
+							<li>When a group leader dies, the group elects another group leader</li>
+							<li>There is up to <code>MxN</code> network messages for every cluster message</li> 
+						
+						</ul>
+						<div class="h-drawing" id="1i4d-qdauj-3SpRGH6pTLcq52WxFuPPi_SYwtwOL293o" style="width: 550px"></div>
+					</ul>
+				</div>
+
+				<!--<div class="slide">
+					<hgroup>
+						<h1>Multicast</h1>
+					</hgroup>
+					<ul class="x-small">
+					</ul>
+				</div>-->
+
+
+				<div class="slide">
+					<hgroup>
+						<h1>Cluster Services</h1>
+					</hgroup>
+					<ul class="x-small">
+						<li>Cluster Membership</li>
+						<ul>
+							<li>Cluster members maintain their view on what servers are in the cluster</li>
+							<li>Each server sends heartbeat messages to the cluster</li>
+							<ul>
+								<li>others know it is alive</li>
+							</ul>
+							<li>Each server receives heartbeat messages</li>
+							<ul>
+								<li>When a server misses a number of messages from a cluster, it removes the servver from the list
+								until it receives the next heartbeat message.</li>
+							</ul>
+						</ul>
+						<li>JNDI Replication</li>
+						<ul>
+							<li>Provides each server with a cluster-wide view of the JNDI tree.</li>
+							<li>Servers send JNDI update messages to the cluster when an object is bound or removed to their local tree.</li>
+							<li>When a server leaves the cluster</li>
+							<ul>
+								<li>other members remove its JNDI bindings from their three.</li>
+							</ul>
+							<li>When a server joins the cluster</li>
+							<ul>
+								<li>The server asks other server for a JNDI state dump.</li>
+							</ul>
+						</ul>
+					</ul>
+				</div>
+				
+			</section>
+		</section>
+		
+		<div class="slide outline"></div>
+
+		<section>
+			<header>Performance Tuning</header>
+				
+			<div class="slide">
+				<hgroup>
+					<h1>Performance Limiting Factors</h1>
+				</hgroup>
+				<div id="1bo3PC-IopJA4SiyHLVag7g1amyT8W89k2edtirQwz1w" style="height: 450px; margin: 30px" class="h-drawing"></div>
+			</div>			
+
+			<div class="slide">
+				<hgroup>
+					<h1>Monitoring</h1>
+				</hgroup>
+				<ul class="xx-small">
+					<li>Important to understand performance</li>
+					<ul>
+						<li>DevOps monitoring trends</li>
+					</ul>
+					<li>What you need</li>
+					<ul>
+						<li>Collect &rarr; Filter &rarr; Store &rarr; View &rarr; <b>Tune</b></li>
+						<li>Metrics, dashboards, alerting, log management, reporting, tracing capabilities</li>
+						<li>It is necessary to organize metrics well in order to understand what is going on</li>
+						<li>Start from a high-level process, detail to technical components</li>
+					</ul>
+					<li>Source</li>
+					<ul>
+						<li>Application server</li>
+						<ul>
+							<li>usually management beans with JMX interfaces</li>
+							<li>log files (access logs, server logs, etc.)</li>
+						</ul>
+						<li>OS</li>
+						<ul>
+							<li>many utilities available out of the box</li>
+							<li>open sockets, memory, context switches, I/O performance, CPU usage</li>
+						</ul>
+						<li>Database</li>
+						<ul>
+							<li>applications may write metrics to the DB</li>
+							<li>SQL scripts to collect metrics</li>
+						</ul>
+					</ul>
+				</ul>
+			</div>			
+
+			<div class="slide">
+				<hgroup>
+					<h1>Monitoring Tools</h1>
+				</hgroup>
+				<ul class="x-small">
+					<li>Commercial Monitoring Solutions</li>
+					<ul>
+						<li>Application server vendor usually offers a monitoring solution</li>
+						<li>AppDynamics, Oracle Enterprise Manager, Splunk</li>
+						<li>Google stackdriver, Amazon AWS CloudWatch</li>
+					</ul>
+					<li>Open source examples</li>
+					<ul>
+						<li>Elasticsearch + LogStash + Kibana</li>
+						<li>InfluxDB + Telegraph + DataGraph</li>
+					</ul>
+				</ul>
+			</div>			
+
+			<div class="slide">
+				<hgroup>
+					<h1>Tuning &ndash; A Layered Approach</h1>
+				</hgroup>
+				<ul>
+					<li>Application server can be tuned at multiple layers</li>
+					<ul>
+						<li>Service configuration optimization</li>
+						<li>Transport-level tuning</li>
+						<li>Application Server Tuning</li>
+						<li>JVM Memory Tuning</li>
+						<li>OS Tuning</li>
+					</ul>
+					<li>Lower levels are cheaper to tune</li>
+				</ul>
+			</div>			
+
+			<div class="slide">
+				<hgroup>
+					<h1>Memory Allocations</h1>
+				</hgroup>
+				<ul class="x-small">
+					<div id="1VtIYJV3f-sAizvO9ZmI4c0tRvcKWbESZuAaT5s02xzA" style="height: 300px" class="h-drawing"></div>
+					<li>Generations</li>
+					<ul>
+						<li>Young &ndash; objects get allocated in this space initially</li>
+						<li>Old &ndash; objects get promoted to old from young</li>
+						<li>Perm &ndash; space for permanent allocations, e.g. objects describing classes and methods</li>
+					</ul>
+			</div>			
+
+			<div class="slide">
+				<hgroup>
+					<h1>Garbage Collection</h1>
+				</hgroup>
+				<ul class="x-small">
+					<li>Steps to move objects around</li>
+					<ol>
+						<li>Objects are created in young</li>
+						<li>When young is full, the live objects are copied to old, dead are discarded</li>
+						<ul>
+							<li><b>lightweight GC</b></li>
+						</ul>
+						<li>When young is full and no space in old &rarr; the full GC frees the old space</li>
+						<ul>
+							<li><b>Full GC</b> &ndash; nothing is running in JVM, the application stops</li>
+						</ul>
+					</ol>
+					<ul>
+						<li><b>Too frequent full GC has an impact on performance</b></li>
+					</ul>
+					<li>A memory leak or inadequate heap allocation</li>
+					<ul>
+						<li>Old is out of space &rarr; full GC will run often (or continously)</li>
+						<li>High CPU utilization, The server will not be able to process/respond to requests</li>
+					</ul>
+				</ul>
+			</div>			
+
+			<div class="slide">
+				<hgroup>
+					<h1>Heap Size and GC Runs
+				</hgroup>
+				<ul class="small">
+					<li>Heap Size and GC runs</li>
+					<ul>
+						<li>Wrong heap size allocation &ndash; too small or memory leaks</li>
+						<li>GC full runs too often, this has a negative impact on performance</li>
+					</ul>
+				</ul>
+				<div class="h-drawing" id="15ZZC64x6TXSgkQBFeoNfGZnaQMjqUu-ODOA7IfnDMDg" format="png"></div>
+			</div>
+
+			<div class="slide">
+				<hgroup>
+					<h1>JVM Memory Tuning</h1>
+				</hgroup>
+				<ul class="x-small">
+					<li>JVM Memory Parameters</li>
+					<ul class="no-bullet">
+						<li><code>-Xms</code> &ndash; initial java heap size</li>
+						<li><code>-Xmx</code> &ndash; maximum java heap size</li>
+						<li><code>-XX:NewSize</code> &ndash; the initial size of the heap for young generation</li>
+						<li><code>-XX:MaxNewSize</code> &ndash; the maximum size of the heap for young generation</li>
+					</ul>
+					<li>General recommendations</li>
+					<ul class="no-bullet">
+						<li><code>-Xms</code> and <code>-Xmx</code> should be set to the same value</li>
+						<li>(do not allow the heap to grow &rarr; limit the overhead)</li>
+						<li><code>-XX:NewSize</code> and <code>-XX:MaxNewSize</code> should be set to the one half of maximum heap</li>
+					</ul>
+					<ul>
+						<li>Example, 1GB heap size</li>
+						<ul class="no-bullet">
+							<li><code>–Xms1024m –Xmx1024m -XX:NewSize=500m -XX:MaxNewSize=500m</code></li>
+						</ul>
+					</ul>
+				</ul>
+			</div>			
+			
+			<div class="slide">
+				<hgroup>
+					<h1>Asynchronous I/O: Recall</h1>
+				</hgroup>
+				<ul class="small">
+					<li>Connections maintained by the OS, not the Web app</li>
+	                   <ul>                    
+	                       <li>The Web app registers events, OS triggers events when occur</li>
+	                   </ul>
+	               </ul>
+	   			<div id="1kxkFc3Chl4qFXxH_4f2seuNbpBdENMyZWMRUmxd1p28" class="h-drawing" style="height: 220px"></div>
+	               <ul class="small">
+					<li>Characteristics</li>
+	                   <ul>
+	                       <li>Event examples: new connection, read, write, closed</li>
+					    <li>The app may create working threads, but controls the number!</li>
+	                       <ul>
+					        <li>much less number of working threads as opposed to blocking I/O</li>
+	                       </ul>
+	                   </ul>
+				</ul>
+			</div>						
+			
+			<div class="slide">
+				<hgroup>
+					<h1>Work Manager Configuration</h1>
+				</hgroup>
+				<ul class="x-small">
+					<li>Work Manager</li>
+					<ul>
+						<li>Controls the number of thread allocated to processing of requests</li>
+						<li>In WLS is called a dispatch policy</li>
+						<ul>
+							<li>Can be assigned to OSB proxy services</li>
+						</ul>
+						<li>Parameters</li>
+						<ul>
+							<li><b>maximum threads</b> (<code>max</code>) &ndash; maximum number of working threads</li>
+							<li><b>capacity</b> (<code>cap</code>) &ndash; maximum number of connections</li>
+						</ul>
+						<li>maximum connections waiting to be processed: <code>cap - max</code></li>
+						<li>refused connections: when number of connections is <code>> cap</code></li>
+					</ul>
+					<li>Inbound throtling</li>
+					<ul>
+						<li>A dispatch policy applied to a single proxy service</li>
+						<li>Rejected connections will not be processed</li>
+					</ul>
+				</ul>
+			</div>		
+
+    	<!--	<div class="slide">
+				<hgroup>
+					<h1>Throttling</h1>
+				</hgroup>
+				<ul class="small">
+				<li>Throttling</li>
+				<ul>
+					<li>There may be multiple instances of processes running in the middleware</li>
+					<li>Business service can be invoked concurrently</li>
+					<li>Not to overload a back-end service, throttling enables a control on a number of concurrent invocations</li>
+				</ul>
+				<li>Parameters</li>
+				<ul>
+					<li><b>Maximum concurrency</b> &ndash; a maximum number of concurrent invocations of a service</li>
+					<li><b>Throttling queue</b> &ndash; a queue for requests that cannot be sent due to maximum concurrency limit</li>
+					<li><b>Message expiration</b> &ndash; a maximum time that a message can spent in the queue</li>
+				</ul>
+        	</div> -->        	        
+							
+		</section>
+
+	<!--	<div class="slide outline"></div>
+
+		<section>
+			<header>Troubleshooting</header>
+
+			<div class="slide">
+				<hgroup>
+					<h1>Overview</h1>
+				</hgroup>
+				<ul class="xx-small spacing">
+					<li>Complex environments</li>
+					<ul>
+						<li>SOA middleware is a complex environment involving many laeyers</li>
+						<li>When an error occurs in one layer, it may be propagated to another layer</li>
+						<li>Layers</li>
+						<ul class="no-bullet">
+							<li><b>OS</b> &ndash; I/O, network, file system</li>
+							<li><b>JVM</b> &ndash; memory, threads</li>
+							<li><b>AS</b> &ndash; services, applications</li>
+							<li><b>ESB</b> &ndash; services, processes, references</li> 
+							<li><b>DB</b> &ndash; tables</li>
+						</ul>
+					</ul>
+					<li>Troubleshooting = to systematically locate a root cause of an error</li>
+					<li>Tools</li>
+					<ul>
+						<li>Tools to understand the error context</li>
+						<ul class="no-bullet">
+							<li><b>OS</b> &ndash; <code>telnet</code>, <code>wget</code>, <code>curl</code>, <code>ps</code>, <code>lsof</code>, <code>arp</code>, <code>netstat</code>, <code>/proc/{pid}/{resource}</code></li>
+							<li><b>JVM</b> &ndash; thread dumps, memory inspection tools, GC logs, Java decompiler</li>
+							<li><b>AS</b> &ndash; standard, error, diagnostic logs</li>
+							<li><b>ESB</b> &ndash; monitoring, inspection of messages, etc.</li>
+							<li><b>DB</b> &ndash; SQL client</li>
+						</ul>
+					</ul>
+				</ul>
+			</div>			
+				
+		</section>		-->	
+			
+			
+
+	</section>
+
+        
+        
+        
+        
+        
+    </body>

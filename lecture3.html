@@ -4,1152 +4,1055 @@
     (cc) 2010-2012 Tomas Vitvar, http://vitvar.com
     written for Humla, an open source HTML5 presentation environment
 -->
-<html>  
-    <head>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> 
-        <meta name="course"   content="Middleware and Web Services"/>
-		<meta name="lecture"  content="Lecture 3"/>
-   		<meta name="keywords" content="Web Server, Application Server, JEE"/>
-           
-        <link type="text/css" rel="stylesheet" href="css/meta.css"></link>   
-        <link type="text/css" rel="stylesheet" href="css/ctu-fit.css"></link>   
-        <link type="text/css" rel="stylesheet" href="humla/lib/core/humla.css"></link>   
+<html>
 
-        <script type="text/javascript" src="humla/lib/humla.js"></script>
-        <title>Application Server</title>
-	</head>
-	
-	<body>
-		<footer>
-			<p><b>#META_LECTURE#: #TITLE#</b>,&nbsp;<span class="meta_semester"/>,&nbsp;
-			<span class="meta_twitter"/></p>
-			<p><b>&#8210; #SLIDE_NO# &#8210;</b></p>
-		</footer>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="course" content="Middleware and Web Services" />
+  <meta name="lecture" content="Lecture 3" />
+  <meta name="keywords" content="SOA, service concepts, service technologies, SOAP, REST, WSDL" />
 
-    	<div class="slide intro">
-			<hgroup>
-				<h1><span class="meta_course"/></h1>
- 				<h2>#META_LECTURE#: #TITLE#</h2>
-			</hgroup>
-			<div class="author">
-				<p class="meta_author"/>
-				<p><span class="meta_email"/> &bull; <span class="meta_twitter"/> &bull; 
-				<span class="meta_web"/></p>
-			</div>
-			<center><div class="meta_logo"></div></center>
-			<div class="org">
-				<p class="meta_org"/>
-				<p><span class="meta_orgfac"/> &bull; <span class="meta_field"/> 
-				&bull; <span class="meta_orgweb"/></p>
-			</div>
-			<div class="etc">
-        		<div class="text-info">
-    				Modified: #LAST_MODIFIED#<br/>
-					Humla v#HUMLA_VERSION#
-				</div>
-				<a href="http://creativecommons.org/licenses/by-sa/3.0/"><div class="license"></div></a>
-				<div class="oppa"></div>
-			</div>
-		</div>
-		
-        <div class="slide outline"></div>
-        
-        <section>
-            <header>Architecture</header>
-            
-	        <div class="slide">
-	            <hgroup>
-	                <h1>Application Server Overview</h1>
-	            </hgroup>  
-	            <ul class="x-small">
-	                <li>An environment that runs an application logic</li>
-	                <ul>
-	                    <li>A client communicates with the server using an application protocol</li>
-	                </ul>
-	                <li>Application Server</li>
-                 	<ul>
-                        <li>A modular environment</li>
-						<ul>
-							<li>provides technology to realize enterprise systems</li>
-							<li>JEE containers &ndash; Java technology for AS components</li>
-							<li>Supports a variety of objects such as Servlets, JSPs, JMS</li>
-						</ul>
-						<li>Provides services such as naming and directory, performance, failover</li>
-                        <li>Provides Web server capabilities</li>
-						<li>Can be a single server or multiple servers</li>
-					</ul>
-	                <li>Web Tier &ndash; HTTP Server</li>
-					<ul>
-						<li>Web Server supports HTTP only</li>
-						<li>HTTP request/response, security, proxy, caching</li>
-					</ul>
-	            </ul>
-	        </div>
+  <link type="text/css" rel="stylesheet" href="css/meta.css">
+  </link>
+  <link type="text/css" rel="stylesheet" href="css/ctu-fit.css">
+  </link>
+  <link type="text/css" rel="stylesheet" href="humla/lib/core/humla.css">
+  </link>
 
-            <div class="slide">
-    			<hgroup>
-    				<h1>Standard Java Technology Stack</h1>
-    			</hgroup>
-                <ul class="small">
-					<img src="img/java-stack.png" style="margin-left: -20px; padding-top: 30px"/>
-                </ul>
-            </div>
+  <script type="text/javascript" src="humla/lib/humla.js"></script>
+  <title>Representational State Transfer</title>
+</head>
 
-			<div class="slide">
-				<hgroup>
-					<h1>Application Server Layers</h1>
-				</hgroup>
-				<div class="h-drawing" id="17DlmmSs0FHtUNWKTk1y1a0fWotKTB2m91nKjqYVyZiE" style="height: 300px"></div>
-				<ul class="xx-small">
-					<li>Features</li>
-					<ul>
-						<li>AS instance appears as a single process in the OS</li>
-						<ul>
-							<li>you can use standard OS commands to investigate its operation</li>
-							<li>AS listens on a single or multipe IPs (VIPs) and a tcp port</li>
-						</ul>
-						<li>AS is a Java process</li>
-						<ul>
-							<li>you can use Java tools to investigate its operation</li>
-							<li>Garbage collector stats, thread dumps, memory allocations, etc.</li>
-						</ul>
-					</ul>
-				</ul>
-			</div>
+<body>
+  <footer>
+    <p><b>#META_LECTURE#: #TITLE#</b>,&nbsp;<span class="meta_semester" />,&nbsp;
+      <span class="meta_twitter" /></p>
+    <p><b>&#8210; #SLIDE_NO# &#8210;</b></p>
+  </footer>
 
-			<div class="slide">
-				<hgroup>
-					<h1>Example Weblogic Infrastructure</h1>
-				</hgroup>
-				<div class="h-drawing" id="1ORdelV4uCzUHHsMlh7W0oGMfKL9Y3MLqYnm15CMgb5I" style="height: 450px"></div>
-			</div>
+  <div class="slide intro">
+    <hgroup>
+      <h1><span class="meta_course" /></h1>
+      <h2>#META_LECTURE#: #TITLE#</h2>
+    </hgroup>
+    <div class="author">
+      <p class="meta_author" />
+      <p><span class="meta_email" /> &bull; <span class="meta_twitter" /> &bull;
+        <span class="meta_web" /></p>
+    </div>
+    <center>
+      <div class="meta_logo"></div>
+    </center>
+    <div class="org">
+      <p class="meta_org" />
+      <p><span class="meta_orgfac" /> &bull; <span class="meta_field" />
+        &bull; <span class="meta_orgweb" /></p>
+    </div>
+    <div class="etc">
+      <div class="text-info">
+        Modified: #LAST_MODIFIED#<br />
+        Humla v#HUMLA_VERSION#
+      </div>
+      <a href="http://creativecommons.org/licenses/by-sa/3.0/">
+        <div class="license"></div>
+      </a>
+      <div class="oppa"></div>
+    </div>
+  </div>
 
-			<div class="slide">
-				<hgroup>
-					<h1>Terminology</h1>
-				</hgroup>
-				<ul class="xx-small">
-					<li>Domain</li>
-					<ul>
-						<li>A group of servers with specific configuration of applications and objects</li>
-					</ul>
-					<li>Administration Server</li>
-					<ul>
-						<li>An instance of application server that manages the domain</li>
-					</ul>
-					<li>Managed Server</li>
-					<ul>
-						<li>An instance of application server running instances of applications and objects</li>
-					</ul>
-					<li>Cluster</li>
-					<ul>
-						<li>A group of managed servers; they contain the same copy of applications and objects</li>
-					</ul>
-					<li>Machine</li>
-					<ul>
-						<li>A physical machine and OS running one or more servers (Admin or Managed)</li>
-					</ul>
-					<li>Node Manager</li>
-					<ul>
-						<li>A process that provides an access to admin and managed servers on the machine</li>
-					</ul>
-					<li>Load Balancer</li>
-					<ul>
-						<li>A network element that distributes client requests to managed servers based on a specific algorithm</li>
-					</ul>
-				</ul>
-			</div>
+  <div class="slide outline"></div>
 
-			<div class="slide">
-				<hgroup>
-					<h1>Console Example &ndash; Weblogic Server</h1>
-				</hgroup>
-				<div class="h-drawing" id="18_IxASaDBUOGplwP64NihWC4669RkSEmnM5Y0HdQyZI" format="png" style="height: 450px" ></div>
-			</div>
+  <section>
+    <header>Introduction to REST</header>
 
-			<div class="slide">
-				<hgroup>
-					<h1>Application Server from the OS View</h1>
-				</hgroup>
-				<ul class="xx-small">
-					<li>Process ID, command line arguments</li>
-					<pre class="brush: bash; class-name: 'xx-small tight'; first-line: 5">
-						$ ps ax | grep WLS_SOA
-						 1820 ?        Sl   289:15 /opt/oracle/jrockit/bin/java -jrockit
-						 -Xms768m -Xmx1536m -Dweblogic.Name=WLS_SOA1 -Djava.security.policy=
-						 /opt/oracle/11g/fmw/wlserver_10.3/server/lib/weblogic.policy
-						 -Dweblogic.ProductionModeEnabled=true
-						 ...</pre>
-					<li>Open files by the process</li>
-					<pre class="brush: bash; class-name: 'xx-small tight'; first-line: 5">
-						$ ll -l /proc/1820/fd
-						 lr-x------ 1 oracle oinstall 64 Oct 12 16:53 0 -> /dev/null
-						 l-wx------ 1 oracle oinstall 64 Oct 12 16:53 1 -> /opt/oracle/11g/domains/soa_domain/servers/WLS_SOA1/logs/WLS_SOA1.out
-						 lr-x------ 1 oracle oinstall 64 Oct 12 16:53 10 -> /opt/oracle/11g/fmw/oracle_common/modules/oracle.jdbc_11.1.1/ojdbc6dms.jar
-						 lr-x------ 1 oracle oinstall 64 Oct 12 16:53 100 -> /opt/oracle/11g/fmw/modules/com.bea.core.common.engine.api_1.0.0.0_6-2-0-0.jar
-						 ...</pre>
-					<li>Open sockets by the process</li>
-					<pre class="brush: bash; class-name: 'xx-small tight'; first-line: 5">
-						$ netstat -anp | grep 1820
-						tcp  0 0 192.168.94.52:8001      0.0.0.0:*              LISTEN      1820/java
-						tcp  0 0 192.168.94.10:8088      0.0.0.0:*              LISTEN      1820/java
-						tcp  0 0 192.168.94.10:39763     192.168.94.20:33001    ESTABLISHED 1820/java
-						tcp  0 0 192.168.94.52:8001      192.168.94.20:59589    ESTABLISHED 1820/java
-						tcp  0 0 192.168.94.10:33498     192.168.94.20:33001    ESTABLISHED 1820/java
-						tcp  0 0 192.168.94.10:33504     192.168.94.20:33001    ESTABLISHED 1820/java
-						 ...</pre>
-				</ul>
-			</div>
+    <div class="slide">
+      <hgroup>
+        <h1>Data on the Web</h1>
+      </hgroup>
+      <div class="h-drawing" style="height: 450px" id="161LY9K1fWd-G3iNpulEEEXq1yoxvjsQxombdyV4Yyfc"></div>
+    </div>
 
-			<div class="slide">
-				<hgroup>
-					<h1>Application Server from the JVM View</h1>
-				</hgroup>
-				<ul class="x-small">
-					<li>Thread dumps</li>
-					<ul>
-						<li>All threads that the application server uses, a snapshot on all the threads</li>
-						<li>Prints stack trace of currently run threads</li>
-					</ul>
-					<pre class="brush: bash; class-name: 'xx-small tight'; first-line: 5">
-						$ jrockit 1820 print_threads</pre>
-					<li>Command line arguments</li>
-					<ul>
-						<li>Prints all command line arguments of the JVM process</li>
-						<ul>
-							<li>Memory settings, log file locations, etc.</li>
-						</ul>
-					</ul>
-					<pre class="brush: bash; class-name: 'xx-small tight'; first-line: 5">
-						$ jrockit 1820 command_line</pre>
-				</ul>
-			</div>
+    <div class="slide">
+      <hgroup>
+        <h1>REST</h1>
+      </hgroup>
+      <ul class="small spacing">
+        <li>REST</li>
+        <ul>
+          <li>Representational State Transfer</li>
+        </ul>
+        <li>Architecture Style</li>
+        <ul>
+          <li>Roy Fielding &ndash; co-author of HTTP</li>
+          <li>He coined REST in his <span class="h-ref" id="rest">PhD thesis</span>.</li>
+          <ul>
+            <li>The thesis abstracts from HTTP technical details</li>
+            <li>HTTP is one of the REST implementation &rarr; <b>RESTful</b></li>
+            <li>REST is a leading programming model for Web APIs</li>
+          </ul>
+        </ul>
+        <li>REST (RESTful) proper design</li>
+        <ul>
+          <li>people break principles often</li>
+          <li>See <span class="h-ref" id="rest-anti">REST Anti-Patterns</span> for some details.<br />
+        </ul>
+        <li>REST and Web Service Architecture</li>
+        <ul>
+          <li>REST is a realization of WSA resource-oriented model</li>
+        </ul>
+      </ul>
+    </div>
 
-		</section>
+    <div class="slide">
+      <hgroup>
+        <h1>REST and Web Architecture</h1>
+      </hgroup>
+      <ul class="small">
+        <li>Tim-Berners Lee</li>
+        <ul>
+          <li>"creator", father of the Web</li>
+        </ul>
+        <li>Key Principles</li>
+        <ul>
+          <li>Separation of Concerns</li>
+          <ul>
+            <li>enables independent innovation</li>
+          </ul>
+          <li>Standards-based</li>
+          <ul>
+            <li>common agreement, big spread and adoption</li>
+          </ul>
+          <li>Royalty-free technology</li>
+          <ul>
+            <li>a lot of open source, no fees</li>
+          </ul>
+        </ul>
+        <li>Architectural Basis</li>
+        <ul>
+          <li><b>Identification:</b> universal linking of resources using URI</li>
+          <li><b>Interaction:</b> protocols to retrieve resources &ndash; HTTP</li>
+          <li><b>Formats:</b> resource representation (data and metadata)</li>
+        </ul>
+      </ul>
+    </div>
 
-        <div class="slide outline"></div>
+    <div class="slide">
+      <hgroup>
+        <h1>HTTP Advantages</h1>
+      </hgroup>
+      <ul class="small spacing">
+        <li>Familiarity</li>
+        <ul>
+          <li>HTTP protocol is well-known and widely used</li>
+        </ul>
+        <li>Interoperability</li>
+        <ul>
+          <li>All environments have HTTP client libraries</li>
+          <ul>
+            <li>technical interoperability is thus no problem</li>
+            <li>no need to deal with vendor-specific interoperability issues</li>
+          </ul>
+          <li>You can focus on the core of the integration problem</li>
+          <ul>
+            <li>application (domain, content) interoperability</li>
+          </ul>
+        </ul>
+        <li>Scalability</li>
+        <ul>
+          <li>you can use highly scalable Web infrastructure</li>
+          <ul>
+            <li>caching servers, proxy servers, etc.</li>
+          </ul>
+          <li>HTTP features such as HTTP GET idempotence and safe
+            allow you to use caching</li>
+        </ul>
+      </ul>
+    </div>
 
-		<section>
+    <div class="slide">
+      <hgroup>
+        <h1>REST Core Principles</h1>
+      </hgroup>
+      <ul class="small">
+        <li>REST architectural style defines constraints</li>
+        <ul>
+          <li>if you follow them, they help you to achieve a good design,
+            interoperability and scalability.</li>
+        </ul>
+        <li>Constraints</li>
+        <ul>
+          <li>Client/Server</li>
+          <li>Statelessness</li>
+          <li>Cacheability</li>
+          <li>Layered system</li>
+          <li>Uniform interface</li>
+        </ul>
+        <li>Guiding principles</li>
+        <ul>
+          <li>Identification of resources</li>
+          <li>Representations of resources and self-descriptive messages</li>
+          <li>Hypermedia as the engine of application state (HATEOAS)</li>
+        </ul>
+      </ul>
+    </div>
 
-			<header>I/O Communication</header>
+    <div class="slide">
+      <hgroup>
+        <h1>Resource</h1>
+      </hgroup>
+      <ul class="x-small">
+        <li>A resource can be anything such as</li>
+        <ul>
+          <li>A real object: car, dog, Web page, printed document</li>
+          <li>An abstract thing such as address, name, etc. &rarr; RDF</li>
+        </ul>
+        <li>A resource in REST</li>
+        <ul>
+          <li>A resource corresponds to one or more entities of a data model</li>
+          <li>A representation of a resource can be conveyed in a message electronically (information resource)</li>
+          <li>A resource has an identifier and a representation and a client can apply an access to it</li>
+        </ul>
+      </ul>
+      <div class="h-drawing" style="height: 200px" id="1sSCJVFnKU0UgLek_FlFdQfKVeT9myKf-34IYyw5FQps"></div>
+    </div>
 
-			<div class="slide">
-				<hgroup>
-					<h1>Blocking I/O Model</h1>
-				</hgroup>
-				<ul class="small">
-					<li>The server creates a thread for every connection</li>
-					<ul>
-						<li>For example, 1K connections = 1K threads, big overhead</li>
-					</ul>
-				</ul>
-				<div id="1QP7gZSS1WS3YquzLekSgdZfcmi4BYArm-K9tuWrULQs" class="h-drawing" style="height: 220px"></div>
-				<ul class="small">
-					<li>Characteristics</li>
-					<ul>
-						<li>the thread is reserved for the connection</li>
-						<li>When processing of the request requires other interactions with DB/FS or network
-							communication is slow</li>
-						<ul>
-							<li>scales very bad as the thread's execution is "blocked"</li>
-						</ul>
-					</ul>
-				</ul>
-			</div>
+    <div class="slide">
+      <hgroup>
+        <h1>Access to a Resource</h1>
+      </hgroup>
+      <div class="h-drawing" style="height: 290px;" id="1hw7HbAaK09w3I1mtmsJZMb3_OsYpFlBrrJjJRGsz23g"></div>
+      <ul class="x-small">
+        <li>Terminology</li>
+        <ul>
+          <li>Client = User Agent</li>
+          <li><b>Dereferencing URI</b> &ndash; a process of obtaining a protocol from the URI and creating a request.</li>
+          <li><b>Access</b> &ndash; a process of sending a request and obtaining a response as a result;
+            access usually realized through HTTP.</li>
+        </ul>
+      </ul>
+    </div>
 
-			<div class="slide">
-				<hgroup>
-					<h1>Non-Blocking I/O Model</h1>
-				</hgroup>
-				<ul class="small">
-					<li>Connections maintained by the OS, not the Web app</li>
-					<ul>
-						<li>The Web app registers events, OS triggers events when occur</li>
-					</ul>
-				</ul>
-				<div id="1kxkFc3Chl4qFXxH_4f2seuNbpBdENMyZWMRUmxd1p28" class="h-drawing" style="height: 220px"></div>
-				<ul class="small">
-					<li>Characteristics</li>
-					<ul>
-						<li>Event examples: new connection, read, write, closed</li>
-						<li>The app may create working threads, but controls the number!</li>
-						<ul>
-							<li>much less number of working threads as opposed to blocking I/O</li>
-						</ul>
-					</ul>
-				</ul>
-			</div>
+  </section>
 
-			<div class="slide">
-				<hgroup>
-					<h1>Handling Requests in Weblogic</h1>
-				</hgroup>
-				<div class="h-drawing" id="19ZwXAQ2Ui4TzbuCtXDoT-1dW7ZsAqgGWdQwal0ZxPVQ"></div>
-				<ul class="xx-small" >
-					<li><b>Muxer</b> &ndash; component that handles communication via network sockets.</li>
-					<li><b>Request queue</b> &ndash; queue of requests to be processed.</li>
-					<li><b>Self-tunning thread pool</b> &ndash; a pool of threads in various states.</li>
-					<li><b>Work manager</b> &ndash; a configuration of <b>maximum threads</b> and a <b>capacity</b> that
-						can be used to handle requests for a specific application/service.</b></li>
-				</ul>
-			</div>
+  <div class="slide outline"></div>
 
-		</section>
+  <section>
+    <header>Uniform Resource Identifier</header>
 
-		<div class="slide outline"></div>
+    <div class="slide">
+      <hgroup>
+        <h1>URI, URL, URN</h1>
+      </hgroup>
+      <ul class="small spacing">
+        <li>URI &ndash; Uniform Resource Identifier</li>
+        <ul>
+          <li>URI only identifies a resource</li>
+          <ul>
+            <li>it does not imply the resource physically exists</li>
+          </ul>
+          <li>URI could be URL (locator) or URN (name)</li>
+        </ul>
+        <li>URL &ndash; Uniform Resource Locator</li>
+        <ul>
+          <li>in addition allows to locate the resource</li>
+          <ul>
+            <li>that is &mdash; its network location</li>
+          </ul>
+          <li>every URL is URI but an URI does not need to be URL</li>
+        </ul>
+        <li>URN &ndash; Uniform Resource Name</li>
+        <ul>
+          <li>refers to URI under "urn" scheme (<span class="h-ref" id="rfc-2141">RFC 2141</span>)</li>
+          <li>require to be globally unique and persistent</li>
+          <ul>
+            <li>even if the resource cease to exist/becomes unavailable</li>
+          </ul>
+        </ul>
+      </ul>
+    </div>
 
-		<section>
+    <div class="slide">
+      <hgroup>
+        <h1>URI</h1>
+      </hgroup>
+      <ul class="x-small">
+        <li>Definition</li>
+        <pre class="brush: plain; gutter: 'false'; class-name: 'tight'">
+                            URI = scheme ":" [ "//" authority ] [ "/" path ] [ "?" query ] [ "#" frag ]
+    				    </pre>
+        <li>Hierarchal sequence of components</li>
+        <ul>
+          <li><code>scheme</code></li>
+          <ul>
+            <li>refers to a spec that assigns IDs within that scheme</li>
+            <li>examples: <code>http</code>, <code>ftp</code>, <code>mailto</code>, <code>urn</code></li>
+            <li><code>scheme != protocol</code></li>
+          </ul>
+          <li><code>authority</code></li>
+          <ul>
+            <li>registered name (domain name) or server address</li>
+            <li>optional port and user</li>
+          </ul>
+          <li><code>path and query</code></li>
+          <ul>
+            <li>identify resource within the scheme and authority scope</li>
+            <li>path &ndash; hierarchal form</li>
+            <li>query &ndash; non-hierarchal form (parameters key=value)</li>
+          </ul>
+          <li><code>fragment</code></li>
+          <ul>
+            <li>reference to a secondary resource within the primary resource</li>
+          </ul>
+        </ul>
+      </ul>
+    </div>
 
-			<header>Servlet Technology</header>
+    <div class="slide">
+      <hgroup>
+        <h1>Resources over Entities</h1>
+      </hgroup>
+      <ul class="x-small">
+        <li>Application's data model</li>
+        <ul>
+          <li>Entities and properties that the app uses for its data</li>
+        </ul>
+        <div class="h-drawing" style="height: 290px" id="1zT46lCNzfiaw9d5HfA6fzDZFAj2GQG8sRAg1QRWPPfQ"></div>
+        <li>URI identifies a resource within the app's data model</li>
+        <ul>
+          <li><code>path</code> &ndash; a "view" on the data model</li>
+          <ul>
+            <li>data model is a graph</li>
+            <li>URI identifies a resource using a path in a tree with some root</li>
+          </ul>
+        </ul>
+      </ul>
+    </div>
 
-	        <div class="slide"> 
-				<hgroup> 
-					<h1>Overview</h1> 
-				</hgroup> 
-				<ul class="small">
-					<li>Technology to extend application server functionalities</li>
-					<ul>
-						<li>A Java class that can respond to any type of requests</li>
-						<ul>
-							<li>A servlet defines an interface for a specific protocol</li>
-							<li>Your application implements the servlet's interface</li>
-						</ul>
-					</ul>
-					<li>Commonly used to respond to HTTP requests</li>
-					<ul>
-						<li>A basis for an application running on an application server</li>
-						<li>HTTP Servlet Java classes</li>
-						<ul>
-							<li><code>HttpServlet</code> &ndash; provides HTTP protocol interface</li>
-							<li><code>HttpServletRequest</code> &ndash; represents HTTP request</li>
-							<li><code>HttpServletResponse</code> &ndash; represents HTTP response</li>
-						</ul>
-					</ul>
-				</ul>
-			</div>
+    <div class="slide">
+      <hgroup>
+        <h1>Examples of Views</h1>
+      </hgroup>
+      <ul class="x-small">
+        <li>View 1</li>
+        <ul>
+          <li>all customers: <code>/customers</code></li>
+          <li>a particular customer: <code>/customers/{customer-id}</code>
+          <li>All orders of a customer: <code>/customers/{customer-id}/orders</code>
+          <li>A particular order: <code>/customers/{customer-id}/orders/{order-id}</code>
+        </ul>
+        <li>View 2</li>
+        <ul>
+          <li>all orders: <code>/orders</code></li>
+          <li>All orders of a customer: <code>/orders/{customer-id}</code>
+          <li>A particular order: <code>/orders/{customer-id}/{order-id}</code>
+        </ul>
+        <li class="no-bullet">&rArr; Design issues</li>
+        <li>Good design practices</li>
+        <ul>
+          <li>No need for 1:1 relationship between resources and data entities</li>
+          <ul>
+            <li>A resource may aggregate data from two or more entities</li>
+            <li>Thus only expose resources if it makes sense for the service</li>
+          </ul>
+          <li>Try to limit URI aliases, make it simple and clear</li>
+        </ul>
+      </ul>
+      </ul>
+    </div>
 
-            <div class="slide">
-        		<hgroup>
-    				<h1>Directory Structure</h1>
-    			</hgroup>
-                <ul class="x-small">
-                    <li>Your application</li>
-                    <ul>
-                        <li>collection of documents and libraries your application requires</li>
-                        <li>packaged in <code>war</code> or <code>ear</code> archive</li>
-                        <ul>
-                            <li>JAR that includes not only java classes but also additional resources such as 
-                            <code>.xml</code>, <code>.html</code>, <code>.js</code>, <code>.css</code>, <code>.jpg</code> files.</li>
-                        </ul>
-                    </ul>
-                    <li>Content of <code>war</code> package</li>
-                    <pre class="brush: bash; gutter: false; class-name: ''">
-                        # web archive root
-                        war
-                         |   # directories and documents accessible through the app root /
-                         |   # such as img, css, js, ...
-                         |-- (public-directory | public-document)*
-                         |   # directories and documents internal to your application
-                         |-- WEB-INF
-                                |-- (private-directory | private-document)*
-                                |   # compiled java classes of your application
-                                |-- classes
-                                |   # all java libraries your application requires
-                                |-- lib
-                                |   # configuration of your application
-                                |-- web.xml
-                                |-- # other platform-specific configurations 
-                                    # such as app-engineweb.xml for GAE
-                    </pre>
-                </ul>
-            </div>
+    <div class="slide">
+      <hgroup>
+        <h1>Path vs. Query</h1>
+      </hgroup>
+      <ul class="x-small">
+        <li>Path</li>
+        <ul>
+          <li>Hierarchical component, a view on the data</li>
+          <li>The main identification of the resource</li>
+        </ul>
+        <li>Query</li>
+        <ul>
+          <li>Can define selection, projection or other processing instructions</li>
+          <li>Selection</li>
+          <ul>
+            <li>filters entries of a resource by values of properties<br />
+              <code>/customers/?status=valid</code></li>
+          </ul>
+          <li>Projection</li>
+          <ul>
+            <li>filters properties of resource entries<br />
+              <code>/customers/?properties=id,name</code></li>
+          </ul>
+          <li>Processing instructions examples</li>
+          <ul>
+            <li>data format of the resource &rarr; cf. URI opacity<br />
+              <code>/customers/?format=JSON</code></li>
+            <li>Access keys such as API keys<br />
+              <code>/customers/?key=3ae56-56ef76-34540aeb</code></li>
+          </ul>
+        </ul>
+      </ul>
+    </div>
 
-            <div class="slide">
-                <hgroup>
-    				<h1>Configuration in web.xml</h1>
-    			</hgroup>
-                <ul class="x-small">
-                    <li><code>web.xml</code> defines configuration for</li>
-                    <ul>
-                        <li>list of servlets, mapping of servlets to URL paths, welcome files, filters, EJB references, 
-                        authentication mechanism, etc.</li>
-                        <li>basic configuration example:</li>
-                    </ul>
-                    <pre class="brush: xml">
-                        &lt;?xml version="1.0" encoding="utf-8"?>
-                        &lt;web-app 
-                            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                            xmlns="http://java.sun.com/xml/ns/javaee">
-                    
-                            &lt;servlet>
-                        		&lt;servlet-name>main&lt;/servlet-name>
-                        		&lt;servlet-class>com.vitvar.mdw.main&lt;/servlet-class>
-                        	&lt;/servlet>
-                    
-                        	&lt;servlet-mapping>
-                        		&lt;servlet-name>main&lt;/servlet-name>
-                        		&lt;url-pattern>/&lt;/url-pattern>
-                        	&lt;/servlet-mapping>
-                    
-                        	&lt;welcome-file-list>
-                        		&lt;welcome-file>index.jsp&lt;/welcome-file>
-                        	&lt;/welcome-file-list>
-                        &lt;/web-app>
-                    </pre>
-                </ul>
-            </div>
+    <div class="slide">
+      <hgroup>
+        <h1>Fragment</h1>
+      </hgroup>
+      <ul class="small">
+        <li>Primary resource</li>
+        <ul>
+          <li>Defined by URI path and query</li>
+          <li>could be complex, composed resources</li>
+        </ul>
+        <li>Sub-resource/secondary resource</li>
+        <ul>
+          <li>Can be defined by a fragment</li>
+          <li>No explicit relationship between primary and sub-resource</li>
+          <ul>
+            <li>For example, we cannot infer that the two resources are in <code>part-of</code>,
+              or <code>sub-class-of</code> relationships.</li>
+          </ul>
+          <li>Fragment semantics defined by a data format</li>
+        </ul>
+        <li>Usage of fragment</li>
+        <ul>
+          <li>identification of elements in HTML</li>
+          <li>URI references in RDF</li>
+          <li>State of an application in a browser</li>
+        </ul>
+      </ul>
+    </div>
 
-            <div class="slide">
-            	<hgroup>
-    				<h1>Handling HTTP Requests</h1>
-    			</hgroup>
-                <ul class="x-small">
-                    <li>HTTP Servlets</li>
-                    <ul>
-                        <li>Servlet is a class that extends capabilities of application servers 
-                        via a request-response programming model</li>
-                        <li>HTTP servlets are classes that extend <code>HTTPServlet</code> abstract class</li> 
-                        <li>Example:</li>
-                    </ul>
-                    <pre class="brush: java">
-                        package com.vitvar.mdw;
-                    
-                        import javax.servlet.http.HttpServlet;
-                        import javax.servlet.http.HttpServletRequest;
-                        import javax.servlet.http.HttpServletResponse;
-                    
-                        public class Main extends HttpServlet {
-                            public doGet(HttpServletRequest request, HttpServletResponse response) {
-                                // GET method implementation here
-                            }
+    <div class="slide">
+      <hgroup>
+        <h1>Fragment Semantics</h1>
+      </hgroup>
+      <ul class="small">
+        <li>Fragment semantics for HTML</li>
+        <ul>
+          <li>assume that <code>orders.html</code> are in <code>HTML</code> format.</li>
+        </ul>
+        <pre class="brush: plain">
+                                http://company.com/tomas/orders.html#3456
+                            </pre>
+        <ul>
+          <li class="no-bullet">&rArr; there is a HTML element with <code>id=3456</code></li>
+        </ul>
+        <li>But:</li>
+        <ul>
+          <li>Consider <code>orders</code> resource in <code>application/xml</code></li>
+        </ul>
+        <pre class="brush: xml">
+                                &lt;orders>
+                                    &lt;order id="3456">...&lt;/order>
+                                    ...
+                                &lt;/orders>
+                            </pre>
+        <ul>
+          <li>Can't say that <code>http://company.com/tomas/orders.xml#3456</code> identifies
+            an order element within the <code>orders</code> resource.</li>
+          <li><code>application/xml</code> content type does not define fragment semantics</li>
+        </ul>
+      </ul>
+    </div>
 
-                            public doPost(HttpServletRequest request, HttpServletResponse response) {
-                                // POST method implementation here
-                            }
-                        
-                            // other methods such as doPost, doDelete, doOptions
-                        }
-                    </pre>
-                </ul>
-            </div>
+    <div class="slide">
+      <hgroup>
+        <h1>Resource ID vs. Resource URI</li>
+      </hgroup>
+      <ul class="small">
+        <li>Resource ID</li>
+        <ul>
+          <li>Local ID, part of an entity in a data model</li>
+          <li>Unique within an application where the resource belongs</li>
+          <li>Usually generated on a server (cf. <a href="lecture3.html#/PUT">PUT to update and insert</a>)</li>
+          <li>Exposed to the resource URI as a path element<br />
+            <code>/orders/{order-id}</code></li>
+        </ul>
+        <li>Resource URI</li>
+        <ul>
+          <li>Global identifier, valid on the whole Web</li>
+          <li>Corresponds to the view on the data model of the app</li>
+          <li>Include multiple higher-level resources' IDs</li>
+          <li>Example:<br />
+            <code>/customers/{customer-id}/orders/{order-id}/</code></li>
+          <li>There can be more URIs identifying the same resource</li>
+        </ul>
 
-            <div class="slide">
-                <hgroup>
-    				<h1>Support for Sessions</h1>
-    			</hgroup>
-                <ul class="x-small">
-                    <li><code>HttpSession</code> interface</li>
-                    <ul>
-                        <li>Allows to store session data in the memory</li>
-                        <li>Java API for <a href="#/state-management">HTTP State Management</a></li>
-                        <ul>
-                            <li>Hides details from developers</li>
-                        </ul>
-                    </ul>
-                    <pre class="brush: java;">
-                        // method doGet in a servlet
-                        public doGet(HttpServletRequest request, HttpServletResponse response) {
-                            // access the session object through the request
-                            HttpSession session = request.getSession();
-                        
-                            // unique identification of the session, the value used for the cookie
-                            String id = session.getId();
-                        
-                            // get the value of the attribute
-                            Object value = session.getAttribute("data");
+      </ul>
+    </div>
 
-                            // set the value of the attribute
-                            session.setAttribute("data", new String("some data"));
-                                                    
-                            // this will set a max-age of the session cookie 
-                            session.setMaxInactiveInterval(3600);
-                        }
-                    </pre>
-                </ul>
-            </div>
+    <div class="slide">
+      <hgroup>
+        <h1>Major characteristics</li>
+      </hgroup>
+      <ul class="xx-small">
+        <li>Capability URL</li>
+        <ul>
+          <li>Short lived URL generated for a specific purpose</li>
+          <li>For example, an user e-mail verification</li>
+        </ul>
+        <li>URI Alias</li>
+        <ul>
+          <li>Two URIs identifying the same resource</li>
+        </ul>
+        <li>URI Collision</li>
+        <ul>
+          <li>Two URIs identifying the same resource (misuse of an URI authority)</li>
+        </ul>
+        <li>URI Opacity</li>
+        <ul>
+          <li>Content type encoded as part of an URI</li>
+          <li><code>http://www.example.org/customers.xml</code>
+        </ul>
+        <li>Resource versions encoded in an URI</li>
+        <ul>
+          <li>Two URIs identifying the same resource of different versions</li>
+          <li><code>http://www.example.org/v1/customers.xml</code>
+        </ul>
+        <li>Persistent URL</li>
+        <ul>
+          <li>URL is valid even when the resource is obsolete</li>
+          <li>For example, a redirection should be in place</li>
+        </ul>
+      </ul>
+    </div>
 
-        </section>		
+  </section>
 
-        <div class="slide outline"></div>			
-  							
-          <section>
-              <header>Java Technologies and Services</header>
+  <div class="slide outline"></div>
 
-  	        <section>
-  	            <header>Remote Method Invocation</header>
-  	            
-  	    		<div class="slide">
-  					<hgroup>
-  						<h1>Overview</h1>
-  					</hgroup>
-  					<ul class="x-small">
-  						<li>Communication among Java-based applications</li>
-  						<ul>
-  							<li>Methods of a Java class can be invoked by other Java class remotely</li>
-  							<li>Uses Java Remote Method Protocol (JRMP)</li>
-  							<ul>
-  								<li>Java-specific application protocol over TCP/IP</li>
-  							</ul>
-  							<li>Basis for JEE technologies, such as JMS</li>
-  						</ul>
-  						<li>Terminology</li>
-  						<ul class="x-small">
-  							<li><b>Client</b> &ndash; a program that invokes a remote method</li>
-  							<li><b>Server</b> &ndash; a program that exports a remote object</li>
-  							<li><b>Stub</b> &ndash; a representation of the client-side object for communication</li>
-  							<li><b>Skeleton</b> &ndash; a representation of the server-side object for communication</li>
-  							<li><b>Registry</b> &ndash; a component that holds a stub</li>
-  							<li><b>Marshalling/Unmarshalling</b> &ndash; a process of transforming memory representation 
-  							of the object to a form suitable for network transmittion and vice-cersa</li>
-  						</ul>
-  					</ul>
-  				</div>
-  				
-  	    		<div class="slide">
-  					<hgroup>
-  						<h1>Architecture</h1>
-  					</hgroup>
-  					<ul class="small">
-  						<div id="115uOEKHVTxYVXJbYfivieQ7qMcpF2jqpMYqmbxpKbVM" style="height: 470px" class="h-drawing"></div>
-  					</ul>
-  				</div>
+  <section>
+    <header>Resource Representation</header>
 
-  	    		<div class="slide">
-  					<hgroup>
-  						<h1>RMI Implementation in Java &ndash; Interface</h1>
-  					</hgroup>
-  					<ul class="x-small">
-  						<li>Shared interface</li>
-  						<pre class="brush: java">
-  							import java.rmi.Remote;
-  							import java.rmi.RemoteException;
-  							
-  							// shared interface between a client and a server to
-  							// invoke methods on the remote object
-  							public interface HelloRMIInterface extends Remote {
-  							    public String calculate(int a, int b) throws RemoteException;
-  							}</pre>
-  						<li>RMI Server</li>
-  						<pre class="brush: java">
-  						import java.rmi.Naming;
-  						import java.rmi.RemoteException;
-  						import java.rmi.RMISecurityManager;
-  						import java.rmi.server.UnicastRemoteObject;
-  						import java.rmi.registry.LocateRegistry;
+    <div class="slide">
+      <hgroup>
+        <h1>Representation and Data Format</h1>
+      </hgroup>
+      <ul class="small">
+        <li>Representation</li>
+        <ul>
+          <li>Various languages, one resource can have multiple representations</li>
+          <ul>
+            <li>XML, HTML, JSON, YAML, RDF, ...</li>
+            <li>should conform to Internet Media Types</li>
+          </ul>
+        </ul>
+        <li>Data format</li>
+        <ul>
+          <li>Format of resource data</li>
+          <li>Binary format</li>
+          <ul>
+            <li>specific data structures</li>
+            <li>pointers, numeric values, compressed, etc.</li>
+          </ul>
+          <li>Textual format</li>
+          <ul>
+            <li>in a defined encoding as a sequence of characters</li>
+            <li>HTML, XML-based formats are textual</li>
+          </ul>
+        </ul>
+      </ul>
+    </div>
 
-  						public class Server extends UnicastRemoteObject implements HelloRMIInterface {
-  							
-  						    // implementation of the interface method
-  						    public int calculate(int a, int b) throws RemoteException {
-  						    	return a+b;
-  						    }</pre>	
-  					</ul>
-  				</div>
-  				
-  	    		<div class="slide">
-  					<hgroup>
-  						<h1>RMI Implementation in Java &ndash; Server</h1>
-  					</hgroup>
-  					<ul class="x-small">
-  						<li>RMI Server (cont.)</li>
-  						<pre class="brush: java; highlight : [11,14,18]">						 
-  					        // start the server and register the object in the rmi registry
-  						    public static void main(String args[]) { 
-  						    	try {
-  							        // install a security manager (uses a security policy)
-  							        if (System.getSecurityManager() == null) {
-  							        	RMISecurityManager sm = new RMISecurityManager();
-  							            System.setSecurityManager(sm);
-  							        }
-  							
-  							        // create rmi registry
-  							        LocateRegistry.createRegistry(1099); 
-  							 
-  							        // create remote object
-  							        Server obj = new Server();
-  							 
-  							        // Bind the object instance to the name "HelloRMI"
-  							        // 0.0.0.0 denotes the service will listen on all network interfaces
-  							        Naming.rebind("//0.0.0.0/HelloRMI", obj);
-  							        
-  							        System.out.println("RMI server started, " + 
-  							        	"listening to incoming requests...");
-  						    	} catch (Exception e) {
-  						    		System.out.println("Error occurred: " + e.getLocalizedMessage());
-  						    	}
-  						    }</pre>
-  					</ul>
-  				</div>
+    <div class="slide">
+      <hgroup>
+        <h1>Metadata</h1>
+      </hgroup>
+      <ul class="x-small">
+        <li>Metadata ~ self-description</li>
+        <ul>
+          <li>Data about the resource</li>
+          <li>e.g., data format, representation, date the resource was created, ...</li>
+          <li class="space-before no-bullet">1. Defined by HTTP response headers</li>
+          <li class="no-bullet">2. Can be part of the data format</li>
+          <ul>
+            <li>Atom Syndication Format such as <code>author</code>, <code>updated</code>, ...</li>
+            <li>HTML <code>http-equiv</code> meta tags</li>
+          </ul>
+        </ul>
+        <li>Resource anatomy</li>
+        <div class="h-drawing" style="height: 220px" id="1AYsQub6fAGV4Z_R2BdIm4JPmoqtamueF9ABNoyPKyJ4"></div>
+      </ul>
+    </div>
 
-  	    		<div class="slide">
-  					<hgroup>
-  						<h1>RMI Implementation in Java &ndash; Client</h1>
-  					</hgroup>
-  					<ul class="x-small">
-  						<li>RMI Client</li>
-  						<pre class="brush: java">
-  						import java.rmi.Naming;
-  						
-  						public class Client { 
-  							
-  						    public static void main(String args[]) throws Exception {
-  						    	// get a reference to the remote object
-  						    	// assuming the server is running on the localhost
-  						        HelloRMIInterface o = (HelloRMIInterface)
-  						        	Naming.lookup("//localhost/HelloRMI");
-  						        	
-  						        // call the object method
-  						        System.out.println(o.calculate(6, 4));
-  						    }
-  						}</pre>
-  					</ul>
-  				</div>
-  			</section>
+    <div class="slide">
+      <hgroup>
+        <h1>Content-Type Metadata</h1>
+      </hgroup>
+      <ul class="x-small">
+        <li>Access</li>
+        <ul>
+          <li>to be retrieved (GET)</li>
+          <li>to be inserted or updated (PUT, POST)</li>
+          <li>to be deleted (DELETE)</li>
+        </ul>
+        <li>Request</li>
+        <ul>
+          <li>HTTP header <code>Accept</code>, part of content negotiation protocol</li>
+        </ul>
+        <li>Response</li>
+        <ul>
+          <li>HTTP header <code>Content-Type: type/subtype; parameters</code></li>
+          <li>Specifies an <span id="rfc-2045" class="h-ref">Internet
+              Media Type</span> of the resource representation.</li>
+          <ul>
+            <li>IANA (Internet Assigned Numbers Authority)
+              manages a <span id="iana-media-types" class="h-ref">registry of media types</span> and character encodings</li>
+            <li>subtypes of <code>text</code> type have an optional charset parameter<br />
+              <code>text/html; charset=iso-8859-1</code></li>
+          </ul>
+          <li>A resource may provide more than one representations</li>
+          <ul>
+            <li>promotes services' loose coupling</li>
+          </ul>
+        </ul>
+      </ul>
+    </div>
 
-  	        <div class="slide outline"></div>
-  			
-  			<section>
-  				<header>Java Database Connectivity</header>
-                  
-  		        <div class="slide">
-  					<hgroup>
-  						<h1>Overview</h1>
-  					</hgroup>
-                      <ul class="small">
-                          <li>Uniform API to access any kind of tabular data</li>
-                          <ul>
-                              <li>No need to deal with specific APIs of DBMS vendors</li>
-                          </ul>
-                          <li>JDBC components</li>
-                          <ul class="small">
-                              <li>JDBC API</li>
-                              <ul>
-                              	<li>defines methods to execute SQL statements and retrieve results</li>
-                              </ul>
-                              <li>Driver Manager</li>
-                              <ul>
-                              	<li>provides drivers that provide access to a specific DBMS</li>
-                              	<li>they implement a specific protocol to access the DBMS</li>
-                              </ul>
-                              <li>JDBC-ODBC Bridge</li>
-                              <ul>
-                              	<li>a software bridge which provides access via ODBC drivers</li>
-                              	<li>ODBC driver is a driver in C for accessing DBMS</li>
-                              </ul>
-                          </ul>
-                      </ul>
-  				</div>
-  	            
-  	            <div class="slide">
-  	                <hgroup>
-  	                    <h1>JDBC Architecture</h1>
-  	                </hgroup>
-  	                <div id="10PigICKx61cQVyU8G11TahfCUNKz8M9ySmIMErL8S8Q" style="margin-top: 40px; height: 440px" class="h-drawing"></div>
-  	            </div>
-  	            
-  	            <div class="slide">
-  	                <hgroup>
-  	                    <h1>JDBC Example Implementation in Java</h1>
-  	                </hgroup>
-  	                <ul class="x-small">
-  	                    <li>JDBC Client</li>
-  	                    <pre class="brush: java">
-  	                        import java.sql.*;
-  	                        
-  	                        public class JDBCClient {
-  	                        
-  	                            public static void main(String args[]){
-  	                            // database url
-  	                            String db_url = "jdbc:oracle:thin:@czns20sr:33001:XE";
-  	                        
-  	                            // username and password
-  	                            String username = "myUsername";
-  	                            String password = "myPassword";
-  	                        
-  	                            try {
-  	                                // Register JDBC driver
-  	                                Class.forName("oracle.jdbc.driver.OracleDriver");
-  	                        
-  	                                // Open a connection
-  	                                Connection con = DriverManager.getConnection(
-  	                                db_url, username, password);
-  	                        
-  	                                // Create and execute query statement
-  	                                Statement stmt = con.createStatement();
-  	                                String sql = "SELECT id, first, last, age FROM Employees";
-  	                                ResultSet rs = stmt.executeQuery(sql);
-  	                    </pre>
-  	                </ul>
-  	            </div>
-  	            
-  	            <div class="slide">
-  	                <hgroup>
-  	                    <h1>JDBC Example Implementation in Java</h1>
-  	                </hgroup>
-  	                <ul class="x-small">
-  	                    <li>JDBC Client (cont.)</li>
-  	                    <pre class="brush: java; highlight : []; first-line: 25">
-  	                            // Loop and extract received data
-  	                            while (rs.next()) {
-  	                                int id  = rs.getInt("id");
-  	                                int age = rs.getInt("age");
-  	                                String first = rs.getString("first");
-  	                                String last = rs.getString("last");
-  	                            }
-  	                        
-  	                            // Release the connections
-  	                            rs.close();
-  	                            stmt.close();
-  	                            conn.close();
-  	                        }catch(SQLException se){
-  	                        
-  	                            //Handle errors for JDBC
-  	                            se.printStackTrace();
-  	                        }catch(Exception e){
-  	                        
-  	                            //Handle errors for Class.forName
-  	                            e.printStackTrace();
-  	                        }
-  	                    }
-  	                }
-  	                    </pre>
-  	                </ul>
-  	            </div>
-  	        </section>
+    <div class="slide">
+      <hgroup>
+        <h1>Major Media Types</h1>
+      </hgroup>
+      <ul class="small">
+        <li>Common Standard Media Types</li>
+        <ul>
+          <li><code>text/plain</code></li>
+          <ul>
+            <li>natural text in no formal structures</li>
+          </ul>
+          <li><code>text/html</code></li>
+          <ul>
+            <li>natural text embedded in HTML format</li>
+          </ul>
+          <li><code>application/xml</code>, <code>application/json</code></li>
+          <ul>
+            <li>XML-based/JSON-based, application specific format</li>
+          </ul>
+          <li><code>application/wsdl+xml</code></li>
+          <ul>
+            <li><code>+xml</code> suffix to indicate a specific format</li>
+          </ul>
+        </ul>
+        <li>Non-standard media types</li>
+        <ul>
+          <li>Types or subtypes that begin with <code>x-</code> are not in IANA<br />
+            <code>application/x-latex</code></li>
+          <li>subtypes that begin with <code>vnd.</code> are vendor-specific<br />
+            <code>application/vnd.ms-excel</code></li>
+        </ul>
+      </ul>
+    </div>
 
-  	        <div class="slide outline"></div>
-  			
-  			<section>
-  				<header>Java Naming and Directory Interface</header>
-                  
-  		        <div class="slide">
-  					<hgroup>
-  						<h1>Overview</h1>
-  					</hgroup>
-                      <ul class="small">
-                      	<li>Objectives</li>
-                      	<ul>
-                      		<li>Allows to access objects by names in various directory systems and their attributes</li>
-                      		<li>Independent of any specific directory service implementation</li>
-                      		<li>Enables to distribute Java objects across various systems in the environment</li>
-                      	</ul>
-                      	<li>Terminology</li>
-                      	<ul>
-                      		<li>Binding &ndash; association between a name and a object</li>
-                      		<li>Context &ndash; a set of bindings</li>
-                      	</ul>
-                          <li>JNDI Provides:</li>
-                          <ul>
-                              <li>a mechanism to bind an object to a name.</li>
-                              <li>a directory lookup interface</li>
-                              <li>a pluggable service provider interface (SPI) &ndash; any directory service implmentation can be plugged in</li>
-                          </ul>
-                      </ul>
-  				</div>
-  	                        
-  	            <div class="slide">
-  	            	<hgroup>
-  	            		<h1>JNDI Packages</h1>
-  	            	</hgroup>
-  	            	<ul class="small">
-  	            		<li>Naming Package</li>
-  	            		<ul>
-  	            			<li>interfaces to access naming services</li>
-  	            			<li>Context: looking up, binding/unbinding, renaming, objects</li>
-  	            		</ul>
-  	            		<li>Directory Package</li>
-  	            		<ul>
-  	            			<li>allows to retrieve attributes of objects, and to search for objects</li>
-  	            		</ul>
-  	            		<li>Event Package</li>
-  	            		<ul>
-  	            			<li>allows for event notification in naming and directory services</li>
-  	            			<li>For example, object was added, object changed, etc.</li>
-  	            		</ul>
-  	            		<li>Other packages</li>
-  	            		<ul>
-  	            			<li>LDAP &ndash; allows to access LDAP services</li>
-  	            			<li>Service Provider Interface &ndash; allows to develop various naming/directory services</li>
-  	            		</ul>
-  	            	</ul>
-  	            </div>
-  	            
-  	            <div class="slide">
-  	                <hgroup>
-  	                    <h1>JNDI Architecture</h1>
-  	                </hgroup>
-  	                <div id="163CemeUk7U2cG2qMeRHEQ0VAloGmIkRwbdkVH_tYe9o" style="height: 480px" class="h-drawing"></div>
-  	            </div>           
-  	            
-  	            <div class="slide">
-  	            	<hgroup>
-  	            		<h1>Application Server and JNDI</h1>
-  	            	</hgroup>
-  	            	<ul class="small">
-  	            		<li>Distribution of objects</li>
-  	            		<ul>
-  	                        <li>Application Server provides central directory for various kinds of objects</li>
-  	                        <ul>
-  	                            <li>Datasources, JMS queues and topics, etc.</li>
-  	                        </ul>
-  	                        <li>Clients store objects in the central directory</li>
-  	                        <ul>
-  	                            <li>Administrator configures objects using Application Server Console or via AS API</li>
-  	                        </ul>
-  	            			<li>Clients retrieve objects from the central directory</li>
-  	                    </ul>
-  	        			<li>Benefits</li>
-  	        			<ul>
-  	        				<li>replication of objects across clients</li>
-  	        				<li>central configuration of objects' parameters</li>
-  	                        <li>scalability &ndash; allowing/disabling connections as required</li>
-  	        			</ul>
-  	            	</ul>
-  	            </div> 
-  	        </section>
+    <div class="slide">
+      <hgroup>
+        <h1>Resource State</h1>
+      </hgroup>
+      <ul class="x-small">
+        <li>State</li>
+        <ul>
+          <li>Resource representation is in fact a <b>representation of a resource state</b></li>
+          <li>Resource may be in different states over time</li>
+        </ul>
+      </ul>
+      <div class="h-drawing" style="height: 250px; margin: 15px 0px 15px 0px;" id="1dhjNo4p6x5rS-IH3E2WcVw3TxwCqmdhtA-9wD0hwbuc"></div>
+      <ul class="small space-before">
+        <li>In REST resource states represent application states</li>
+      </ul>
+    </div>
 
-  	        <div class="slide outline"></div>
+    <div class="slide" id="resource-state">
+      <hgroup>
+        <h1>Resource State Example</h1>
+      </hgroup>
+      <ul class="x-small">
+        <li>Time <code>t1</code>: client A retrieves a resource <code>/orders</code> (GET)</li>
+        <pre class="brush: xml; class-name: 'tight'">
+                            &lt;orders>
+                                &lt;order id="54467"/>
+                                &lt;order id="65432"/>
+                            &lt;/orders>                                                
+                        </pre>
+        <li>Time <code>t2</code>: client B adds a new order (POST)</li>
+        <pre class="brush: xml; class-name: 'tight'">
+                            &lt;order>
+                                ...
+                            &lt;/order>                                                
+                        </pre>
+        <li>Time <code>t3</code>: client A retrieves a resource <code>/orders</code> (GET)</li>
+        <pre class="brush: xml; class-name: 'tight'">
+                            &lt;orders>
+                                &lt;order id="54467"/>
+                                &lt;order id="65432"/>
+                                &lt;order id="74567"/>
+                            &lt;/orders>                                                
+                        </pre>
+        <li>The resource <code>/orders</code> has different states in <code>t1</code>
+          and <code>t3</code>.
+      </ul>
+    </div>
+  </section>
 
-  	        <section>
+  <div class="slide outline"></div>
 
-  	        	<header>Application Server and JNDI</header>
+  <section>
+    <header>Uniform Interface</header>
 
-  	            <div class="slide">
-  	                <hgroup>
-  	                    <h1>Application Server and JNDI</h1>
-  	                </hgroup>
-  	                <div id="1jr8rdcF7wUNkylyT-QgBpeRaUnIfwf0Be2vW2M25URw" 
-  	                    style="height: 220px; margin-top: 20px" class="h-drawing"></div>
-  	                <ul class="xx-small">
-  	                    <li>Example Scenario</li>
-  	                    <ul>
-  	                        <li>Client A creates a datasource, configures it and registeres it in the JNDI tree</li>
-  	                        <ul>
-  	                            <li>Client A is a Admin server console app; this task is performed by the administrator</li>
-  	                        </ul>
-  	                        <li>Client B and C lookup the object under specific JNDI name and retrieves the object from the tree</li>
-  	                        <ul>
-  	                            <li>They get the object from the tree and use it to connect to the DB</li>
-  	                            <li>They do not need to know any DB specific details, the object is pre-configured from the server</li>
-  	                        </ul>
-  	                    </ul>
-  	                </ul>
-  	            </div>        
-  	            	            
-  	            <div class="slide">
-  	                <hgroup>
-  	                    <h1>Example Datasource in Weblogic</h1>
-  	                </hgroup>
-  	                <div id="1NpFuljUMgFFGkP6BRCS03MN_1T7JtitTTRLgjy4yLDc" 
-  	                    style="height: 450px" class="h-drawing" format="png"></div>
-  	            </div>            
+    <div class="slide">
+      <hgroup>
+        <h1>Uniform Interface</h1>
+      </hgroup>
+      <ul class="small">
+        <li>Uniform interface = finite set of operations</li>
+        <ul>
+          <li>Resource manipulation</li>
+          <ul>
+            <li>CRUD &ndash; Create (POST/PUT), Read (GET), Update (PUT/PATCH), Delete (DELETE)</li>
+          </ul>
+          <li>operations are not domain-specific</li>
+          <ul>
+            <li>For example, <code>GET /orders</code> and not <code>getOrders()</code></li>
+            <li>This reduces complexity when solving interoperability</li>
+          </ul>
+        </ul>
+        <li>Integration issues examples</li>
+      </ul>
+      <div class="h-drawing" style="height: 190px" id="1hLogh6s5Az0vXhCW6e05l2MRMLPDtnYbxlPEctjJTAk"></div>
+    </div>
 
-  	            <div class="slide">
-  	                <hgroup>
-  	                    <h1>Targets</h1>
-  	                </hgroup>
-  	                <ul>
-  	                	<li>Object</li>
-  	                	<ul>
-  	                		<li>A service provided by the applicaton server, e.g. datasources, JMS queue, SAF</li>
-  	                	</ul>
-  	                	<li>Types of services</li>
-  	                	<ul>
-  	                		<li>Pinned services</li>
-  	                		<ul>
-  	                			<li>Objects targeted to a single server only</li>
-  	                		</ul>
-  	                		<li>Cluster services</li>
-  	                		<ul>
-  	                			<li>Objects targeted to all servers in the cluster</li>
-  	                		</ul>
-  	                	</ul>
-  	                </ul>
-  	            </div>        
+    <div class="slide">
+      <hgroup>
+        <h1>Safe and Unsafe Operations</h1>
+      </hgroup>
+      <ul class="small">
+        <li>Safe operations</li>
+        <ul>
+          <li>Do not change the resource state</li>
+          <li>Usually "read-only" or "lookup" operation</li>
+          <li>Clients can cache the results and refresh the cache freely</li>
+        </ul>
+        <li>Unsafe operations</li>
+        <ul>
+          <li>May change the state of the resource</li>
+          <li>Transactions such as buy a ticket, post a message</li>
+          <li>Unsafe does not mean dangerous!</li>
+        </ul>
+        <li>Unsafe interactions and transaction results</li>
+        <ul>
+          <li><code>POST</code> response may include transaction results</li>
+          <ul>
+            <li>you buy a ticket and submit a purchase data</li>
+            <li>you get transaction results</li>
+            <li>and you cannot bookmark this..., why?</li>
+          </ul>
+          <li>Should be referable with a persistent URI</li>
+        </ul>
+      </ul>
+    </div>
 
-  	            <div class="slide">
-  	                <hgroup>
-  	                    <h1>Example Target Configuration</h1>
-  	                </hgroup>
-  	                <div id="1etB99sfKsLeK1Di_xkNdDqZ63le3-NDDohGZewQCmoI" 
-  	                    style="height: 450px" class="h-drawing" format="png"></div>
-  	            </div>        
+    <div class="slide">
+      <hgroup>
+        <h1>Idempotence</h1>
+      </hgroup>
+      <ul>
+        <li>Idempotent operation</li>
+        <ul>
+          <li>Invoking a method on the same resource always has the same effect</li>
+          <li>Operations <code>GET</code>, <code>PUT</code>, <code>DELETE</code></li>
+        </ul>
+        <li>Non-idempotent operation</li>
+        <ul>
+          <li>Invoking a method on the same resource may have different effects</li>
+          <li>Operation <code>POST</code></li>
+        </ul>
+        <li>Effect = a state change</li>
+        <ul>
+          <li>recall the effect definition in MDW</li>
+        </ul>
+      </ul>
+    </div>
 
-  				<div class="slide">
-  					<hgroup>
-  						<h1>Deployment to Cluster</h1>
-  					</hgroup>
-  					<ul class="x-small">
-  						<li>Deployment of an object</li>
-  						<ul>
-  							<li>Client deploys to one managed server in the cluster</li>
-  							<li>Object gets replicated to its targets</li>
-  							<ul>
-  								<li>Targets can be configured for the object, usually all servers but can be selected servers</li>
-  							</ul>
-  						</ul>
-  					</ul>
-  					<center>
-  					<div id="1f_D8YEP87vmI-ZLR8wGx9yMRFAsJkCDwVm0mltz5xiw" class="h-drawing" style="width: 550px"></div>
-  					</center>
-  				</div>
+    <div class="slide">
+      <hgroup>
+        <h1>GET</h1>
+      </hgroup>
+      <ul class="small">
+        <li>Reading</li>
+        <ul>
+          <li><code>GET</code> retrieves a representation of a state of a resource</li>
+          <pre class="brush: plain; gutter: 'false'">
+                              &gt; GET /orders HTTP/1.1
+                              &gt; Accept: application/xml
 
-  	            <div class="slide">
-  	                <hgroup>
-  	                    <h1>Cluster-wide JNDI Tree</h1>
-  	                </hgroup>
-  	                <ul class="x-small">
-  	                	<li>Cluster</li>
-  	                	<ul>
-  	                		<li>Every managed server has its own JNDI tree</li>
-  	                		<li>Servers in a cluster sync up their JNDI trees as per the target configuration</li>
-  	                		<ul>
-  	                			<li>A stub of the object appears in every managed server's JNDI tree</li>
-  	                			<li>They use <a href="lecture6.html#/22">JNDI replication service</a> (see Lecture 6)</li>
-  	                		</ul>
-  	                	</ul>
-  	                	<li>When a client retrieves an object from the tree</li>
-  	                	<ol>
-  	                		<li>Client connects to the cluster using the cluster address</li>
-  	                		<li>Client creates an initial context (represents a naming service)</li>
-  	                		<li>Client uses the initial context to lookup objects</li>
-  	                		<li>Client uses the stub of the object to call the service</li>
-  	                	</ol>
-  	                </ul>
-  	            </div>        
-
-  				<div class="slide">
-  					<hgroup>
-  						<h1>Object Failover</h1>
-  					</hgroup>
-  					<ul class="x-small">
-  						<li>Failover</li>
-  						<ul>
-  							<li>Failover = ability to locate an object on another server that holds a copy of the object without impact on the 
-  								performace and configuration</li>
-  						</ul>
-  					</ul>
-  					<center>
-  					<div id="1q3-1NEIj6sLX_2FnOUGDxrHiAyHRJac3x-l8tcO88f0" class="h-drawing" style="width: 600px"></div>
-  					</center>
-  					<ul class="x-small"><ul>
-  						<li>A client gets a stub of the object by calling <code>lookup</code> on the context</li>
-  						<li>A client uses the stub of the object to access the object on the server</li>
-  						<li>When a server fails, replicate-aware stub calls the next server that holds the object copy</li>
-  					</ul></ul>
-
-  				</div>
-
-  	            <div class="slide">
-  	                <hgroup>
-  	                    <h1>Example JNDI Tree on Weblogic Server</h1>
-  	                </hgroup>
-  	                <div id="14bF-vKr3XbzUCvWExsUDDXy81ODuQe34qQQGxo9mk1E" 
-  	                    style="" class="h-drawing" format="png"></div>
-  	            </div>        
-
-  	            <div class="slide">
-  	                <hgroup>
-  	                    <h1>JNDI Implementation in Java</h1>
-  	                </hgroup>
-  	                <ul class="x-small">
-  	                    <li>Lookup for bound object</li>
-  	                    <pre class="brush: java; highlight : [19,20]">
-  	                        import javax.naming.InitialContext;
-  	                        import java.util.*;
-  	                        import javax.sql.*;
-  	                        
-  	                        ...
-  	                        
-  	                        Properties p = new Properties();
-  	                            
-  	                        // configure the service provider url: "t3://localhost:7001"
-  	                        p.put(Context.PROVIDER_URL,
-  	                        	"t3://czfmwapp03-vf:8001,czfmwapp04-vf:8001,czfmwapp05-vf:8001");
-  	                        
-  	                        // configure the initial context factory.
-  	                        // we use WebLogic context factory
-  	                        p.put(Context.INITIAL_CONTEXT_FACTORY,
-  	                                "weblogic.jndi.WLInitialContextFactory");
-  	                        InitialContext ctx = new InitialContext(p);
-  	                        
-  	                        dataSource =
-  	                            (DataSource) ctx.lookup("jdbc/order-db");
-
-  	                        // invoke the object method
-  	                        Connection c = dataSource.getConnection();
-  	                    </pre>
-  	                </ul>
-  	            </div>
-  	        </section>
-
-          	<div class="slide outline"></div>
-              
-  			<section>
-  				<header>Two-phase Commit</header>
-  		        <div class="slide">
-  					<hgroup>
-  						<h1>Overview</h1>
-                      </hgroup>
-                      
-                      <ul class="small">
-                          <li>Coordination of a distributed transaction</li>
-                          <ul>
-                              <li>All transaction operations are completed across multiple resources; or none is completed</li>
-                              <li>Able to deal with many types of failures (process, network, communication)</li>
-                          </ul>
-                          <li>Terminology</li>
-                          <ul class="x-small">
-                              <li><b>Transaction Manager</b> &ndash; manages transactions, coordinates decisions for commit or 
-                              rollback, and coordinates failure recovery</li>
-                              <li><b>Resource Manager</b> &ndash; manages an access to a resource that participates in the transacction, e.g. DBMS, JMS</li>
-                              <li><b>Agreement</b> &ndash; an agreement message send by the Resource Manager, whether the operation was 
-                              processed successfuly</li>
-                              <li><b>Acknowledgment</b> &ndash; a message about a status of the operation execution</li>
-                              <li><b>Rollback</b> &ndash; operation that returns the Resource Manager state to its pre-transaction state.</li>
-                          </ul>
-                      </ul>
-                      
-  				</div>
-                                  
-                  <div class="slide">
-                      <hgroup>
-                          <h1> X/Open &ndash; eXtended Architecture (XA)</h1>
-                      </hgroup>
-                      <ul class="small">
-                          <li>Standard for executing distrubuted transactions</li>
-                          <ul>
-                              <li>Specifies how the coordinator will roll up the transaction against involved different systems.
-                              </li>
-                              <li>Based on the Two-phase Commit protocol.
-                              </li>
-                              <li>Defines interface between the coordinator and each system node.
-                              </li>
-                              <li>Single transaction access to multiple resources (e.g. message queues, databases, etc.)</li>
-                              <li>Defined in the <a class="ext-link ref" title="XA Specification" 
-                              href="http://pubs.opengroup.org/onlinepubs/009680699/toc.pdf">eXtended Architecture Specification</a></li>
-                          </ul>
-                          <li>Wide technological support</li>
-                          <ul>
-                              <li><a class="ext-link ref" title="Java Transaction API" 
-                              href="http://www.oracle.com/technetwork/java/javaee/jta/index.html">Java Transaction API (JTA)</a> &ndash; 
-                              distributed transactions in a Java environment.</li>
-                              <li>Supported in the Oracle Service Bus through a JMS queue.</li>
-                              <li>MySQL Relational Database Management System (since v5.0)</li>
-                          </ul>
-                      </ul>
-                  </div>
-                  
-                  <div class="slide">
-                      <hgroup>
-                          <h1>Two-phase Commit</h1>
-                      </hgroup>
-                      <ul class="small">
-                          <li>Two-phase commit scenario</li>
-                          <div id="1kfDa725ldvDg0xwr3EryplwU1gZm_hgaNxfRkmCsN0E" style="height: 400px" class="h-drawing"></div>
-                      </ul>
-                  </div>
-
-                  <div class="slide">
-                      <hgroup>
-                          <h1>XA Example Implementation in Java</h1>
-                      </hgroup>
-                      <ul class="x-small">
-                          <li>Distributed Transaction</li>
-                          <pre class="brush: java; highlight : [18,19,23];">
-                              import java.sql.*;
-                              import javax.sql.*;
-                              import javax.naming.*;
-                              import java.util.*;
-                              
-                              public class Server {
-                              
-                                  public static void main(String args[]) {
-                              
-                                  	// Initialize context
-                                  	Hashtable parms = new Hashtable();
-                                  	parms.put(Context.INITIAL_CONTEXT_FACTORY,
-                                          "weblogic.jndi.WLInitialContextFactory");
-                                  	parms.put(Context.PROVIDER_URL, "t3://localhost:7001");
-                                  	InitialContext ctx = new InitialContext(parms);
-                              
-                                  	// Perform a naming service lookup to get UserTransaction object
-                                  	javax.transaction.UserTransaction usertx;
-                                  	usertx = (UserTransaction) ctx.lookup("java:comp/UserTransaction");
-                              
-                                  	try {
-                                      	//Start a new user transaction.
-                                      	usertx.begin();
+                              &lt; HTTP/1.1 200 OK
+                              &lt; Content-Type: application/xml
+                              &lt;
+                              &lt; ...resource representation in xml...
                           </pre>
-                      </ul>
-                  </div>
-                  
-                  <div class="slide">
-                      <hgroup>
-                          <h1>XA Example Implementation in Java</h1>
-                      </hgroup>
-                      <ul class="x-small">
-                          <li>Distributed Transaction (cont.)</li>
-                          <pre class="brush: java; highlight : [26,31,36,37,41]; first-line: 24">
-                              // Establish a connection with the first database
-                              javax.sql.DataSource data1;
-                              data1=(javax.sql.DataSource)ctx.lookup("java:comp/env/jdbc/DataBase1");
-                              java.sql.Connection conn1 = data1.getConnection();
-                              java.sql.Statement stat1 = conn1.getStatement();
-                              // Establish a connection with the second database
-                              javax.sql.DataSource data2;
-                              data2=(javax.sql.DataSource)ctx.lookup("java:comp/env/jdbc/DataBase2");
-                              java.sql.Connection conn2 = data2.getConnection();
-                              java.sql.Statement stat2 = conn2.getStatement();
-                              
-                              // Execute update query to both databases
-                              stat1.executeUpdate(...);
-                              stat2.executeUpdate(...);
-                              
-                              // Commit the transaction
-                              // Apply the changes to the participating databases
-                              usertx.commit();
-                              
-                              //Release all connections and statements.
-                              stat1.close();
-                              stat2.close();
-                              conn1.close();
-                              conn2.close();
-                          </pre>
-                      </ul>
-                  </div>
-                  <div class="slide">
-                      <hgroup>
-                          <h1>XA Example Implementation in Java</h1>
-                      </hgroup>
-                      <ul class="x-small">
-                          <li>Distributed Transaction (cont.)</li>
-                          <pre class="brush: java; highlight : [54]; first-line: 48">
-                              // Catch any type of exception
-                              catch (java.lang.Exception e) {
-                                  try {
-                                      e.printStackTrace();
-                              
-                                      // Rollback the transaction
-                                      usertx.rollback();
-                                      System.out.println("The transaction is rolled back.");
-                                  } catch(java.lang.Exception ex) {
-                                      e.printStackTrace();
-                                      System.out.println("Exception is caught. Check stack trace.");
-                                  }
-                              }
-                          }
-                          </pre>
-                      </ul>
-                  </div>
+          <li>It is read-only operation</li>
+          <li>It is <b>safe</b></li>
+          <li>It is <b>idempotent</b></li>
+          <li class="space-before"><code>GET</code> retrieves different states over time but
+            the effect is always the same, cf.
+            <a href="lecture2.html#/resource-state">resource state</a> hence it is idempotent.</li>
+          <li>Invocation of <code>GET</code> involves content negotiation</li>
+        </ul>
+      </ul>
+    </div>
 
-  			</section>
-  				
-  		</section>
-    		
-        
-        
-    </body>
+    <div class="slide" id="PUT">
+      <hgroup>
+        <h1>PUT</h1>
+      </hgroup>
+      <ul class="small">
+        <li>Updating or Inserting</li>
+        <ul>
+          <li><code>PUT</code> updates or inserts a representation of a state of a resource</li>
+          <li>Updating the resource is a <b>complete replacement of the resource</b></li>
+          <pre class="brush: xml; gutter: 'false'">
+                              &gt; PUT /orders/4456 HTTP/1.1
+                              &gt; Content-Type: application/xml
+                              &gt;
+                              &gt; &lt;order>...&lt;/order>
+
+                              &lt; HTTP/1.1 CODE
+                          </pre>
+          <li>where CODE is:</li>
+          <ul>
+            <li><code>200 OK</code> or <code>204 No Content</code> for updating:
+              A resource with id <code>4456</code> <b>exists</b>, the client
+              sends an updated resource</li>
+            <li><code>201 Created</code> for inserting: A resource <b>does not exist</b>, the client
+              generates the id <code>4456</code> and sends a representation of it.</li>
+          </ul>
+          <li>It is <b>not safe</b> and it is <b>idempotent</b></li>
+        </ul>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>PATCH</h1>
+      </hgroup>
+      <ul class="x-small">
+        <li><code>PATCH</code> to partial update a resource</li>
+        <ul>
+          <li>IETF specification, see <span id="rfc-5789" class="h-ref"></span></li>
+        </ul>
+        <li>Use in GData Protocol</li>
+        <ul>
+          <li>To add, modify or delete selected elements of an Atom feed entry</li>
+          <li>Example to delete a description element and add a new title element
+            <br /><code>gd:fields</code> uses the partial response syntax</li>
+          <pre class="brush: xml; class-name: 'tight'">
+                              PATCH /myFeed/1/1/
+                              Content-Type: application/xml
+
+                              &lt;entry xmlns='http://www.w3.org/2005/Atom'
+                                  xmlns:gd='http://schemas.google.com/g/2005'
+                                  gd:fields='description'>
+                                &lt;title>New title&lt;/title>
+                              &lt;/entry></pre>
+          <li>Rules</li>
+          <ul>
+            <li>Fields not already present are added</li>
+            <li>Non-repeating fields already present are updated</li>
+            <li>Repeating fields already present are appended</li>
+          </ul>
+        </ul>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>POST</h1>
+      </hgroup>
+      <ul class="small">
+        <li>Inserting</li>
+        <ul>
+          <li><code>POST</code> inserts a new resource</li>
+          <li>A server generates a new resource ID, client only supplies a content and a resource URI where the new
+            resource will be inserted.</li>
+          <pre class="brush: xml; gutter: 'false'">
+                              &gt; POST /orders HTTP/1.1
+                              &gt; Content-Type: application/xml
+                              &gt;
+                              &gt; &lt;order>...&lt;/order>
+
+                              &lt; HTTP/1.1 201 Created
+                              &lt; Location: /orders/4456
+                          </pre>
+          <li>It is <b>not safe</b> an it is <b>not idempotent</b><br />
+          <li class="space-before">A client may "suggest" a resource's id using the <code>Slug</code> header</li>
+          <ul>
+            <li>Defined in <span class="h-ref" id="rfc-5023">AtomPub protocol</span></li>
+          </ul>
+        </ul>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>DELETE</h1>
+      </hgroup>
+      <ul class="small">
+        <li>Deleting</li>
+        <ul>
+          <li><code>DELETE</code> deletes a resource with specified URI</li>
+          <pre class="brush: plain; gutter: 'false'">
+                          &gt; DELETE /orders/4456 HTTP/1.1
+
+                          &lt; HTTP/1.1 CODE
+                          </pre>
+          <li>where CODE is:</li>
+          <ul>
+            <li><code>200 OK</code>: the response body contains an entity describing a result of the operation.</li>
+            <li><code>204 No Content</code>: there is no response body.</li>
+          </ul>
+          <li class="space-before">It is <b>not safe</b> and it is <b>idempotent</b></li>
+          <ul>
+            <li>Multiple invocation of <code>DELETE /orders/4456</code> has always the same effect &ndash; the resource
+              <code>/orders/4456</code> does not exist.</li>
+          </ul>
+        </ul>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Other</h1>
+      </hgroup>
+      <ul class="small">
+        <li>HEAD</li>
+        <ul>
+          <li>same as <code>GET</code> but only retrieves HTTP headers</li>
+          <li>It is <b>safe</b> and <b>idempotent</b></li>
+        </ul>
+        <li>OPTIONS</li>
+        <ul>
+          <li>queries the resource for resource configuration</li>
+          <li>It is <b>safe</b> and <b>idempotent</b></li>
+        </ul>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Types of Errors</h1>
+      </hgroup>
+      <ul class="x-small">
+        <li>Client-side &ndash; status code <code>4xx</code></li>
+        <ul>
+          <li><code>400 Bad Request</code></li>
+          <ul>
+            <li>generic client-side error</li>
+            <li>invalid format, such as syntax or validation error</li>
+          </ul>
+          <li><code>404 Not Found</code></li>
+          <ul>
+            <li>server can't map URI to a resource</li>
+          </ul>
+          <li><code>401 Unauthorized</code></li>
+          <ul>
+            <li>wrong credentials (such as user/pass, or API key)</li>
+            <li>the response contains <code>WWW-Authenticate</code> indicating what kind of authentication
+              the service accepts</li>
+          </ul>
+          <li><code>405 Method Not Allowed</code></li>
+          <ul>
+            <li>the resource does not support the HTTP method the client used</li>
+            <li>the response contains <code>Allow</code> header to indicate methods it supports</li>
+          </ul>
+          <li><code>406 Not Acceptable</code></li>
+          <ul>
+            <li>so many restrictions on acceptable content types (using <code>Accept-*</code>)</li>
+            <li>server cannot serialize the resource to requested content types</li>
+          </ul>
+        </ul>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Types of Errors (Cont.)</h1>
+      </hgroup>
+      <ul class="x-small">
+        <li>Server-side &ndash; status code <code>5xx</code></li>
+        <ul>
+          <li><code>500 Internal Server Error</code></li>
+          <ul>
+            <li>generic server-side error</li>
+            <li>usually not expressive, logs a message for system admins</li>
+          </ul>
+          <li><code>503 Service Not Available</code></li>
+          <ul>
+            <li>server is overloaded or is under maintenance</li>
+            <li>the response contains <code>Retry-After</code> header</li>
+          </ul>
+        </ul>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Use of Status Codes</h1>
+      </hgroup>
+      <ul class="small">
+        <li>Service should respect semantics of status codes!</li>
+        <ul>
+          <pre class="brush: js; gutter: 'false''">
+                              &gt; GET /orders HTTP/1.1
+                              &gt; Accept: application/json
+
+                              &lt; HTTP/1.1 200 OK
+                              &lt; Content-Type: application/json
+                              &lt;
+                              &lt; { "error" :
+                              &lt;    { "error_text" :
+                              &lt;        "you do not have rights to access this resource " }
+                              &lt; }
+                          </pre>
+          <li>Client must understand the semantics of the response.</li>
+          <li>This breaks loose coupling and reusability service principles</li>
+          <li>The response should be:</li>
+          <pre class="brush: plain; gutter: 'false'">
+                              &lt; HTTP/1.1 401 Unauthorized
+                              &lt; ...
+
+                              &lt; ...optional text describing the error...
+                          </pre>
+        </ul>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Respect HTTP Semantics</h1>
+      </hgroup>
+      <ul class="small">
+        <li>Do not overload semantics of HTTP methods</li>
+        <ul>
+          <li>For example, <code>GET</code> is read-only method and idempotent</li>
+          <li>REST Anti-pattern:</li>
+          <li class="no-bullet">&nbsp;&nbsp;&nbsp;<code>GET /orders/?add=new_order</code></li>
+          <ul>
+            <li>This is not REST!</li>
+            <li>This breaks both safe and idempotent principles</li>
+          </ul>
+        </ul>
+        <li>Consequences</li>
+        <ul>
+          <li>Result of <code>GET</code> can be cached by proxy servers</li>
+          <li>They can revalidate their caches freely</li>
+          <li>You can end up with new entries in your storage without you knowing!</li>
+        </ul>
+        <li>The same is true for other methods</li>
+      </ul>
+    </div>
+
+  </section>
+
+
+</body>
+
 </html>
-
-
