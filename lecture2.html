@@ -160,8 +160,12 @@
         <ul>
           <li>Data-oriented integration</li>
           <li>processing of large amount of data in batches</li>
+          <li>Sometimes required for reconciliation across apps</li>
+          <ul>
+            <li>when real-time integration fails and there is poor error handling</li>
+          </ul>
         </ul>
-        <li><b>ESB provides both Web service and ETL capabilities</b></li>
+        <li><b>SOA provides both Web service and ETL capabilities</b></li>
       </ul>
     </div>
   </section>
@@ -485,16 +489,20 @@
 				</ul>
 			</ul>
 			<div id="1kxkFc3Chl4qFXxH_4f2seuNbpBdENMyZWMRUmxd1p28" class="h-drawing" style="height: 220px"></div>
-			<ul class="small">
+			<ul class="x-small">
 				<li>Characteristics</li>
 				<ul>
 					<li>Event examples: new connection, read, write, closed</li>
-					<li>The app may create working threads, but controls the number!</li>
+					<li>The app may create working threads and controls their number</li>
 					<ul>
-						<li>much less number of working threads as opposed to blocking I/O</li>
-					</ul>
-				</ul>
-			</ul>
+						<li>less number of working threads as opposed to blocking I/O</li>
+          </ul>
+          <li>On the outbound calls, there can still be blocking I/O</li>
+          <ul>
+            <li>this depends on the implementation framework</li>
+				  </ul>
+			  </ul>
+      </ul>
 		</div>
 
 
