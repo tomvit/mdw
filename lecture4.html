@@ -75,14 +75,14 @@
           <li>The REST core principle</li>
           <li><b>Hypertext</b></li>
           <ul>
-            <li>Hypertext is a representation of a resource with <b>links</b></li>
+            <li>Hypertext is a representation of a resource state with <b>links</b></li>
             <li>A link is an URI of a resource</li>
-            <li>Applying an access to a resource via its link = state transition</li>
+            <li>Applying an access (PUT, POST, DELETE) to a resource via its link = state transition</li>
           </ul>
         </ul>
         <li>Statelessness</li>
         <ul>
-          <li>A service does not use a memory to remember a state</li>
+          <li>A service does not use a session memory to remember a state</li>
           <li>HATEOAS enables stateless implementation of services</li>
         </ul>
       </ul>
@@ -436,7 +436,7 @@
           <li><code>public</code> &ndash; any intermediary can cache (proxies and clients)</li>
           <li><code>no-cache</code> &ndash; the response should not be cached.
             If it is cached, the content should always be revalidated.</li>
-          <li><code>no-store</code> &ndash; can cache but should not store persistently. When a client restarts, content is lost</li>
+          <li><code>no-store</code> &ndash; must not store persistently (this turns off caching)</li>
           <li><code>no-transform</code> &ndash; no transformation of cached data; e.g. compressions</li>
           <li><code>max-age</code>, <code>s-maxage</code> a time in seconds how long the cache is valid;
             <code>s-maxage</code> for proxies</li>
@@ -465,13 +465,12 @@
                             
                             &lt; HTTP/1.1 200 OK
                             &lt; Content-Type: application/xml
-                            &lt; Cache-Control: private, no-store, max-age=200
+                            &lt; Cache-Control: private, max-age=200
                             &lt; Last-Modified: Sun, 7 Nov 2011, 09:40 CET
                             &lt;
                             &lt; ...data...
                             </pre>
-          <li>only client can cache, must not be stored on the disk,
-            the cache is valid for 200 seconds.</li>
+          <li>only client can cache, the cache is valid for 200 seconds.</li>
         </ul>
         <li>Revalidation (conditional GET) example:</li>
         <ul>
@@ -481,7 +480,7 @@
                             &gt; If-Modified-Since: Sun, 7 Nov 2011, 09:40 CET
                             
                             &lt; HTTP/1.1 304 Not Modified
-                            &lt; Cache-Control: private, no-store, max-age=200
+                            &lt; Cache-Control: private, max-age=200
                             &lt; Last-Modified: Sun, 7 Nov 2011, 09:40 CET
                             </pre>
         </ul>
@@ -509,7 +508,7 @@
         <li>Example content revalidation with <code>ETag</code></li>
         <pre class="brush: plain; gutter: 'false'; class-name: 'tight'">
                             &lt; HTTP/1.1 200 OK
-                            &lt; Cache-Control: private, no-store, max-age=200
+                            &lt; Cache-Control: private, max-age=200
                             &lt; Last-Modified: Sun, 7 Nov 2011, 09:40 CET
                             &lt; ETag: "4354a5f6423b43a54d"
                             
@@ -517,7 +516,7 @@
                             &gt; If-None-Match: "4354a5f6423b43a54d"
                             
                             &lt; HTTP/1.1 304 Not Modified
-                            &lt; Cache-Control: private, no-store, max-age=200
+                            &lt; Cache-Control: private, max-age=200
                             &lt; Last-Modified: Sun, 7 Nov 2011, 09:40 CET
                             &lt; ETag: "4354a5f6423b43a54d"
                             </pre>
