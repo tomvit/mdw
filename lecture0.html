@@ -7,8 +7,8 @@
 
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<meta name="course" content="Middleware and Web Services" />
-	<meta name="lecture" content="Lecture 1" />
+	<meta name="course" content="Middleware Architecture" />
+	<meta name="lecture" content="Lecture 0" />
 	<meta name="keywords" content="motivation, scope, requirements, resources" />
 
 	<link type="text/css" rel="stylesheet" href="css/meta.css">
@@ -29,7 +29,6 @@
 			<span class="meta_twitter" /></p>
 		<p><b>&#8210; #SLIDE_NO# &#8210;</b></p>
 	</footer>
-
 
 	<div class="slide intro">
 		<hgroup>
@@ -68,7 +67,7 @@
 		<ul class="x-small">
 			<li>Tomáš Vitvar &ndash; lectures (Czech)</li>
 			<ul>
-				<li>Web engineering study programme chair at CTU FIT</li>
+				<li>Web engineering curricula chair at CTU FIT</li>
 				<li>Technology Architect Director at Oracle</li>
 				<li>Research</li>
 				<ul>
@@ -117,6 +116,24 @@
 
 			<div class="slide">
 				<hgroup>
+					<h1>What is Middleware?</h1>
+				</hgroup>
+				<ul class="small spacing">
+					<li>Say anything you think has something to do with middleware</li>
+					<ul>
+						<li>Architecture</li>
+						<li>Tehnology</li>
+						<li>Tools</li>
+						<li>Concept or style</li>
+						<li>Methodology</li>
+						<li>...</li>
+						<li>No worries, there is no bad answer!</li>
+					</ul>
+				</ul>
+			</div>
+
+			<div class="slide">
+				<hgroup>
 					<h1>Motivation in Brief</h1>
 				</hgroup>
 				<ul class="small spacing">
@@ -130,46 +147,19 @@
 							<li>variety of architectures, client-server, peer-to-peer, ...</li>
 						</ul>
 					</ul>
+					<li>Rapid changes in applications' functionalities</li>
+					<ul>
+						<li>modular development</li>
+						<li>reuse of application functionality</li>
+						<li>low costs &ndash; do it now and quickly!</li>
+						<ul>
+					</ul>
 					<li>Good performance</li>
 					<ul>
 						<li>frequent changes in applications' loads, peek hours</li>
 						<li>scalability &ndash; effective load balancing</li>
 						<li>low costs &ndash; cheaper to outsource?</li>
 					</ul>
-					<li>Rapid changes in applications' functionality</li>
-					<ul>
-						<li>modular development</li>
-						<li>reuse of application functionality</li>
-						<li>low costs &ndash; do it now and quickly!</li>
-						<ul>
-						</ul>
-			</div>
-
-			<div class="slide" id="spaghetti">
-				<hgroup>
-					<h1>Spaghetti Architecture</h1>
-				</hgroup>
-				<ul class="small">
-					<li>Need for the integration</li>
-					<ul>
-						<li>One-to-one integration</li>
-						<li>Hard to maintain, vendor interoperability problem</li>
-					</ul>
-					<div class="h-drawing" style="height: 350px" id="123tDQFo3Zq0LEzzhquKp1xJX4YZ6YiWC0GDNGGK1UA0" alt="Spaghetti Integration"></div>
-				</ul>
-			</div>
-
-			<div class="slide">
-				<hgroup>
-					<h1>SOA Architecture</h1>
-				</hgroup>
-				<ul class="small">
-					<li>Integration organized</li>
-					<ul>
-						<li>Enterprise Service Bus, to be used wisely</li>
-					</ul>
-				</ul>
-				<div class="h-drawing" style="height: 400px" id="1-uHnuWoYea9KZgEBRkGmdpbKDT5THls9dn56XolZ1Lg" alt="SOA Integration"></div>
 			</div>
 
 			<div class="slide" id="scope">
@@ -184,13 +174,13 @@
 					</ul>
 					<li>Web Service technologies</li>
 					<ul>
-						<li>Details of HTTP and REST, SOAP</li>
-						<li>Web Service Description Language (WSDL)</li>
+						<li>Details of HTTP and REST</li>
+						<li>relation to SOAP</li>
 					</ul>
 					<li>Infrastructure and Middleware</li>
 					<ul>
-						<li>Performance, Scalability</li>
 						<li>Application server</li>
+						<li>Performance, Scalability</li>
 					</ul>
 					<li>Cloud Architectures</li>
 				</ul>
@@ -249,18 +239,19 @@
 
 					<li>Plan</li>
 					<ol>
-						<li>23.09.2019 &#150; Motivation and Course Overview (<a href="lecture0.html">html</a>)</li>
-						<li>30.09.2019 &#150; Introduction to Architectures (<a href="lecture1.html">html</a>)</li>
-						<li>07.10.2019 &#150; Service Architecture (<a href="lecture2.html">html</a>)</li>
-						<li>14.10.2019 &#150; Representational State Transfer (<a href="lecture3.html">html</a>)</li>
-						<li>21.10.2019 &#150; Advanced Service Concepts and Technologies (<a href="lecture4.html">html</a>)</li>
-						<li>04.11.2019 &#150; Application Server Architecture (<a href="lecture5.html">html</a>)</li>
-						<li>11.11.2019 &#150; Application Server Services (<a href="lecture5.html#/18">html</a>)</li>
-						<li>18.11.2019 &#150; Integration Patterns (<a href="lecture6.html">html</a>)</li>
-						<li>25.11.2019 &#150; Messaging Systems (<a href="lecture7.html">html</a>)</li>
-						<li>02.12.2019 &#150; High Availability and Performance (<a href="lecture8.html">html</a>)</li>
-						<li>09.12.2019 &#150; Cloud Architectures (<a href="lecture9.html">html</a>)</li>
-						<li>16.12.2019 &#150; Reserve</li>
+						<li>21.09.2020 &#150; Motivation and Course Overview (<a href="lecture0.html">html</a>)</li>
+						<li>28.09.2020 &#150; public holidays</li>
+						<li>05.10.2020 &#150; Information System Architectures (<a href="lecture1.html">html</a>)</li>
+						<li>12.10.2020 &#150; Service Architectures and Integration Patterns (<a href="lecture2.html">html</a>)</li>
+						<li>19.10.2020 &#150; Application Server Architecture 1 (<a href="lecture3.html">html</a>)</li>
+						<li>26.10.2020 &#150; Application Server Architecture 2 (<a href="lecture4.html">html</a>)</li>
+						<li>02.11.2020 &#150; Resource-oriented Web Service Architecture (<a href="lecture5.html">html</a>)</li>
+						<li>09.11.2020 &#150; Web Service Architecture State Model (<a href="lecture6.html">html</a>)</li>
+						<li>19.11.2020 &#150; Caching, Revalidation, Concurrency Control (<a href="lecture7.html">html</a>)</li>
+						<li>23.11.2020 &#150; High Availability and Performance (<a href="lecture8.html">html</a>)</li>
+						<li>30.11.2020 &#150; Event-driven architectures (<a href="lecture9.html">html</a>)</li>
+						<li>07.12.2020 &#150; Asynchronous integration patterns (<a href="lecture10.html">html</a>)</li>
+						<li>14.12.2020 &#150; Reserve</li>
 					</ol>
 				</ul>
 			</div>
