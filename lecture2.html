@@ -20,7 +20,7 @@
   </link>
 
   <script type="text/javascript" src="humla/lib/humla.js"></script>
-  <title>Service Architecture</title>
+  <title>Service Oriented Architecture</title>
 </head>
 
 <body>
@@ -61,152 +61,8 @@
   </div>
 
   <div class="slide outline"></div>
-
-  <section>
-    <header>Integrating Applications</header>
-
-    <div class="slide">
-      <hgroup>
-        <h1>Integration and Interoperability</h1>
-      </hgroup>
-      <ul class="small spacing">
-        <li>Integration</li>
-        <ul>
-          <li>A process of connecting applications so that they can
-            exchange and share capabilities, that is &mdash; information and functionalities.</li>
-          <li>Includes methodological approaches as well as technologies</li>
-        </ul>
-        <li>Interoperability</li>
-        <ul>
-          <li>Ability of two or more applications to understand each other</li>
-          <li>Interoperability levels</li>
-          <ul>
-            <li>Data &ndash; syntax/structure and semantics</li>
-            <li>Functions/Processes &ndash; syntax and semantics</li>
-            <li>Technical aspects &ndash; protocols, network addresses, etc.</li>
-          </ul>
-        </ul>
-      </ul>
-    </div>
-
-    <div class="slide">
-      <hgroup>
-        <h1>Integration Approaches Overview</h1>
-      </hgroup>
-      <div id="1i5jXogsSgaBZzCMpgtnXdTYaJ_rjbj_AeXEvkH9ljBI" class="h-drawing" style="height: 480px"></div>
-    </div>
-
-    <div class="slide">
-      <hgroup>
-        <h1>Data-oriented Integration</h1>
-      </hgroup>
-      <div class="h-drawing" style="height: 140px" id="103hhb19k8lNgnHJ4ul5kpR7cUb7L1tmVFnoXtq15M5A"></div>
-      <ul class="x-small">
-        <li>Third-party database access</li>
-        <ul>
-          <li>Application D accesses a database of application B directly
-            by using SQL and a knowledge of database B structure and constraints</li>
-          <li>In the past: monolithic and two-tier client/server architectures</li>
-          <li>Today: ETL (Extract, Transform, Load) technologies</li>
-        </ul>
-        <li>Problems</li>
-        <ul>
-          <li>App D must understand complex structures and constraints</li>
-          <ul>
-            <li>Data &ndash; very complex, includes structure and integrity constraints</li>
-            <li>Functions/processes &ndash; hidden in integrity constraints</li>
-            <li>Technical &ndash; access mechanisms can vary</li>
-          </ul>
-        </ul>
-      </ul>
-    </div>
-
-    <div class="slide">
-      <hgroup>
-        <h1>Service-oriented Integration</h1>
-      </hgroup>
-      <div class="h-drawing" style="height: 120px" id="1gqZkpqGJixejTLWZrZCE45iZo-2j3_rDgaRs3Qq4rN4"></div>
-      <ul class="x-small">
-        <li>Integration at the application layer</li>
-        <ul>
-          <li>Application exposes services that other applications consume</li>
-          <li>Services hide implementation details but only define interfaces for integration</li>
-        </ul>
-        <li>Problems</li>
-        <ul>
-          <li>Can become unmanageable if not properly designed</li>
-          <li>Interoperability</li>
-          <ul>
-            <li>Data &ndash; limited to input and output messages only</li>
-            <li>Functions/processes &ndash; limited to semantics of services</li>
-            <li>Technical &ndash; access mechanisms can vary</li>
-          </ul>
-        </ul>
-      </ul>
-    </div>
-
-    <div class="slide">
-      <hgroup>
-        <h1>Integration and Types of Data</h1>
-      </hgroup>
-      <ul class="x-small">
-        <li>Real-time data &ndash; Web services</li>
-        <ul>
-          <li>Service-oriented integration</li>
-          <li>online, realtime communication between a client and a service</li>
-          <li>Usually small data and small amount of service invocation in a process</li>
-        </ul>
-        <li>Bulk data &ndash; ETL</li>
-        <ul>
-          <li>Data-oriented integration</li>
-          <li>processing of large amount of data in batches</li>
-          <li>Sometimes required for reconciliation across apps</li>
-          <ul>
-            <li>when real-time integration fails and there is poor error handling</li>
-          </ul>
-        </ul>
-        <li><b>SOA provides both Web service and ETL capabilities</b></li>
-      </ul>
-    </div>
-  </section>
-
-  <div class="slide outline"></div>
-
   <section>
     <header>Service Definition</header>
-
-    <div class="slide">
-      <hgroup>
-        <h1>Web Service Architecture</h1>
-      </hgroup>
-      <ul class="x-small">
-        <li>Web Service Architecture</li>
-        <ul>
-          <li>Defined by W3C in <span id="ws-arch" class="h-ref">Web Service Architecture Working Group Note</span></li>
-          <li>Defines <b>views</b></li>
-          <ul>
-            <li>message-oriented view (WSDL and SOAP)</li>
-            <li>resource-oriented view (REST and HTTP)</li>
-          </ul>
-          <li>Defines <b>architecture entities</b> and their <b>interactions</b></li>
-          <ul>
-            <li>Abstraction over underlying technology</li>
-            <li>Basis for service usage processes and description languages</li>
-          </ul>
-        </ul>
-        <li>Service Oriented Architecture</li>
-        <ul>
-          <li>Collection of tools, methods and technologies</li>
-          <li>There is some implicit understanding of SOA in the community such as</li>
-          <ul>
-            <li>SOA provides advances over Enterprise Application Integration</li>
-            <li>SOA is realized by using SOAP, WSDL, (and UDDI) technologies</li>
-            <li>SOA utilizes Enterprise Service Bus (ESB)</li>
-          </ul>
-          <li class="no-bullet">&rArr; ~&nbsp;a realization of Web Service Architecture message-oriented view</li>
-        </ul>
-      </ul>
-    </div>
 
     <div class="slide" id="service-definition">
       <hgroup>
@@ -233,10 +89,7 @@
         <li>Logical definition</li>
         <ul>
           <li>service interface, description and implementation</li>
-          <li>service usage process</li>
-          <ul>
-            <li>service use tasks, service types</li>
-          </ul>
+          <li>message-oriented and resource-oriented</li>
         </ul>
         <li>Architectural definition</li>
         <ul>
@@ -325,186 +178,415 @@
   <div class="slide outline"></div>
 
   <section>
-    <header>Service Communication</header>
+    <header>Integrating Applications</header>
 
     <div class="slide">
       <hgroup>
-        <h1>Application Protocols</h1>
+        <h1>Integration and Interoperability</h1>
       </hgroup>
-      <ul class="x-small">
-        <li>Remember this</li>
-      </ul>
-      <div class="h-drawing" id="19zJkisQOr32yxVeMcXEi7B3fHAtSot0c_ppDJeKl4bc" style="height: 120px; margin-top: -10px"></div>
-      <ul class="x-small">
-        <li>App protocols mostly on top of the TCP Layer</li>
+      <ul class="small spacing">
+        <li>Integration</li>
         <ul>
-          <li>use TCP socket for communication</li>
+          <li>A process of connecting applications so that they can
+            exchange and share capabilities, that is &mdash; information and functionalities.</li>
+          <li>Includes methodological approaches as well as technologies</li>
         </ul>
-        <li>Major protocols</li>
+        <li>Interoperability</li>
         <ul>
-          <li>HTTP &#150; most of the app protocols layered on HTTP</li>
+          <li>Ability of two or more applications to understand each other</li>
+          <li>Interoperability levels</li>
           <ul>
-            <li>wide spread, but: implementors often break HTTP semantics</li>
+            <li>Data &ndash; syntax/structure and semantics</li>
+            <li>Functions/Processes &ndash; syntax and semantics</li>
+            <li>Technical aspects &ndash; protocols, network addresses, etc.</li>
           </ul>
-          <li>RMI &#150; Remote Method Invocation</li>
-          <ul>
-            <li>Java-specific, rather interface</li>
-            <li>may use HTTP underneath (among other things)</li>
-          </ul>
-          <li>XML-RPC &#150; Remote Procedure Call and SOAP</li>
-          <ul>
-            <li>Again, HTTP underneath</li>
-          </ul>
-          <li>WebSocket &#150; new protocol part of HTML5</li>
         </ul>
       </ul>
     </div>
 
     <div class="slide">
       <hgroup>
-        <h1>Socket</h1>
+        <h1>Service Oriented Architecture</h1>
       </hgroup>
-      <div class="h-drawing" style="height: 140px" id="1Z4OmMLdUPPmmfAsENj7zBb_kjDOWVUzku50WucxpePU"></div>
+      <center>
+        <div class="h-drawing" id="1IOWIHKsD9qfPJ-eaXZc-hcL_4_gFO9AY5-ftDuZ1n3s" style="margin-top: 20px; width: 600px"></div>
+      </center>
+      <ul class="x-small">
+        <li>SOA supports two core business strategies</li>
+        <ul>
+          <li>Growing top-line revenue</li>
+          <ul>
+            <li>Enterprise reacts quickly to requirements from the market</li>
+            <li>Business processes can be reconfigured rather than reimplemented</li>
+          </ul>
+          <li>Improving bottom-line profit</li>
+          <ul>
+            <li>Saving development costs by resuing existing services</li>
+          </ul>
+        </ul>
+        <li>Pre-integrated solutions</li>
+        <ul>
+          <li>Out-of-the-box applications and integration solutions among them</li>
+        </ul>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>One-to-One Service Integration</h1>
+      </hgroup>
+      <ul class="x-small">
+        <li>Direct integration of applications</li>
+        <ul>
+          <li>Multiple protocols problem, multiple vendor problem</li>
+          <li>Replication of integration functionalities such as interoperability solutions</li>
+        </ul>
+        <div class="h-drawing" style="height: 340px" id="123tDQFo3Zq0LEzzhquKp1xJX4YZ6YiWC0GDNGGK1UA0" alt="One to One Spaghetti Integration"></div>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Many-to-Many Service Integration</h1>
+      </hgroup>
+      <ul class="x-small">
+        <li>Enterprise Service Bus &ndash; central integration technology</li>
+        <ul>
+          <li>Realizes so called Service Oriented Architecture (SOA)</li>
+          <li>Contains various integration components such as process server, mediators, messaging middleware,
+            identity management, etc.</li>
+        </ul>
+      </ul>
+      <div class="h-drawing" style="height: 360px" id="1-uHnuWoYea9KZgEBRkGmdpbKDT5THls9dn56XolZ1Lg" alt="SOA Integration"></div>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Integration Approaches Overview</h1>
+      </hgroup>
+      <div id="1i5jXogsSgaBZzCMpgtnXdTYaJ_rjbj_AeXEvkH9ljBI" class="h-drawing" style="height: 480px"></div>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Data-oriented Integration</h1>
+      </hgroup>
+      <div class="h-drawing" style="height: 140px" id="103hhb19k8lNgnHJ4ul5kpR7cUb7L1tmVFnoXtq15M5A"></div>
+      <ul class="x-small">
+        <li>Third-party database access</li>
+        <ul>
+          <li>Application D accesses a database of application B directly
+            by using SQL and a knowledge of database B structure and constraints</li>
+          <li>In the past: monolithic and two-tier client/server architectures</li>
+          <li>Today: ETL (Extract, Transform, Load) technologies</li>
+        </ul>
+        <li>Problems</li>
+        <ul>
+          <li>App D must understand complex structures and constraints</li>
+          <ul>
+            <li>Data &ndash; very complex, includes structure and integrity constraints</li>
+            <li>Functions/processes &ndash; hidden in integrity constraints</li>
+            <li>Technical &ndash; access mechanisms can vary</li>
+          </ul>
+        </ul>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Service-oriented Integration</h1>
+      </hgroup>
+      <div class="h-drawing" style="height: 120px" id="1gqZkpqGJixejTLWZrZCE45iZo-2j3_rDgaRs3Qq4rN4"></div>
+      <ul class="x-small">
+        <li>Integration at the application layer</li>
+        <ul>
+          <li>Application exposes services that other applications consume</li>
+          <li>Services hide implementation details but only define interfaces for integration</li>
+        </ul>
+        <li>Problems</li>
+        <ul>
+          <li>Can become unmanageable if not properly designed</li>
+          <li>Interoperability</li>
+          <ul>
+            <li>Data &ndash; limited to input and output messages only</li>
+            <li>Functions/processes &ndash; limited to semantics of services</li>
+            <li>Technical &ndash; access mechanisms can vary</li>
+          </ul>
+        </ul>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Integration and Types of Data</h1>
+      </hgroup>
+      <ul class="x-small">
+        <li>Real-time data &ndash; Web services</li>
+        <ul>
+          <li>Service-oriented integration</li>
+          <li>online, realtime communication between a client and a service</li>
+          <li>Usually small data and small amount of service invocation in a process</li>
+        </ul>
+        <li>Bulk data &ndash; ETL</li>
+        <ul>
+          <li>Data-oriented integration</li>
+          <li>processing of large amount of data in batches</li>
+          <li>Sometimes required for reconciliation across apps</li>
+          <ul>
+            <li>when real-time integration fails and there is poor error handling</li>
+          </ul>
+        </ul>
+        <li><b>SOA provides both Web service and ETL capabilities</b></li>
+      </ul>
+    </div>
+
+  </section>
+
+  <section>
+    <header>Enterprise Service Bus</header>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Enterprise Service Bus</h1>
+      </hgroup>
+      <ul class="x-small">
+        <li>ESB is a central intermediary in SOA</li>
+        <ul>
+          <li>Types of services: shared and infrastructure</li>
+          <li>Types of processes: Technical and Business</li>
+        </ul>
+        <li>ESB Application</li>
+        <ul>
+          <li>Application running on an application server</li>
+          <li>Exposes functionality via Web service interface</li>
+          <li>Allows to communicate with various messaging protocols</li>
+        </ul>
+        <li>Integration Patterns</li>
+        <ul>
+          <li>Technical-level interoperability &ndash; message broker</li>
+          <li>Location transparency</li>
+          <li>Dynamic routing</li>
+          <li>Data transformations &ndash; mediator</li>
+          <li>Resequencing of messages</li>
+          <li>Session pooling</li>
+          <li>Service orchestrations &ndash; BPMN, BPEL</li>
+          <li>Message enrichment</li>
+        </ul>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Service Types</h1>
+      </hgroup>
+      <ul class="x-small">
+        <li>ESB services</li>
+        <ul>
+          <li>shared services &ndash; created for particular domain</li>
+          <li>infrastructure services &ndash; support integration and interoperability</li>
+        </ul>
+      </ul>
+      <div class="h-drawing" id="1HicnsnDos6MtMtIB75XP4odOnSpWs_qSj4TZJnBtWhI" style="height: 390px"></div>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Connectivity Services</h1>
+      </hgroup>
+      <ul class="small">
+        <li>Purpose</li>
+        <ul>
+          <li>Adapters for various back-end technologies</li>
+          <li>Connectivity to legacy applications</li>
+          <li>No business logic, Usually stateless, ESB internal</li>
+        </ul>
+        <li>Example</li>
+        <ul>
+          <li>Database adapters</li>
+          <ul>
+            <li>SQL statement:</li>
+            <pre class="brush: plain">
+          SELECT ID, NAME FROM CUSTOMERS C
+          WHERE  C.REVENUE > :revenue</pre>
+            <li class="no-bullet"><code>Revenue</code> &ndash; input parameter</code></li>
+            <li class="no-bullet"><code>ID, NAME</code> &ndash; structure of output message</li>
+            <li>Expose the SQL statement as a connectivity service</li>
+          </ul>
+          <li>Example implementation: OSB Proxy service, JCA adapters</li>
+        </ul>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Entity Services</h1>
+      </hgroup>
       <ul class="xx-small">
-        <li>Handshaking (connection establishment)</li>
+        <li>Purpose</li>
         <ul>
-          <li>The server listens at <code>[dst_ip,dsp_port]</code></li>
-          <li>Three-way handshake:</li>
+          <li>Expose services on top of one or more entities in a database</li>
+          <li>Do not add any specific logic to entities' operations</li>
           <ul>
-            <li>the client at <code>[src_ip,src_port]</code> sends a connection request</li>
-            <li>the server responds</li>
-            <li>the client acknowledges the response, can send data along</li>
+            <li>Provide CRUD operations only</li>
           </ul>
-          <li>Result is a socket (virtual communication channel) with unique identification:<br />
-            <code>socket=[src_ip,src_port;dst_ip,dst_port]</code></li>
+          <li>May be used to facilitate a Common Data Model</li>
+          <ul>
+            <li>Business entities &ndash; entities of CDM</li>
+            <li>Business objects &ndash; instances of business entities</li>
+            <li>Business Entity Service &ndash; manipulations for business entities</li>
+          </ul>
+          <li>No business logic, usually stateless, ESB internal</li>
         </ul>
-        <li>Data transfer (resource usage)</li>
+        <li>Example</li>
         <ul>
-          <li>Client/server writes/reads data to/from the socket</li>
-          <li>TCP features: reliable delivery, correct order of packets, flow control</li>
-        </ul>
-        <li>Connection close</li>
-      </ul>
-    </div>
-
-    <div class="slide" id="sync-async-comm">
-      <hgroup>
-        <h1>Synchronous and Asynchronous Communication</h1>
-      </hgroup>
-      <div class="h-drawing" style="height: 220px" id="14daki2YQxkRxkpg_RW16-Efihlxzhep8AWXb226NaQA"></div>
-      <ul class="x-small">
-        <li>Synchronous</li>
-        <ul>
-          <li>one socket, |t<sub>req</sub> &#150; t<sub>res</sub>| is small</li>
-          <li>easy to implement and deploy, only standard firewall config</li>
-          <li>only the server defines endpoint</li>
-        </ul>
-        <li>Asynchronous</li>
-        <ul>
-          <li>request, response each has socket, client and server define endpoints</li>
-          <li>|t<sub>req</sub> &#150; t<sub>res</sub>| can be large (hours, even days)</li>
-          <li>harder to do across network elements (private/public networks issue)</li>
+          <li>Two entities in a database: <code>CUSTOMERS</code>, <code>ADDRESS</code> (1:N)</li>
+          <li>Business entity <code>CUSTOMER</code></li>
+          <pre class="brush: xml; class-name: 'tight'">
+        &lt;customer>
+          &lt;name>Company.cz&lt;/name>
+          &lt;invoice-address>
+            …
+          &lt;/invoice-address>
+          &lt;main-address>
+            …
+          &lt;/main-address>
+        &lt;/customer></pre>
+          <li>Operarions: read, write</li>
         </ul>
       </ul>
     </div>
 
     <div class="slide">
       <hgroup>
-        <h1>Asynchronous via Intermediary</h1>
+        <h1>Business Services</h1>
       </hgroup>
-      <div class="h-drawing" style="height: 220px" id="1mh4fk7kNmLyqVT1Cks4rRFRpGjFcU1yStOYQw2uiew8"></div>
       <ul class="x-small">
-        <li>Intermediary</li>
+        <li>Purpose</li>
         <ul>
-          <li>A component that decouples a client-server communication</li>
-          <li>It increases reliability and performance</li>
+          <li>Business/integration logic, can be stateful or stateless</li>
+          <li>Atomic business activities</li>
           <ul>
-            <li>The server may not be available when a client sends a request</li>
-            <li>There can be multiple servers that can handle the request</li>
+            <li>direct mapping to back-end application services</li>
           </ul>
+          <li>Can be "imported" in ESB to be used in a business process</li>
+          <li>Can be exposed by ESB and add values in terms of business/integration logic or technical processing</li>
         </ul>
-        <li>Further Concepts</li>
+        <li>Example</li>
         <ul>
-          <li>Message Queues (MQ) &ndash; queue-based communication</li>
-          <li>Publish/Subscribe (P/S) &ndash; event-driven communication</li>
+          <li>Data transformation</li>
+          <ul>
+            <li>Back-end application service exposed in CDM language</li>
+          </ul>
+          <li>Message enrichment</li>
+          <ul>
+            <li>Adds information to content from other sources</li>
+          </ul>
+          <li>Monitoring</li>
+          <ul>
+            <li>Every invocation of the service logged</li>
+            <li>Monitoring of business metrics</li>
+            <ul>
+              <li>Number of orders, total revenue per customer</li>
+            </ul>
+          </ul>
         </ul>
       </ul>
     </div>
 
     <div class="slide">
       <hgroup>
-        <h1>Asynchronous via Polling</h1>
+        <h1>Business Processes</h1>
       </hgroup>
-      <div class="h-drawing" style="height: 220px" id="1F3GsWbkka-hDU75qAzFl1OlhtMMHt_gfxE9m3CcvlAk"></div>
       <ul class="x-small">
-        <li>Polling &ndash; only clients open sockets</li>
+        <li>Purpose</li>
         <ul>
-          <li>A client performs multiple request-response interactions</li>
+          <li>Business/integration logic, usually stateful</li>
+          <li>Complex processes involving invocations of multiple business services at various back-end applications</li>
+          <li>Handles transformations from various data formats of back-end applications</li>
+          <li>Handles <b>key-mapping</b></li>
           <ul>
-            <li>The first interaction initiates a process on the server</li>
-            <li>Subsequent interactions check for the processing status</li>
-            <li>The last interaction retrieves the processing result</li>
+            <li>Business entities exist in multiple systems</li>
+            <li>Each back-end application maintains its own ID for corresponding business objects</li>
           </ul>
+          <li>Usually implemented in a process language such as BPMN or BPEL</li>
+          <li>OSB uses its own orchestration language which translates to XQuery</li>
         </ul>
-        <li>Properties of environments</li>
+        <li>Example</li>
         <ul>
-          <li>A server cannot open a socket with the client (network restrictions)</li>
-          <li>Typically on the Web (a client runs in a browser)</li>
+          <li>Order processing</li>
+          <ul>
+            <li>Get customer information from the CRM system</li>
+            <li>Add line items to OMS</li>
+            <li>Close order</li>
+          </ul>
         </ul>
       </ul>
     </div>
+    </div>
+  </section>
 
-		<div class="slide">
-			<hgroup>
-				<h1>Blocking I/O Model</h1>
-			</hgroup>
-			<ul class="small">
-				<li>The server creates a thread for every connection</li>
-				<ul>
-					<li>For example, 1K connections = 1K threads, big overhead</li>
-				</ul>
-			</ul>
-			<div id="1QP7gZSS1WS3YquzLekSgdZfcmi4BYArm-K9tuWrULQs" class="h-drawing" style="height: 220px"></div>
-			<ul class="small">
-				<li>Characteristics</li>
-				<ul>
-					<li>the thread is reserved for the connection</li>
-					<li>When processing of the request requires other interactions with DB/FS or network
-						communication is slow</li>
-					<ul>
-						<li>scales very bad as the thread's execution is "blocked"</li>
-					</ul>
-				</ul>
-			</ul>
-		</div>
+  <div class="slide outline"></div>
 
-		<div class="slide">
-			<hgroup>
-				<h1>Non-Blocking I/O Model</h1>
-			</hgroup>
-			<ul class="small">
-				<li>Connections maintained by the OS, not the Web app</li>
-				<ul>
-					<li>The Web app registers events, OS triggers events when occur</li>
-				</ul>
-			</ul>
-			<div id="1kxkFc3Chl4qFXxH_4f2seuNbpBdENMyZWMRUmxd1p28" class="h-drawing" style="height: 220px"></div>
-			<ul class="x-small">
-				<li>Characteristics</li>
-				<ul>
-					<li>Event examples: new connection, read, write, closed</li>
-					<li>The app may create working threads and controls their number</li>
-					<ul>
-						<li>less number of working threads as opposed to blocking I/O</li>
-          </ul>
-          <li>On the outbound calls, there can still be blocking I/O</li>
-          <ul>
-            <li>this depends on the implementation framework</li>
-				  </ul>
-			  </ul>
+  <section>
+    <header>Microservices Architecture</header>
+
+    <div class="slide">
+      <hgroup>
+        <h1>The Scale Cube</h1>
+      </hgroup>
+      <ul class="x-small">
+        <li>Three-dimensional scalability model</li>
+        <ul>
+          <li>X-Axis scaling requests across multiple instances</li>
+          <li><b>Y-Axis scaling decomposes an application into micro-services</b></li>
+          <li>Z-Axis scaling requests across "data partitioned" instances</li>
+        </ul>
+        <img src="img/scale-cube.png" style="zoom: 0.9"></img>
       </ul>
-		</div>
+    </div>
 
+    <div class="slide">
+      <hgroup>
+        <h1>Overview</h1>
+      </hgroup>
+      <ul>
+        <li>Emerging software architecture</li>
+        <ul>
+          <li>monolithic vs. decoupled applications</li>
+          <li>applications as independenly deployable services</li>
+        </ul>
+        <img src="img/microservices.png" style="zoom: 0.7"></img>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Major Characteristics</h1>
+      </hgroup>
+      <ul>
+        <li>Loosely coupled</li>
+        <ul>
+          <li>Integrated using well-defined interfaces</li>
+        </ul>
+        <li>Technology-agnostic protocols</li>
+        <ul>
+          <li>HTTP, they use REST architecture</li>
+        </ul>
+        <li>Independently deployable and easy to replace</li>
+        <ul>
+          <li>A change in small part requires to redeploy only that part</li>
+        </ul>
+        <li>Organized around capabilities</li>
+        <ul>
+          <li>such as accounting, billing, recommendation, etc.</li>
+        </ul>
+        <li>Impplemented using different technologies</li>
+        <ul>
+          <li>polyglot &ndash; programming languages, databases</li>
+        </ul>
+        <li>Owned by a small team</li>
+      </ul>
+    </div>
 
   </section>
 
