@@ -64,6 +64,44 @@
   <section>
     <header>Service Definition</header>
 
+    <div class="slide">
+      <hgroup>
+        <h1>Basic Entities</h1>
+      </hgroup>
+      <ul class="x-small spacing">
+        <li>Agent</li>
+        <ul>
+          <li>software or hardware that sends/receives messages</li>
+          <li>concrete implementation of a service</li>
+        </ul>
+        <li>Service interface</li>
+        <ul>
+          <li>abstract set of functionality and behavior</li>
+          <li>two different agents may realize the same service</li>
+        </ul>
+        <li>Provider</li>
+        <ul>
+          <li>owner (person or organization) that provides an agent 
+            realizing a service</li>
+          <li>also called a service provider</li>							  
+        </ul>
+        <li>Requester</li>
+        <ul>
+          <li>a person or organization that wishes to make use of a 
+          provider's service</li>
+          <li>uses a requester's agent to exchange messages with provider's agent</li>
+        </ul>
+      </ul>
+    </div>
+    
+    <div class="slide">
+      <hgroup>
+        <h1>Interaction of Entities</h1>
+      </hgroup>
+      <div class="h-drawing" id="1ryEYL6i_VJrUeFDyTxE25DY_8j2ufgHeY2o4QcSbA5Y"
+        style="height: 420px"></div>
+    </div>
+
     <div class="slide" id="service-definition">
       <hgroup>
         <h1>Service</h1>
@@ -118,6 +156,7 @@
           <li>SOAP service ~ a service interface is possible to access through SOAP protocol;
             there is a WSDL description usually available too.</li>
           <li>REST/RESTful service ~ service interface that conforms to REST architectural style and HTTP protocol</li>
+          <li>Microservice ~ a set of services that realize an app's capability
         </ul>
       </ul>
     </div>
@@ -141,7 +180,6 @@
           <li>Process</li>
           <ul>
             <li>public process: how to consume the service's functionality</li>
-            <li>orchestration: realization of the service's functionality by its implementation</li>
           </ul>
           <li>Technical</li>
           <ul>
@@ -342,6 +380,8 @@
 
   </section>
 
+  <div class="slide outline"></div>
+
   <section>
     <header>Enterprise Service Bus</header>
 
@@ -412,7 +452,7 @@
             <li class="no-bullet"><code>ID, NAME</code> &ndash; structure of output message</li>
             <li>Expose the SQL statement as a connectivity service</li>
           </ul>
-          <li>Example implementation: OSB Proxy service, JCA adapters</li>
+          <li>Example implementation: JCA adapters</li>
         </ul>
       </ul>
     </div>
