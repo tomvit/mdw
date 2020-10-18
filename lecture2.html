@@ -8,9 +8,9 @@
 
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-  <meta name="course" content="Middleware and Web Services" />
+  <meta name="course" content="Middleware Architectures" />
   <meta name="lecture" content="Lecture 2" />
-  <meta name="keywords" content="SOA, service concepts, service technologies, SOAP, REST, WSDL" />
+  <meta name="keywords" content="SOA, service concepts, service technologies" />
 
   <link type="text/css" rel="stylesheet" href="css/meta.css">
   </link>
@@ -61,6 +61,7 @@
   </div>
 
   <div class="slide outline"></div>
+
   <section>
     <header>Service Definition</header>
 
@@ -563,6 +564,180 @@
       </ul>
     </div>
     </div>
+  </section>
+
+  <div class="slide outline"></div>
+  
+  <section>
+
+    <section>
+      
+      <header>
+        Integration Patterns
+      </header>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Integration Patterns</h1>
+        </hgroup>
+        <ul class="x-small">
+          <li>Applied in implementation of business services and processes</li>
+          <ul>
+            <li>Usually a combination of more patterns</li>
+          </ul>
+          <li>Technical patterns</li>
+          <ul>
+            <li>Deals with technical aspects of service communication</li>
+            <li>Message broker &ndash; technical-level interoperability</li>
+            <li>Location transparency</li>
+            <li>Session pooling</li>
+          </ul>
+          <li>Business patterns</li>
+          <ul>
+            <li>Deals with business aspects (message content) of service communication</li>
+            <li>Dynamic routing</li>
+            <li>Data transformations &ndash; mediator</li>
+            <li>Service orchestrations &ndash; BPMN, BPEL</li>
+            <li>Message enrichment</li>
+            <li>Resequencing of messages</li>
+          </ul>
+        </ul>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Message Broker</h1>
+        </hgroup>
+        <ul class="small">
+          <li>Message broker</li>
+          <ul>
+            <li>ESB can mix and match transports both standard and proprietary</li>
+          </ul>
+        </ul>
+        <div class="h-drawing" id="1Ga9iANbaAAB-eEuCxZBPbTKX8pDQlvttS5-dI19vJRI" style="height: 350px"></div>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Location Transparency</h1>
+        </hgroup>
+        <ul class="small">
+          <li>Location transparency</li>
+          <ul>
+            <li>ESB can hide changes in location of services</li>
+            <li>Such changes will not affect clients</li>
+            <li>Can also be used for load balancing for multiple service instances</li>
+          </ul>
+        </ul>
+        <div class="h-drawing" id="1yyj2VBgauYs_zVWoSR1R2Hugf8pLG-HmDq8-2bF-vNI" style="height: 200px"></div>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Session Pooling</h1>
+        </hgroup>
+        <ul class="small">
+          <li>Session Pooling</li>
+          <ul>
+            <li>ESB can maintain a pool of connections (session tokens) to a back-end app when creating a new connection is expensive</li>
+            <li>A single session token can be reused by multiple instances of business processes</li>
+          </ul>
+        </ul>
+        <div class="h-drawing" id="1O06u_GmbgK_hAPqwWJcQsFz7XtugVx6q1t5gCurn-3Y" style="height: 250px"></div>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Dynamic Routing</h1>
+        </hgroup>
+        <ul class="small">
+          <li>Dynamic routing</li>
+          <ul>
+            <li>ESB exposes a service that routes to various back-end services based on message contents.</li>
+          </ul>
+        </ul>
+        <div class="h-drawing" id="1dqQSDoXzk9KOscw7hA1N1aAexj5iqWbjn49e782DUMk" style="height: 180px"></div>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Message Enrichment</h1>
+        </hgroup>
+        <ul class="small">
+          <li>Message enrichmenet</li>
+          <ul>
+            <li>Enriches a message before invoking back-end application service.</li>
+          </ul>
+        </ul>
+        <div id="1675sNfJX75EcwMZXTSACUGKEhPf3QnTjXRPtEABXwm0" class="h-drawing" style="height: 250px"></div>
+
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Data Transformation</h1>
+        </hgroup>
+        <ul class="small">
+          <li>Data transformation phases:</li>
+          <ul>
+            <li>Definition of mapping and execution of mappings</li>
+          </ul>
+          <li>Definition of mappings (design-time)</li>
+          <ul>
+            <li>A mapping associates one data structure to another data structure
+              and defines a conversion between them.</li>
+            <li>Mapping languages</li>
+            <ul>
+              <li>graphical for design that translates to XSLT, XQuery</li>
+              <li>Sometimes implemented in 3rd gen. languages (e.g., Java)</li>
+            </ul>
+          </ul>
+          <li>Execution of mappings (runtime)</li>
+          <ul>
+            <li>application of mappings to instance data</li>
+          </ul>
+          <li>CDM terminology</li>
+          <ul>
+            <li>Application Business Message &ndash; back-end app format</li>
+            <li>Enterprise Business Message &ndash; CDM format</li>
+          </ul>
+        </ul>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Key Mapping</h1>
+        </hgroup>
+        <ul class="x-small">
+          <li>What is key mapping</li>
+          <ul>
+            <li>Key = identifier of en entity in a back-end application</li>
+            <li>Key Mapping = a mapping of an ID of an entity in one system to an ID of the same entity in another system.</li>
+            <li>Key mapping is realized using universal IDs (UID)</li>
+          </ul>
+          <li>Example</li>
+          <ul>
+            <li>A customer MOON exists in CRM and OMS systems</li>
+            <li>In CRM system, MOON has an <code>CRM-ID=AB1</code></li>
+            <li>In OMS system, MOON has an <code>CRM-ID=45A</code></li>
+            <li>Key mappig allows to map the <code>CRM-ID AB1</code> to the <code>OMS-ID 45A</code></li>
+            <li>Key mapping is a table</li>
+            <ul class="no-bullet">
+              <li><code>CRM-ID &rarr; UID &rarr; OMS-ID</code></li>
+            </ul>
+          </ul>
+        </ul>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Key Mapping Example</h1>
+        </hgroup>
+        <div id="1G4XbrYDV4ptT6GvXzWHio5bp2tfRpZd8MwrOpCcIR0U" class="h-drawing" style="height: 410px; margin-top: 60px"></div>
+      </div>
+
+    </section>
+  
   </section>
 
   <div class="slide outline"></div>
