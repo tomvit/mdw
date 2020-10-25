@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<!--
+    Middleware and Web Services, CTU course slides
+    (cc) 2010-2012 Tomas Vitvar, http://vitvar.com
+    written for Humla, an open source HTML5 presentation environment
+-->
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="course" content="Middleware Architectures" />
+  <meta name="lecture" content="Lecture 3" />
+  <meta name="keywords" content="Integration Patterns" />
+
+  <link type="text/css" rel="stylesheet" href="css/meta.css">
+  </link>
+  <link type="text/css" rel="stylesheet" href="css/ctu-fit.css">
+  </link>
+  <link type="text/css" rel="stylesheet" href="humla/lib/core/humla.css">
+  </link>
+
+  <script type="text/javascript" src="humla/lib/humla.js"></script>
+  <title>Communication Patterns</title>
+</head>
+
+<body>
+  <footer>
+    <p><b>#META_LECTURE#: #TITLE#</b>,&nbsp;<span class="meta_semester" />,&nbsp;
+      <span class="meta_twitter" /></p>
+    <p><b>&#8210; #SLIDE_NO# &#8210;</b></p>
+  </footer>
+
+  <div class="slide intro">
+    <hgroup>
+      <h1><span class="meta_course" /></h1>
+      <h2>#META_LECTURE#: #TITLE#</h2>
+    </hgroup>
+    <div class="author">
+      <p class="meta_author" />
+      <p><span class="meta_email" /> &bull; <span class="meta_twitter" /> &bull;
+        <span class="meta_web" /></p>
+    </div>
+    <center>
+      <div class="meta_logo"></div>
+    </center>
+    <div class="org">
+      <p class="meta_org" />
+      <p><span class="meta_orgfac" /> &bull; <span class="meta_field" />
+        &bull; <span class="meta_orgweb" /></p>
+    </div>
+    <div class="etc">
+      <div class="text-info">
+        Modified: #LAST_MODIFIED#<br />
+        Humla v#HUMLA_VERSION#
+      </div>
+      <a href="http://creativecommons.org/licenses/by-sa/3.0/">
+        <div class="license"></div>
+      </a>
+      <div class="oppa"></div>
+    </div>
+  </div>
+
+  <div class="slide outline"></div>
+
+  <section>
+    <header>Introduction to Application Protocols</header>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Application Protocols</h1>
+      </hgroup>
+      <ul class="x-small">
+        <li>Remember this</li>
+      </ul>
+      <div class="h-drawing" id="19zJkisQOr32yxVeMcXEi7B3fHAtSot0c_ppDJeKl4bc" style="height: 120px; margin-top: -10px"></div>
+      <ul class="x-small">
+        <li>App protocols mostly on top of the TCP Layer</li>
+        <ul>
+          <li>use TCP socket for communication</li>
+        </ul>
+        <li>Major protocols</li>
+        <ul>
+          <li>HTTP &#150; most of the app protocols layered on HTTP</li>
+          <ul>
+            <li>wide spread, but: implementors often break HTTP semantics</li>
+          </ul>
+          <li>RMI &#150; Remote Method Invocation</li>
+          <ul>
+            <li>Java-specific, rather interface</li>
+            <li>may use HTTP underneath (among other things)</li>
+          </ul>
+          <li>XML-RPC &#150; Remote Procedure Call and SOAP</li>
+          <ul>
+            <li>Again, HTTP underneath</li>
+          </ul>
+          <li>WebSocket &#150; new protocol part of HTML5</li>
+        </ul>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Socket</h1>
+      </hgroup>
+      <div class="h-drawing" style="height: 140px" id="1Z4OmMLdUPPmmfAsENj7zBb_kjDOWVUzku50WucxpePU"></div>
+      <ul class="xx-small">
+        <li>Handshaking (connection establishment)</li>
+        <ul>
+          <li>The server listens at <code>[dst_ip,dsp_port]</code></li>
+          <li>Three-way handshake:</li>
+          <ul>
+            <li>the client at <code>[src_ip,src_port]</code> sends a connection request</li>
+            <li>the server responds</li>
+            <li>the client acknowledges the response, can send data along</li>
+          </ul>
+          <li>Result is a socket (virtual communication channel) with unique identification:<br />
+            <code>socket=[src_ip,src_port;dst_ip,dst_port]</code></li>
+        </ul>
+        <li>Data transfer (resource usage)</li>
+        <ul>
+          <li>Client/server writes/reads data to/from the socket</li>
+          <li>TCP features: reliable delivery, correct order of packets, flow control</li>
+        </ul>
+        <li>Connection close</li>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Addressing in Application Protocol</h1>
+      </hgroup>
+      <div class="h-drawing" style="height: 220px" id="1a6OhSNel7-1HC-NaWmmkRfIOyQqlvaoXGyJws1rAuZU"></div>
+      <ul class="xx-small">
+        <li>IP addressing: IP is an address of a machine interface</li>
+        <ul>
+          <li>A machine can have multiple interfaces (eth0, eth1, bond0, ...)</li>
+        </ul>
+        <li>TCP addressing: TCP port is an address of an app running on a machine and listening on a machine interface</li>
+        <ul>
+          <li>Multiple applications with different TCP ports may listen on a machine interface</li>
+        </ul>
+        <li>Application addressing</li>
+        <ul>
+          <li>Additional mechanisms to address entities within an application</li>
+          <li>They are out of scope of IP/TCP, they are app specific</li>
+          <ul>
+            <li>for example, Web apps served by a single Web server</li>
+          </ul>
+        </ul>
+      </ul>
+    </div>
+
+    <div class="slide outline"></div>
+
+    <section>
+      <header>Synchronous and Asynchronous Communication</header>
+
+      <div class="slide" id="sync-async-comm">
+        <hgroup>
+          <h1>Synchronous and Asynchronous Communication</h1>
+        </hgroup>
+        <div class="h-drawing" style="height: 220px" id="14daki2YQxkRxkpg_RW16-Efihlxzhep8AWXb226NaQA"></div>
+        <ul class="x-small">
+          <li>Synchronous</li>
+          <ul>
+            <li>one socket, |t<sub>req</sub> &#150; t<sub>res</sub>| is small</li>
+            <li>easy to implement and deploy, only standard firewall config</li>
+            <li>only the server defines endpoint</li>
+          </ul>
+          <li>Asynchronous</li>
+          <ul>
+            <li>request, response each has socket, client and server define endpoints</li>
+            <li>|t<sub>req</sub> &#150; t<sub>res</sub>| can be large (hours, even days)</li>
+            <li>harder to do across network elements (private/public networks issue)</li>
+          </ul>
+        </ul>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Asynchronous via Intermediary</h1>
+        </hgroup>
+        <div class="h-drawing" style="height: 220px" id="1mh4fk7kNmLyqVT1Cks4rRFRpGjFcU1yStOYQw2uiew8"></div>
+        <ul class="x-small">
+          <li>Intermediary</li>
+          <ul>
+            <li>A component that decouples a client-server communication</li>
+            <li>It increases reliability and performance</li>
+            <ul>
+              <li>The server may not be available when a client sends a request</li>
+              <li>There can be multiple servers that can handle the request</li>
+            </ul>
+          </ul>
+          <li>Further Concepts</li>
+          <ul>
+            <li>Message Queues (MQ) &ndash; queue-based communication</li>
+            <li>Publish/Subscribe (P/S) &ndash; event-driven communication</li>
+          </ul>
+        </ul>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Asynchronous via Polling</h1>
+        </hgroup>
+        <div class="h-drawing" style="height: 220px" id="1F3GsWbkka-hDU75qAzFl1OlhtMMHt_gfxE9m3CcvlAk"></div>
+        <ul class="x-small">
+          <li>Polling &ndash; only clients open sockets</li>
+          <ul>
+            <li>A client performs multiple request-response interactions</li>
+            <ul>
+              <li>The first interaction initiates a process on the server</li>
+              <li>Subsequent interactions check for the processing status</li>
+              <li>The last interaction retrieves the processing result</li>
+            </ul>
+          </ul>
+          <li>Properties of environments</li>
+          <ul>
+            <li>A server cannot open a socket with the client (network restrictions)</li>
+            <li>Typically on the Web (a client runs in a browser)</li>
+          </ul>
+        </ul>
+      </div>
+
+      <div class="slide">
+  			<hgroup>
+  				<h1>Blocking (Synchronous) I/O</h1>
+  			</hgroup>
+        <div id="1QP7gZSS1WS3YquzLekSgdZfcmi4BYArm-K9tuWrULQs" class="h-drawing" style="height: 220px"></div>
+  			<ul class="x-small">
+  				<li>Inbound connection</li>
+  				<ul>
+            <li>A server creates a thread for every inbound connection</li>
+  					<li>For example, 1K connections = 1K threads, big overhead</li>
+            <li>A thread is reserved for the entire duration of the request processing</li>
+  				</ul>
+          <li>Outbound connection</li>
+          <ul>
+            <li>A thread is blocked when outbound connection is made</li>
+            <li>When outbound connection is slow, the scalability is poor</li>
+          </ul>
+  			</ul>
+  		</div>
+
+  		<div class="slide">
+  			<hgroup>
+  				<h1>Non-Blocking (Asynchrnous) I/O</h1>
+  			</hgroup>
+        <div id="1kxkFc3Chl4qFXxH_4f2seuNbpBdENMyZWMRUmxd1p28" class="h-drawing" style="height: 220px"></div>
+  			<ul class="x-small">
+  				<li>Inbound connections</li>
+  				<ul>
+            <li>The connection is maintained by the OS, not the server app</li>
+  					<li>The Web app registers events, OS triggers events when they occur</li>
+            <li>The app may create working threads and controls their number</li>
+  				</ul>
+          <li>Outound connections</li>
+          <ul>
+            <li>The app registers a callback that is called when the data is available</li>
+            <li>Event loop</li>
+          </ul>
+  			</ul>
+  		</div>
+
+    </section>
+
+    <div class="slide outline"></div>
+
+    <section>
+      <header>Selected Networking Concepts</header>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Forward Proxy</h1>
+        </hgroup>
+        <div class="h-drawing" id="1zt7pfPYpd5cdHu92rimaRelwjKHkHeeA7AhHnrerI74" style="height: 270px"></div>
+        <ul class="xx-small">
+          <li>Forward Proxy</li>
+          <ul>
+            <li>Centralized access control based on content</li>
+            <li>The client knows about the site it wants to access</li>
+            <li>Perfoms request on behalf of the client</li>
+            <ul>
+              <li>Caches content to increase performance, limits network traffic</li>
+              <li>Filters requests or controls access based on destinations or origins</li>
+            </ul>
+            <li>Widely used in private networks in companies</li>
+            <li>Most of the proxy servers today are Web proxy servers</li>
+          </ul>
+        </ul>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Reverse Proxy</h1>
+        </hgroup>
+        <div class="h-drawing" id="1RpfjNLhFSzu7mDdWVvV3ZldHEhzx9rLB1KpHpdL9bno" style="height: 270px"></div>
+        <ul class="xx-small">
+          <li>Reverse Proxy</li>
+          <ul>
+            <li>Aggregates multiple request-response interactions with back-end systems</li>
+            <li>Processes the request on behalf of the client</li>
+            <li>The client does not know about the back-end systems</li>
+            <li>May provide additional capabilities</li>
+            <ul>
+              <li>Data transformations</li>
+              <li>Security &ndash; authentication, authorization</li>
+              <li>Orchestration of communication with back-end systems</li>
+            </ul>
+          </ul>
+        </ul>
+      </div>
+
+    </section>
+  </section>
+
+
+  <section>
+    <header>
+      Introduction to HTTP
+    </header>
+
+    
+
+
+  </section>
+
+
+
+
+
+
+
+
+
+
+</body>
