@@ -20,7 +20,7 @@
   </link>
 
   <script type="text/javascript" src="humla/lib/humla.js"></script>
-  <title>Communication Patterns</title>
+  <title>Communication Protocols</title>
 </head>
 
 <body>
@@ -82,16 +82,16 @@
         <ul>
           <li>HTTP &#150; most of the app protocols layered on HTTP</li>
           <ul>
-            <li>wide spread, but: implementors often break HTTP semantics</li>
+            <li>widely spread</li>
           </ul>
           <li>RMI &#150; Remote Method Invocation</li>
           <ul>
-            <li>Java-specific, rather interface</li>
+            <li>Java-specific; vendor-interoperability problem</li>
             <li>may use HTTP underneath (among other things)</li>
           </ul>
-          <li>XML-RPC &#150; Remote Procedure Call and SOAP</li>
+          <li>XML-RPC and SOAP &#150; Remote Procedure Call and SOAP</li>
           <ul>
-            <li>Again, HTTP underneath</li>
+            <li>HTTP-based</li>
           </ul>
           <li>WebSocket &#150; new protocol part of HTML5</li>
         </ul>
@@ -109,9 +109,9 @@
           <li>The server listens at <code>[dst_ip,dsp_port]</code></li>
           <li>Three-way handshake:</li>
           <ul>
-            <li>the client at <code>[src_ip,src_port]</code> sends a connection request</li>
-            <li>the server responds</li>
-            <li>the client acknowledges the response, can send data along</li>
+            <li>the client sends a connection request with TCP flags (SYN, x=rand)</li>
+            <li>the server respons with its own TCP flags (SYN ACK, x+1 y=rand)</li>
+            <li>the client acknowledges the response, can send data along (ACK, y+1 x+1)</li>
           </ul>
           <li>Result is a socket (virtual communication channel) with unique identification:<br />
             <code>socket=[src_ip,src_port;dst_ip,dst_port]</code></li>
@@ -122,6 +122,39 @@
           <li>TCP features: reliable delivery, correct order of packets, flow control</li>
         </ul>
         <li>Connection close</li>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>New Connection Costs</h1>
+      </hgroup>
+      <ul class="xx-small">
+        <li>Creating a new TCP connection is expensive</li>
+        <ul>
+          <li>It requires to complete a full roundtrip</li>
+          <li>It is limited by a network latency, not bandwidth</li>
+        </ul>
+        <li>Example</li>
+        <ul>
+          <li>Distance from London to New York is approx. 5500 km</li>
+          <li>Communication over a fibre link will take at least 28ms one way</li>
+          <li>Three-way handskake will take a minimum of 56ms</li>
+        </ul>
+        <li>Connection reuse is critical for any app running over TCP</li>
+        <ul>
+          <li>HTTP Keep-alive</li>
+          <li>HTTP pipelining</li>
+        </ul>
+        <li>TCP Fast Open (TFO)</li>
+        <ul>
+          <li>TFO allows to speed up the opening of successfive TCP connections</li>
+          <li>TCP cookie stored on the client that was established on initial connection</li>
+          <li>The client sends the TCP cookie with SYN packet</li>
+          <li>The server verifies the TCP cookie and can send the data without final ACK</li>
+          <li>Can reduce network transaction latency by 15%</li>
+          <li>TFO is supported by Linux in 3.7+ kernels</li>
+        </ul>
       </ul>
     </div>
 
@@ -223,107 +256,295 @@
       </div>
 
       <div class="slide">
-  			<hgroup>
-  				<h1>Blocking (Synchronous) I/O</h1>
-  			</hgroup>
+        <hgroup>
+          <h1>Blocking (Synchronous) I/O</h1>
+        </hgroup>
         <div id="1QP7gZSS1WS3YquzLekSgdZfcmi4BYArm-K9tuWrULQs" class="h-drawing" style="height: 220px"></div>
-  			<ul class="x-small">
-  				<li>Inbound connection</li>
-  				<ul>
+        <ul class="x-small">
+          <li>Inbound connection</li>
+          <ul>
             <li>A server creates a thread for every inbound connection</li>
-  					<li>For example, 1K connections = 1K threads, big overhead</li>
+            <li>For example, 1K connections = 1K threads, big overhead</li>
             <li>A thread is reserved for the entire duration of the request processing</li>
-  				</ul>
+          </ul>
           <li>Outbound connection</li>
           <ul>
             <li>A thread is blocked when outbound connection is made</li>
             <li>When outbound connection is slow, the scalability is poor</li>
           </ul>
-  			</ul>
-  		</div>
+        </ul>
+      </div>
 
-  		<div class="slide">
-  			<hgroup>
-  				<h1>Non-Blocking (Asynchrnous) I/O</h1>
-  			</hgroup>
+      <div class="slide">
+        <hgroup>
+          <h1>Non-Blocking (Asynchrnous) I/O</h1>
+        </hgroup>
         <div id="1kxkFc3Chl4qFXxH_4f2seuNbpBdENMyZWMRUmxd1p28" class="h-drawing" style="height: 220px"></div>
-  			<ul class="x-small">
-  				<li>Inbound connections</li>
-  				<ul>
+        <ul class="x-small">
+          <li>Inbound connections</li>
+          <ul>
             <li>The connection is maintained by the OS, not the server app</li>
-  					<li>The Web app registers events, OS triggers events when they occur</li>
+            <li>The Web app registers events, OS triggers events when they occur</li>
             <li>The app may create working threads and controls their number</li>
-  				</ul>
+          </ul>
           <li>Outound connections</li>
           <ul>
             <li>The app registers a callback that is called when the data is available</li>
             <li>Event loop</li>
           </ul>
-  			</ul>
-  		</div>
+        </ul>
+      </div>
 
     </section>
 
     <div class="slide outline"></div>
 
     <section>
-      <header>Selected Networking Concepts</header>
+      <header>Introduction to HTTP</header>
 
       <div class="slide">
         <hgroup>
-          <h1>Forward Proxy</h1>
+          <h1>Hypertext Transfer Protocol &ndash; HTTP</h1>
         </hgroup>
-        <div class="h-drawing" id="1zt7pfPYpd5cdHu92rimaRelwjKHkHeeA7AhHnrerI74" style="height: 270px"></div>
-        <ul class="xx-small">
-          <li>Forward Proxy</li>
+        <ul class="small">
+          <li>Application protocol, basis of Web architecture</li>
           <ul>
-            <li>Centralized access control based on content</li>
-            <li>The client knows about the site it wants to access</li>
-            <li>Perfoms request on behalf of the client</li>
+            <li>Part of HTTP, URI, and HTML family</li>
+            <li>Request-response protocol</li>
+          </ul>
+          <li>One socket for single request-response</li>
+          <ul>
+            <li>original specification</li>
+            <li>have changed due to performance issues</li>
             <ul>
-              <li>Caches content to increase performance, limits network traffic</li>
-              <li>Filters requests or controls access based on destinations or origins</li>
+              <li>many concurrent requests</li>
+              <li>overhead when establishing same connections</li>
+              <li>HTTP 1.1 offers persistent connection and pipelining</li>
             </ul>
-            <li>Widely used in private networks in companies</li>
-            <li>Most of the proxy servers today are Web proxy servers</li>
+          </ul>
+          <li>HTTP is stateless</li>
+          <ul>
+            <li>Multiple HTTP requests cannot be normally related at the server</li>
+            <ul>
+              <li>"problems" with state management</li>
+              <li>REST goes back to the original HTTP idea</li>
+            </ul>
           </ul>
         </ul>
       </div>
 
       <div class="slide">
         <hgroup>
-          <h1>Reverse Proxy</h1>
+          <h1>HTTP Request and Response</h1>
         </hgroup>
-        <div class="h-drawing" id="1RpfjNLhFSzu7mDdWVvV3ZldHEhzx9rLB1KpHpdL9bno" style="height: 270px"></div>
+        <ul class="small">
+          <li>Request Syntax</li>
+          <pre class="brush: plain; gutter: false">
+                    method uri http-version &lt;crlf>
+                    (header : value &lt;crlf>)* 
+                    &lt;crlf>                    
+                    [ data ]
+                </pre>
+          <li>Response Syntax</li>
+          <pre class="brush: plain; gutter: false">
+                    http-version response-code [ message ]  &lt;crlf>
+                    (header : value &lt;crlf>)* 
+                    &lt;crlf>
+                    [ data ]
+                </pre>
+          <li>Semantics of terms</li>
+          <pre class="brush: plain; gutter: false">
+                    method         = "GET" | "POST" | "DELETE" | "PUT" | "HEAD" | "OPTIONS" 
+                    uri            = [ path ] [ ";" params ] [ "?" query ] 
+                    http-version   = "HTTP/1.0" | "HTTP/1.1"
+                    response-code  = valid response code 
+                    header : value = valid HTTP header and its value
+                    data           = resource state representation (hypertext)
+                </pre>
+        </ul>
+      </div>
+
+      <div class="slide" id="http-request">
+        <hgroup>
+          <h1>Serving HTTP Request</h1>
+        </hgroup>
+        <div class="h-drawing" style="height: 180px" id="1c1oNNZgurIxOEDHbnZuPHKR9I-H1VhoeOpTWa6-vslI"></div>
         <ul class="xx-small">
-          <li>Reverse Proxy</li>
+          <li>IP and TCP addressing</li>
+          <ol>
+            <li>User enters URL <code>http://company.cz:8080/orders</code> to the browser</li>
+            <li>Browser gets an IP address for <code>company.cz</code>, <code>IP:138.232.189.127</code></li>
+            <li>Browser and Web Server creates a socket <code>[147.32.100.5:3223;138.232.189.127:8080]</code></li>
+          </ol>
+          <li>Application addressing</li>
+          <ol start="4">
+            <li>Browser sends HTTP request, that is, writes following data to the socket</li>
+            <pre class="brush: plain; class-name: 'tight'">
+                    GET /orders HTTP/1.1
+                    Host: company.cz
+                    </pre>
+            <li>Web server passes the request to the web application <code>company.cz</code> which serves
+              <code>GET orders</code> and that writes a response back to the socket.</li>
+          </ol>
+        </ul>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Virtual Web Server</h1>
+        </hgroup>
+        <ul class="x-small">
+          <li>Virtual server</li>
           <ul>
-            <li>Aggregates multiple request-response interactions with back-end systems</li>
-            <li>Processes the request on behalf of the client</li>
-            <li>The client does not know about the back-end systems</li>
-            <li>May provide additional capabilities</li>
+            <li>Configuration of a named virtual web server</li>
+            <li>Web server uses host request header to distinguish among multiple virtual
+              web servers on a single physical host.</li>
+          </ul>
+          <li>Apache virtual Web server configuration</li>
+          <ul class="x-small">
+            <li>Two virtual servers hosted on a single physical host</li>
+            <pre class="brush:plain; class-name: 'tight'">
+          # all IP addresses will be used for named virtual hosts
+          NameVirtualHost *:80
+          
+          &lt;VirtualHost *:80>
+                  ServerName company.com
+                  ServerAdmin admin@company.com
+                  DocumentRoot /var/www/apache/company.com
+          &lt;/VirtualHost>
+          
+          &lt;VirtualHost *:80>
+                  ServerName firm.cz
+                  ServerAdmin admin@firm.cz
+                  DocumentRoot /var/www/apache/firm.cz
+          &lt;/VirtualHost></pre>
+          </ul>
+        </ul>
+      </div>
+
+      <div class="slide" id="curl">
+        <hgroup>
+          <h1>Better Support for HTTP Testing</h1>
+        </hgroup>
+        <ul class="x-small">
+          <li>Use <code>curl</code> to test HTTP protocol</li>
+          <pre class="brush: plain; class-name: 'tight'">
+                    Usage: curl [options...] &lt;url>
+                    
+                    -X/--request &ltcommand>          Specify request command to use
+                    -H/--header &lt;line>              Custom header to pass to server
+                    -d/--data &lt;data>                HTTP POST data
+                    -b/--cookie &lt;name=string/file>  Cookie string or file to read cookies from
+                    -v/--verbose                    Make the operation more talkative                            
+                </pre>
+          <li>Example</li>
+          <pre class="brush: plain; class-name: 'tight'">
+                    curl -v -H "Host: company.cz"  127.0.0.1:8080
+                    
+                    * About to connect() to 127.0.0.1 port 8080 
+                    *   Trying 127.0.0.1... connected
+                    * Connected to 127.0.0.1 port 8080 
+                    &gt; GET / HTTP/1.1
+                    &gt; User-Agent: curl/7.20.0 (i386-apple-darwin10.3.2) libcurl/7.20.0 OpenSSL/0.9.8n
+                    &gt; Accept: */*
+                    &gt; Host: company.cz
+                    &gt; 
+                    &lt; HTTP/1.1 201 OK
+                    &lt; Connection: keep-alive
+                    &lt; Content-Type: plain/text
+                    &lt; 
+                    &lt; This is the response...                            
+                </pre>
+        </ul>
+      </div>
+
+      <div class="slide" id="state-management">
+        <hgroup>
+          <h1>State Management</h1>
+        </hgroup>
+        <ul class="small">
+          <li>HTTP is a stateless protocol &#150; original design</li>
+          <ul>
+            <li>No information to relate multiple interactions at server-side</li>
             <ul>
-              <li>Data transformations</li>
-              <li>Security &ndash; authentication, authorization</li>
-              <li>Orchestration of communication with back-end systems</li>
+              <li>Except <code>Authorization</code> header is copied in every request</li>
+              <li>IP addresses do not work, one public IP can be shared by multiple clients</li>
             </ul>
           </ul>
+          <li>Solutions to check for a valid state at server-side</li>
+          <ul>
+            <li><b>Cookies</b> &ndash; obvious and the most common workaround</li>
+            <ul>
+              <li><span class="h-ref" id="rfc-2109">RFC 2109 &ndash; HTTP State Management Mechanism</span></li>
+              <li>Allow clients and servers to talk in a context called <b>sessions</b></li>
+            </ul>
+            <li><b>Hypertext</b> &ndash; original HTTP design principle</li>
+            <ul>
+              <li>App states represented by resources (hypermedia), links define transitions between states</li>
+              <li>Adopted by the REST principle <b>statelessness</b></li>
+            </ul>
+          </ul>
+        </ul>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Interaction with Cookies</h1>
+        </hgroup>
+        <ul class="small">
+          <li>Request-response interaction with cookies</li>
+          <ul>
+            <li>Session is a logical channel maintained by the server</li>
+          </ul>
+          <div class="h-drawing" style="height: 250px" id="1mVCe8EtqVApZVRV_RHYQKtqDNELKdo84qzCqGvAs7iA"></div>
+          <li>Stateful Server</li>
+          <ul>
+            <li>Server remembers the session information in a server memory</li>
+            <li>Server memory is a non-persistent storage, when server restarts the memory content is lost!</li>
+          </ul>
+        </ul>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Set-Cookie and Cookie Headers</h1>
+        </hgroup>
+        <ul class="xx-small">
+          <li><code>Set-Cookie</code> response header</li>
+          <pre class="brush: plain; ">
+                        set-cookie = "Set-Cookie:" cookie ("," cookie)*
+                          cookie    = NAME "=" VALUE (";" cookie-av)*
+                          cookie-av = "Comment" "=" value
+                                    | "Domain" "=" value
+                                    | "Max-Age" "=" value
+                                    | "Path" "=" value
+                    </pre>
+          <ul>
+            <li><code>domain</code> &ndash; a domain for which the cookie is applied</li>
+            <li><code>Max-Age</code> &ndash; number of seconds the cookie is valid</li>
+            <li><code>Path</code> &ndash; URL path for which the cookie is applied</li>
+          </ul>
+          <li><code>Cookie</code> request header. A client sends the cookie in a request if:</li>
+          <ul>
+            <li><code>domain</code> matches the origin server's fully-qualified host name</li>
+            <li><code>path</code> matches a prefix of the request-URI</li>
+            <li><code>Max-Age</code> has not expired</li>
+          </ul>
+          <pre class="brush: plain;">
+                        cookie  = "Cookie:" cookie-value (";" cookie-value)*
+                          cookie-value    = NAME "=" VALUE [";" path] [";" domain]
+                          path            = "$Path" "=" value
+                          domain          = "$Domain" "=" value                        
+                    </pre>
+          <ul>
+            <li><code>domain</code>, and <code>path</code> are values from corresponding attributes of
+              the <code>Set-Cookie</code> header</li>
+          </ul>
+
         </ul>
       </div>
 
     </section>
-  </section>
-
-
-  <section>
-    <header>
-      Introduction to HTTP
-    </header>
-
-    
-
-
-  </section>
 
 
 
