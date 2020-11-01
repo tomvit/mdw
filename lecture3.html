@@ -396,7 +396,7 @@
             <li>In our example this will save one RTT, i.e. 56ms</li>
             <li>The total time will be 228ms</li>
           </ul>
-        </ul>        
+        </ul>
       </div>
 
       <div class="slide">
@@ -422,9 +422,9 @@
               <li>Other: 5 requests</li>
             </ul>
           </ul>
-        </ul>        
+        </ul>
       </div>
-      
+
       <div class="slide">
         <hgroup>
           <h1>HTTP pipelining</h1>
@@ -445,7 +445,7 @@
             <li>In our example this saves another 20ms of latency</li>
             <li><b>Head of line blocking</b></li>
             <ul>
-              <li>Slower response (css with processing time 20ms) must be buffered until 
+              <li>Slower response (css with processing time 20ms) must be buffered until
                 the first response is generated and sent (no interleaving of responses)</li>
             </ul>
           </ul>
@@ -455,12 +455,12 @@
             <li>Buffered (large or many) responses may exhaust server resources</li>
             <li>A failed response may terminate TCP connection</li>
             <ul>
-              <li>A client must request all sub-sequent resources again (dupplicate processing) 
+              <li>A client must request all sub-sequent resources again (dupplicate processing)
             </ul>
             <li>Some intermediaries may not support pipelining and abort connection</li>
           </ul>
           <li>HTTP pipelining support today is limited</li>
-        </ul>        
+        </ul>
       </div>
 
       <div class="slide">
@@ -495,9 +495,9 @@
               <li><code>www.example.com</code> &rarr; <code>shard1.example.com</code>, <code>shard2.example.com</code></li>
               <li>Each shard can resolve to the same IP or different IP, it does not matter</li>
             </ul>
-            <li>How many shards?</li> 
+            <li>How many shards?</li>
           </ul>
-        </ul>        
+        </ul>
       </div>
 
       <div class="slide" id="http-request">
@@ -679,7 +679,150 @@
       </div>
 
     </section>
+    
+    <div class="slide outline"></div>
 
+    <section>
+      <header>SOAP and WSDL</header>
+
+      <div class="slide">
+        <hgroup>
+          <h1>SOAP Protocol</h1>
+        </hgroup>
+        <ul class="small">
+          <li>SOAP defines a messaging framework</li>
+          <div class="h-drawing" style="height: 180px; margin-left: -30px; margin-bottom: 20px" id="1yzA6Qa4NlvUBLrDtefeo3_Ud9eT6fl--qOwawlH9F_M"></div>
+          <ul>
+            <li>XML-based protocol</li>
+            <li>a layer over transport protocols</li>
+            <ul>
+              <li>binding to HTTP, SMTP, JMS, ...</li>
+            </ul>
+            <li>involves multiple nodes (message path)</li>
+            <ul>
+              <li>sender, receiver, intermediary</li>
+            </ul>
+          </ul>
+        </ul>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>SOAP Message</h1>
+        </hgroup>
+        <ul class="x-small">
+          <li>Envelope</li>
+          <ul>
+            <li>A container of a message</li>
+          </ul>
+          <li>Header</li>
+          <ul>
+            <li>Metadata &ndash; describe a message, organized in header blocks</li>
+            <ul>
+              <li>routing information</li>
+              <li>security measures implemented in the message</li>
+              <li>reliability rules related to delivery of the message</li>
+              <li>context and transaction management</li>
+              <li>correlation information (request and response message relation)</li>
+            </ul>
+            <li>WS extensions (WS-*) utilize the message header</li>
+          </ul>
+          <li>Body (payload)</li>
+          <ul>
+            <li>Actual contents of the message, XML formatted</li>
+            <li>Contains also faults for exception handling</li>
+          </ul>
+          <li>Attachment</li>
+          <ul>
+            <li>Data that cannot be serialized into XML such as binary data</li>
+          </ul>
+        </ul>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Endpoint</h1>
+        </hgroup>
+        <ul class="small">
+          <li>SOAP service endpoint definition</li>
+          <div class="h-drawing" style="height: 300px" id="1PYfoC9B77CJ83zO22c2-k8yWf-wZ1ChZ8lZNkqcDl_I"></div>
+          <ul class="xx-small">
+            <li>Endpoint &ndash; a network address used for communication</li>
+            <li>Communication &ndash; request-response, SOAP messages over a communication (application) protocol</li>
+            <li>Synchronous communication &ndash; only service defines endpoint</li>
+            <li>Asynchronous communication &ndash; service and client define endpoints</li>
+          </ul>
+        </ul>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>WSDL Specifications</h1>
+        </hgroup>
+        <ul class="x-small">
+          <li>WSDL = Web Service Description Language</li>
+          <ul>
+            <li>A standard that allows to describe Web services explicitly (main aspects)</li>
+            <li>A contract between a requester and a provider</li>
+          </ul>
+          <li>Specifications</li>
+          <ul>
+            <li>WSDL 1.1 &ndash; still widely used</li>
+            <ul>
+              <li><span class="h-ref" id="wsdl11">Web Service Description Language 1.1</span></li>
+            </ul>
+            <li>WSDL 2.0 &ndash; An attempt to address several issues with WSDL 1.1</li>
+            <ul>
+              <li>SOAP vs. REST, naming, exrpessivity</li>
+              <li><span class="h-ref" id="wsdl20-primer">WSDL 2.0 Primer (part 0)</span></li>
+              <li><span class="h-ref" id="wsdl20">WSDL 2.0 Core Language (part 1)</span></li>
+            </ul>
+          </ul>
+        </ul>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>WSDL Overview and WSDL 1.1 Syntax</h1>
+        </hgroup>
+        <ul class="x-small">
+          <li>Components of WSDL</li>
+          <ul>
+            <li>Information model (<code>types</code>)</li>
+            <ul>
+              <li>Element types, message declarations (XML Schema)</li>
+            </ul>
+            <li>Set of operations (<code>portType</code>)</li>
+            <ul>
+              <li>A set of operations is "interface" in the WSDL terminology</li>
+              <li>operation name, input, output, fault</li>
+            </ul>
+            <li>Binding (<code>binding</code>)</li>
+            <ul>
+              <li>How messages are transfered over the network using a concrete transport protocol</li>
+              <li>Transport protocols: HTTP, SMTP, FTP, JMS, ...</li>
+            </ul>
+            <li>Endpoint (<code>service</code>)</li>
+            <ul>
+              <li>Where the service is physically present on the network</li>
+            </ul>
+          </ul>
+          <li>Types of WSDL documents</li>
+          <ul>
+            <li><b>Abstract WSDL</b> &ndash; only information model and a set of operations</li>
+            <li><b>Concrete WSDL</b> &ndash; everything, a concrete service available in the environment</li>
+          </ul>
+        </ul>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>WSDL Components and Dependencies</h1>
+        </hgroup>
+        <img src="img/wsdl-with-links.png" style="height: 490px; margin-top: 10px; margin-left: 200px"></img>
+      </div>
+
+    </section>
 
 
 
