@@ -399,7 +399,7 @@
         </ul>
       </ul>
     </div>
-
+    
     <div class="slide">
       <hgroup>
         <h1>Persistent connections savings</h1>
@@ -510,14 +510,14 @@
         <li>Serving HTTP request</li>
         <ol>
           <li>User enters URL <code>http://shard1.example.com/orders</code> to the browser</li>
-          <li>DNS resolution: browser gets an IP address for <code>www.example.com</code></li>
+          <li>DNS resolution: browser gets an IP address for <code>shard1.example.com</code></li>
           <li>Three-way handshake: browser and Web Server creates a socket</li>
           <li>Browser sends ACK and HTTP request:</li>
           <pre class="brush: plain; class-name: 'tight'">
                     GET /orders HTTP/1.1
-                    Host: www.example.com
+                    Host: shard1.example.com
                     </pre>
-          <li>Web server passes the request to the web application <code>www.example.com</code> which serves
+          <li>Web server passes the request to the web application <code>shard1.example.com</code> which serves
             <code>GET orders</code> and that writes a response back to the socket.</li>
         </ol>
       </ul>
