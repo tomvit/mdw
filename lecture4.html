@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<!--
+    Middleware and Web Services, CTU course slides
+    (cc) 2010-2012 Tomas Vitvar, http://vitvar.com
+    written for Humla, an open source HTML5 presentation environment
+-->
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="course" content="Middleware and Web Services" />
+  <meta name="lecture" content="Lecture 5" />
+  <meta name="keywords" content="Web Server, Application Server, JEE" />
+
+  <link type="text/css" rel="stylesheet" href="css/meta.css">
+  </link>
+  <link type="text/css" rel="stylesheet" href="css/ctu-fit.css">
+  </link>
+  <link type="text/css" rel="stylesheet" href="humla/lib/core/humla.css">
+  </link>
+
+  <script type="text/javascript" src="humla/lib/humla.js"></script>
+  <title>Application Server Architecture</title>
+</head>
+
+<body>
+  <footer>
+    <p><b>#META_LECTURE#: #TITLE#</b>,&nbsp;<span class="meta_semester" />,&nbsp;
+      <span class="meta_twitter" /></p>
+    <p><b>&#8210; #SLIDE_NO# &#8210;</b></p>
+  </footer>
+
+  <div class="slide intro">
+    <hgroup>
+      <h1><span class="meta_course" /></h1>
+      <h2>#META_LECTURE#: #TITLE#</h2>
+    </hgroup>
+    <div class="author">
+      <p class="meta_author" />
+      <p><span class="meta_email" /> &bull; <span class="meta_twitter" /> &bull;
+        <span class="meta_web" /></p>
+    </div>
+    <center>
+      <div class="meta_logo"></div>
+    </center>
+    <div class="org">
+      <p class="meta_org" />
+      <p><span class="meta_orgfac" /> &bull; <span class="meta_field" />
+        &bull; <span class="meta_orgweb" /></p>
+    </div>
+    <div class="etc">
+      <div class="text-info">
+        Modified: #LAST_MODIFIED#<br />
+        Humla v#HUMLA_VERSION#
+      </div>
+      <a href="http://creativecommons.org/licenses/by-sa/3.0/">
+        <div class="license"></div>
+      </a>
+      <div class="oppa"></div>
+    </div>
+  </div>
+
+  <div class="slide outline"></div>
+
+  <section>
+    <header>Application Server Architecture</header>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Application Server Overview</h1>
+      </hgroup>
+      <ul class="x-small">
+        <li>An environment that runs an application logic</li>
+        <ul>
+          <li>A client communicates with the server using an application protocol</li>
+        </ul>
+        <li>Application Server</li>
+        <ul>
+          <li>A modular environment</li>
+          <ul>
+            <li>provides technology to realize enterprise systems</li>
+            <li>JEE containers &ndash; Java technology for AS components</li>
+            <li>Supports a variety of objects such as Servlets, JSPs, JMS</li>
+          </ul>
+          <li>Provides services such as naming and directory, performance, failover</li>
+          <li>Provides Web server capabilities</li>
+          <li>Can be a single server or multiple servers</li>
+        </ul>
+        <li>Web Tier &ndash; HTTP Server</li>
+        <ul>
+          <li>Web Server supports HTTP only</li>
+          <li>HTTP request/response, security, proxy, caching</li>
+        </ul>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Application Server Layers</h1>
+      </hgroup>
+      <div class="h-drawing" id="17DlmmSs0FHtUNWKTk1y1a0fWotKTB2m91nKjqYVyZiE" style="height: 300px"></div>
+      <ul class="xx-small">
+        <li>Features</li>
+        <ul>
+          <li>AS instance appears as a single process in the OS</li>
+          <ul>
+            <li>you can use standard OS commands to investigate its operation</li>
+            <li>AS listens on a single or multipe IPs (VIPs) and a tcp port</li>
+          </ul>
+          <li>AS is a Java process</li>
+          <ul>
+            <li>you can use Java tools to investigate its operation</li>
+            <li>Garbage collector stats, thread dumps, memory allocations, etc.</li>
+          </ul>
+        </ul>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Example Weblogic Infrastructure</h1>
+      </hgroup>
+      <div class="h-drawing" id="1ORdelV4uCzUHHsMlh7W0oGMfKL9Y3MLqYnm15CMgb5I" style="height: 450px"></div>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Terminology</h1>
+      </hgroup>
+      <ul class="xx-small">
+        <li>Domain</li>
+        <ul>
+          <li>A group of servers with specific configuration of applications and objects</li>
+        </ul>
+        <li>Administration Server</li>
+        <ul>
+          <li>An instance of application server that manages the domain</li>
+        </ul>
+        <li>Managed Server</li>
+        <ul>
+          <li>An instance of application server running instances of applications and objects</li>
+        </ul>
+        <li>Cluster</li>
+        <ul>
+          <li>A group of managed servers; they contain the same copy of applications and objects</li>
+        </ul>
+        <li>Machine</li>
+        <ul>
+          <li>A physical machine and OS running one or more servers (Admin or Managed)</li>
+        </ul>
+        <li>Node Manager</li>
+        <ul>
+          <li>A process that provides an access to admin and managed servers on the machine</li>
+        </ul>
+        <li>Load Balancer</li>
+        <ul>
+          <li>A network element that distributes client requests to managed servers based on a specific algorithm</li>
+        </ul>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Servlet Technology</h1>
+      </hgroup>
+      <ul class="small">
+        <li>Technology to extend application server functionalities</li>
+        <ul>
+          <li>A Java class that can respond to any type of requests</li>
+          <ul>
+            <li>A servlet defines an interface for a specific protocol</li>
+            <li>Your application implements the servlet's interface</li>
+          </ul>
+        </ul>
+        <li>Commonly used to respond to HTTP requests</li>
+        <ul>
+          <li>A basis for an application running on an application server</li>
+          <li>HTTP Servlet Java classes</li>
+          <ul>
+            <li><code>HttpServlet</code> &ndash; provides HTTP protocol interface</li>
+            <li><code>HttpServletRequest</code> &ndash; represents HTTP request</li>
+            <li><code>HttpServletResponse</code> &ndash; represents HTTP response</li>
+          </ul>
+        </ul>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Handling Requests in Weblogic</h1>
+      </hgroup>
+      <div class="h-drawing" id="19ZwXAQ2Ui4TzbuCtXDoT-1dW7ZsAqgGWdQwal0ZxPVQ"></div>
+      <ul class="xx-small">
+        <li><b>Muxer</b> &ndash; component that handles communication via network sockets.</li>
+        <li><b>Request queue</b> &ndash; queue of requests to be processed.</li>
+        <li><b>Self-tunning thread pool</b> &ndash; a pool of threads in various states.</li>
+        <li><b>Work manager</b> &ndash; a configuration of <b>maximum threads</b> and a <b>capacity</b> that
+          can be used to handle requests for a specific application/service.</b></li>
+      </ul>
+    </div>
+
+  </section>
+  
+  <div class="slide outline"></div>
+  
+  <section>
+    
+    <header>Distribution of Objects</header>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Remote Method Invocation</h1>
+      </hgroup>
+      <ul class="x-small">
+        <li>Communication among Java-based applications</li>
+        <ul>
+          <li>Methods of a Java class can be invoked by other Java class remotely</li>
+          <li>Uses Java Remote Method Protocol (JRMP)</li>
+          <ul>
+            <li>Java-specific application protocol over TCP/IP</li>
+          </ul>
+          <li>Basis for JEE technologies, such as JMS</li>
+        </ul>
+        <li>Terminology</li>
+        <ul class="x-small">
+          <li><b>Client</b> &ndash; a program that invokes a remote method</li>
+          <li><b>Server</b> &ndash; a program that exports a remote object</li>
+          <li><b>Stub</b> &ndash; a representation of the client-side object for communication</li>
+          <li><b>Skeleton</b> &ndash; a representation of the server-side object for communication</li>
+          <li><b>Registry</b> &ndash; a component that holds a stub</li>
+          <li><b>Marshalling/Unmarshalling</b> &ndash; a process of transforming memory representation
+            of the object to a form suitable for network transmittion and vice-cersa</li>
+        </ul>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>RMI Stubs and Skeletons</h1>
+      </hgroup>
+      <ul class="small">
+        <div id="115uOEKHVTxYVXJbYfivieQ7qMcpF2jqpMYqmbxpKbVM" style="height: 470px" class="h-drawing"></div>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Java Naming and Directory Interface</h1>
+      </hgroup>
+      <ul class="small">
+        <li>Objectives</li>
+        <ul>
+          <li>Allows to access objects by names in various directory systems and their attributes</li>
+          <li>Independent of any specific directory service implementation</li>
+          <li>Enables to distribute Java objects across various systems in the environment</li>
+        </ul>
+        <li>Terminology</li>
+        <ul>
+          <li>Binding &ndash; association between a name and a object</li>
+          <li>Context &ndash; a set of bindings</li>
+        </ul>
+        <li>JNDI Provides:</li>
+        <ul>
+          <li>a mechanism to bind an object to a name.</li>
+          <li>a directory lookup interface</li>
+          <li>a pluggable service provider interface (SPI) &ndash; any directory service implmentation can be plugged in</li>
+        </ul>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Application Server and JNDI</h1>
+      </hgroup>
+      <ul class="small">
+        <li>Distribution of objects</li>
+        <ul>
+          <li>Application Server provides central directory for various kinds of objects</li>
+          <ul>
+            <li>Datasources, JMS queues and topics, etc.</li>
+          </ul>
+          <li>Clients store objects in the central directory</li>
+          <ul>
+            <li>Administrator configures objects using Application Server Console or via AS API</li>
+          </ul>
+          <li>Clients retrieve objects from the central directory</li>
+        </ul>
+        <li>Benefits</li>
+        <ul>
+          <li>replication of objects across clients</li>
+          <li>central configuration of objects' parameters</li>
+          <li>scalability &ndash; allowing/disabling connections as required</li>
+        </ul>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>JNDI Example</h1>
+      </hgroup>
+      <div id="1jr8rdcF7wUNkylyT-QgBpeRaUnIfwf0Be2vW2M25URw" style="height: 220px; margin-top: 20px" class="h-drawing"></div>
+      <ul class="xx-small">
+        <li>Example Scenario</li>
+        <ul>
+          <li>Client A creates a datasource, configures it and registeres it in the JNDI tree</li>
+          <ul>
+            <li>Client A is a Admin server console app</li>
+          </ul>
+          <li>Client B and C lookup the object under specific JNDI name and retrieves the object from the tree</li>
+          <ul>
+            <li>They get the object from the tree and use it to connect to the DB</li>
+            <li>They do not need to know any DB specific details</li>
+            <li>The object is pre-configured from the server</li>
+          </ul>
+        </ul>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Deployment to Cluster</h1>
+      </hgroup>
+      <ul class="x-small">
+        <li>Deployment of an object</li>
+        <ul>
+          <li>Client deploys to one managed server in the cluster</li>
+          <li>Object gets replicated to its targets</li>
+          <ul>
+            <li>Targets can be configured for the object, usually all servers but can be selected servers</li>
+          </ul>
+        </ul>
+      </ul>
+      <center>
+        <div id="1f_D8YEP87vmI-ZLR8wGx9yMRFAsJkCDwVm0mltz5xiw" class="h-drawing" style="width: 550px"></div>
+      </center>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Cluster-wide JNDI Tree</h1>
+      </hgroup>
+      <ul class="x-small">
+        <li>Cluster</li>
+        <ul>
+          <li>Every managed server has its own JNDI tree</li>
+          <li>Servers in a cluster sync up their JNDI trees as per the target configuration</li>
+          <ul>
+            <li>A stub of the object appears in every managed server's JNDI tree</li>
+            <li>They use JNDI replication service</li>
+          </ul>
+        </ul>
+        <li>When a client retrieves an object from the tree</li>
+        <ol>
+          <li>Client connects to the cluster using the cluster address</li>
+          <li>Client creates an initial context (represents a naming service)</li>
+          <li>Client uses the initial context to lookup objects</li>
+          <li>Client uses the stub of the object to call the service</li>
+        </ol>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Object Failover</h1>
+      </hgroup>
+      <ul class="x-small">
+        <li>Failover</li>
+        <ul>
+          <li>Failover = ability to locate an object on another server that holds a copy of the object without impact on the
+            performace and configuration</li>
+        </ul>
+      </ul>
+      <center>
+        <div id="1q3-1NEIj6sLX_2FnOUGDxrHiAyHRJac3x-l8tcO88f0" class="h-drawing" style="width: 600px"></div>
+      </center>
+      <ul class="x-small">
+        <ul>
+          <li>A client gets a stub of the object by calling <code>lookup</code> on the context</li>
+          <li>A client uses the stub of the object to access the object on the server</li>
+          <li>When a server fails, <b>replicate-aware stub</b> calls the next server that holds the object copy</li>
+        </ul>
+      </ul>
+
+    </div>
+
+    <!-- <div class="slide">
+      <hgroup>
+        <h1>Two-phase Commit</h1>
+      </hgroup>
+
+      <ul class="small">
+        <li>Coordination of a distributed transaction</li>
+        <ul>
+          <li>All transaction operations are completed across multiple resources; or none is completed</li>
+          <li>Able to deal with many types of failures (process, network, communication)</li>
+        </ul>
+        <li>Terminology</li>
+        <ul class="x-small">
+          <li><b>Transaction Manager</b> &ndash; manages transactions, coordinates decisions for commit or
+            rollback, and coordinates failure recovery</li>
+          <li><b>Resource Manager</b> &ndash; manages an access to a resource that participates in the transacction, e.g. DBMS, JMS</li>
+          <li><b>Agreement</b> &ndash; an agreement message send by the Resource Manager, whether the operation was
+            processed successfuly</li>
+          <li><b>Acknowledgment</b> &ndash; a message about a status of the operation execution</li>
+          <li><b>Rollback</b> &ndash; operation that returns the Resource Manager state to its pre-transaction state.</li>
+        </ul>
+      </ul>
+
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Two-phase Commit</h1>
+      </hgroup>
+      <ul class="small">
+        <li>Two-phase commit scenario</li>
+        <div id="1kfDa725ldvDg0xwr3EryplwU1gZm_hgaNxfRkmCsN0E" style="height: 400px" class="h-drawing"></div>
+      </ul>
+    </div> -->
+
+  </section>
+
+</body>
+
+</html>
