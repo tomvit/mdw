@@ -396,35 +396,6 @@
 
     <div class="slide">
       <hgroup>
-        <h1>Fragment</h1>
-      </hgroup>
-      <ul class="small">
-        <li>Primary resource</li>
-        <ul>
-          <li>Defined by URI path and query</li>
-          <li>could be complex, composed resources</li>
-        </ul>
-        <li>Sub-resource/secondary resource</li>
-        <ul>
-          <li>Can be defined by a fragment</li>
-          <li>No explicit relationship between primary and sub-resource</li>
-          <ul>
-            <li>For example, we cannot infer that the two resources are in <code>part-of</code>,
-              or <code>sub-class-of</code> relationships.</li>
-          </ul>
-          <li>Fragment semantics defined by a data format</li>
-        </ul>
-        <li>Usage of fragment</li>
-        <ul>
-          <li>identification of elements in HTML</li>
-          <li>URI references in RDF</li>
-          <li>State of an application in a browser</li>
-        </ul>
-      </ul>
-    </div>
-
-    <div class="slide">
-      <hgroup>
         <h1>Fragment Semantics</h1>
       </hgroup>
       <ul class="small">
@@ -453,32 +424,6 @@
             an order element within the <code>orders</code> resource.</li>
           <li><code>application/xml</code> content type does not define fragment semantics</li>
         </ul>
-      </ul>
-    </div>
-
-    <div class="slide">
-      <hgroup>
-        <h1>Resource ID vs. Resource URI</li>
-      </hgroup>
-      <ul class="small">
-        <li>Resource ID</li>
-        <ul>
-          <li>Local ID, part of an entity in a data model</li>
-          <li>Unique within an application where the resource belongs</li>
-          <li>Usually generated on a server (cf. <a href="lecture3.html#/PUT">PUT to update and insert</a>)</li>
-          <li>Exposed to the resource URI as a path element<br />
-            <code>/orders/{order-id}</code></li>
-        </ul>
-        <li>Resource URI</li>
-        <ul>
-          <li>Global identifier, valid on the whole Web</li>
-          <li>Corresponds to the view on the data model of the app</li>
-          <li>Include multiple higher-level resources' IDs</li>
-          <li>Example:<br />
-            <code>/customers/{customer-id}/orders/{order-id}/</code></li>
-          <li>There can be more URIs identifying the same resource</li>
-        </ul>
-
       </ul>
     </div>
 
