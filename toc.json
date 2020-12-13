@@ -11,5 +11,5 @@
 ,
 {"title":"Representational State Transfer","slide-url":"lecture5.html#/1","sections":[{"title":"Introduction to REST","slide-url":"lecture5.html#/2","sections":[]},{"title":"Uniform Resource Identifier","slide-url":"lecture5.html#/10","sections":[]},{"title":"Resource Representation","slide-url":"lecture5.html#/18","sections":[]},{"title":"Uniform Interface","slide-url":"lecture5.html#/25","sections":[]}],"lastModified":"Sun Nov 22 2020, 21:28:55","slidesCount":38}
 ,
-{"title":"High Availability and Performance","slide-url":"lecture6.html#/1","sections":[{"title":"Definitions","slide-url":"lecture6.html#/3","sections":[]},{"title":"Load Balancers","slide-url":"lecture6.html#/8","sections":[]}],"lastModified":"Sun Dec 13 2020, 19:51:13","slidesCount":21}
+{"title":"High Availability and Performance","slide-url":"lecture6.html#/1","sections":[{"title":"Definitions","slide-url":"lecture6.html#/3","sections":[]},{"title":"Load Balancers","slide-url":"lecture6.html#/8","sections":[]},{"title":"Performance Tuning","slide-url":"lecture6.html#/22","sections":[]}],"lastModified":"Sun Dec 13 2020, 21:01:14","slidesCount":25}
 ]}
