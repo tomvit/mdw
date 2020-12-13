@@ -317,8 +317,7 @@
 							</pre>
             <ul class="no-bullet">
               <li><code>/soa-infra</code> is a first part of an URL path that rules in this <code>Location</code> will be applied (this is a standard Apache configuration mechanism)</li>
-              <li><code>czfmwapp{N}</code> is a hostname that corresponds to a virtual IP to which the managed server JVM processes is bounded (using the tcp port <code>8001</code>).
-              <li><code>WebLogicCluster</code> specifies the list of servers for load balancing</li>
+              <li><code>WebLogicCluster</code> specifies the list of backend servers for load balancing</li>
             </ul>
           </ul>
           <li>Hardware</li>
@@ -389,7 +388,7 @@
           <li>Backend server with a weight and a backup server</li>
           <ul>
             <li>NGINX example:</li>
-            <pre class="brush: plain; gutter: false">
+            <pre class="brush: plain; gutter: false; class-name: 'tight'">
               http {
                   upstream backend {
                       server backend1.example.com weight=5;
@@ -411,7 +410,12 @@
           </ul>
           <li>Least time</li>
           <ul>
-            <li>A request is sent to a server with the lowest average latency and the lowest number of active connections</li>
+            <li>A request is sent to a server with the lowest average response time and the lowest number of active connections</li>
+            <li>Time can be:</li>
+            <ul>
+              <li>Time to receive the resonse header</li>
+              <li>Time to receive full response body</li>
+            </ul>            
           </ul>
         </ul>
       </div>
