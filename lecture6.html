@@ -438,6 +438,76 @@
       </div>
 
     </section>
+    
+    <div class="slide outline"></div>
+
+		<section>
+			<header>Performance Tuning</header>
+				
+			<div class="slide">
+				<hgroup>
+					<h1>Performance Limiting Factors</h1>
+				</hgroup>
+				<div id="1bo3PC-IopJA4SiyHLVag7g1amyT8W89k2edtirQwz1w" style="height: 450px; margin: 30px" class="h-drawing"></div>
+			</div>			
+
+			<div class="slide">
+				<hgroup>
+					<h1>Monitoring</h1>
+				</hgroup>
+				<ul class="xx-small">
+					<li>Important to understand performance</li>
+					<ul>
+						<li>DevOps monitoring trends</li>
+					</ul>
+					<li>What you need</li>
+					<ul>
+						<li>Collect &rarr; Filter &rarr; Store &rarr; View &rarr; <b>Tune</b></li>
+						<li>Metrics, dashboards, alerting, log management, reporting, tracing capabilities</li>
+						<li>It is necessary to organize metrics well in order to understand what is going on</li>
+						<li>Start from a high-level process, detail to technical components</li>
+					</ul>
+					<li>Source</li>
+					<ul>
+						<li>Application server</li>
+						<ul>
+							<li>usually management beans with JMX interfaces</li>
+							<li>log files (access logs, server logs, etc.)</li>
+						</ul>
+						<li>OS</li>
+						<ul>
+							<li>many utilities available out of the box</li>
+							<li>open sockets, memory, context switches, I/O performance, CPU usage</li>
+						</ul>
+						<li>Database</li>
+						<ul>
+							<li>applications may write metrics to the DB</li>
+							<li>SQL scripts to collect metrics</li>
+						</ul>
+					</ul>
+				</ul>
+			</div>			
+
+			<div class="slide">
+				<hgroup>
+					<h1>Monitoring Tools</h1>
+				</hgroup>
+				<ul class="x-small">
+					<li>Commercial Monitoring Solutions</li>
+					<ul>
+						<li>Application server vendor usually offers a monitoring solution</li>
+						<li>AppDynamics, Oracle Enterprise Manager, Splunk</li>
+						<li>Google stackdriver, Amazon AWS CloudWatch</li>
+					</ul>
+					<li>Open source examples</li>
+					<ul>
+						<li>Elasticsearch + LogStash + Kibana</li>
+						<li>InfluxDB + Telegraph + DataGraph</li>
+					</ul>
+				</ul>
+			</div>			
+    
+    </section>
 
 
 
