@@ -11,5 +11,7 @@
 ,
 {"title":"Representational State Transfer","slide-url":"lecture5.html#/1","sections":[{"title":"Introduction to REST","slide-url":"lecture5.html#/2","sections":[]},{"title":"Uniform Resource Identifier","slide-url":"lecture5.html#/10","sections":[]},{"title":"Resource Representation","slide-url":"lecture5.html#/18","sections":[]},{"title":"Uniform Interface","slide-url":"lecture5.html#/25","sections":[]}],"lastModified":"Sun Nov 22 2020, 21:28:55","slidesCount":38}
 ,
-{"title":"High Availability and Performance","slide-url":"lecture6.html#/1","sections":[{"title":"Definitions","slide-url":"lecture6.html#/3","sections":[]},{"title":"Load Balancers","slide-url":"lecture6.html#/8","sections":[]},{"title":"Performance Tuning","slide-url":"lecture6.html#/22","sections":[]}],"lastModified":"Sun Dec 13 2020, 21:01:14","slidesCount":25}
+{"title":"HATEOAS, Caching and Concurrency","slide-url":"lecture6.html#/1","sections":[{"title":"HATEOAS","slide-url":"lecture6.html#/2","sections":[]},{"title":"Caching, Revalidation, Concurrency Control","slide-url":"lecture6.html#/13","sections":[]},{"title":"Richardson Maturiy Model","slide-url":"lecture6.html#/24","sections":[]}],"lastModified":"Sun Dec 13 2020, 22:32:18","slidesCount":26}
+,
+{"title":"High Availability and Performance","slide-url":"lecture7.html#/1","sections":[{"title":"Definitions","slide-url":"lecture7.html#/3","sections":[]},{"title":"Load Balancers","slide-url":"lecture7.html#/8","sections":[]},{"title":"Performance Tuning","slide-url":"lecture7.html#/19","sections":[]}],"lastModified":"Sat Sep 19 2020, 17:17:08","slidesCount":22}
 ]}
