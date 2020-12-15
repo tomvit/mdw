@@ -303,9 +303,10 @@
         <ul class="x-small">
           <li>Software</li>
           <ul>
-            <li>Apache <code>mod_proxy_balancer</code></li>
+            <li>Apache <code>mod_proxy_balancer</code>, NGINX</li>
             <ul>
               <li>HTTP Session persistence &ndash; sticky sessions</li>
+              <li>Various configuration options</li>
             </ul>
             <li>WebLogic proxy plug-in</li>
             <pre class="brush: xml">
@@ -316,8 +317,7 @@
 							</pre>
             <ul class="no-bullet">
               <li><code>/soa-infra</code> is a first part of an URL path that rules in this <code>Location</code> will be applied (this is a standard Apache configuration mechanism)</li>
-              <li><code>czfmwapp{N}</code> is a hostname that corresponds to a virtual IP to which the managed server JVM processes is bounded (using the tcp port <code>8001</code>).
-              <li><code>WebLogicCluster</code> specifies the list of servers for load balancing</li>
+              <li><code>WebLogicCluster</code> specifies the list of backend servers for load balancing</li>
             </ul>
           </ul>
           <li>Hardware</li>
@@ -335,7 +335,7 @@
           <li>Uses</li>
           <ul class="no-bullet">
             <li><code>request</code> &ndash; client request with or without a cookie information</li>
-            <li><code>server_list</code> &ndash; a list of servers that can process the request</li>
+            <li><code>server_list</code> &ndash; a list of backend servers that can process the request</li>
             <li><code>rbinx</code> &ndash; round robin index</li>
             <li><code>sticky_sessions</code> &ndash; associative array of pairs <code>&lt;session_id,server&gt;</code></li>
             <li><code>unhealthy_treshhold</code> &ndash; a number of negative consecutive health checks
@@ -379,6 +379,106 @@
             </ul>
           </ul>
       </div>
+      
+      <div class="slide">
+        <hgroup>
+          <h1>Backend Server Selection Options</h1>
+        </hgroup>
+        <ul class="xx-small">
+          <li>Backend server with a weight and a backup server</li>
+          <ul>
+            <li>NGINX example:</li>
+            <pre class="brush: plain; gutter: false; class-name: 'tight'">
+              http {
+                  upstream backend {
+                      server backend1.example.com weight=5;
+                      server backend2.example.com;
+                      server 192.0.0.1 backup;
+                  }
+                  
+                  server {
+                      location / {
+                          proxy_pass http://backend;
+                      }
+                  }                  
+              }            
+            </pre>
+          </ul>
+          <li>Least connections</li>
+          <ul>
+            <li>A request is sent to a server with the least number of active connections</li>            
+          </ul>
+          <li>Least time</li>
+          <ul>
+            <li>A request is sent to a server with the lowest average response time and the lowest number of active connections</li>
+            <li>Time can be:</li>
+            <ul>
+              <li>Time to receive the resonse header</li>
+              <li>Time to receive full response body</li>
+            </ul>            
+          </ul>
+        </ul>
+      </div>
+        
+      <div class="slide">
+        <hgroup>
+          <h1>Backend Server Selection Options (Cont.)</h1>
+        </hgroup>
+        <ul class="xx-small">    
+          <li>Limiting the Number of Connections</li>
+          <ul>
+            <li>Maximum number of connections per backend server</li>
+            <li>Number of connections in the queue</li>
+            <pre class="brush: plain; gutter: false">
+              upstream backend {
+                server backend1.example.com max_conns=3;
+                server backend2.example.com;
+                queue 100 timeout=70;
+              }
+            </pre>
+            </li>    
+          </ul>
+          <li>Hash (ip hash, generic hash)</li>
+          <ul>
+            <li>A server to which a request is sent is determined from the client IP address or an arbitrary value (string, request URL, etc.)</li>
+          </ul>
+          <li>Server Slow-Start</li>
+          <ul>
+            <li>This prevents a recently recovered server from being overwhelmed</li>
+            <li>During server slow-start, connections may time out</li>
+            <ul>
+              <li>This may cause the server to be marked as failed again.</li>
+            </ul>
+          </ul>
+        </ul>
+      </div>
+        
+      <div class="slide">
+        <hgroup>
+          <h1>Session Persistence</h1>
+        </hgroup>
+        <ul class="xx-small">            
+          <li>Session Persistence</li>
+          <ul>
+            <li>Sticky cookie</li>
+            <ul>
+              <li>A cookie defined by the load balancer for every client</li>
+              <pre class="brush: plain; gutter: false">
+                upstream backend {
+                    server backend1.example.com;
+                    server backend2.example.com;
+                    sticky cookie srv_id expires=1h domain=.example.com path=/;
+                }              
+              </pre>
+            </ul>
+            <li>Sticky learn</li>
+            <ul>
+              <li>LB finds a cookie by inspecting requests and responses</li>
+              <li>LB uses the cookie for subsequent redirection</li> 
+            </ul>
+          </ul>
+        </ul>
+      </div>      
 
       <div class="slide">
         <hgroup>
@@ -386,10 +486,10 @@
         </hgroup>
         <ul class="xx-small">
           <div class="h-drawing" style="height: 290px" id="1PiI-1CeVkQTYUgOPHyk3wqJufQl9cYQz5vlNziERE74"></div>
-          <li>Session persistence</li>
+          <li>Session DB persistence</li>
           <ul>
             <li>Session information is maintained in the database</li>
-            <li>Does not require sticky sessions</li>
+            <li>Does not require sticky sessions in LB</li>
             <li>Implements <code>HttpSession</code> interface that writes data to the DB</li>
           </ul>
           <li>In-memory replication</li>
