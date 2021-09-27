@@ -26,9 +26,6 @@ clean:
 pdf:
 	humla/bin/generate-pdfs.sh	
 
-docker-pdf:
-	humla/docker/bin/generate-pdfs.sh
-
 toc:
 	humla/bin/generate-toc.sh
 
