@@ -16,7 +16,7 @@
 }
 
 .meta_web:before {
-	content: "http://vitvar.com";
+	content: "https://vitvar.com";
 }
 
 .meta_semester:before {
@@ -36,7 +36,7 @@
 }
 
 .meta_orgweb:before {
-	content: "http://vitvar.com/courses/mdw";
+	content: "https://vitvar.com/lectures";
 }
 
 div.oracle-academy {
