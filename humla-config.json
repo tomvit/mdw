@@ -1,16 +1,6 @@
 {
     "extensions": [
         
-        {   "id" : "latex",
-            "object" : "ex_latex",
-            "scripts"  : [ { "src" : "humla/lib/ext/latex.js" } ],    
-            "styles"   : [ { "src" : "humla/lib/ext/latex.css", "media" : "screen, print" } ],
-            "params"   : {
-                "mathtex" : "http://lx.vitvar.com/cgi-bin/mt/mathtex.cgi?\\dpi{300}\\gammacorrection{0.5}"
-            },
-            "enabled" : true 
-        },
-        
         {   "id" : "github",
             "object" : "ex_github",
             "scripts" : [ { "src" : "humla/lib/ext/github.js" } ],
@@ -28,6 +18,16 @@
                           { "src" : "https://spreadsheets.google.com/feeds/list/0AoooUkEfVrhldENEczhyeFU5MVZNZFo4amwtVURxdEE/oda/public/basic?alt=json&callback=ex_references.loadReferences", "g": 5 }],
             "styles"  : [ { "src" : "lib/humla/ext/references.css",  "media" : "screen, print" } ],               
             "enabled" : true 
-        }        
+        },
+
+        {   "id" : "follower",
+            "object" : "ex_follower",
+            "scripts" : [ { "src" : "humla/lib/ext/follower.js" } ],
+            "params" : {
+              "follow_service": "https://humla-follow.vitvar.com"
+            },
+            "enabled" : true
+        }
+        
     ]
 }
