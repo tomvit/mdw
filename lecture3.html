@@ -100,6 +100,14 @@
 
     <div class="slide">
       <hgroup>
+        <h1>Anatomy of a Packet</h1>
+      </hgroup>
+      <img src="img/anatomy-of-a-packet.svg" style="width: 800px; padding: 30px 0px 0px 30px"></img>
+    </div>
+
+
+    <div class="slide">
+      <hgroup>
         <h1>Socket</h1>
       </hgroup>
       <div class="h-drawing" style="height: 140px" id="1Z4OmMLdUPPmmfAsENj7zBb_kjDOWVUzku50WucxpePU"></div>
@@ -183,77 +191,7 @@
       </ul>
     </div>
 
-    <div class="slide outline"></div>
-
-    <section>
-      <header>Synchronous and Asynchronous Communication</header>
-
-      <div class="slide" id="sync-async-comm">
-        <hgroup>
-          <h1>Synchronous and Asynchronous Communication</h1>
-        </hgroup>
-        <div class="h-drawing" style="height: 220px" id="14daki2YQxkRxkpg_RW16-Efihlxzhep8AWXb226NaQA"></div>
-        <ul class="x-small">
-          <li>Synchronous</li>
-          <ul>
-            <li>one socket, |t<sub>req</sub> &#150; t<sub>res</sub>| is small</li>
-            <li>easy to implement and deploy, only standard firewall config</li>
-            <li>only the server defines endpoint</li>
-          </ul>
-          <li>Asynchronous</li>
-          <ul>
-            <li>request, response each has socket, client and server define endpoints</li>
-            <li>|t<sub>req</sub> &#150; t<sub>res</sub>| can be large (hours, even days)</li>
-            <li>harder to do across network elements (private/public networks issue)</li>
-          </ul>
-        </ul>
-      </div>
-
-      <div class="slide">
-        <hgroup>
-          <h1>Asynchronous via Intermediary</h1>
-        </hgroup>
-        <div class="h-drawing" style="height: 220px" id="1mh4fk7kNmLyqVT1Cks4rRFRpGjFcU1yStOYQw2uiew8"></div>
-        <ul class="x-small">
-          <li>Intermediary</li>
-          <ul>
-            <li>A component that decouples a client-server communication</li>
-            <li>It increases reliability and performance</li>
-            <ul>
-              <li>The server may not be available when a client sends a request</li>
-              <li>There can be multiple servers that can handle the request</li>
-            </ul>
-          </ul>
-          <li>Further Concepts</li>
-          <ul>
-            <li>Message Queues (MQ) &ndash; queue-based communication</li>
-            <li>Publish/Subscribe (P/S) &ndash; event-driven communication</li>
-          </ul>
-        </ul>
-      </div>
-
-      <div class="slide">
-        <hgroup>
-          <h1>Asynchronous via Polling</h1>
-        </hgroup>
-        <div class="h-drawing" style="height: 220px" id="1F3GsWbkka-hDU75qAzFl1OlhtMMHt_gfxE9m3CcvlAk"></div>
-        <ul class="x-small">
-          <li>Polling &ndash; only clients open sockets</li>
-          <ul>
-            <li>A client performs multiple request-response interactions</li>
-            <ul>
-              <li>The first interaction initiates a process on the server</li>
-              <li>Subsequent interactions check for the processing status</li>
-              <li>The last interaction retrieves the processing result</li>
-            </ul>
-          </ul>
-          <li>Properties of environments</li>
-          <ul>
-            <li>A server cannot open a socket with the client (network restrictions)</li>
-            <li>Typically on the Web (a client runs in a browser)</li>
-          </ul>
-        </ul>
-      </div>
+    <!-- <div class="slide outline"></div>
 
       <div class="slide">
         <hgroup>
@@ -295,7 +233,7 @@
         </ul>
       </div>
 
-    </section>
+    </section> -->
   </section>
 
   <div class="slide outline"></div>
@@ -343,23 +281,23 @@
         <li>Request Syntax</li>
         <pre class="brush: plain; gutter: false">
                     method uri http-version &lt;crlf>
-                    (header : value &lt;crlf>)* 
-                    &lt;crlf>                    
+                    (header : value &lt;crlf>)*
+                    &lt;crlf>
                     [ data ]
                 </pre>
         <li>Response Syntax</li>
         <pre class="brush: plain; gutter: false">
                     http-version response-code [ message ]  &lt;crlf>
-                    (header : value &lt;crlf>)* 
+                    (header : value &lt;crlf>)*
                     &lt;crlf>
                     [ data ]
                 </pre>
         <li>Semantics of terms</li>
         <pre class="brush: plain; gutter: false">
-                    method         = "GET" | "POST" | "DELETE" | "PUT" | "HEAD" | "OPTIONS" 
-                    uri            = [ path ] [ ";" params ] [ "?" query ] 
+                    method         = "GET" | "POST" | "DELETE" | "PUT" | "HEAD" | "OPTIONS"
+                    uri            = [ path ] [ ";" params ] [ "?" query ]
                     http-version   = "HTTP/1.0" | "HTTP/1.1"
-                    response-code  = valid response code 
+                    response-code  = valid response code
                     header : value = valid HTTP header and its value
                     data           = resource state representation (hypertext)
                 </pre>
@@ -399,7 +337,7 @@
         </ul>
       </ul>
     </div>
-    
+
     <div class="slide">
       <hgroup>
         <h1>Persistent connections savings</h1>
@@ -540,14 +478,14 @@
           <pre class="brush:plain; class-name: 'tight'">
           # all IP addresses will be used for named virtual hosts
           NameVirtualHost *:80
-          
+
           &lt;VirtualHost *:80>
                   ServerName www.example.com
                   ServerAlias shard1.example.com shard2.example.com
                   ServerAdmin admin@example.com
                   DocumentRoot /var/www/apache/example.com
           &lt;/VirtualHost>
-          
+
           &lt;VirtualHost *:80>
                   ServerName company.cz
                   ServerAdmin admin@firm.cz
@@ -565,30 +503,30 @@
         <li>Use <code>curl</code> to test HTTP protocol</li>
         <pre class="brush: plain; class-name: 'tight'">
                     Usage: curl [options...] &lt;url>
-                    
+
                     -X/--request &ltcommand>          Specify request command to use
                     -H/--header &lt;line>              Custom header to pass to server
                     -d/--data &lt;data>                HTTP POST data
                     -b/--cookie &lt;name=string/file>  Cookie string or file to read cookies from
-                    -v/--verbose                    Make the operation more talkative                            
+                    -v/--verbose                    Make the operation more talkative
                 </pre>
         <li>Example</li>
         <pre class="brush: plain; class-name: 'tight'">
                     curl -v -H "Host: company.cz"  127.0.0.1:8080
-                    
-                    * About to connect() to 127.0.0.1 port 8080 
+
+                    * About to connect() to 127.0.0.1 port 8080
                     *   Trying 127.0.0.1... connected
-                    * Connected to 127.0.0.1 port 8080 
+                    * Connected to 127.0.0.1 port 8080
                     &gt; GET / HTTP/1.1
                     &gt; User-Agent: curl/7.20.0 (i386-apple-darwin10.3.2) libcurl/7.20.0 OpenSSL/0.9.8n
                     &gt; Accept: */*
                     &gt; Host: company.cz
-                    &gt; 
+                    &gt;
                     &lt; HTTP/1.1 201 OK
                     &lt; Connection: keep-alive
                     &lt; Content-Type: plain/text
-                    &lt; 
-                    &lt; This is the response...                            
+                    &lt;
+                    &lt; This is the response...
                 </pre>
       </ul>
     </div>
@@ -674,7 +612,7 @@
                         cookie  = "Cookie:" cookie-value (";" cookie-value)*
                           cookie-value    = NAME "=" VALUE [";" path] [";" domain]
                           path            = "$Path" "=" value
-                          domain          = "$Domain" "=" value                        
+                          domain          = "$Domain" "=" value
                     </pre>
           <ul>
             <li><code>domain</code>, and <code>path</code> are values from corresponding attributes of
