@@ -185,9 +185,56 @@
       </ul>
     </div>
 
+  </section>
+
+  <div class="slide outline"></div>
+
+  <section>
+    <header>Serving Requests</header>
+
+    <div class="slide">
+        <hgroup>
+          <h1>Blocking (Synchronous) I/O</h1>
+        </hgroup>
+        <div id="1QP7gZSS1WS3YquzLekSgdZfcmi4BYArm-K9tuWrULQs" class="h-drawing" style="height: 220px"></div>
+        <ul class="x-small">
+          <li>Inbound connection</li>
+          <ul>
+            <li>A server creates a thread for every inbound connection</li>
+            <li>For example, 1K connections = 1K threads, big overhead</li>
+            <li>A thread is reserved for the entire duration of the request processing</li>
+          </ul>
+          <li>Outbound connection</li>
+          <ul>
+            <li>A thread is blocked when outbound connection is made</li>
+            <li>When outbound connection is slow, the scalability is poor</li>
+          </ul>
+        </ul>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Non-Blocking (Asynchrnous) I/O</h1>
+        </hgroup>
+        <div id="1kxkFc3Chl4qFXxH_4f2seuNbpBdENMyZWMRUmxd1p28" class="h-drawing" style="height: 220px"></div>
+        <ul class="x-small">
+          <li>Inbound connections</li>
+          <ul>
+            <li>The connection is maintained by the OS, not the server app</li>
+            <li>The Web app registers events, OS triggers events when they occur</li>
+            <li>The app may create working threads and controls their number</li>
+          </ul>
+          <li>Outound connections</li>
+          <ul>
+            <li>The app registers a callback that is called when the data is available</li>
+            <li>Event loop</li>
+          </ul>
+        </ul>
+      </div>
+
     <div class="slide">
       <hgroup>
-        <h1>Handling Requests in Weblogic</h1>
+        <h1>Components</h1>
       </hgroup>
       <div class="h-drawing" id="19ZwXAQ2Ui4TzbuCtXDoT-1dW7ZsAqgGWdQwal0ZxPVQ"></div>
       <ul class="xx-small">
@@ -199,13 +246,25 @@
       </ul>
     </div>
 
+    <div class="slide">
+      <hgroup>
+        <h1>Java Virtual Threads</h1>
+      </hgroup>
+      <img src="img/virtual-threads-java.png" style="width: 750px; padding: 20px"></img>
+      <ul class="xx-small">
+        <li>Virtual threads mapped to a platform threads (carrier threads)</li>
+        <li>Blocking operations do not block carrier threads</li>
+      </ul>
+    </div>
+
+
   </section>
-  
+
   <div class="slide outline"></div>
-  
+
   <section>
-    
-    <header>Distribution of Objects</header>
+
+    <header>Objects Distribution</header>
 
     <div class="slide">
       <hgroup>
@@ -248,40 +307,15 @@
         <h1>Java Naming and Directory Interface</h1>
       </hgroup>
       <ul class="small">
-        <li>Objectives</li>
-        <ul>
-          <li>Allows to access objects by names in various directory systems and their attributes</li>
-          <li>Independent of any specific directory service implementation</li>
-          <li>Enables to distribute Java objects across various systems in the environment</li>
-        </ul>
-        <li>Terminology</li>
-        <ul>
-          <li>Binding &ndash; association between a name and a object</li>
-          <li>Context &ndash; a set of bindings</li>
-        </ul>
-        <li>JNDI Provides:</li>
-        <ul>
-          <li>a mechanism to bind an object to a name.</li>
-          <li>a directory lookup interface</li>
-          <li>a pluggable service provider interface (SPI) &ndash; any directory service implmentation can be plugged in</li>
-        </ul>
-      </ul>
-    </div>
-
-    <div class="slide">
-      <hgroup>
-        <h1>Application Server and JNDI</h1>
-      </hgroup>
-      <ul class="small">
         <li>Distribution of objects</li>
         <ul>
-          <li>Application Server provides central directory for various kinds of objects</li>
+          <li>Application Server is a central directory for various objects</li>
           <ul>
-            <li>Datasources, JMS queues and topics, etc.</li>
+            <li>Datasources, JMS queues, etc.</li>
           </ul>
           <li>Clients store objects in the central directory</li>
           <ul>
-            <li>Administrator configures objects using Application Server Console or via AS API</li>
+            <li>Administrator configures objects using a console or API</li>
           </ul>
           <li>Clients retrieve objects from the central directory</li>
         </ul>
@@ -337,30 +371,6 @@
 
     <div class="slide">
       <hgroup>
-        <h1>Cluster-wide JNDI Tree</h1>
-      </hgroup>
-      <ul class="x-small">
-        <li>Cluster</li>
-        <ul>
-          <li>Every managed server has its own JNDI tree</li>
-          <li>Servers in a cluster sync up their JNDI trees as per the target configuration</li>
-          <ul>
-            <li>A stub of the object appears in every managed server's JNDI tree</li>
-            <li>They use JNDI replication service</li>
-          </ul>
-        </ul>
-        <li>When a client retrieves an object from the tree</li>
-        <ol>
-          <li>Client connects to the cluster using the cluster address</li>
-          <li>Client creates an initial context (represents a naming service)</li>
-          <li>Client uses the initial context to lookup objects</li>
-          <li>Client uses the stub of the object to call the service</li>
-        </ol>
-      </ul>
-    </div>
-
-    <div class="slide">
-      <hgroup>
         <h1>Object Failover</h1>
       </hgroup>
       <ul class="x-small">
@@ -382,41 +392,6 @@
       </ul>
 
     </div>
-
-    <!-- <div class="slide">
-      <hgroup>
-        <h1>Two-phase Commit</h1>
-      </hgroup>
-
-      <ul class="small">
-        <li>Coordination of a distributed transaction</li>
-        <ul>
-          <li>All transaction operations are completed across multiple resources; or none is completed</li>
-          <li>Able to deal with many types of failures (process, network, communication)</li>
-        </ul>
-        <li>Terminology</li>
-        <ul class="x-small">
-          <li><b>Transaction Manager</b> &ndash; manages transactions, coordinates decisions for commit or
-            rollback, and coordinates failure recovery</li>
-          <li><b>Resource Manager</b> &ndash; manages an access to a resource that participates in the transacction, e.g. DBMS, JMS</li>
-          <li><b>Agreement</b> &ndash; an agreement message send by the Resource Manager, whether the operation was
-            processed successfuly</li>
-          <li><b>Acknowledgment</b> &ndash; a message about a status of the operation execution</li>
-          <li><b>Rollback</b> &ndash; operation that returns the Resource Manager state to its pre-transaction state.</li>
-        </ul>
-      </ul>
-
-    </div>
-
-    <div class="slide">
-      <hgroup>
-        <h1>Two-phase Commit</h1>
-      </hgroup>
-      <ul class="small">
-        <li>Two-phase commit scenario</li>
-        <div id="1kfDa725ldvDg0xwr3EryplwU1gZm_hgaNxfRkmCsN0E" style="height: 400px" class="h-drawing"></div>
-      </ul>
-    </div> -->
 
   </section>
 
