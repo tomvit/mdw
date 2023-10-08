@@ -5,4 +5,8 @@ toc.json
 .DS_Store
 *.swp
 *.iml
+*.pdf
+backup/*
+pngs/*
+old-materials/*
 
