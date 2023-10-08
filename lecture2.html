@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <!--
     Middleware and Web Services, CTU course slides
-    (cc) 2010-2021 Tomas Vitvar, http://vitvar.com
+    (cc) 2010-2023 Tomas Vitvar, http://vitvar.com
     written for Humla, an open source HTML5 presentation environment
 -->
 <html>
@@ -26,7 +26,8 @@
 <body>
   <footer>
     <p><b>#META_LECTURE#: #TITLE#</b>,&nbsp;<span class="meta_semester" />,&nbsp;
-      <span class="meta_twitter" /></p>
+      <span class="meta_twitter" />
+    </p>
     <p><b>&#8210; #SLIDE_NO# &#8210;</b></p>
   </footer>
 
@@ -38,7 +39,8 @@
     <div class="author">
       <p class="meta_author" />
       <p><span class="meta_email" /> &bull; <span class="meta_twitter" /> &bull;
-        <span class="meta_web" /></p>
+        <span class="meta_web" />
+      </p>
     </div>
     <center>
       <div class="meta_logo"></div>
@@ -173,7 +175,8 @@
       <hgroup>
         <h1>Service Characteristics</h1>
       </hgroup>
-      <div class="h-drawing" id="1z7ZDZ2Eh-B_4H3DszyzTmaAdvTdUCy6Ig2PCRynUgmg" style="height: 420px; margin-top: 40px"></div>
+      <div class="h-drawing" id="1z7ZDZ2Eh-B_4H3DszyzTmaAdvTdUCy6Ig2PCRynUgmg" style="height: 420px; margin-top: 40px">
+      </div>
     </div>
 
   </section>
@@ -212,7 +215,8 @@
         <h1>Service Oriented Architecture</h1>
       </hgroup>
       <center>
-        <div class="h-drawing" id="1IOWIHKsD9qfPJ-eaXZc-hcL_4_gFO9AY5-ftDuZ1n3s" style="margin-top: 20px; width: 600px"></div>
+        <div class="h-drawing" id="1IOWIHKsD9qfPJ-eaXZc-hcL_4_gFO9AY5-ftDuZ1n3s" style="margin-top: 20px; width: 600px">
+        </div>
       </center>
       <ul class="x-small">
         <li>SOA supports two core business strategies</li>
@@ -244,7 +248,8 @@
           <li>Multiple protocols problem, multiple vendor problem</li>
           <li>Replication of integration functionalities such as interoperability solutions</li>
         </ul>
-        <div class="h-drawing" style="height: 340px" id="123tDQFo3Zq0LEzzhquKp1xJX4YZ6YiWC0GDNGGK1UA0" alt="One to One Spaghetti Integration"></div>
+        <div class="h-drawing" style="height: 340px" id="123tDQFo3Zq0LEzzhquKp1xJX4YZ6YiWC0GDNGGK1UA0"
+          alt="One to One Spaghetti Integration"></div>
       </ul>
     </div>
 
@@ -260,7 +265,8 @@
             identity management, etc.</li>
         </ul>
       </ul>
-      <div class="h-drawing" style="height: 360px" id="1-uHnuWoYea9KZgEBRkGmdpbKDT5THls9dn56XolZ1Lg" alt="SOA Integration"></div>
+      <div class="h-drawing" style="height: 360px" id="1-uHnuWoYea9KZgEBRkGmdpbKDT5THls9dn56XolZ1Lg"
+        alt="SOA Integration"></div>
     </div>
 
     <div class="slide">
@@ -372,20 +378,6 @@
       </ul>
     </div>
 
-    <!-- <div class="slide">
-      <hgroup>
-        <h1>Service Types</h1>
-      </hgroup>
-      <ul class="x-small">
-        <li>ESB services</li>
-        <ul>
-          <li>shared services &ndash; created for particular domain</li>
-          <li>infrastructure services &ndash; support integration and interoperability</li>
-        </ul>
-      </ul>
-      <div class="h-drawing" id="1HicnsnDos6MtMtIB75XP4odOnSpWs_qSj4TZJnBtWhI" style="height: 390px"></div>
-    </div> -->
-
   </section>
 
   <div class="slide outline"></div>
@@ -462,9 +454,40 @@
           </ul>
         </ul>
       </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Location Transparency</h1>
+        </hgroup>
+        <ul class="small">
+          <li>Location transparency</li>
+          <ul>
+            <li>ESB can hide changes in location of services</li>
+            <li>Such changes will not affect clients</li>
+            <li>Can also be used for load balancing for multiple service instances</li>
+          </ul>
+        </ul>
+        <div class="h-drawing" id="1yyj2VBgauYs_zVWoSR1R2Hugf8pLG-HmDq8-2bF-vNI" style="height: 200px"></div>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Session Pooling</h1>
+        </hgroup>
+        <ul class="small">
+          <li>Session Pooling</li>
+          <ul>
+            <li>ESB can maintain a pool of connections (session tokens) to a back-end app when creating a new connection
+              is expensive</li>
+            <li>A single session token can be reused by multiple instances of business processes</li>
+          </ul>
+        </ul>
+        <div class="h-drawing" id="1O06u_GmbgK_hAPqwWJcQsFz7XtugVx6q1t5gCurn-3Y" style="height: 250px"></div>
+      </div>
+
     </section>
 
-    <div class="slide outline"></div>
+    <!-- <div class="slide outline"></div>
 
     <section>
       <header>Middleware Integration Patterns</header>
@@ -602,72 +625,72 @@
       </div>
     </section>
 
-  </section>
+  </section> -->
 
-  <div class="slide outline"></div>
+    <div class="slide outline"></div>
 
-  <section>
-    <header>Microservices Architecture</header>
+    <section>
+      <header>Microservices Architecture</header>
 
-    <div class="slide">
-      <hgroup>
-        <h1>The Scale Cube</h1>
-      </hgroup>
-      <ul class="x-small">
-        <li>Three-dimensional scalability model</li>
-        <ul>
-          <li>X-Axis scaling requests across multiple instances</li>
-          <li><b>Y-Axis scaling decomposes an application into micro-services</b></li>
-          <li>Z-Axis scaling requests across "data partitioned" instances</li>
+      <div class="slide">
+        <hgroup>
+          <h1>The Scale Cube</h1>
+        </hgroup>
+        <ul class="x-small">
+          <li>Three-dimensional scalability model</li>
+          <ul>
+            <li>X-Axis scaling requests across multiple instances</li>
+            <li><b>Y-Axis scaling decomposes an application into micro-services</b></li>
+            <li>Z-Axis scaling requests across "data partitioned" instances</li>
+          </ul>
+          <img src="img/scale-cube.png" style="zoom: 0.9"></img>
         </ul>
-        <img src="img/scale-cube.png" style="zoom: 0.9"></img>
-      </ul>
-    </div>
+      </div>
 
-    <div class="slide">
-      <hgroup>
-        <h1>Overview</h1>
-      </hgroup>
-      <ul>
-        <li>Emerging software architecture</li>
+      <div class="slide">
+        <hgroup>
+          <h1>Overview</h1>
+        </hgroup>
         <ul>
-          <li>monolithic vs. decoupled applications</li>
-          <li>applications as independenly deployable services</li>
+          <li>Emerging software architecture</li>
+          <ul>
+            <li>monolithic vs. decoupled applications</li>
+            <li>applications as independenly deployable services</li>
+          </ul>
+          <img src="img/microservices.png" style="zoom: 0.7"></img>
         </ul>
-        <img src="img/microservices.png" style="zoom: 0.7"></img>
-      </ul>
-    </div>
+      </div>
 
-    <div class="slide">
-      <hgroup>
-        <h1>Major Characteristics</h1>
-      </hgroup>
-      <ul>
-        <li>Loosely coupled</li>
+      <div class="slide">
+        <hgroup>
+          <h1>Major Characteristics</h1>
+        </hgroup>
         <ul>
-          <li>Integrated using well-defined interfaces</li>
+          <li>Loosely coupled</li>
+          <ul>
+            <li>Integrated using well-defined interfaces</li>
+          </ul>
+          <li>Technology-agnostic protocols</li>
+          <ul>
+            <li>HTTP, they use REST architecture</li>
+          </ul>
+          <li>Independently deployable and easy to replace</li>
+          <ul>
+            <li>A change in small part requires to redeploy only that part</li>
+          </ul>
+          <li>Organized around capabilities</li>
+          <ul>
+            <li>such as accounting, billing, recommendation, etc.</li>
+          </ul>
+          <li>Impplemented using different technologies</li>
+          <ul>
+            <li>polyglot &ndash; programming languages, databases</li>
+          </ul>
+          <li>Owned by a small team</li>
         </ul>
-        <li>Technology-agnostic protocols</li>
-        <ul>
-          <li>HTTP, they use REST architecture</li>
-        </ul>
-        <li>Independently deployable and easy to replace</li>
-        <ul>
-          <li>A change in small part requires to redeploy only that part</li>
-        </ul>
-        <li>Organized around capabilities</li>
-        <ul>
-          <li>such as accounting, billing, recommendation, etc.</li>
-        </ul>
-        <li>Impplemented using different technologies</li>
-        <ul>
-          <li>polyglot &ndash; programming languages, databases</li>
-        </ul>
-        <li>Owned by a small team</li>
-      </ul>
-    </div>
+      </div>
 
-  </section>
+    </section>
 
 
 
