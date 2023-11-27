@@ -835,7 +835,7 @@
             <ul class="x-small">
                 <li>Protocol stack</li>
             </ul>
-            <div class="h-drawing" id="1J5uJmqD-RiXPPZA4Lk3fVqmUxGUffW94SoEw5enu01o" style="width: 400px"></div>
+            <div class="h-drawing" id="1J5uJmqD-RiXPPZA4Lk3fVqmUxGUffW94SoEw5enu01o" style="width: 700px"></div>
             <ul class="x-small">
                 <li>HTTP semantic does not change across HTTP versions</li>
                 <li>New transport protocol QUIC</li>
@@ -846,6 +846,64 @@
                     <li>Connection migration</li>
                 </ul>
             </ul>
+        </div>
+
+        <div class="slide">
+            <hgroup>
+                <h1>Connection Establishment</h1>
+            </hgroup>
+            <div class="h-drawing" id="1JRN5CCKtHFQtpXhMmDht3SMiyLOoXkrm0amvrrEaPF4" style="width: 600px"></div>
+            <ul class="x-small">
+                <li>Reduces overhead during connection setup</li>
+                <ul>
+                    <li>H2 requires TLS, thus requires 3 RTT before data is sent</li>
+                    <li>QUIC requires 1 RTT before data is sent</li>
+                </ul>
+            </ul>
+        </div>
+
+        <div class="slide">
+            <hgroup>
+                <h1>Recovery</h1>
+            </hgroup>
+            <ul class="x-small">
+                <li>TCP</li>
+                <ul>
+                    <li>TCP performs loss recovery (retransmition)</li>
+                    <li>Multiple frames in a single TCP segment, when TCP segment is lost, the whole segment (with all
+                        frames) need to be
+                        retransmitted.</li>
+                </ul>
+                <li>QUIC</li>
+                <ul>
+                    <li>QUIC implements recovery at the stream level</li>
+                    <li>Lost or corrupted data within a specific stream can be recovered independently without
+                        affecting other streams.</li>
+                    <li>Forward Error Correction (FEC): redundant data to allow the receiver
+                        to recover lost packets without the need for retransmission.</li>
+                </ul>
+        </div>
+
+        <div class="slide">
+            <hgroup>
+                <h1>Networks Switching</h1>
+            </hgroup>
+            <ul class="x-small">
+                <li>A user moves from one network to another.</li>
+                <li>TCP</li>
+                <ul>
+                    <li>Connections timeout; they are re-established</li>
+                    <li>This is a lengthy process</li>
+                </ul>
+                <li>QUIC</li>
+                <ul>
+                    <li>QUIC includes unique connection ID with the server</li>
+                    <li>Connection ID is independent of the source</li>
+                    <li>Pakcets are re-send with the same IDs</li>
+                    <ul>
+                        <li>they are still valid when the source changes</li>
+                    </ul>
+                </ul>
         </div>
 
     </section>
