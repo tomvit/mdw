@@ -593,15 +593,39 @@
 
 			<div class="slide">
 				<hgroup>
-					<h1>Multi-tier Client/Server Microservice Architecture</h1>
+					<h1>Client/Server Architecture (microservices)</h1>
+				</hgroup>
+				<div class="h-drawing" style="height: 120px; margin-top: 20px; margin-bottom: 20px"
+					id="1cRwcuZjIcdyV0BKnrT0LqaVreQgSlCbuxmvhTHM2tlY"></div>
+				<ul class="x-small">
+					<li>Microservice architecture</li>
+					<ul>
+						<li>Middleware, app and DB monoliths are microservice architecture</li>
+						<li>Improved scalability and technology neutrality of app components</li>
+					</ul>
+					<li>Service orchestration layer</li>
+					<ul>
+						<li>Kubernetes (K8s)</li>
+						<li>Large K8s cluster for all, middleware, app, DB</li>
+						<li>Separate K8s cluster</li>
+					</ul>
+				</ul>
+			</div>
+
+			<div class="slide">
+				<hgroup>
+					<h1>Client/Server Architecture (<span style="text-decoration: line-through;">microservices</span>)
+					</h1>
 				</hgroup>
 				<div class="h-drawing" style="height: 120px; margin-top: 20px; margin-bottom: 20px"
 					id="1_a-ZdIt4QylghhrPV1F3kWWcZDcm9OzdyHpK9YlJbv8"></div>
 				<ul class="x-small">
-					<li>Microservice architecture</li>
+					<li>Not-a-microservice Architecture</li>
 					<ul>
-						<li>Middleware, app and DB monoliths break down to microservices</li>
-						<li>Provides additional scalability and technology neutrality of app components</li>
+						<li>Monoliths deployed to Kubernetes cluster</li>
+						<li>Improved Deployments (via container images)</li>
+						<li>Improved fail-over</li>
+						<li>Not cheaper (Kubernetes costs come into play)</li>
 					</ul>
 				</ul>
 			</div>
