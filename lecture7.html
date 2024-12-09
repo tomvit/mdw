@@ -4,14 +4,13 @@
     (cc) 2010-2023 Tomas Vitvar, http://vitvar.com
     written for Humla, an open source HTML5 presentation environment
 -->
-
 <html>
 
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <meta name="course" content="Middleware Architectures 1" />
-  <meta name="lecture" content="Lecture 7" />
-  <meta name="keywords" content="SOA, service concepts, service technologies, SOAP, REST, WSDL" />
+  <meta name="lecture" content="Lecture 8" />
+  <meta name="keywords" content="High Availability, Load Balancer, Replication" />
 
   <link type="text/css" rel="stylesheet" href="css/meta.css">
   </link>
@@ -21,7 +20,7 @@
   </link>
 
   <script type="text/javascript" src="humla/lib/humla.js"></script>
-  <title>HATEOAS, Caching and Concurrency</title>
+  <title>High Availability and Performance</title>
 </head>
 
 <body>
@@ -63,82 +62,264 @@
     </div>
   </div>
 
+  <div class="slide">
+    <hgroup>
+      <h1>Good Performance</h1>
+    </hgroup>
+    <ul class="small">
+      <li>What influences good performance?</li>
+      <ul>
+        <li>Number of users and concurrent connections</li>
+        <li>Number of messages and messages' sizes</li>
+        <li>Number of services</li>
+        <li>Infrastructure &ndash; capacity, availability, configuration, ...</li>
+      </ul>
+      <li>How can we achieve good performance?</li>
+      <ul>
+        <li>Infrastructure</li>
+        <ul>
+          <li>Scalability, failover, cluster architectures</li>
+        </ul>
+        <li>Performance tuning</li>
+        <ul>
+          <li>Application Server, JVM memory, OS-level tuning, Work managers configuration</li>
+        </ul>
+        <li>Service configuration</li>
+        <ul>
+          <li>Parallel processing, process optimization</li>
+        </ul>
+      </ul>
+    </ul>
+  </div>
+
   <div class="slide outline"></div>
 
   <section>
-    <header>HATEOAS</header>
+    <header>Definitions</header>
 
     <div class="slide">
       <hgroup>
-        <h1>HATEOAS</h1>
+        <h1>Definitions</h1>
       </hgroup>
-      <ul>
-        <li>HATEOAS = Hypertext as the Engine for Application State</li>
+      <ul class="xx-small">
+        <li>Scalability</li>
         <ul>
-          <li>The REST core principle</li>
-          <li><b>Hypertext</b></li>
+          <li>server scalability</li>
           <ul>
-            <li>Hypertext is a representation of a resource state with <b>links</b></li>
-            <li>A link is an URI of a resource</li>
-            <li>Applying an access (PUT, POST, DELETE) to a resource via its link = state transition</li>
+            <li>ability of a system to scale &ndash; when input load changes</li>
+            <li>users should not feel a difference when more users
+              access the same application at the same time</li>
+            <li><b>horizontal scaling</b></li>
+            <ul>
+              <li>adding new instances of applications/servers</li>
+            </ul>
+            <li><b>vertical scaling</b></li>
+            <ul>
+              <li>adding new resources (CPU, memory) to a server instance</li>
+            </ul>
+          </ul>
+          <li>network traffic</li>
+          <ul>
+            <li>bandwidth capacity influences performance too</li>
+            <li>service should limit the network traffic through caching</li>
           </ul>
         </ul>
-        <li>Statelessness</li>
+        <li>Availability</li>
         <ul>
-          <li>A service does not use a session memory to remember a state</li>
-          <li>HATEOAS enables stateless implementation of services</li>
+          <li>probability that a service is operational at a particular time</li>
+          <ul>
+            <li>e.g., 99.9987% availability &ndash; downtime ~44 seconds/year</li>
+          </ul>
+        </ul>
+        <li>SLA &ndash; Service Level Agreement</li>
+        <ul>
+          <li>Guarantee of service availability</li>
+          <li>When availability is below a guaranteed value, a customer can get a discount</li>
         </ul>
       </ul>
     </div>
 
     <div class="slide">
       <hgroup>
-        <h1>Stateful server</h1>
+        <h1>Definitions (Cont.)</h1>
       </hgroup>
       <ul class="x-small">
-        <li>Sessions to store the application state</li>
+        <li>High Availability</li>
         <ul>
-          <li>The app uses a server memory to remember the state</li>
-          <li>When the server restarts, the app state is lost</li>
+          <li>When a server instance fails, operation of the application can continue</li>
+          <li>Failures should affect application availability and performance as little as possible</li>
+        </ul>
+        <li>Application Failover</li>
+        <ul>
+          <li>When an application component performing a job becomes unavailable,
+            a copy of the failed object finishes the job.</li>
+          <li>Issues</li>
+          <ul>
+            <li>A copy of the failed object must be available</li>
+            <li>A location and operational status of available objects must be available</li>
+            <li>A processing state must be replicated</li>
+          </ul>
+        </ul>
+        <li>Load Balancing</li>
+        <ul>
+          <li>Distribution of incoming requests across server instances</li>
         </ul>
       </ul>
-      <img src="/img/stateful-server.png" width="500px" style="padding-left: 150px; padding-top: 15px" />
     </div>
 
     <div class="slide">
       <hgroup>
-        <h1>Stateless server</h1>
+        <h1>Performance Metrics</h1>
       </hgroup>
       <ul class="x-small">
-        <li>HTTP and hypermedia to transfer the app state</li>
+        <li>Response Time</li>
         <ul>
-          <li>Does not use a server memory to remember the app state</li>
-          <li>State transferred between a client and a service via HTTP metadata and resources' representations</li>
+          <li>A client-side metric</li>
         </ul>
+        <div class="h-drawing" style="height: 300px" id="1rgjQBi7cWEbNSjNYmnhaFTqcoXNi6JbLaGmNajArRUY"></div>
       </ul>
-      <img src="/img/stateless-server.png" width="500px"
-        style="padding-left: 150px; padding-top: 0px; margin-top: -10px" />
-    </div>
-
-    <div class="slide">
-      <hgroup>
-        <h1>Persistent Storage and Session Memory</h1>
-      </hgroup>
-      <ul class="small">
-        <li>Persistent Storage</li>
+      <ul class="xx-small">
         <ul>
-          <li>Contains the app data</li>
-          <li>Data is serialized into resource representation formats</li>
-          <li>All sessions may access the data via resource IDs</li>
-        </ul>
-        <li>Session Memory</li>
-        <ul>
-          <li>Server memory that contains a state of the app</li>
-          <li>A session may only access its session memory</li>
-          <li>Access through cookies</li>
-          <li>Note</li>
+          <li>CPU intensive service or a bad configuration of a service</li>
           <ul>
-            <li>A session memory may be implemented via a persistent storage (such as in Google AppEngine)</li>
+            <li>consider asynchronous processing when CPU intensive</li>
+          </ul>
+          <li>Writing to a data store</li>
+        </ul>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Performance Metrics</h1>
+      </hgroup>
+      <ul class="x-small">
+        <li>Queries/Requests per Second (QPS)</li>
+        <ul>
+          <li>A server-side metric</li>
+        </ul>
+        <div class="h-drawing" style="height: 300px" id="1BhopVXexuS5coYLBbcrBi1SiUY3YNcr-K4usFXU6IwM"></div>
+      </ul>
+      <ul class="xx-small">
+        <ul>
+          <li>Caching may improve performance</li>
+          <ul>
+            <li>even if data changes often, with high QPS caching improves a lot</li>
+          </ul>
+        </ul>
+      </ul>
+    </div>
+  </section>
+
+  <div class="slide outline"></div>
+
+  <section>
+    <header>Serving Requests</header>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Blocking (Synchronous) I/O</h1>
+      </hgroup>
+      <div id="1QP7gZSS1WS3YquzLekSgdZfcmi4BYArm-K9tuWrULQs" class="h-drawing" style="height: 220px"></div>
+      <ul class="x-small">
+        <li>Inbound connection</li>
+        <ul>
+          <li>A server creates a thread for every inbound connection</li>
+          <li>For example, 1K connections = 1K threads, big overhead</li>
+          <li>A thread is reserved for the entire duration of the request processing</li>
+        </ul>
+        <li>Outbound connection</li>
+        <ul>
+          <li>A thread is blocked when outbound connection is made</li>
+          <li>When outbound connection is slow, the scalability is poor</li>
+        </ul>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Non-Blocking (Asynchrnous) I/O</h1>
+      </hgroup>
+      <div id="1kxkFc3Chl4qFXxH_4f2seuNbpBdENMyZWMRUmxd1p28" class="h-drawing" style="height: 220px"></div>
+      <ul class="x-small">
+        <li>Inbound connections</li>
+        <ul>
+          <li>The connection is maintained by the OS, not the server app</li>
+          <li>The Web app registers events, OS triggers events when they occur</li>
+          <li>The app may create working threads and controls their number</li>
+        </ul>
+        <li>Outound connections</li>
+        <ul>
+          <li>The app registers a callback that is called when the data is available</li>
+          <li>Event loop</li>
+        </ul>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Components</h1>
+      </hgroup>
+      <div class="h-drawing" id="19ZwXAQ2Ui4TzbuCtXDoT-1dW7ZsAqgGWdQwal0ZxPVQ"></div>
+      <ul class="xx-small">
+        <li><b>Muxer</b> &ndash; component that handles communication via network sockets.</li>
+        <li><b>Request queue</b> &ndash; queue of requests to be processed.</li>
+        <li><b>Self-tunning thread pool</b> &ndash; a pool of threads in various states.</li>
+        <li><b>Work manager</b> &ndash; a configuration of <b>maximum threads</b> and a <b>capacity</b> that
+          can be used to handle requests for a specific application/service.</b></li>
+      </ul>
+    </div>
+
+    <!-- <div class="slide">
+      <hgroup>
+        <h1>Java Virtual Threads</h1>
+      </hgroup>
+      <img src="img/virtual-threads-java.png" style="width: 750px; padding: 20px"></img>
+      <ul class="xx-small">
+        <li>Virtual threads mapped to a platform threads (carrier threads)</li>
+        <li>Blocking operations do not block carrier threads</li>
+      </ul>
+    </div> -->
+
+  </section>
+
+  <div class="slide outline"></div>
+
+  <section>
+
+    <header>Load Balancers</header>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Load Balancing</h1>
+      </hgroup>
+      <ul class="small">
+        <li>Distributes a load to multiple app/object instances</li>
+        <ul>
+          <li>App instances run on different machines</li>
+          <li>Load sharing: equal or with preferences</li>
+          <li>Health checks</li>
+        </ul>
+        <li>Types</li>
+        <ul class="x-small">
+          <li>DNS-based load balancer</li>
+          <ul>
+            <li>DNS Round Robin</li>
+          </ul>
+          <li>NAT-based load balancer (Layer-4)</li>
+          <li><b>Reverse-proxy load balancer</b> (Layer-7)</li>
+          <ul>
+            <li>application layer</li>
+            <li>Sticky sessions</li>
+            <ul>
+              <li>JSession, JSession-aware load balancer</li>
+            </ul>
+          </ul>
+          <li>Client-side load balancer</li>
+          <ul>
+            <li>LB run by a client
+            <li>a client uses a replica-aware stub of the object
+              from the server</li>
           </ul>
         </ul>
       </ul>
@@ -146,469 +327,425 @@
 
     <div class="slide">
       <hgroup>
-        <h1>Link</h1>
+        <h1>DNS-based Load Balancer</h1>
       </hgroup>
-      <ul class="small">
-        <li>Service operation</li>
+      <ul class="x-small">
+        <li>DNS Round Robin</li>
         <ul>
-          <li>Applying an access to a link (GET, PUT, POST, DELETE)</li>
-          <li>Link: HTTP method + resource URI + optional link semantics</li>
-        </ul>
-        <li>Example: <code>getOrder</code>, <code>addOrder</code>, and <code>updateItem</code></li>
-      </ul>
-      <div class="h-drawing" id="16vcb0AGdT3N5Jd4FFw9YADqYoF_QQlP46UsYngjfTKs" style="height: 320px"></div>
-    </div>
-
-    <div class="slide">
-      <hgroup>
-        <h1>Atom Links</h1>
-      </hgroup>
-      <ul class="small">
-        <li>Atom Syndication Format</li>
-        <ul>
-          <li>XML-based document format; Atom feeds</li>
-          <li>Atom links becoming popular for RESTful applications</li>
-          <pre class="brush: xml; highlight : [2,3,4,5]">
-                            &lt;order a:xmlns="http://www.w3.org/2005/Atom" xmlns="..."&gt;
-                                &lt;a:link 
-                                    rel="next" 
-                                    href="http://company.com/orders/5543" 
-                                    type="application/xml"/>
-                                &lt;customer&gt;Tomas&lt;/customer>
-                                &lt;items&gt;...&lt;/items>
-                            &lt;/order>
-                            </pre>
-          <li>Link structure</li>
-          <ul class="no-bullet">
-            <li><code>rel</code> &ndash; name of the link<br />
-              ~ semantics of an operation behind the link</li>
-            <li><code>href</code> &ndash; URI to the resource described by the link</li>
-            <li><code>type</code> &ndash; media type of the resource the link points to</li>
-          </ul>
-        </ul>
-      </ul>
-    </div>
-
-    <div class="slide">
-      <hgroup>
-        <h1>Link Semantics</h1>
-      </hgroup>
-      <ul class="small">
-        <li>Standard <code>rel</code> values</li>
-        <ul>
-          <li>Navigation: <code>next</code>, <code>previous</code>, <code>self</code></li>
-          <li>Does not reflect a HTTP method you can use</li>
-        </ul>
-        <li>Extension <code>rel</code> values</li>
-        <ul>
-          <li>You can use <code>rel</code> to indicate a semantics of an operation</li>
-          <li>Example: add item, delete order, update order, etc.</li>
-          <li>A client associates this semantics with an operation it may apply at a particular state</li>
-          <li>The semantics should be defined by using an URI</li>
-          <pre class="brush: xml;">
-                            &lt;order a:xmlns="http://www.w3.org/2005/Atom" xmlns="..."&gt;
-                                &lt;id>2324&lt;/id>
-                                &lt;a:link rel="http://company.com/op/addItem" 
-                                    href="http://company.com/orders/2324"/>
-                                &lt;a:link rel="http://company.com/op/deleteOrder" 
-                                    href="http://company.com/orders/2324"/>
-                            &lt;/order>
-                            </pre>
-        </ul>
-      </ul>
-    </div>
-
-    <div class="slide">
-      <hgroup>
-        <h1>Link Headers</h1>
-      </hgroup>
-      <ul class="small">
-        <li>An alternative to Atom links in resource representations</li>
-        <ul>
-          <li>links defined in HTTP Link header, <span class="h-ref" id="rfc-5988">Web Linking IETF spec</a></li>
-          <li>They have the same semantics as Atom Links</li>
-          <li>Example:</li>
-          <pre class="brush: plain; gutter: 'false'">
-                                &gt; HEAD /orders HTTP/1.1
-                                
-                                &lt; Content-Type: application/xml
-                                &lt; Link: &lt;http://company.com/orders/?page=2&amp;size=10&gt;; rel="next"
-                                &lt; Link: &lt;http://company.com/orders/?page=10&amp;size=10&gt;; rel="last"
-                            </pre>
+          <li>A DNS record has multiple assigned IP addresses</li>
+          <li>DNS system delivers different IP addresses from the list</li>
+          <li>Example DNS A Record:<br />
+            <code>company.com A 147.32.100.71 147.32.100.72 147.32.100.73</code>
+          </li>
         </ul>
         <li>Advantages</li>
         <ul>
-          <li>no need to get the entire document</li>
-          <li>no need to parse the document to retrieve links</li>
-          <li>use HTTP HEAD only</li>
+          <li>Very simple, easy to implement</li>
+        </ul>
+        <li>Disadvantages</li>
+        <ul>
+          <li>IP address in cache, could take hours to re-assign</li>
+          <li>No information about servers' loads and health</li>
         </ul>
       </ul>
     </div>
 
     <div class="slide">
       <hgroup>
-        <h1>Preconditions and HATEOAS</li>
+        <h1>Forward Proxy</h1>
       </hgroup>
-      <ul class="x-small">
-        <li>Preconditions in HATEOAS</li>
-        <ul>
-          <li>Service in a current state generates only valid transitions
-            that it includes in the representation of the resource.</li>
-          <li>Transition logic is realized at the server-side</li>
-        </ul>
-      </ul>
-      <img src="/img/preconditions-HATEOAS.png" width="700px" style="padding-left: 50px; padding-top: 15px" />
-    </div>
-
-    <div class="slide">
-      <hgroup>
-        <h1>Advantages</h1>
-      </hgroup>
-      <ul class="x-small">
-        <li>Location transparency</li>
-        <ul>
-          <li>only "entry-level" links published to the World</li>
-          <li>other links within documents can change without changing client's logic</li>
-          <li>Hypertext represents the current user's view, i.e. rights or other context</li>
-        </ul>
-        <li>Loose coupling</li>
-        <ul>
-          <li>no need for a logic to construct the links</li>
-          <li>Clients know to which states they can move via links</li>
-        </ul>
-        <li>Statelessness and Cloud</li>
-        <ul>
-          <li>Better implementation of scalability</li>
-        </ul>
-      </ul>
-    </div>
-
-  </section>
-
-  <div class="slide outline"></div>
-
-  <section>
-    <header>Caching, Revalidation, Concurrency Control</header>
-
-    <div class="slide">
-      <hgroup>
-        <h1>Scalability</h1>
-      </hgroup>
-      <ul>
-        <li>Need for scalability</li>
-        <ul>
-          <li>Huge amount of requests on the Web every day</li>
-          <li>Huge amount of data downloaded</li>
-        </ul>
-        <li>Some examples</li>
-        <ul>
-          <li>Google, Facebook: 5 billion API calls/day</li>
-          <li>Twitter: 3 billions of API calls/day (75% of all the traffic)<br />
-            &rarr; 50 million tweets a day</li>
-          <li>eBay: 8 billion API calls/month</li>
-          <li>Bing: 3 billion API calls/month</li>
-          <li>Amazon WS: over 100 billion objects stored in S3</li>
-        </ul>
-        <li>Scalability in REST</li>
-        <ul>
-          <li>Caching and revalidation</li>
-          <li>Concurrency control</li>
-        </ul>
-      </ul>
-    </div>
-
-    <div class="slide">
-      <hgroup>
-        <h1>Caching</h1>
-      </hgroup>
-      <div class="h-drawing" id="1nc-u-R3NUvur4WBAB1yxSqtj3PfmsSWF8iMo0aLT-Nc" style="height: 200px"></div>
-      <ul class="x-small">
-        <li>Your service should cache:</li>
-        <ul>
-          <li>anytime there is a static resource</li>
-          <li>even there is a dynamic resource</li>
-          <ul>
-            <li>with chances it updates often</li>
-            <li>you can force clients to always revalidate</li>
-          </ul>
-        </ul>
-        <li>three steps:</li>
-        <ul>
-          <li>client GETs the resource representation</li>
-          <li>server controls how it should cache through <code>Cache-Control</code>
-            header</li>
-          <li>client revalidates the content via conditional GET</li>
-        </ul>
-      </ul>
-    </div>
-
-    <div class="slide">
-      <hgroup>
-        <h1>Cache Headers</h1>
-      </hgroup>
-      <ul class="x-small">
-        <li><code>Cache-Control</code> response header</li>
-        <ul>
-          <li>controls over local and proxy caches</li>
-          <li><code>private</code> &ndash; no proxy should cache, only clients can</li>
-          <li><code>public</code> &ndash; any intermediary can cache (proxies and clients)</li>
-          <li><code>no-cache</code> &ndash; the response should not be cached.
-            If it is cached, the content should always be revalidated.</li>
-          <li><code>no-store</code> &ndash; must not store persistently (this turns off caching)</li>
-          <li><code>no-transform</code> &ndash; no transformation of cached data; e.g. compressions</li>
-          <li><code>max-age</code>, <code>s-maxage</code> a time in seconds how long the cache is valid;
-            <code>s-maxage</code> for proxies
-          </li>
-        </ul>
-        <li><code>Last-Modified</code> and <code>ETag</code> response headers</li>
-        <ul>
-          <li>Content last modified date and a content entity tag</li>
-        </ul>
-        <li><code>If-Modified-Since</code> and <code>If-None-Match</code> request headers</li>
-        <ul>
-          <li>Content revalidation (conditional GET)</li>
-        </ul>
-      </ul>
-    </div>
-
-    <div class="slide">
-      <hgroup>
-        <h1>Example Date Revalidation</h1>
-      </hgroup>
-      <ul class="x-small">
-        <li>Cache control example:</li>
-        <ul>
-          <pre class="brush: plain; gutter: 'false'">
-                            &gt; GET /orders HTTP/1.1
-                            &gt; ...
-                            
-                            &lt; HTTP/1.1 200 OK
-                            &lt; Content-Type: application/xml
-                            &lt; Cache-Control: private, max-age=200
-                            &lt; Last-Modified: Sun, 7 Nov 2011, 09:40 CET
-                            &lt;
-                            &lt; ...data...
-                            </pre>
-          <li>only client can cache, the cache is valid for 200 seconds.</li>
-        </ul>
-        <li>Revalidation (conditional GET) example:</li>
-        <ul>
-          <li>A client revalidates the cache after <code>200</code> seconds.</li>
-          <pre class="brush: plain; gutter: 'false'">
-                            &gt; GET /orders HTTP/1.1
-                            &gt; If-Modified-Since: Sun, 7 Nov 2011, 09:40 CET
-                            
-                            &lt; HTTP/1.1 304 Not Modified
-                            &lt; Cache-Control: private, max-age=200
-                            &lt; Last-Modified: Sun, 7 Nov 2011, 09:40 CET
-                            </pre>
-        </ul>
-      </ul>
-    </div>
-
-    <div class="slide">
-      <hgroup>
-        <h1>Entity Tags</h1>
-      </hgroup>
-      <ul class="x-small">
-        <li>Signature of the response body</li>
-        <ul>
-          <li>A hash such as MD5</li>
-          <li>A sequence number that changes with any modification of the content</li>
-        </ul>
-        <li>Types of tag</li>
-        <ul>
-          <li>Strong ETag: reflects the content bit by bit</li>
-          <li>Weak ETag: reflects the content "semantically"</li>
-          <ul>
-            <li>The app defines the meaning of its weak tags</li>
-          </ul>
-        </ul>
-        <li>Example content revalidation with <code>ETag</code></li>
-        <pre class="brush: plain; gutter: 'false'; class-name: 'tight'">
-                            &lt; HTTP/1.1 200 OK
-                            &lt; Cache-Control: private, max-age=200
-                            &lt; Last-Modified: Sun, 7 Nov 2011, 09:40 CET
-                            &lt; ETag: "4354a5f6423b43a54d"
-                            
-                            &gt; GET /orders HTTP/1.1
-                            &gt; If-None-Match: "4354a5f6423b43a54d"
-                            
-                            &lt; HTTP/1.1 304 Not Modified
-                            &lt; Cache-Control: private, max-age=200
-                            &lt; Last-Modified: Sun, 7 Nov 2011, 09:40 CET
-                            &lt; ETag: "4354a5f6423b43a54d"
-                            </pre>
-      </ul>
-      </ul>
-    </div>
-
-    <div class="slide">
-      <hgroup>
-        <h1>Design Suggestions</h1>
-      </hgroup>
-      <ul class="small">
-        <li>Composed resources use weak ETags</li>
-        <ul>
-          <li>For example <code>/orders</code></li>
-          <ul>
-            <li>a composed resource that contains a summary information</li>
-            <li>changes to an order's items will not change semantics of <code>/orders</code></li>
-          </ul>
-          <li>It is usually not possible to perform updates on these resources</li>
-        </ul>
-        <li>Non-composed resources use strong ETags</li>
-        <ul>
-          <li>For example <code>/orders/{order-id}</code></li>
-          <li>They can be updated</li>
-        </ul>
-        <li>Further notes</li>
-        <ul class="small">
-          <li>Server should send both <code>Last-Modified</code> and
-            <code>ETag</code> headers
-          </li>
-          <li>If client sends both <code>If-Modified-Since</code> and <code>If-None-Match</code>,<br />
-            <code>ETag</code> validation takes preference
-          </li>
-        </ul>
-      </ul>
-    </div>
-
-    <div class="slide">
-      <hgroup>
-        <h1>Weak ETag Example</h1>
-      </hgroup>
-      <ul class="x-small">
-        <li>App specific, <code>/orders</code> resource example</li>
-        <pre class="brush: js; class-name: 'tight'">
-                        { 
-                            "orders" : 
-                                [
-                                    { "id"        : 2245,
-                                      "customer"  : "Tomas",
-                                      "descr"     : "Stuff to build a house.",
-                                      "items"     : [...] },
-                                    { "id"        : 5546,
-                                      "customer"  : "Peter",
-                                      "descr"     : "Things to build a pipeline.",
-                                      "items"     : [...] }
-                                ] 
-                        }
-                        </pre>
-        <li>Weak ETag compute function example</li>
-        <ul>
-          <li>Any modification to an order's items is not significant for <code>/orders</code>:</li>
-        </ul>
-        <pre class="brush: js; class-name: 'tight'">
-                            var crypto = require("crypto");
-                        
-                            function computeWeakETag(orders) {
-                                var content = "";
-                                for (var i = 0; i < orders.length; i++)
-                                    content += orders[i].id + orders[i].customer + orders[i].descr;
-                                return crypto.createHash('md5').update(content).digest("hex");
-                            }
-                        </pre>
-      </ul>
-    </div>
-
-    <div class="slide">
-      <hgroup>
-        <h1>Weak ETag Revalidation</h1>
-      </hgroup>
-      <ul class="x-small">
-        <li>Updating <code>/orders</code> resource</li>
-        <ul>
-          <li><code>POST /orders/{order-id}</code> inserts a new item to an order</li>
-          <li>Any changes to orders' items will not change the Weak ETag</li>
-        </ul>
-      </ul>
-      <div class="h-drawing" id="1n1jGatYjOc_kgMhWSuXyReptynOFn1CEDELB75Qj_3A" style="height: 380px"></div>
-    </div>
-
-    <div class="slide">
-      <hgroup>
-        <h1>Concurrency</h1>
-      </hgroup>
-      <ul class="x-small">
-        <li>Two clients may update the same resource</li>
-        <ul class="no-bullet">
-          <li>1) a client GETs a resource <code>GET /orders/5545</code></li>
-          <li>2) the client modifies the resource</li>
-          <li>3) the client updates the resource via <code>PUT /orders/5545 HTTP/1.1</code></li>
-          <li class="space-before">What happens if another client updates the
-            resource between 1) and 3) ?</li>
-        </ul>
-
-        <li>Concurrency control</li>
-        <ul>
-          <li>Conditional <code>PUT</code></li>
-          <ul>
-            <li>Update the resource only if it has not changed since a specified date or
-              a specified ETag matches the resource content</li>
-          </ul>
-          <li><code>If-Unmodified-Since</code> and <code>If-Match</code> headers</li>
-          <li>Response to conditional <code>PUT</code>:</li>
-          <ul>
-            <li><code>200 OK</code> if the <code>PUT</code> was successful</li>
-            <li><code>412 Precondition Failed</code> if the resource was updated in the meantime.</li>
-          </ul>
-        </ul>
-      </ul>
-    </div>
-
-    <div class="slide">
-      <hgroup>
-        <h1>Concurrency Control Protocol</h1>
-      </hgroup>
-      <div class="h-drawing" id="1D9w_NKq3AqIl14fn0vGFBmVlbNMrAQqeYljjOYLcqCo" style="height: 380px"></div>
-      <ul class="x-small">
-        <li>Conditional PUT and ETags</li>
-        <ul>
-          <li>Conditional PUT must always use strong entity tags or date validation</li>
-        </ul>
-      </ul>
-    </div>
-
-  </section>
-
-  <div class="slide outline"></div>
-
-  <section>
-    <header>Richardson Maturiy Model</header>
-
-    <div class="slide">
-      <hgroup>
-        <h1>Steps towards REST</h1>
-      </hgroup>
-      <img src="img/maturity-model.png" style="margin-top: 40px; margin-left: 50px"></img>
+      <div class="h-drawing" id="1zt7pfPYpd5cdHu92rimaRelwjKHkHeeA7AhHnrerI74" style="height: 270px"></div>
       <ul class="xx-small">
-        <li class="no-bullet">See <span class="h-ref" id="rmm">Richardson Maturiy Model</span> details.</li>
+        <li>Forward Proxy</li>
+        <ul>
+          <li>Centralized access control based on content</li>
+          <li>The client knows about the site it wants to access</li>
+          <li>Perfoms request on behalf of the client</li>
+          <ul>
+            <li>Caches content to increase performance, limits network traffic</li>
+            <li>Filters requests or controls access based on destinations or origins</li>
+          </ul>
+          <li>Widely used in private networks in companies</li>
+          <li>Most of the proxy servers today are Web proxy servers</li>
+        </ul>
       </ul>
     </div>
 
     <div class="slide">
       <hgroup>
-        <h1>Levels</h1>
+        <h1>Forward Prox Sequence Diagram</h1>
       </hgroup>
-      <ul class="small">
-        <li>LEVEL 0 &ndash; POX (Plain Old XML)</li>
+      <div class="h-drawing" id="1F9GMscVnuf1Jex-2SMCc0phrtajyGmZtV-zMl9AqBXA" style="height: 270px"></div>
+      <ul class="xx-small">
+        <li>Forward Proxy</li>
         <ul>
-          <li>HTTP as a tunneling mechanism</li>
-          <li>URL defines a service endpoint</li>
-          <li>No Web principles</li>
+          <li>There are 2 TCP sockets for every connection (client-FP, FP-server)</li>
+          <li>Client is not directly connected to the server</li>
+          <li>FP tunnels requests to the server</li>
         </ul>
-        <li>LEVEL 1 &ndash; Resources</li>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Reverse Proxy</h1>
+      </hgroup>
+      <div class="h-drawing" id="1RpfjNLhFSzu7mDdWVvV3ZldHEhzx9rLB1KpHpdL9bno" style="height: 270px"></div>
+      <ul class="xx-small">
+        <li>Reverse Proxy</li>
         <ul>
-          <li>Take advantages of resources and URIs</li>
+          <li>Aggregates multiple request-response interactions with back-end systems</li>
+          <li>Processes the request on behalf of the client</li>
+          <li>The client does not know about the back-end systems</li>
+          <li>May provide additional capabilities</li>
+          <ul>
+            <li>Data transformations</li>
+            <li>Security &ndash; authentication, authorization</li>
+            <li>Orchestration of communication with back-end systems</li>
+          </ul>
         </ul>
-        <li>LEVEL 2 &ndash; HTTP Verbs</li>
+      </ul>
+    </div>
+    <div class="slide">
+      <hgroup>
+        <h1>Reverse Proxy Load Balancer</h1>
+      </hgroup>
+      <div class="h-drawing" style="margin-top: 40px; height: 450px" id="1QtCAcD0R571rYmeP1hrofveZ3x6F7P61rfUpEswxOl0">
+      </div>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>HTTP Sticky Sessions Example</h1>
+      </hgroup>
+      <div class="h-drawing" id="1hzFB_41gJmkKQHpcSODvengGnHW98UYv1x1xZHt4XMA" style="height: 320px; margin: 20px">
+      </div>
+      <ul class="x-small">
+        <li>How to identify a server that hosts the session state</li>
         <ul>
-          <li>Use HTTP methods and respect their semantics</li>
+          <li>Passive cookie persistence &ndash; LB uses a cookie from the server</li>
+          <li>Active cookie persistence &ndash; LB adds its own cookie</li>
         </ul>
-        <li>LEVEL 3 &ndash; Hypermedia Controls</li>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Types of Load Balancers</h1>
+      </hgroup>
+      <ul class="x-small">
+        <li>Software</li>
         <ul>
-          <li>HATEOAS</li>
+          <li>Apache <code>mod_proxy_balancer</code>, NGINX</li>
+          <ul>
+            <li>HTTP Session persistence &ndash; sticky sessions</li>
+            <li>Various configuration options</li>
+          </ul>
+          <li>WebLogic proxy plug-in</li>
+          <pre class="brush: xml">
+								&lt;Location /soa-infra>
+    								SetHandler weblogic-handler
+    								WebLogicCluster czfmwapp03-vf:8001,czfmwapp04-vf:8001,czfmwapp05-vf:8001
+								&lt;/Location> 
+							</pre>
+          <ul class="no-bullet">
+            <li><code>/soa-infra</code> is a first part of an URL path that rules in this <code>Location</code> will be
+              applied (this is a standard Apache configuration mechanism)</li>
+            <li><code>WebLogicCluster</code> specifies the list of backend servers for load balancing</li>
+          </ul>
+        </ul>
+        <li>Hardware</li>
+        <ul>
+          <li>Cisco, Avaya, Barracude</li>
+        </ul>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Round-Robin Algorithm</h1>
+      </hgroup>
+      <ul class="xx-small">
+        <li>Uses</li>
+        <ul class="no-bullet">
+          <li><code>request</code> &ndash; client request with or without a cookie information</li>
+          <li><code>server_list</code> &ndash; a list of backend servers that can process the request</li>
+          <li><code>rbinx</code> &ndash; round robin index</li>
+          <li><code>sticky_sessions</code> &ndash; associative array of pairs <code>&lt;session_id,server&gt;</code>
+          </li>
+          <li><code>unhealthy_treshhold</code> &ndash; a number of negative consecutive health checks
+            before moving the server to the "unhealthy" state.</li>
+        </ul>
+        <li>Round Robin Algorithm</li>
+        <ul>
+          <li>if <code>session_id</code> exist in the <code>request</code> and in <code>sticky_sessions</code></li>
+          <ul>
+            <li>send the <code>request</code> to the server <code>sticky_sessions[session_id]</code></li>
+          </ul>
+          <li>otherwise</li>
+          <ul>
+            <li>send the <code>request</code> to the <code>rbinx</code> server in the <code>server_list</code></li>
+            <li>extract <code>session_id</code> from the response from the server</li>
+            <li>if the <code>session_id</code> exist, add a pair <code>&lt;session_id;server_list[rbinx]&gt;</code> to
+              <code>sticky_sessions</code>
+            </li>
+            <li>increase <code>rbinx</code> by one or reset it to <code>0</code> if it exceeds the length of
+              <code>server_list</code>
+            </li>
+          </ul>
+        </ul>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Health Check</h1>
+      </hgroup>
+      <ul class="xx-small">
+        <li>Health Check</li>
+        <ul>
+          <li>For each server in the <code>server_list</code></li>
+          <ul>
+            <li>call the server's heatlhcheck endpoint</li>
+            <li>if a number of failed health checks for the server exceeds the <code>unhealthy_threshold</code></li>
+            <ul>
+              <li>remove the server from the <code>server_list</code></li>
+            </ul>
+            <li>if the server was unhealthy and a there was a successful healthcheck</li>
+            <ul>
+              <li>add the server back to the <code>server_list</code></li>
+            </ul>
+          </ul>
+        </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Backend Server Selection Options</h1>
+      </hgroup>
+      <ul class="xx-small">
+        <li>Backend server with a weight and a backup server</li>
+        <ul>
+          <li>NGINX example:</li>
+          <pre class="brush: plain; gutter: false; class-name: 'tight'">
+              http {
+                  upstream backend {
+                      server backend1.example.com weight=5;
+                      server backend2.example.com;
+                      server 192.0.0.1 backup;
+                  }
+                  
+                  server {
+                      location / {
+                          proxy_pass http://backend;
+                      }
+                  }                  
+              }            
+            </pre>
+        </ul>
+        <li>Least connections</li>
+        <ul>
+          <li>A request is sent to a server with the least number of active connections</li>
+        </ul>
+        <li>Least time</li>
+        <ul>
+          <li>A request is sent to a server with the lowest average response time and the lowest number of active
+            connections</li>
+          <li>Time can be:</li>
+          <ul>
+            <li>Time to receive the resonse header</li>
+            <li>Time to receive full response body</li>
+          </ul>
+        </ul>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Backend Server Selection Options (Cont.)</h1>
+      </hgroup>
+      <ul class="xx-small">
+        <li>Limiting the Number of Connections</li>
+        <ul>
+          <li>Maximum number of connections per backend server</li>
+          <li>Number of connections in the queue</li>
+          <pre class="brush: plain; gutter: false">
+              upstream backend {
+                server backend1.example.com max_conns=3;
+                server backend2.example.com;
+                queue 100 timeout=70;
+              }
+            </pre>
+          </li>
+        </ul>
+        <li>Hash (ip hash, generic hash)</li>
+        <ul>
+          <li>A server to which a request is sent is determined from the client IP address or an arbitrary value
+            (string, request URL, etc.)</li>
+        </ul>
+        <li>Server Slow-Start</li>
+        <ul>
+          <li>This prevents a recently recovered server from being overwhelmed</li>
+          <li>During server slow-start, connections may time out</li>
+          <ul>
+            <li>This may cause the server to be marked as failed again.</li>
+          </ul>
+        </ul>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Session Persistence</h1>
+      </hgroup>
+      <ul class="xx-small">
+        <li>Session Persistence</li>
+        <ul>
+          <li>Sticky cookie</li>
+          <ul>
+            <li>A cookie defined by the load balancer for every client</li>
+            <pre class="brush: plain; gutter: false">
+                upstream backend {
+                    server backend1.example.com;
+                    server backend2.example.com;
+                    sticky cookie srv_id expires=1h domain=.example.com path=/;
+                }              
+              </pre>
+          </ul>
+          <li>Sticky learn</li>
+          <ul>
+            <li>LB finds a cookie by inspecting requests and responses</li>
+            <li>LB uses the cookie for subsequent redirection</li>
+          </ul>
+        </ul>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Session State Persistence and Replication</h1>
+      </hgroup>
+      <ul class="xx-small">
+        <div class="h-drawing" style="height: 290px" id="1PiI-1CeVkQTYUgOPHyk3wqJufQl9cYQz5vlNziERE74"></div>
+        <li>Session DB persistence</li>
+        <ul>
+          <li>Session information is maintained in the database</li>
+          <li>Does not require sticky sessions in LB</li>
+          <li>Implements <code>HttpSession</code> interface that writes data to the DB</li>
+        </ul>
+        <li>In-memory replication</li>
+        <ul>
+          <li>A <b>primary server</b> holds a session state, the <b>secondary server</b>
+            holds its replica.</li>
+          <li>Information about primary and secondary servers are part of JSession</li>
+        </ul>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>In-Memory Replication</h1>
+      </hgroup>
+      <ul class="x-small">
+        <li>Session format</li>
+        <ul>
+          <li>It's a cookie</li>
+          <li><code>JSESSIONID=SESSION_ID!PRIM_SERVER_ID!SEC_SERVER_ID!CREATION_TIME</code></li>
+          <ul class="no-bullet">
+            <li><code>SESSION_ID</code> &ndash; session id, generated by the server to identify memory associated with
+              the session on the server</li>
+            <li><code>PRIM_SERVER_ID</code> &ndash; ID of the managed server holding the session data</li>
+            <li><code>SEC_SERVER_ID</code> &ndash; ID of the managed server holding the session replica</li>
+            <li><code>CREATION_TIME</code> &ndash; time the session data was created/updated</li>
+          </ul>
+        </ul>
+        <li>How LB uses this information</li>
+        <ul>
+          <li>LB has information whether the server is running or not (via healthchecks)</li>
+          <li>if the primary server is running, it redirects the request there</li>
+          <li>if the primary server is not running, it redirects the request to the secondary server directly</li>
+          <li>if primary and secondary servers are not running, it redirect the request to any other server it has in
+            the list &ndash; this may cause side effects!</li>
+        </ul>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>In-Memory Replication Scenarios</h1>
+      </hgroup>
+      <center>
+        <div class="h-drawing" id="1APKL5IK-WG_8rlF6g__Q5TwxVrwmW9a4KPbK10JiKGU" style="width: 690px"></div>
+      </center>
+    </div>
+
+  </section>
+
+  <div class="slide outline"></div>
+
+  <section>
+    <header>Performance Tuning</header>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Performance Limiting Factors</h1>
+      </hgroup>
+      <div id="1bo3PC-IopJA4SiyHLVag7g1amyT8W89k2edtirQwz1w" style="height: 450px; margin: 30px" class="h-drawing">
+      </div>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Monitoring</h1>
+      </hgroup>
+      <ul class="xx-small">
+        <li>Important to understand performance</li>
+        <ul>
+          <li>DevOps monitoring trends</li>
+        </ul>
+        <li>What you need</li>
+        <ul>
+          <li>Collect &rarr; Filter &rarr; Store &rarr; View &rarr; <b>Tune</b></li>
+          <li>Metrics, dashboards, alerting, log management, reporting, tracing capabilities</li>
+          <li>It is necessary to organize metrics well in order to understand what is going on</li>
+          <li>Start from a high-level process, detail to technical components</li>
+        </ul>
+        <li>Source</li>
+        <ul>
+          <li>Application server</li>
+          <ul>
+            <li>usually management beans with JMX interfaces</li>
+            <li>log files (access logs, server logs, etc.)</li>
+          </ul>
+          <li>OS</li>
+          <ul>
+            <li>many utilities available out of the box</li>
+            <li>open sockets, memory, context switches, I/O performance, CPU usage</li>
+          </ul>
+          <li>Database</li>
+          <ul>
+            <li>applications may write metrics to the DB</li>
+            <li>SQL scripts to collect metrics</li>
+          </ul>
+        </ul>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Monitoring Tools</h1>
+      </hgroup>
+      <ul class="x-small">
+        <li>Commercial Monitoring Solutions</li>
+        <ul>
+          <li>Application server vendor usually offers a monitoring solution</li>
+          <li>AppDynamics, Oracle Enterprise Manager, Splunk</li>
+          <li>Google stackdriver, Amazon AWS CloudWatch</li>
+        </ul>
+        <li>Open source examples</li>
+        <ul>
+          <li>Elasticsearch + LogStash + Kibana</li>
+          <li>InfluxDB + Telegraph + DataGraph</li>
         </ul>
       </ul>
     </div>
@@ -616,8 +753,5 @@
   </section>
 
 
-  </section>
 
 </body>
-
-</html>
