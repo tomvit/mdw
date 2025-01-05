@@ -117,11 +117,11 @@
       <ul class="xx-small">
         <li>Handshaking (connection establishment)</li>
         <ul>
-          <li>The server listens at <code>[dst_ip,dsp_port]</code></li>
+          <li>The server listens at <code>[dst_ip,dst_port]</code></li>
           <li>Three-way handshake:</li>
           <ul>
             <li>the client sends a connection request with TCP flags (SYN, x=rand)</li>
-            <li>the server respons with its own TCP flags (SYN ACK, x+1 y=rand)</li>
+            <li>the server responds with its own TCP flags (SYN ACK, x+1 y=rand)</li>
             <li>the client acknowledges the response, can send data along (ACK, y+1 x+1)</li>
           </ul>
           <li>Result is a socket (virtual communication channel) with unique identification:<br />
@@ -376,7 +376,7 @@
       <ul class="xx-small">
         <li>Important optimization &ndash; response queuing</li>
         <ul>
-          <li>Allows to relecote FIFO queue from the client to the server</li>
+          <li>Allows to relocate FIFO queue from the client to the server</li>
         </ul>
         <li>Requests are pipelined one after another</li>
         <ul>
@@ -399,7 +399,7 @@
           <li>Buffered (large or many) responses may exhaust server resources</li>
           <li>A failed response may terminate TCP connection</li>
           <ul>
-            <li>A client must request all sub-sequent resources again (dupplicate processing)
+            <li>A client must request all sub-sequent resources again (duplicate processing)
           </ul>
           <li>Some intermediaries may not support pipelining and abort connection</li>
         </ul>
@@ -777,7 +777,7 @@
         </ul>
         <li>Integrity</li>
         <ul>
-          <li>TLS provives message framing mechanism</li>
+          <li>TLS provides message framing mechanism</li>
           <li>Every message is signed with Message Authentication Code (MAC)</li>
           <ul>
             <li>MAC hashes data in a message and combines the resulting hash with a key (negotiated during the TLS
@@ -814,7 +814,7 @@
         <ul>
           <li>The client generates a symetric key</li>
           <li>The client encrypts the key with the server's public key</li>
-          <li>The client sends the encrpyed key to the server</li>
+          <li>The client sends the encrypted key to the server</li>
           <li>The server uses its private key to decrypt the symetric key</li>
         </ul>
         <li>RSA critical weekness</li>
@@ -831,7 +831,7 @@
         </ul>
         <li>Diffie-Hellman key exhange</li>
         <ul>
-          <li>Client and server can negoriate shared secret without its explicit communication</li>
+          <li>Client and server can negotiate shared secret without its explicit communication</li>
           <ul>
             <li>Attacker cannot get the key</li>
           </ul>
