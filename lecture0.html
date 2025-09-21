@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <!--
 	Middleware and Web Services, CTU course slides
-	(cc) 2010-2023 Tomas Vitvar, tomas@vitvar.com
+	(cc) 2010-2025 Tomas Vitvar, tomas@vitvar.com
 -->
 <html>
 
@@ -62,53 +62,6 @@
 		</div>
 	</div>
 
-	<div class="slide">
-		<hgroup>
-			<h1>Hellos</h1>
-		</hgroup>
-		<ul class="x-small">
-			<li>Tomáš Vitvar &ndash; lectures (Czech)</li>
-			<ul>
-				<li>Web engineering program chair at CTU FIT</li>
-				<li>Technology Architect Director at Oracle</li>
-				<li>Research</li>
-				<ul>
-					<li>Web Services, Web Intelligence, Semantic Web</li>
-				</ul>
-				<li>Industry</li>
-				<ul>
-					<li>Large scale integration architecture projects<br />(Vodafone UK, IKEA IT Sweden, Turkish
-						Telecom)</li>
-					<li>Design, governance, troubleshooting, performance tuning</li>
-				</ul>
-			</ul>
-			<li>Jaroslav Kuchař &ndash; labs (Czech)</li>
-			<ul>
-				<li>Research assistant at CTU FIT, Seznam.cz</li>
-				<li>Web usage mining, big data analytics, Web services</li>
-			</ul>
-			<li>Milan Dojčinovski &ndash; lectures and labs (English)</li>
-			<ul>
-				<li>research assistant at CTU FIT, Ph.D. candidate</li>
-				<li>Semantic Web, Linked Data, NLP, Web services</li>
-			</ul>
-		</ul>
-	</div>
-
-	<div class="slide">
-		<hgroup>
-			<h1>Web Engineering Curricula &ndash; bird's view</h1>
-		</hgroup>
-		<ul class="small">
-			<li>Web engineering is...</li>
-			<ul>
-				<li>far beyond PHP and HTML!</li>
-			</ul>
-		</ul>
-		<div class="h-drawing" style="height: 390px" alt="Web Engineering Overview"
-			id="1oyGz6GdF-K_hln9g_l3Cp1eNK843S4NKE4tO8HMUYGw"></div>
-	</div>
-
 	<div class="slide outline">
 	</div>
 
@@ -156,14 +109,13 @@
 						<li>modular development</li>
 						<li>reuse of application logic</li>
 						<li>low costs &ndash; do it now and quickly!</li>
-						<ul>
-						</ul>
-						<li>Good performance</li>
-						<ul>
-							<li>frequent changes in applications' loads, peek hours</li>
-							<li>scalability &ndash; effective load balancing</li>
-							<li>low costs &ndash; cheaper to outsource?</li>
-						</ul>
+					</ul>
+					<li>Good performance</li>
+					<ul>
+						<li>frequent changes in applications' loads, peek hours</li>
+						<li>scalability &ndash; effective load balancing</li>
+						<li>low costs &ndash; cheaper to outsource?</li>
+					</ul>
 			</div>
 
 			<div class="slide" id="scope">
@@ -173,14 +125,15 @@
 				<ul class="small x-spacing">
 					<li>Architectural and conceptual basis</li>
 					<ul>
-						<li>What is architecture &ndash; enterprise, processes, data, software</li>
-						<li>Service concepts, integration patterns, middleware</li>
+						<li>What is an architecture &ndash; methodology, global, software</li>
+						<li>Service concepts, integration patterns, microservices, middleware</li>
 					</ul>
 					<li>Backend technologies</li>
 					<ul>
 						<li>Communication protocols &ndash; HTTP, TLS, HTTP/2</li>
 						<li>Application backend and requests handling</li>
-						<li>Advances of REST, MOM</li>
+						<li>Advances of REST, gRPC</li>
+						<li>Kubernetes</li>
 					</ul>
 					<li>Performance and Scalability</li>
 					<ul>
@@ -203,29 +156,22 @@
 					<h1>Prerequisites</h1>
 				</hgroup>
 				<ul class="small spacing">
-					<li>Object-oriented programming</li>
+					<li>Operating systems</li>
 					<ul>
-						<li>Principles</li>
-						<ul>
-							<li>class, object, inheritance, encapsulation, ...</li>
-							<ul>
-								<li>basis for service concepts</li>
-							</ul>
-						</ul>
+						<li>Basics of Linux</li>
+					</ul>
+					<li>Computer Networks</li>
+					<ul>
+						<li>Basics of networking concepts</li>
 					</ul>
 					<li>JavaScript</li>
 					<ul>
-						<li>All code examples will be in JavaScript</li>
-						<li>All lab work will be in JavaScript</li>
+						<li>Code examples will be in JavaScript</li>
+						<li>Lab work will be in JavaScript</li>
 					</ul>
 					<li>Web Architecture</li>
 					<ul>
 						<li>Basics of REST, HTTP, URI/URL</li>
-					</ul>
-					<li>Other</li>
-					<ul>
-						<li>Networking</li>
-						<li>Basics of OS</li>
 					</ul>
 				</ul>
 			</div>
@@ -237,26 +183,25 @@
 				<ul class="xx-small">
 					<li>12 Lectures</li>
 					<ul>
-						<li>Czech: Mon 9:15-10:45, T9:107</li>
+						<li>Czech: Mon 9:15-10:45, JP:B-571</li>
 						<li>English: TBA</li>
 					</ul>
 
 					<li>Plan</li>
 					<ol>
-						<li>22.09.2024 &#150; Motivation and Course Overview</li>
-						<li>30.09.2024 &#150; Information System Architectures</li>
-						<li>09.10.2024 &#150; Service Architecture 1</li>
-						<li>07.10.2024 &#150; Service Architecture 2</li>
-						<li>14.10.2024 &#150; Communication protocols, HTTP, TLS</li>
-						<li>21.10.2024 &#150; HTTP/2 and HTTP/3</li>
-						<li>28.10.2024 &#150; No lecture</li>
-						<li>11.11.2024 &#150; HATEOAS, Caching, Concurrency Control</li>
-						<li>04.11.2024 &#150; Monolithic vs Microservices Architectures</li>
-						<li>18.11.2024 &#150; Messaging middleware</li>
-						<li>25.11.2024 &#150; High Availability and Performance 1</li>
-						<li>02.12.2024 &#150; High Availability and Performance 2</li>
-						<li>09.12.2024 &#150; Reserve</li>
-						<li>16.12.2024 &#150; Reserve</li>
+						<li>22.09.2025 &#150; Motivation and Course Overview</li>
+						<li>29.09.2025 &#150; Information System Architectures</li>
+						<li>06.10.2025 &#150; Introduction to Service Architecture</li>
+						<li>13.10.2025 &#150; Microservices and Cloud-Native Architectures</li>
+						<li>20.10.2025 &#150; Communication protocols, HTTP, TLS</li>
+						<li>27.10.2025 &#150; HTTP/2 and HTTP/3</li>
+						<li>03.11.2025 &#150; HATEOAS, Caching, Concurrency Control</li>
+						<li>10.11.2025 &#150; gRPC</li>
+						<li>17.11.2025 &#150; No Lecture</li>
+						<li>24.11.2025 &#150; Synchronous and Asynchronous I/O</li>
+						<li>01.12.2025 &#150; High Availability and Performance</li>
+						<li>08.12.2025 &#150; Performance Tuning</li>
+						<li>15.12.2025 &#150; Reserve</li>
 					</ol>
 				</ul>
 			</div>
@@ -294,6 +239,32 @@
 							<li>5 completed tasks</li>
 							<li>you will submit results to <a href="https://gitlab.fit.cvut.cz/">gitlbab@FIT</a></li>
 						</ul>
+					</ul>
+				</ul>
+			</div>
+
+			<div class="slide">
+				<hgroup>
+					<h1>FIT Workspaces</h1>
+				</hgroup>
+				<ul class="small">
+					<li>All work you will do in <b>FIT Workspaces</b></li>
+					<ul>
+						<li>Cloud-native Development Environment running in Kubernetes</li>
+						<li>Each student has an access to their own workspace</li>
+						<li>Workspace is ready for the <b>lab work</b></li>
+					</ul>
+					<li>Access</li>
+					<ul>
+						<li>You use your FIT username and a key (stored in GitLab)</li>
+						<ul>
+							<li><code>ssh vitvatom~am1@fit-workspaces.ksi.fit.cvut.cz</code></li>
+						</ul>
+						<li>You can use SSH CLI, VSCode or IntelliJ with Remote SSH plugin</li>
+						<li>You have sudo access if you want to add packages</li>
+						<li>For more Information see <a
+								href="https://gitlab.fit.cvut.cz/groups/fit-workspaces/-/wikis/instructions_en">FIT
+								Workspaces Wiki</a></li>
 					</ul>
 				</ul>
 			</div>
