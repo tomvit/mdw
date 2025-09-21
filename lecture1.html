@@ -155,223 +155,95 @@
 
 		<div class="slide">
 			<hgroup>
-				<h1>Organization Types</h1>
+				<h1>Organization Types in Enterprise Systems</h1>
 			</hgroup>
-			<ul class="spacing">
-				<li>Customer</li>
+			<ul class="xx-small spacing">
+				<li><b>Customer Organization</b></li>
 				<ul>
-					<li>user needs: support for business processes</li>
-					<li>defines business requirements</li>
-					<li>roles: enterprise architect, developers, admins, users</li>
+					<li><b>Primary need:</b> Business process automation and optimization</li>
+					<li><b>Responsibilities:</b> Define business requirements, acceptance criteria, change management
+					</li>
+					<li><b>Key roles:</b> Enterprise architect, business analysts, end users, IT administrators</li>
+					<li><b>Example:</b> Bank implementing new CRM system for customer management</li>
 				</ul>
-				<li>Supplier (enterprise system/application provider)</li>
+				<li><b>Supplier Organization</b> (System Integrator)</li>
 				<ul>
-					<li>solutions and customization according to requirements</li>
-					<li>roles: technical and solution architects, developers, admins</li>
+					<li><b>Primary need:</b> Deliver tailored solutions meeting customer requirements</li>
+					<li><b>Responsibilities:</b> Solution design, customization, implementation, support</li>
+					<li><b>Key roles:</b> Solution architects, technical architects, developers, project managers</li>
+					<li><b>Example:</b> Accenture implementing SAP for manufacturing company</li>
 				</ul>
-				<li>Vendor (technology provider)</li>
+				<li><b>Vendor Organization</b> (Technology Provider)</li>
 				<ul>
-					<li>product development according to market needs</li>
-					<li>roles: product managers, developers, reference users</li>
+					<li><b>Primary need:</b> Develop market-driven products and platforms</li>
+					<li><b>Responsibilities:</b> Product roadmap, R&D, platform maintenance, market analysis</li>
+					<li><b>Key roles:</b> Product managers, platform architects, developers, DevOps engineers</li>
+					<li><b>Example:</b> Microsoft developing Azure cloud services</li>
 				</ul>
 			</ul>
 		</div>
 
 		<div class="slide">
 			<hgroup>
-				<h1>Architect Roles</h1>
+				<h1>Architect Roles and Responsibilities</h1>
 			</hgroup>
-			<ul class="spacing small">
-				<li>Technical Architect</li>
+			<ul class="xx-small spacing">
+				<li><b>Enterprise Architect</b></li>
 				<ul>
-					<li>Technical architecture design</li>
-					<li>technology configurations, performance</li>
+					<li><b>Scope:</b> Organization-wide architecture strategy and governance</li>
+					<li><b>Focus:</b> Business-IT alignment, application portfolio, data architecture</li>
+					<li><b>Deliverables:</b> Enterprise architecture blueprints, technology roadmaps</li>
+					<li><b>Standards:</b> TOGAF, industry-specific (eTOM for telecom)</li>
 				</ul>
-				<li>Solution Architect</li>
+				<li><b>Solution Architect</b></li>
 				<ul>
-					<li>Requirements gathering, analysis</li>
-					<li>Solution design (data, functions, process)</li>
+					<li><b>Scope:</b> End-to-end solution design for specific business problems</li>
+					<li><b>Focus:</b> Requirements analysis, system integration, functional design</li>
+					<li><b>Deliverables:</b> Solution design documents, integration patterns, data flows</li>
+					<li><b>Skills:</b> Business analysis, system design, stakeholder management</li>
 				</ul>
-				<li>Enterprise Architect</li>
+				<li><b>Technical Architect</b></li>
 				<ul>
-					<li>High-level enterprise architecture design</li>
-					<ul>
-						<li>Applications, processes, data models</li>
-					</ul>
-					<li>Should be aligned with industry standards</li>
-					<ul>
-						<li>APQC &ndash; American Productivity &amp; Quality Center (Process Classification Framework)
-						</li>
-						<li>TM Forum &ndash; eTOM &ndash; Enhanced Telekom Operations Map (Business Process Framework)
-						</li>
-					</ul>
-				</ul>
-			</ul>
-		</div>
-
-	</section>
-
-	<div class="slide outline">
-	</div>
-
-	<section>
-		<header>Data, Functions and Processes</header>
-
-		<div class="slide">
-			<hgroup>
-				<h1>Process Classification Framework</h1>
-			</hgroup>
-			<div class="h-drawing" id="1ou4lOAvwaFP2MJo1RQbJOTF-DavfYjcUF6MELE6cWws"></div>
-		</div>
-
-		<div class="slide">
-			<hgroup>
-				<h1>Order Process Example in Telco</h1>
-			</hgroup>
-			<ul class="small">
-				<li>Order to Cash Process (O2C)</li>
-				<ul>
-					<li>end-to-end (E2E) order process</li>
-				</ul>
-				<div class="h-drawing" style="height: 100px; width: 700px"
-					id="1yX-8bZn0P2UwA06KeVJOgk4jaZ0EuMkWaIUa-RdMEno"></div>
-				<li style="margin-top: 15px;">Involved applications</li>
-				<ul>
-					<li>integrated applications</li>
-				</ul>
-				<div class="h-drawing" style="height: 200px; width: 700px"
-					id="1JRgVTqa43jbpGM6PYgGQQFk3mBFHqwWu_SGZHbd0fsY"></div>
-			</ul>
-		</div>
-
-		<div class="slide">
-			<hgroup>
-				<h1>Syntax and Domain Semantics</h1>
-			</hgroup>
-			<ul class="small">
-				<li>Syntax</li>
-				<ul>
-					<li>Data format, representation, serialization</li>
-					<li>Various languages at various architectural levels:<br />
-						XML, JSON, Class/object models in a specific programming language, SQL, DB native structures,
-						...</li>
-					<li>They have formal grammars, can be checked for the correct syntax</li>
-				</ul>
-				<li>Domain semantics</li>
-				<ul>
-					<li>Meaning of terms in a domain they are being used</li>
-					<li>We understand meaning of terms:</li>
-					<ul>
-						<li>Through syntax by using the natural language</li>
-						<li>Through some <b>agreement</b> among users of the terms</li>
-					</ul>
-					<li>Every applications can use different semantics</li>
-					<ul>
-						<li>Need to mediate data from one application to another</li>
-					</ul>
+					<li><b>Scope:</b> Technology implementation and infrastructure design</li>
+					<li><b>Focus:</b> Performance, scalability, security, technology selection</li>
+					<li><b>Deliverables:</b> Technical specifications, deployment guides, performance benchmarks</li>
+					<li><b>Skills:</b> Deep technical expertise, cloud platforms, DevOps practices</li>
 				</ul>
 			</ul>
 		</div>
 
 		<div class="slide">
 			<hgroup>
-				<h1>Simplified Order Type Example</h1>
+				<h1>Modern Technical Architect Roles</h1>
 			</hgroup>
-			<div class="h-drawing" style="height: 450px; margin-top: 10px"
-				id="1o2nyoAPa9s78sXjWuRUNXYoh5uulvGiE7yrHpfsgrTw" format="png"></div>
-		</div>
-
-		<div class="slide outline">
-		</div>
-
-		<section>
-			<header>Integration</header>
-
-			<div class="slide">
-				<hgroup>
-					<h1>Integrating Applications</h1>
-				</hgroup>
-				<ul class="x-small">
-					<li>Intra-Enterprise Integration</li>
-					<ul>
-						<li>Applications exist in a specific area</li>
-						<li>Functions and data often overlap across areas</li>
-						<li>There is a need to integrate applications within enterprise:</li>
-						<ul>
-							<li>Applications need to share the same data that are often in different formats.</li>
-							<li>Applications need to communicate &#150; a result of one process may trigger another one.
-							</li>
-						</ul>
-					</ul>
-					<li>Inter-Enterprise Integration</li>
-					<ul>
-						<li>Also called Business-to-Business Integration (B2B)</li>
-						<li>Automation support for communication and collaboration among enterprises</li>
-						<li>For example, B2B automates customers' orders processing, tracking orders, etc.</li>
-					</ul>
+			<ul class="x-small spacing">
+				<li><b>Cloud Architect</b></li>
+				<ul>
+					<li>Cloud-native solutions, migration strategies, multi-cloud designs</li>
+					<li>AWS, Azure, GCP certifications and expertise</li>
 				</ul>
-			</div>
-
-			<!-- <div class="slide">
-                    <hgroup>
-                        <h1>Integration Example &ndash; O2C</h1>
-                    </hgroup>
-                    <div class="h-drawing" style="height: 350px; margin-top: 60px"
-                    id="1kSE87erCPlL8_3bKu9a7ufeIH71fU1RROcfB6b2yxA4" format="png"></div>
-                </div> -->
-
-			<div class="slide">
-				<hgroup>
-					<h1>Integration Example &ndash; O2C</h1>
-				</hgroup>
-				<img src="/img/order-management-process.png" style="width: 800px"></img>
-			</div>
-
-
-			<!--  <div class="slide">
-                    <hgroup>
-                        <h1>Example Oracle O2C Technical Flows</h1>
-                    </hgroup>
-                    <div class="h-drawing" style="height: 490px; margin-top: 10px"
-                    id="1zgNezT0FKt69C2Ngqjeuwp1LNv_vKeDeKInxnULN6z8" format="png"></div>
-                </div> -->
-
-			<div class="slide">
-				<hgroup>
-					<h1>Integration Issues</h1>
-				</hgroup>
-				<ul class="x-small">
-					<li>Key to integration = <b>interface</b></li>
-					<ul>
-						<li>standards &#150; data, functions, processes, technical aspects</li>
-						<ul>
-							<li>enterprise standards, committee standards</li>
-							<li>unified environment from a single vendor</li>
-						</ul>
-						<li>mediators</li>
-						<ul>
-							<li>where standard do not work out</li>
-						</ul>
-					</ul>
-					<li>Data</li>
-					<ul>
-						<li>Message exchange formats, data representation</li>
-						<ul>
-							<li>often standardized</li>
-						</ul>
-						<li>Semantics of data</li>
-						<ul>
-							<li>also standardized, more difficult</li>
-						</ul>
-					</ul>
-					<li>Functions and processes</li>
-					<ul>
-						<li>how apps' functionalities should be consumed and orchestrated, protocols, naming issues</li>
-						<li>A service concept</li>
-					</ul>
+				<li><b>Security Architect</b></li>
+				<ul>
+					<li>Zero-trust architecture, compliance frameworks (GDPR, SOX)</li>
+					<li>Identity management, encryption, threat modeling</li>
 				</ul>
-			</div>
-		</section>
+				<li><b>Data Architect</b></li>
+				<ul>
+					<li>Data lakes, data warehouses, real-time analytics</li>
+					<li>Data governance, privacy, master data management</li>
+				</ul>
+				<li><b>API Architect</b></li>
+				<ul>
+					<li>API strategy, microservices design, API governance</li>
+					<li>REST, GraphQL, event-driven architectures</li>
+				</ul>
+				<li><b>DevOps Architect</b></li>
+				<ul>
+					<li>CI/CD pipelines, infrastructure as code, monitoring</li>
+					<li>Kubernetes, containerization, observability platforms</li>
+				</ul>
+			</ul>
+		</div>
 
 	</section>
 
@@ -478,21 +350,18 @@
 
 			<div class="slide">
 				<hgroup>
-					<h1>Complex Interfaces</h1>
+					<h1>Interface Example: REST API</h1>
 				</hgroup>
-				<div class="h-drawing" style="height: 300px; margin-top: 10px"
-					id="1duolAS2N0L7UFhk75xuky5eV9V9x6isGos76S9MGBLE"></div>
 				<ul class="x-small">
-					<li>More levels of interfaces</li>
-					<ol>
-						<li>DBMS native interface</li>
-						<li>JDBC &#150; universal connectors for various DBMS systems</li>
-						<li>JDO &#150; mapping of Java classes to data objects</li>
-						<li>Domain Object Model (OM) &#150; app-specific (~API, SDK)</li>
-						<ul>
-							<li>try to be as universal as possible; cover many technologies</li>
-						</ul>
-					</ol>
+					<li><b>Data</b> interface: JSON format</li>
+					<li><b>Function</b> interface: HTTP methods</li>
+					<ul>
+						<li>GET /customers/{id} - retrieve customer</li>
+						<li>POST /customers - create customer</li>
+						<li>PUT /customers/{id} - update customer</li>
+					</ul>
+					<li><b>Process</b> interface: state transitions</li>
+					<li><b>Technical</b> interface: HTTPS, port 443, authentication</li>
 				</ul>
 			</div>
 		</section>
@@ -657,6 +526,7 @@
 					</ul>
 				</ul>
 			</div>
+
 		</section>
 
 	</section>
