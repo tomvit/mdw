@@ -20,7 +20,7 @@
   </link>
 
   <script type="text/javascript" src="humla/lib/humla.js"></script>
-  <title>Service Architectures</title>
+  <title>Service Architecture</title>
 </head>
 
 <body>
@@ -82,13 +82,12 @@
         </ul>
         <li>Conceptual view</li>
         <ul>
-          <li>encapsulation, reusability, loose coupling, contracting,
-            abstraction,</br> discoverability, composability</li>
+          <li>reusability, loose coupling, contracting, discoverability</li>
         </ul>
         <li>Logical view</li>
         <ul>
           <li>service interface, description and implementation</li>
-          <li>message-oriented and resource-oriented</li>
+          <li>RPC-style and resource-oriented</li>
         </ul>
         <li>Software architecture view</li>
         <ul>
@@ -119,11 +118,9 @@
         <li>Terminology clarification</li>
         <ul>
           <li>service ~ service interface + service implementation</li>
-          <li>WSDL service ~ service description in WSDL language</li>
-          <li>SOAP service ~ a service interface is possible to access through SOAP protocol;
-            there is a WSDL description usually available too.</li>
           <li>REST/RESTful service ~ service interface that conforms to REST architectural style and HTTP protocol</li>
-          <li>Microservice ~ a set of services that realize an app's capability
+          <li>Microservice ~ a set of services that realize an app's capability</li>
+          <li>Kubernetes service ~ a service that routes traffic to a set of pods</li>
         </ul>
       </ul>
     </div>
