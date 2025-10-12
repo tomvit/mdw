@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<!--
+    Middleware and Web Services, CTU course slides
+    (cc) 2010-2023 Tomas Vitvar, http://vitvar.com
+    written for Humla, an open source HTML5 presentation environment
+-->
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="course" content="Middleware Architectures 1" />
+  <meta name="lecture" content="Lecture 2" />
+  <meta name="keywords" content="SOA, service concepts, service technologies, integration patterns" />
+
+  <link type="text/css" rel="stylesheet" href="css/meta.css">
+  </link>
+  <link type="text/css" rel="stylesheet" href="css/ctu-fit.css">
+  </link>
+  <link type="text/css" rel="stylesheet" href="humla/lib/core/humla.css">
+  </link>
+
+  <script type="text/javascript" src="humla/lib/humla.js"></script>
+  <title>Microservice Architecture</title>
+</head>
+
+<body>
+  <footer>
+    <p><b>#META_LECTURE#: #TITLE#</b>,&nbsp;<span class="meta_semester" />,&nbsp;
+      <span class="meta_twitter" />
+    </p>
+    <p><b>&#8210; #SLIDE_NO# &#8210;</b></p>
+  </footer>
+
+  <div class="slide intro">
+    <hgroup>
+      <h1><span class="meta_course" /></h1>
+      <h2>#META_LECTURE#: #TITLE#</h2>
+    </hgroup>
+    <div class="author">
+      <p class="meta_author" />
+      <p><span class="meta_email" /> &bull; <span class="meta_twitter" /> &bull;
+        <span class="meta_web" />
+      </p>
+    </div>
+    <center>
+      <div class="meta_logo"></div>
+    </center>
+    <div class="org">
+      <p class="meta_org" />
+      <p><span class="meta_orgfac" /> &bull; <span class="meta_field" />
+        &bull; <span class="meta_orgweb" /></p>
+    </div>
+    <div class="etc">
+      <div class="text-info">
+        Modified: #LAST_MODIFIED#<br />
+        Humla v#HUMLA_VERSION#
+      </div>
+      <a href="http://creativecommons.org/licenses/by-sa/3.0/">
+        <div class="license"></div>
+      </a>
+      <div class="oppa"></div>
+    </div>
+  </div>
+
+  <div class="slide outline"></div>
+
+  <section>
+    <header>Microservices Architecture</header>
+
+    <div class="slide">
+      <hgroup>
+        <h1>The Scale Cube</h1>
+      </hgroup>
+      <ul class="x-small">
+        <li>Three-dimensional scalability model</li>
+        <ul>
+          <li>X-Axis scaling requests across multiple instances</li>
+          <li><b>Y-Axis scaling decomposes an application into micro-services</b></li>
+          <li>Z-Axis scaling requests across "data partitioned" instances</li>
+        </ul>
+        <img src="img/scale-cube.png" style="zoom: 0.9"></img>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Overview</h1>
+      </hgroup>
+      <ul>
+        <li>Emerging software architecture</li>
+        <ul>
+          <li>monolithic vs. decoupled applications</li>
+          <li>applications as independenly deployable services</li>
+        </ul>
+        <img src="img/microservices.png" style="zoom: 0.7"></img>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Major Characteristics</h1>
+      </hgroup>
+      <ul>
+        <li>Loosely coupled</li>
+        <ul>
+          <li>Integrated using well-defined interfaces</li>
+        </ul>
+        <li>Technology-agnostic protocols</li>
+        <ul>
+          <li>HTTP, they use REST architecture</li>
+        </ul>
+        <li>Independently deployable and easy to replace</li>
+        <ul>
+          <li>A change in small part requires to redeploy only that part</li>
+        </ul>
+        <li>Organized around capabilities</li>
+        <ul>
+          <li>such as accounting, billing, recommendation, etc.</li>
+        </ul>
+        <li>Impplemented using different technologies</li>
+        <ul>
+          <li>polyglot &ndash; programming languages, databases</li>
+        </ul>
+        <li>Owned by a small team</li>
+      </ul>
+    </div>
+
+  </section>
+
+  <div class="slide outline"></div>
+
+  <section>
+    <header>Design Patterns</header>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Design Patterns</h1>
+      </hgroup>
+      <ul class="x-small">
+        <li>Data management patterns</li>
+        <ul>
+          <li>Database per service</li>
+          <li>Saga pattern</li>
+          <li>Command query responsibility segregation (CQRS)</li>
+        </ul>
+        <li>Communication patterns</li>
+        <ul>
+          <li>API Gateway</li>
+          <li>Aggregator design pattern</li>
+          <li>Circuit breaker design pattern</li>
+          <li>Sidecar pattern</li>
+        </ul>
+        <li>Other patterns</li>
+        <ul>
+          <li>Strangler pattern</li>
+        </ul>
+      </ul>
+    </div>
+
+    <div class="slide outline"></div>
+
+    <section>
+      <header>Data Management Patterns</header>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Database per Service</h1>
+        </hgroup>
+        <ul class="xx-small">
+          <li>Every service has its own database (or at least its own schema)</li>
+          <ul>
+            <li>A database dedicated to one service can’t be accessed by other services.</li>
+            <li>Decouples services from each other</li>
+            <li>Enables polyglot persistence</li>
+            <ul>
+              <li>Different services can use different database technologies</li>
+            </ul>
+          </ul>
+          <li>Challenges</li>
+          <ul>
+            <li>Data consistency</li>
+            <li>Complex queries and transactions</li>
+          </ul>
+        </ul>
+        <img src="/img/db-per-service.png" style="width: 700px; margin-left: 50px; margin-top: -10px; zoom: 0.7"></img>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Saga Pattern</h1>
+        </hgroup>
+        <ul class="xx-small">
+          <li>Manages data consistency across services</li>
+          <ul>
+            <li>A series of local transactions</li>
+            <li>This requires <b>compensating</b> transactions to undo changes if needed</li>
+            <li>An alternative to Two-phase commit</li>
+          </ul>
+          <li>Two types of Sagas</li>
+          <ul>
+            <li>Choreography-based Sagas</li>
+            <ul>
+              <li>Each service produces and listens to events</li>
+              <li>No central coordinator</li>
+            </ul>
+            <li>Orchestration-based Sagas</li>
+            <ul>
+              <li>Central coordinator (orchestrator) tells the participants what local transactions to execute</li>
+            </ul>
+          </ul>
+        </ul>
+        <img src="/img/saga.png" style="width: 700px; margin-left: 50px"></img>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Saga Pattern Examples</h1>
+        </hgroup>
+        <ul class="x-small">
+          <li>Example Services</li>
+          <ul>
+            <li>Order Service</li>
+            <li>Payment Service</li>
+            <li>Inventory Service</li>
+          </ul>
+          <li>Choreography (no central coordinator)</li>
+          <ul>
+            <li>Order Service → publishes <code>OrderCreated</code></li>
+            <li>Payment Service → listens, reserves funds → publishes <code>PaymentCompleted</code></li>
+            <li>Inventory Service → listens, deducts stock → publishes <code>InventoryUpdated</code></li>
+            <li>Order Service → listens, marks order as <code>Completed</code></li>
+          </ul>
+          <li>Orchestration (central coordinator)</li>
+          <ul>
+            <li><b>Orchestrator</b> → sends <code>ReservePayment</code> to Payment Service</li>
+            <li>Payment Service → responds <code>PaymentConfirmed</code></li>
+            <li><b>Orchestrator</b> → sends <code>ReserveStock</code> to Inventory Service</li>
+            <li>Inventory Service → responds <code>StockReserved</code></li>
+            <li><b>Orchestrator</b> → calls <code>CompleteOrder</code> in Order Service</li>
+          </ul>
+        </ul>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Two-phase Commit</h1>
+        </hgroup>
+        <div id="1kfDa725ldvDg0xwr3EryplwU1gZm_hgaNxfRkmCsN0E" style="height: 400px; margin-top: 50px"
+          class="h-drawing"></div>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>CQRS</h1>
+        </hgroup>
+        <ul class="xx-small">
+          <li>Command Query Responsibility Segregation</li>
+          <li>A pattern that separates read and write operations in a system.</li>
+          <ul>
+            <li><b>Command side:</b> Handles create/update/delete operations</li>
+            <li><b>Query side:</b> Handles read operations with optimized views</li>
+          </ul>
+          <li><b>Example:</b> Online Order System</li>
+          <ul>
+            <li>User places order → <code>CreateOrder</code></li>
+            <li>Order Service stores order, publishes <code>OrderCreatedEvent</code></li>
+            <li>Read Service updates denormalized <code>orders_view</code></li>
+            <li>Client queries <code>GetOrderStatus</code> → served from <code>orders_view</code></li>
+          </ul>
+          <img src="img/cqrs.png" style="zoom:0.35"></img>
+        </ul>
+      </div>
+
+    </section>
+
+    <div class="slide outline"></div>
+
+    <section>
+      <header>Communication Patterns</header>
+
+      <div class="slide">
+        <hgroup>
+          <h1>API Gateway</h1>
+        </hgroup>
+        <ul class="xx-small">
+          <li>Single entry point for all clients</li>
+          <ul>
+            <li>Handles requests by routing them to the appropriate microservice(s)</li>
+            <li>Perform request aggregation, protocol translation, authentication, rate limiting</li>
+          </ul>
+          <li>Benefits</li>
+          <ul>
+            <li>A single entry point for a group of microservices</li>
+            <li>Clients don’t need to know how services are partitioned</li>
+            <li>Service boundaries can evolve independently</li>
+            <li>Can implement authentication, TLS termination and caching</li>
+          </ul>
+          <li>Challenges</li>
+          <ul>
+            <li>Potential bottleneck and single point of failure</li>
+            <li>Increased complexity in API Gateway implementation</li>
+          </ul>
+        </ul>
+        <img src="/img/api-gateway.png" style="width: 700px; margin-left: 100px; margin-top: -10px; zoom: 0.6"></img>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Aggregator Design Pattern</h1>
+        </hgroup>
+        <ul class="xx-small">
+          <li>Combines data from multiple services into a single response</li>
+          <ul>
+            <li>Useful when a client request requires data from multiple microservices</li>
+          </ul>
+          <li>Benefits</li>
+          <ul>
+            <li>Reduces the number of client requests</li>
+            <li>Simplifies client logic</li>
+          </ul>
+          <li>Challenges</li>
+          <ul>
+            <li>Increased complexity in the aggregator service</li>
+            <li>Potential performance bottleneck</li>
+          </ul>
+        </ul>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Circuit Breaker</h1>
+        </hgroup>
+        <ul class="xx-small">
+          <li>A service stops trying to execute an operation that is likely to fail</li>
+          <ul>
+            <li>Monitors for failures and opens the circuit if failures exceed a threshold</li>
+            <li>When the circuit is <b>open</b>, calls to the failing service are blocked for some time</li>
+            <li>After a timeout, the circuit <b>half-opens</b> to test if the service has recovered</li>
+            <li>If the test call succeeds, the circuit <b>closes</b> and normal operation resumes</li>
+          </ul>
+          <li>Benefits</li>
+          <ul>
+            <li>Improves system resilience and stability</li>
+            <li>Prevents cascading failures in distributed systems</li>
+          </ul>
+          <li>Challenges</li>
+          <ul>
+            <li>Requires careful configuration of thresholds and timeouts</li>
+          </ul>
+          <img src="/img/circuit-breaker.png"
+            style="width: 700px; margin-left: 100px; margin-top: -10px; zoom: 0.4"></img>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Circuit Breaker Example</h1>
+        </hgroup>
+        <ul class="x-small">
+          <li><b>Scenario:</b> Order Service calls Payment Service</li>
+          <ul>
+            <li>Under normal conditions → call succeeds, response is fast</li>
+            <li>When Payment Service slows down or fails repeatedly → circuit "opens"</li>
+            <li>Further calls are blocked immediately → fallback response returned</li>
+            <li>After a timeout → circuit "half-opens" to test recovery</li>
+            <li>If test succeeds → circuit "closes" and normal calls resume</li>
+          </ul>
+          <li>Example Flow</li>
+          <ul>
+            <li>Order Service → calls Payment API (fails 3×)</li>
+            <li>Circuit opens → returns <code>"Payment service unavailable"</code></li>
+            <li>After 30s → one trial call allowed</li>
+            <li>If trial succeeds → circuit closes and normal traffic resumes</li>
+          </ul>
+        </ul>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Sidecar Pattern</h1>
+        </hgroup>
+        <ul class="xx-small">
+          <li>Deploys auxiliary components alongside the main service</li>
+          <ul>
+            <li>Handles logging, monitoring, configuration, and networking</li>
+            <li>Runs in a separate process or container but shares the same lifecycle as the main service</li>
+          </ul>
+          <li>Benefits</li>
+          <ul>
+            <li>Decouples auxiliary functionality from the main service</li>
+            <li>Enables reuse of common functionality across multiple services</li>
+          </ul>
+          <li>Challenges</li>
+          <ul>
+            <li>Increased operational complexity</li>
+            <li>Resource overhead due to additional processes/containers</li>
+          </ul>
+        </ul>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Sidecar Pattern and Service Mesh</h1>
+        </hgroup>
+        <ul class="x-small">
+          <li><b>Service Mesh:</b> A dedicated infrastructure layer for managing service-to-service communication</li>
+          <li>Service mesh uses sidecar proxies (e.g. Envoy) to manage traffic</li>
+          <li>Example: Istio injects Envoy sidecar to handle</li>
+          <ul>
+            <li>Service discovery and routing</li>
+            <li>mTLS security</li>
+            <li>Retries, rate limiting, and metrics</li>
+          </ul>
+          <img src="img/sidecar-service-mesh.png" style="zoom:0.35"></img>
+        </ul>
+      </div>
+
+    </section>
+
+    <div class="slide outline"></div>
+
+    <section>
+      <header>Other Patterns</header>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Strangler Pattern</h1>
+        </hgroup>
+        <ul class="xx-small">
+          <li>Incrementally replace a monolith with microservices</li>
+          <li>New functionality is implemented as microservices</li>
+          <li>Existing functionality is gradually "strangled" and replaced</li>
+          <li>Benefits</li>
+          <ul>
+            <li>Reduced risk by not rewriting the entire system at once</li>
+            <li>Allows for gradual migration and testing</li>
+          </ul>
+          <li>Challenges</li>
+          <ul>
+            <li>Complexity in managing both monolith and microservices</li>
+            <li>Potential performance overhead during transition</li>
+          </ul>
+        </ul>
+      </div>
+
+    </section>
+
+  </section>
+
+
+</body>
+
+</html>
