@@ -1,16 +1,15 @@
 <!DOCTYPE html>
 <!--
-    Middleware and Web Services, CTU course slides
-    (cc) 2010-2023 Tomas Vitvar, http://vitvar.com
-    written for Humla, an open source HTML5 presentation environment
+	Web 2.0, CTU course slides
+	(cc) 2010-2014 Tomas Vitvar, tomas@vitvar.com
 -->
 <html>
 
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-  <meta name="course" content="Middleware Architectures 1" />
-  <meta name="lecture" content="Lecture 3" />
-  <meta name="keywords" content="Integration Patterns" />
+  <meta name="course" content="Web 2.0" />
+  <meta name="lecture" content="Lecture 6" />
+  <meta name="keywords" content="SaaS, IaaS, PaaS" />
 
   <link type="text/css" rel="stylesheet" href="css/meta.css">
   </link>
@@ -20,10 +19,11 @@
   </link>
 
   <script type="text/javascript" src="humla/lib/humla.js"></script>
-  <title>Communication Protocols</title>
+  <title>Containers</title>
 </head>
 
 <body>
+
   <footer>
     <p><b>#META_LECTURE#: #TITLE#</b>,&nbsp;<span class="meta_semester" />,&nbsp;
       <span class="meta_twitter" />
@@ -65,305 +65,202 @@
   <div class="slide outline"></div>
 
   <section>
-    <header>Introduction to Application Protocols</header>
+    <header>Overview</header>
 
     <div class="slide">
       <hgroup>
-        <h1>Application Protocols</h1>
+        <h1>Virtual Machines vs. Containers</h1>
       </hgroup>
-      <ul class="x-small">
-        <li>Remember this</li>
-      </ul>
-      <div class="h-drawing" id="19zJkisQOr32yxVeMcXEi7B3fHAtSot0c_ppDJeKl4bc" style="height: 120px; margin-top: -10px">
+      <div class="h-drawing" style="height:450px; margin-top: 30px" id="13MxlAselSiJfnL7o8NwX87x2SzlPbLdJ56Zi87Ex00w">
       </div>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Overview</h1>
+      </hgroup>
+
       <ul class="x-small">
-        <li>App protocols mostly on top of the TCP Layer</li>
+        <li>Linux Containers</li>
         <ul>
-          <li>use TCP socket for communication</li>
+          <li>Introduced in 2008</li>
+          <li>Allow to run a process tree in a isolated system-level "virtualization"</li>
+          <li>Use much less resources and disk space than traditional virtualization</li>
         </ul>
-        <li>Major protocols</li>
+        <li>Implementations</li>
         <ul>
-          <li>HTTP &#150; most of the app protocols layered on HTTP</li>
+          <li>LXC &ndash; default implementation in Linux</li>
+          <li>Docker Containers</li>
           <ul>
-            <li>widely spread</li>
+            <li>Builds on Linux namespaces and union file system (OverlayFS)</li>
+            <li>A way to build, commit and share images</li>
+            <li>Build images using a description file called Dockerfile</li>
+            <li>Large number of available base and re-usable images</li>
           </ul>
-          <li>RMI &#150; Remote Method Invocation</li>
-          <ul>
-            <li>Java-specific; vendor-interoperability problem</li>
-            <li>may use HTTP underneath (among other things)</li>
-          </ul>
-          <li>XML-RPC and SOAP &#150; Remote Procedure Call and SOAP</li>
-          <ul>
-            <li>HTTP-based</li>
-          </ul>
-          <li>WebSocket &#150; new protocol part of HTML5</li>
+        </ul>
+        <li>Monolithic design originally</li>
+        <ul>
+          <li>Now several layers</li>
+          <li>container runtime</li>
+          <li>container engine</li>
+        </ul>
+        <div class="h-drawing" id="1XcnPNd8sFL3BztQqVtv6Xf4XUNrpzQHAsDm9Ma6D_S8"
+          style="text-align:left; height: 160px; margin-top: -120px; margin-left: 350px" />
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Containerd</h1>
+      </hgroup>
+
+      <img src="img/container-arch.jpeg" style="height: 240px; margin-top: 20px; margin-left: 20px" />
+      <ul class="xx-small">
+        <li>Container engine</li>
+        <ul>
+          <li>Accepts user inputs (via CLI or API), pulling images from registry, preparing metadata to be passed to
+            container runtime</li>
+        </ul>
+        <li>Container runtime</li>
+        <ul>
+          <li>Abstraction from syscalls or OS specific functionality to run containers on linux, windows, solaris,
+            etc.</li>
+          <li>Uses <code>runc</code> and <code>container-shim</code></li>
+          <li>Communicates with kernel to start containerized processes</li>
         </ul>
       </ul>
     </div>
 
     <div class="slide">
       <hgroup>
-        <h1>Anatomy of a Packet</h1>
+        <h1>Terminology</h1>
       </hgroup>
-      <img src="img/anatomy-of-a-packet.svg" style="width: 800px; padding: 30px 0px 0px 30px"></img>
-    </div>
-
-
-    <div class="slide">
-      <hgroup>
-        <h1>Socket</h1>
-      </hgroup>
-      <div class="h-drawing" style="height: 140px" id="1Z4OmMLdUPPmmfAsENj7zBb_kjDOWVUzku50WucxpePU"></div>
       <ul class="xx-small">
-        <li>Handshaking (connection establishment)</li>
+        <li>Image</li>
         <ul>
-          <li>The server listens at <code>[dst_ip,dsp_port]</code></li>
-          <li>Three-way handshake:</li>
-          <ul>
-            <li>the client sends a connection request with TCP flags (SYN, x=rand)</li>
-            <li>the server respons with its own TCP flags (SYN ACK, x+1 y=rand)</li>
-            <li>the client acknowledges the response, can send data along (ACK, y+1 x+1)</li>
-          </ul>
-          <li>Result is a socket (virtual communication channel) with unique identification:<br />
-            <code>socket=[src_ip,src_port;dst_ip,dst_port]</code>
+          <li>An image contains a union of layered filesystems stacked on top of each other</li>
+          <li>Immutable, it does not have state and it never changes</li>
+        </ul>
+        <li>Container</li>
+        <ul>
+          <li>One or more processes running in one or more isolated namespaces in a filesystem provided by the image
           </li>
         </ul>
-        <li>Data transfer (resource usage)</li>
+        <li>Container Engine/Runtime</li>
         <ul>
-          <li>Client/server writes/reads data to/from the socket</li>
-          <li>TCP features: reliable delivery, correct order of packets, flow control</li>
+          <li>The core processes providing container capabilities on a host</li>
         </ul>
-        <li>Connection close</li>
-      </ul>
-    </div>
-
-    <div class="slide">
-      <hgroup>
-        <h1>New Connection Costs</h1>
-      </hgroup>
-      <ul class="xx-small">
-        <li>Creating a new TCP connection is expensive</li>
+        <li>Client</li>
         <ul>
-          <li>It requires to complete a full roundtrip</li>
-          <li>It is limited by a network latency, not bandwidth</li>
+          <li>An app (e.g. CLI, custom app), communicates with a container engine by its API</li>
         </ul>
-        <li>Example</li>
+        <li>Registry</li>
         <ul>
-          <li>Distance from London to New York is approx. 5500 km</li>
-          <li>Communication over a fibre link will take at least 28ms one way</li>
-          <li>Three-way handskake will take a minimum of 56ms</li>
+          <li>A hosted service containing repository of images</li>
+          <li>A registry provides a registry API to search, pull and push images</li>
+          <li>Docker Hub is the default Docker registry</li>
         </ul>
-        <li>Connection reuse is critical for any app running over TCP</li>
+        <li>Swarm</li>
         <ul>
-          <li>HTTP Keep-alive</li>
-          <li>HTTP pipelining</li>
-        </ul>
-        <li>TCP Fast Open (TFO)</li>
-        <ul>
-          <li>TFO allows to speed up the opening of successfive TCP connections</li>
-          <li>TCP cookie stored on the client that was established on initial connection</li>
-          <li>The client sends the TCP cookie with SYN packet</li>
-          <li>The server verifies the TCP cookie and can send the data without final ACK</li>
-          <li>Can reduce network transaction latency by 15%</li>
-          <li>TFO is supported by Linux in 3.7+ kernels</li>
+          <li>A cluster of one or more docker engines</li>
         </ul>
       </ul>
     </div>
-
-    <div class="slide">
-      <hgroup>
-        <h1>Addressing in Application Protocol</h1>
-      </hgroup>
-      <div class="h-drawing" style="height: 220px" id="1a6OhSNel7-1HC-NaWmmkRfIOyQqlvaoXGyJws1rAuZU"></div>
-      <ul class="xx-small">
-        <li>IP addressing: IP is an address of a machine interface</li>
-        <ul>
-          <li>A machine can have multiple interfaces (eth0, eth1, bond0, ...)</li>
-        </ul>
-        <li>TCP addressing: TCP port is an address of an app running on a machine and listening on a machine interface
-        </li>
-        <ul>
-          <li>Multiple applications with different TCP ports may listen on a machine interface</li>
-        </ul>
-        <li>Application addressing</li>
-        <ul>
-          <li>Additional mechanisms to address entities within an application</li>
-          <li>They are out of scope of IP/TCP, they are app specific</li>
-          <ul>
-            <li>for example, Web apps served by a single Web server</li>
-          </ul>
-        </ul>
-      </ul>
-    </div>
-
-    <!-- <div class="slide outline"></div>
-
-      <div class="slide">
-        <hgroup>
-          <h1>Blocking (Synchronous) I/O</h1>
-        </hgroup>
-        <div id="1QP7gZSS1WS3YquzLekSgdZfcmi4BYArm-K9tuWrULQs" class="h-drawing" style="height: 220px"></div>
-        <ul class="x-small">
-          <li>Inbound connection</li>
-          <ul>
-            <li>A server creates a thread for every inbound connection</li>
-            <li>For example, 1K connections = 1K threads, big overhead</li>
-            <li>A thread is reserved for the entire duration of the request processing</li>
-          </ul>
-          <li>Outbound connection</li>
-          <ul>
-            <li>A thread is blocked when outbound connection is made</li>
-            <li>When outbound connection is slow, the scalability is poor</li>
-          </ul>
-        </ul>
-      </div>
-
-      <div class="slide">
-        <hgroup>
-          <h1>Non-Blocking (Asynchrnous) I/O</h1>
-        </hgroup>
-        <div id="1kxkFc3Chl4qFXxH_4f2seuNbpBdENMyZWMRUmxd1p28" class="h-drawing" style="height: 220px"></div>
-        <ul class="x-small">
-          <li>Inbound connections</li>
-          <ul>
-            <li>The connection is maintained by the OS, not the server app</li>
-            <li>The Web app registers events, OS triggers events when they occur</li>
-            <li>The app may create working threads and controls their number</li>
-          </ul>
-          <li>Outound connections</li>
-          <ul>
-            <li>The app registers a callback that is called when the data is available</li>
-            <li>Event loop</li>
-          </ul>
-        </ul>
-      </div>
-
-    </section> -->
   </section>
 
   <div class="slide outline"></div>
 
   <section>
-    <header>Introduction to HTTP</header>
+
+    <header>Linux Namespaces</header>
 
     <div class="slide">
       <hgroup>
-        <h1>Hypertext Transfer Protocol &ndash; HTTP</h1>
-      </hgroup>
-      <ul class="small">
-        <li>Application protocol, basis of Web architecture</li>
-        <ul>
-          <li>Part of HTTP, URI, and HTML family</li>
-          <li>Request-response protocol</li>
-        </ul>
-        <li>One socket for single request-response</li>
-        <ul>
-          <li>original specification</li>
-          <li>have changed due to performance issues</li>
-          <ul>
-            <li>many concurrent requests</li>
-            <li>overhead when establishing same connections</li>
-            <li>HTTP 1.1 offers persistent connection and pipelining</li>
-            <li>Domain sharding</li>
-          </ul>
-        </ul>
-        <li>HTTP is stateless</li>
-        <ul>
-          <li>Multiple HTTP requests cannot be normally related at the server</li>
-          <ul>
-            <li>"problems" with state management</li>
-            <li>REST goes back to the original HTTP idea</li>
-          </ul>
-        </ul>
-      </ul>
-    </div>
-
-    <div class="slide">
-      <hgroup>
-        <h1>HTTP Request and Response</h1>
-      </hgroup>
-      <ul class="small">
-        <li>Request Syntax</li>
-        <pre class="brush: plain; gutter: false">
-                    method uri http-version &lt;crlf>
-                    (header : value &lt;crlf>)*
-                    &lt;crlf>
-                    [ data ]
-                </pre>
-        <li>Response Syntax</li>
-        <pre class="brush: plain; gutter: false">
-                    http-version response-code [ message ]  &lt;crlf>
-                    (header : value &lt;crlf>)*
-                    &lt;crlf>
-                    [ data ]
-                </pre>
-        <li>Semantics of terms</li>
-        <pre class="brush: plain; gutter: false">
-                    method         = "GET" | "POST" | "DELETE" | "PUT" | "HEAD" | "OPTIONS"
-                    uri            = [ path ] [ ";" params ] [ "?" query ]
-                    http-version   = "HTTP/1.0" | "HTTP/1.1"
-                    response-code  = valid response code
-                    header : value = valid HTTP header and its value
-                    data           = resource state representation (hypertext)
-                </pre>
-      </ul>
-    </div>
-
-    <div class="slide">
-      <hgroup>
-        <h1>Persistent connections</h1>
-      </hgroup>
-      <ul class="x-small">
-        <li>Persistent HTTP connection = HTTP keepalive</li>
-        <ul>
-          <li>TCP established connection used for multiple requests/responses</li>
-          <li>Avoids TCP three-way handshake to be performed on every request</li>
-          <li>Reduces latency</li>
-          <li>FIFO queuing order on the client (request queuing)</li>
-          <ul>
-            <li>dispatch first request, get response, dispatch next request</li>
-          </ul>
-        </ul>
-        <li>Example: <code>GET /html</code>, <code>GET /css</code></li>
-        <ul>
-          <li>server processing time 40ms and 20ms respectivelly</li>
-        </ul>
-        <li>Without HTTP keepalive</li>
-        <ul>
-          <li>three-way handshake 84ms before the data is received on the server</li>
-          <li>Response received at 152ms and 132ms respectivelly</li>
-          <li>The total time is 284ms</li>
-        </ul>
-        <li>HTTP keepalive</li>
-        <ul>
-          <li>One TCP connection for both requests</li>
-          <li>In our example this will save one RTT, i.e. 56ms</li>
-          <li>The total time will be 228ms</li>
-        </ul>
-      </ul>
-    </div>
-
-    <div class="slide">
-      <hgroup>
-        <h1>Persistent connections savings</h1>
+        <h1>Linux Namespaces</h1>
       </hgroup>
       <ul class="xx-small">
-        <li>Each request needs</li>
+        <li>Isolation of Linux processes, there are <b>7 namespaces</b></li>
         <ul>
-          <li>Without keepalive, 2 RTT of latency</li>
-          <li>With keepalive, the first request needs 2 RTT, a following request needs 1 RTT</li>
+          <li>Mount, UTS, IPC, PID, Network, User, Cgroup</li>
+          <li>By default, every process is a member of a default namespace of each type</li>
+          <li>In case no additional namespace configuration is in place, processes and all their direct children will
+            reside in this exact namespace</li>
+          <li>Run <code>lsns</code> to check namespaces the process is in</li>
+          <pre class="brush: plain; gutter: 'false'">
+              $ lsns
+              NS         TYPE  NPROCS   PID USER   COMMAND
+              4026531836 pid        2 30873 oracle -bash
+              4026531837 user     108  1636 oracle /bin/bash /u01/oracle/scripts/startWebLogicContainer.sh
+              4026531838 uts        2 30873 oracle -bash
+              4026531839 ipc        2 30873 oracle -bash
+              4026531840 mnt        2 30873 oracle -bash
+              4026531956 net      108  1636 oracle /bin/bash /u01/oracle/scripts/startWebLogicContainer.sh
+              4026532185 mnt       13 13542 oracle /bin/bash /u01/oracle/scripts/startNM_ohs.sh
+              4026532192 pid       13  2798 oracle /bin/bash /u01/oracle/scripts/startNM_ohs.sh
+              ...
+            </pre>
         </ul>
-        <li>Savings for <code>N</code> requests: <code>(N-1) x RTT</code></li>
-        <li>Average value of <code>N</code> is 90 requests for a Web app</li>
+        <li>Flexible configuration, for example:</li>
         <ul>
-          <li>Measured by HTTP Archive (http://httparchive.org) as of 2013</li>
-          <li>Average Web application is composed of 90 requests fetched from 15 hosts</li>
+          <li>You can run two apps that only share the network namespace, e.g. <code>4026531956</code></li>
+          <li>The apps can talk to each other</li>
+          <li>Any other app (not in this namespace) won't be able to talk to the apps</li>
+        </ul>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Types: mnt, uts, ipc and pid</h1>
+      </hgroup>
+      <ul class="xx-small">
+        <li><code>mnt</code> namespace</li>
+        <ul>
+          <li>Isolates filesystem mount points</li>
+          <li>Restricts the view of the global file hierarchy</li>
+          <li>Each namespace has its own set of mount points</li>
+        </ul>
+        <li><code>uts</code> namespace</li>
+        <ul>
+          <li>The value of the hostname is isolated between different UTS namespaces</li>
+        </ul>
+        <li><code>ipc</code> namespace</li>
+        <ul>
+          <li>Isolates interprocess communication resources</li>
+          <li>message queues, semaphore, and shared memory</li>
+        </ul>
+        <li><code>pid</code> namespace</li>
+        <ul>
+          <li>Isolates PID number space</li>
+          <li>A process ID number space gets isolated</li>
           <ul>
-            <li>HTML: 10 reuqests</li>
-            <li>Images: 55 requests</li>
-            <li>Javascript: 15 requests</li>
-            <li>CSS: 5 requests</li>
-            <li>Other: 5 requests</li>
+            <li>Processes can have PIDs starting from the value 1</li>
+            <li>Real PIDs outside of the namespace of the same process is a different number</li>
+          </ul>
+          <li>Containers have their own init processes with a PID value of 1</li>
+        </ul>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Types: net</h1>
+      </hgroup>
+      <ul class="xx-small">
+        <li><code>net</code> namespace</li>
+        <ul>
+          <li>Processes have their own private network stack (interfaces, routing tables, sockets)</li>
+          <li>Communication with external network stack is done by a virtual ethernet bridge</li>
+          <img src="img/container-bridge.png" style="height: 200px; margin-top: 10px; margin-bottom: 10px" />
+          <li>On the host there is a <b>userland proxy</b> or <b>NAT</b></li>
+          <ul>
+            <li>NAT is a prefered solution over userland proxy (<code>/usr/bin/docker-proxy</code>)</li>
+            <li>Lack of NAT hairpinning may prevent to use NAT</li>
+          </ul>
+          <li>Use case</li>
+          <ul>
+            <li>Multiple services binding to the same port on a single machine, e.g. <code>tcp/80</code></li>
+            <li>A port in the host is mapped to the port exposed by a process in the NS</li>
           </ul>
         </ul>
       </ul>
@@ -371,516 +268,155 @@
 
     <div class="slide">
       <hgroup>
-        <h1>HTTP pipelining</h1>
+        <h1>Types: user</h1>
       </hgroup>
       <ul class="xx-small">
-        <li>Important optimization &ndash; response queuing</li>
+        <li><code>user</code> namespace</li>
         <ul>
-          <li>Allows to relecote FIFO queue from the client to the server</li>
+          <li>Isolates UID/GID number spaces</li>
         </ul>
-        <li>Requests are pipelined one after another</li>
+        <li><code>cgroup</code> namespace</li>
         <ul>
-          <li>This allows the server to process requests immediatelly one after another</li>
-          <li>This saves one request and response propagation latency</li>
-          <li>In our example, the total time will be 172ms</li>
-        </ul>
-        <li>Parallel processing of requests</li>
-        <ul>
-          <li>In our example this saves another 20ms of latency</li>
-          <li><b>Head of line blocking</b></li>
-          <ul>
-            <li>Slower response (css with processing time 20ms) must be buffered until
-              the first response is generated and sent (no interleaving of responses)</li>
-          </ul>
-        </ul>
-        <li>Issues</li>
-        <ul>
-          <li>A single slow response blocks all requests behind it</li>
-          <li>Buffered (large or many) responses may exhaust server resources</li>
-          <li>A failed response may terminate TCP connection</li>
-          <ul>
-            <li>A client must request all sub-sequent resources again (dupplicate processing)
-          </ul>
-          <li>Some intermediaries may not support pipelining and abort connection</li>
-        </ul>
-        <li>HTTP pipelining support today is limited</li>
-      </ul>
-    </div>
-
-    <div class="slide">
-      <hgroup>
-        <h1>Multiple TCP connections</h1>
-      </hgroup>
-      <ul class="xx-small">
-        <li>Using only one TCP connection is slow</li>
-        <ul>
-          <li>Client must queue HTTP requests and process one after another</li>
-        </ul>
-        <li>Multiple TCP connections work in parallel</li>
-        <li><b>There are 6 connections per host</b></li>
-        <ul>
-          <li>The client can dispatch up to 6 requests in parallel</li>
-          <li>The server can process up to 6 requests in parallel</li>
-          <li>This is a trade-off between higher request paralellism and the client and server overhead</li>
-        </ul>
-        <li>The maximum number of connections prevents from DoS attacks</li>
-        <ul>
-          <li>The client could exhaust server resources</li>
-        </ul>
-        <li>Domain sharding</li>
-        <ul>
-          <li>The connection limit as per host (origin)</li>
-          <li>There can be multiple origins used in a page</li>
-          <ul>
-            <li>Each origin has 6 maximum connection limit</li>
-          </ul>
-          <li>A domain can be sharded</li>
-          <ul>
-            <li><code>www.example.com</code> &rarr; <code>shard1.example.com</code>, <code>shard2.example.com</code>
-            </li>
-            <li>Each shard can resolve to the same IP or different IP, it does not matter</li>
-          </ul>
-          <li>How many shards?</li>
+          <li>Isolate cgroup root directory</li>
         </ul>
       </ul>
     </div>
 
-    <div class="slide" id="http-request">
-      <hgroup>
-        <h1>Serving HTTP Request</h1>
-      </hgroup>
-      <div class="h-drawing" style="height: 180px" id="1c1oNNZgurIxOEDHbnZuPHKR9I-H1VhoeOpTWa6-vslI"></div>
-      <ul class="xx-small">
-        <li>Serving HTTP request</li>
-        <ol>
-          <li>User enters URL <code>http://shard1.example.com/orders</code> to the browser</li>
-          <li>DNS resolution: browser gets an IP address for <code>shard1.example.com</code></li>
-          <li>Three-way handshake: browser and Web Server creates a socket</li>
-          <li>Browser sends ACK and HTTP request:</li>
-          <pre class="brush: plain; class-name: 'tight'">
-                    GET /orders HTTP/1.1
-                    Host: shard1.example.com
-                    </pre>
-          <li>Web server passes the request to the web application <code>shard1.example.com</code> which serves
-            <code>GET orders</code> and that writes a response back to the socket.
-          </li>
-        </ol>
-      </ul>
-    </div>
-
-    <div class="slide">
-      <hgroup>
-        <h1>Virtual Host</h1>
-      </hgroup>
-      <ul class="x-small">
-        <li>Virtual host</li>
-        <ul>
-          <li>Configuration of a named virtual host in a Web server</li>
-          <li>Web server uses host request header to distinguish among multiple virtual
-            hosts on a single physical host.</li>
-        </ul>
-        <li>Apache virtual host configuration</li>
-        <ul class="x-small">
-          <li>Two virtual hosts in a single Web server</li>
-          <pre class="brush:plain; class-name: 'tight'">
-          # all IP addresses will be used for named virtual hosts
-          NameVirtualHost *:80
-
-          &lt;VirtualHost *:80>
-                  ServerName www.example.com
-                  ServerAlias shard1.example.com shard2.example.com
-                  ServerAdmin admin@example.com
-                  DocumentRoot /var/www/apache/example.com
-          &lt;/VirtualHost>
-
-          &lt;VirtualHost *:80>
-                  ServerName company.cz
-                  ServerAdmin admin@firm.cz
-                  DocumentRoot /var/www/apache/company.cz
-          &lt;/VirtualHost></pre>
-        </ul>
-      </ul>
-    </div>
-
-    <div class="slide" id="curl">
-      <hgroup>
-        <h1>Better Support for HTTP Testing</h1>
-      </hgroup>
-      <ul class="x-small">
-        <li>Use <code>curl</code> to test HTTP protocol</li>
-        <pre class="brush: plain; class-name: 'tight'">
-                    Usage: curl [options...] &lt;url>
-
-                    -X/--request &ltcommand>          Specify request command to use
-                    -H/--header &lt;line>              Custom header to pass to server
-                    -d/--data &lt;data>                HTTP POST data
-                    -b/--cookie &lt;name=string/file>  Cookie string or file to read cookies from
-                    -v/--verbose                    Make the operation more talkative
-                </pre>
-        <li>Example</li>
-        <pre class="brush: plain; class-name: 'tight'">
-                    curl -v -H "Host: company.cz"  127.0.0.1:8080
-
-                    * About to connect() to 127.0.0.1 port 8080
-                    *   Trying 127.0.0.1... connected
-                    * Connected to 127.0.0.1 port 8080
-                    &gt; GET / HTTP/1.1
-                    &gt; User-Agent: curl/7.20.0 (i386-apple-darwin10.3.2) libcurl/7.20.0 OpenSSL/0.9.8n
-                    &gt; Accept: */*
-                    &gt; Host: company.cz
-                    &gt;
-                    &lt; HTTP/1.1 201 OK
-                    &lt; Connection: keep-alive
-                    &lt; Content-Type: plain/text
-                    &lt;
-                    &lt; This is the response...
-                </pre>
-      </ul>
-    </div>
-
-    <div class="slide outline"></div>
-
-    <section>
-      <header>State Management</header>
-
-      <div class="slide" id="state-management">
-        <hgroup>
-          <h1>State Management</h1>
-        </hgroup>
-        <ul class="small">
-          <li>HTTP is a stateless protocol &#150; original design</li>
-          <ul>
-            <li>No information to relate multiple interactions at server-side</li>
-            <ul>
-              <li>Except <code>Authorization</code> header is copied in every request</li>
-              <li>IP addresses do not work, one public IP can be shared by multiple clients</li>
-            </ul>
-          </ul>
-          <li>Solutions to check for a valid state at server-side</li>
-          <ul>
-            <li><b>Cookies</b> &ndash; obvious and the most common workaround</li>
-            <ul>
-              <li><span class="h-ref" id="rfc-2109">RFC 2109 &ndash; HTTP State Management Mechanism</span></li>
-              <li>Allow clients and servers to talk in a context called <b>sessions</b></li>
-            </ul>
-            <li><b>Hypertext</b> &ndash; original HTTP design principle</li>
-            <ul>
-              <li>App states represented by resources (hypermedia), links define transitions between states</li>
-              <li>Adopted by the REST principle <b>statelessness</b></li>
-            </ul>
-          </ul>
-        </ul>
-      </div>
-
-      <div class="slide">
-        <hgroup>
-          <h1>Interaction with Cookies</h1>
-        </hgroup>
-        <ul class="small">
-          <li>Request-response interaction with cookies</li>
-          <ul>
-            <li>Session is a logical channel maintained by the server</li>
-          </ul>
-          <div class="h-drawing" style="height: 250px" id="1mVCe8EtqVApZVRV_RHYQKtqDNELKdo84qzCqGvAs7iA"></div>
-          <li>Stateful Server</li>
-          <ul>
-            <li>Server remembers the session information in a server memory</li>
-            <li>Server memory is a non-persistent storage, when server restarts the memory content is lost!</li>
-          </ul>
-        </ul>
-      </div>
-
-      <div class="slide">
-        <hgroup>
-          <h1>Set-Cookie and Cookie Headers</h1>
-        </hgroup>
-        <ul class="xx-small">
-          <li><code>Set-Cookie</code> response header</li>
-          <pre class="brush: plain; ">
-                        set-cookie = "Set-Cookie:" cookie ("," cookie)*
-                          cookie    = NAME "=" VALUE (";" cookie-av)*
-                          cookie-av = "Comment" "=" value
-                                    | "Domain" "=" value
-                                    | "Max-Age" "=" value
-                                    | "Path" "=" value
-                    </pre>
-          <ul>
-            <li><code>domain</code> &ndash; a domain for which the cookie is applied</li>
-            <li><code>Max-Age</code> &ndash; number of seconds the cookie is valid</li>
-            <li><code>Path</code> &ndash; URL path for which the cookie is applied</li>
-          </ul>
-          <li><code>Cookie</code> request header. A client sends the cookie in a request if:</li>
-          <ul>
-            <li><code>domain</code> matches the origin server's fully-qualified host name</li>
-            <li><code>path</code> matches a prefix of the request-URI</li>
-            <li><code>Max-Age</code> has not expired</li>
-          </ul>
-          <pre class="brush: plain;">
-                        cookie  = "Cookie:" cookie-value (";" cookie-value)*
-                          cookie-value    = NAME "=" VALUE [";" path] [";" domain]
-                          path            = "$Path" "=" value
-                          domain          = "$Domain" "=" value
-                    </pre>
-          <ul>
-            <li><code>domain</code>, and <code>path</code> are values from corresponding attributes of
-              the <code>Set-Cookie</code> header</li>
-          </ul>
-
-        </ul>
-      </div>
-
-    </section>
   </section>
 
   <div class="slide outline"></div>
 
   <section>
-    <header>Security</header>
+
+    <header>Container Image</header>
 
     <div class="slide">
       <hgroup>
-        <h1>Web Service Security Concepts</h1>
+        <h1>Container Images</h1>
+      </hgroup>
+      <img style="margin-left: 50px; margin-top: 15px; margin-bottom: 10px; height: 280px"
+        src="./img/docker-container-stack.png" />
+      <ul class="x-small" style="margin-left: -10px">
+        <ul>
+          <li>Containers are made up of R/O layers via a storage driver<br />(OverlayFS, AUFS, etc.)</li>
+          <li>Containers are designed to support a single application</li>
+          <li>Instances are ephemeral, persistent data is stored in bind
+            mounts or data volume containers.</li>
+        </ul>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Image Layering with OverlayFS</h1>
       </hgroup>
       <ul class="x-small">
-        <li>Securing the client-server communcation</li>
+        <li>OverlayFS</li>
         <ul>
-          <li>Message-level security</li>
-          <li>Transport-level security</li>
+          <li>A filesystem service implementing a <b>union mount</b> for other file systems.</li>
+          <li>Docker uses <code>overlay</code> and <code>overlay2</code> storage drivers
+            to build and manage on-disk structures of images and containers.</li>
         </ul>
-        <li>Ensure</li>
+        <li>Image Layering</li>
         <ul>
-          <li>Authentication &ndash; verify a client's identity</li>
-          <li>Authorizaton &ndash; rights to access resources</li>
-          <li>Message Confidentiality &ndash; keep message content secret</li>
-          <li>Message Integrity &ndash; message content does not change during transmission</li>
-          <li>Non-repudiation &ndash; proof of integrity and origin of data</li>
+          <li>OverlayFS takes two directories on a single Linux host, layers one on top of the other, and provides
+            a single unified view.</li>
+          <li>Only works for two layers, in multi-layered images hard links are used to
+            reference data shared with lower layers.</li>
         </ul>
-        <div class="h-drawing" style="height: 190px; margin-top: 30px"
-          id="1JhEX5OGpHhQY49mxA4-r7taripW6bkWwLCu94BU9QFI"></div>
+        <img src="img/overlay_constructs.jpg" style="width: 700px; margin-top: 10px" />
       </ul>
     </div>
 
     <div class="slide">
       <hgroup>
-        <h1>Basic Access Authentication</h1>
+        <h1>Image Layers Example</h1>
       </hgroup>
-      <div class="h-drawing" style="height: 280px" id="1OYyQduAQYodoiQ48uYTCB1iVn6UHcCcdDocjLOA9b9Y"></div>
-      <ul class="x-small">
-        <li>Realm</li>
+      <ul class="xx-small" style="margin-top:20px; zoom:0.9">
+        <li>Pulling out the image from the registry</li>
+        <pre class="brush: plain; gutter: 'false'">
+            $ docker pull ubuntu
+
+            Using default tag: latest
+            latest: Pulling from library/ubuntu
+
+            5ba4f30e5bea: Pull complete
+            9d7d19c9dc56: Pull complete
+            ac6ad7efd0f9: Pull complete
+            e7491a747824: Pull complete
+            a3ed95caeb02: Pull complete
+            Digest: sha256:46fb5d001b88ad904c5c732b086b596b92cfb4a4840a3abd0e35dbb6870585e4
+            Status: Downloaded newer image for ubuntu:latest
+          </pre>
         <ul>
-          <li>an identifier of the space on the server (~ a collection of resources and their sub-resources)</li>
-          <li>A client may associate a valid credentials with realms such that it copies authorization information
-            in requests for which server requires authentication (by <code>WWW-Authenticate</code> header)</li>
+          <li>Each image layer has its own directory under <code>/var/lib/docker/overlay/</code>.</li>
+          <li>This is where the contents of each image layer are stored.</li>
         </ul>
-    </div>
+        <li>Directories on the file system</li>
+        <pre class="brush: plain; gutter: 'false'">
+            $ ls -l /var/lib/docker/overlay/
 
-    <div class="slide">
-      <hgroup>
-        <h1>Basic Access Authentication &ndash; Credentials</h1>
-      </hgroup>
-      <ul class="small">
-        <li>Credentials</li>
+            total 20
+            drwx------ 3 root root 4096 Jun 20 16:11 38f3ed2eac129654acef11c32670b534670c3a06e483fce313d72e3e0a15baa8
+            drwx------ 3 root root 4096 Jun 20 16:11 55f1e14c361b90570df46371b20ce6d480c434981cbda5fd68c6ff61aa0a5358
+            drwx------ 3 root root 4096 Jun 20 16:11 824c8a961a4f5e8fe4f4243dab57c5be798e7fd195f6d88ab06aea92ba931654
+            drwx------ 3 root root 4096 Jun 20 16:11 ad0fe55125ebf599da124da175174a4b8c1878afe6907bf7c78570341f308461
+            drwx------ 3 root root 4096 Jun 20 16:11 edab9b5e5bf73f2997524eebeac1de4cf9c8b904fa8ad3ec43b3504196aa3801
+          </pre>
         <ul>
-          <li>credentials are base64 encoded</li>
-          <li>the format is: <code>username:password</code></li>
-        </ul>
-        <pre class="brush: bash">
-						# to encode in linux
-						echo "novak:heslo" | base64
-						> bm92YWs6aGVzbG8K
-
-						# and to decode
-						echo "bm92YWs6aGVzbG8K" | base64 -d # use capital "D" in OS X
-						> novak:heslo</pre>
-
-        <li>Comments</li>
-        <ul class="x-small">
-          <li>When TLS is not used, the password can be read</li>
-          <li>An attacker can repeat interactions</li>
+          <li>The organization of files allows for efficient use of disk space.</li>
+          <li>There are <b>files unique to every layer</b> and <b>hard links to files</b> shared with lower layers
+          </li>
         </ul>
       </ul>
-
-    </div>
-
-    <div class="slide">
-      <hgroup>
-        <h1>Digest Access Authentication</h1>
-      </hgroup>
-      <ul class="xx-small">
-        <li>RFC 2617 &ndash; Basic and Digest Access Authentication</li>
-        <ul>
-          <li>No password between a client and a server but a hash value</li>
-          <li>Simple and advanced mechanisms (only server-generated nonce value &ndash; replay-attacks or
-            with client-generated nonce value)</li>
-        </ul>
-        <li>Basic Steps</li>
-        <ol>
-          <li>Client accesses a protected area</li>
-          <pre class="brush:bash; class-name: 'tight'">
-							> GET / HTTP/1.1</pre>
-          <li>Server requests authentication with <code>WWW-Authenticate</code></li>
-          <pre class="brush:bash; class-name: 'tight'">
-								&lt; HTTP/1.1 401 Unauthorized
-								&lt; WWW-Authenticate: Digest realm="ProtectedArea",
-								  nonce="BbdQof3DBAA=a293ff3d724989371610f03015f2d23f3cd2c045",
-								  algorithm=MD5, domain="/", qop="auth"</pre>
-          <li>Client calculates a response hash by using the realm, his/her username, the password, and the
-            quality of protection (QoP) and requests the resource with <code>authorization</code> header</li>
-          <pre class="brush:bash; class-name: 'tight'">
-								> GET / HTTP/1.1
-								> Authorization: Digest username="novak", realm="ProtectedArea",
-								  nonce="BbdQof3DBAA=a293ff3d724989371610f03015f2d23f3cd2c045", uri="/",
-								  algorithm=MD5, response="c4ea2293aeb318826d1e533f363efd90", qop=auth,
-								  nc=00000001, cnonce="531ee8ba7f2a8fd1"</pre>
-        </ol>
       </ul>
     </div>
 
     <div class="slide">
       <hgroup>
-        <h1>Transport Level Security</h1>
+        <h1>Dockerfile</h1>
       </hgroup>
-      <ul class="x-small">
-        <li>SSL and TLS</li>
-        <ul>
-          <li>SSL and TLS is used interchangeably</li>
-          <li>SSL 3.0 developed by Netscape</li>
-          <li>IETF standardization of SSL 3.0 is TLS 1.0</li>
-          <ul>
-            <li>TLS 1.0 is upgrade of SSL 3.0</li>
-          </ul>
-          <li>Due to security flaws in TLS 1.0, TLS 1.1 and TLS 1.2 were created</li>
+      <ul class="xx-small" style="zoom: 0.90">
+        <li>Dockerfile is a script that creates a new image</li>
+        <pre class="brush: plain; gutter: 'false'">
+          # This is a comment
+          FROM oraclelinux:7
+          MAINTAINER Tomas Vitvar &lt;tomas@vitvar.com>
+          RUN yum install -q -y httpd
+          EXPOSE 80
+          CMD httpd -X
+          </pre>
+
+        <li>A line in the Dockerfile will create an intermediary layer</li>
+
+        <pre class="brush: plain; gutter: 'false'">
+          $ docker build -t tomvit/httpd:v1 .
+          Sending build context to Docker daemon 2.048 kB
+          Step 1 : FROM oraclelinux:7
+           ---> 4c357c6e421e
+          Step 2 : MAINTAINER Tomas Vitvar &lt;tomas@vitvar.com>
+           ---> Running in 35feebb2ffab
+           ---> 95b35d5d793e
+          Removing intermediate container 35feebb2ffab
+          Step 3 : RUN yum install -q -y httpd
+           ---> Running in 3b9aee3c3ef1
+           ---> 888c49141af9
+          Removing intermediate container 3b9aee3c3ef1
+          Step 4 : EXPOSE 80
+           ---> Running in 03e1ef9bf875
+           ---> c28545e3580c
+          Removing intermediate container 03e1ef9bf875
+          Step 5 : CMD httpd -X
+           ---> Running in 3c1c0273a1ef
+          </pre>
+
+        <ul class="no-bullet">
+          <li>If processing fails at some step, all preceeding steps will be loaded from the cache on the next run.
+          </li>
         </ul>
-        <li>TLS layer</li>
-        <img src="img/TLS.png" style="height: 250px" />
+
+
       </ul>
     </div>
-
-    <div class="slide">
-      <hgroup>
-        <h1>TLS Services</h1>
-      </hgroup>
-      <ul class="xx-small">
-        <li>Encryption</li>
-        <ul>
-          <li>Peers must agree on ciphersuite and keys</li>
-          <li>This is achieved by <b>TLS handshake</b></li>
-        </ul>
-        <li>Authentication</li>
-        <ul>
-          <li>Peers can authenticate their identity</li>
-          <ul>
-            <li>The client can verify that the server is who it is claimed to be</li>
-            <li>Achieved by "Chain of Trust and Certificate Authoritites"</li>
-            <li>The server can also verify the client</li>
-          </ul>
-        </ul>
-        <li>Integrity</li>
-        <ul>
-          <li>TLS provives message framing mechanism</li>
-          <li>Every message is signed with Message Authentication Code (MAC)</li>
-          <ul>
-            <li>MAC hashes data in a message and combines the resulting hash with a key (negotiated during the TLS
-              handshake)</li>
-            <li>The result is a message authentication code sent with the message</li>
-          </ul>
-        </ul>
-      </ul>
-    </div>
-
-    <div class="slide">
-      <hgroup>
-        <h1>TLS Handshake Protocol</h1>
-      </hgroup>
-      <img src="img/tls-handshake.png" style="padding-top: 10px; padding-left: 20px; height: 300px" />
-      <ul class="xx-small">
-        <li>TLS Handshake</li>
-        <ul>
-          <li class="no-bullet">56 ms: ClientHello, TLS protocol version, list of ciphersuites, TLS options</li>
-          <li class="no-bullet">84 ms: ServerHello, TLS protocol version, ciphersuite, certificate</li>
-          <li class="no-bullet">112 ms: RSA or Diffie-Hellman key exchange</li>
-          <li class="no-bullet">140 ms: Message integrity checks, sends encrypted "Finished" message</li>
-          <li class="no-bullet">168 ms: Decrypts the message, app data can be sent</li>
-        </ul>
-      </ul>
-    </div>
-
-    <div class="slide">
-      <hgroup>
-        <h1>Key Exchange</h1>
-      </hgroup>
-      <ul class="xx-small">
-        <li>RSA key exhange(Rivest–Shamir–Adleman)</li>
-        <ul>
-          <li>The client generates a symetric key</li>
-          <li>The client encrypts the key with the server's public key</li>
-          <li>The client sends the encrpyed key to the server</li>
-          <li>The server uses its private key to decrypt the symetric key</li>
-        </ul>
-        <li>RSA critical weekness</li>
-        <ul>
-          <li>The same public-private key pair is used to:</li>
-          <ul>
-            <li>authenticate the server (the server's private key is used to sign and verify the handshake)</li>
-            <li>encrypt the symetric key</li>
-          </ul>
-          <li>When an attacker gets hold of the server private key</li>
-          <ul>
-            <li>It can decrypt the entire session</li>
-          </ul>
-        </ul>
-        <li>Diffie-Hellman key exhange</li>
-        <ul>
-          <li>Client and server can negoriate shared secret without its explicit communication</li>
-          <ul>
-            <li>Attacker cannot get the key</li>
-          </ul>
-          <li>Reduction of risk of compromising of the past communications</li>
-          <ul>
-            <li>New key can be generated as part of every key exchange</li>
-            <li>Old keys can be discarded</li>
-          </ul>
-        </ul>
-      </ul>
-    </div>
-
-    <div class="slide">
-      <hgroup>
-        <h1>TLS and Proxy Servers</h1>
-      </hgroup>
-      <ul class="xx-small">
-        <li>TLS Offloading</li>
-        <ul>
-          <li>Inbound TLS connection, plain outbound connection</li>
-          <li>Proxy can inspect messages</li>
-        </ul>
-        <li>TLS Bridging</li>
-        <ul>
-          <li>Inbound TLS connection, new outbound TLS connection</li>
-          <li>Proxy can inspect messages</li>
-        </ul>
-        <li>End-to-End TLS (TLS pass-through)</li>
-        <ul>
-          <li>TLS connection is passed-through the proxy</li>
-          <li>Proxy cannot inspect messages</li>
-        </ul>
-        <li>Load balancer</li>
-        <ul>
-          <li>Can use TLS offloading or TLS bridging</li>
-          <li>Can use TLS pass-through with help of Server Name Indication (SNI)</li>
-        </ul>
-      </ul>
-    </div>
-
 
   </section>
-
-
-
-
-
-
-
-
-
-</body>
