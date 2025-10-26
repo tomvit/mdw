@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<!--
+	Web 2.0, CTU course slides
+	(cc) 2010-2014 Tomas Vitvar, tomas@vitvar.com
+-->
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="course" content="Web 2.0" />
+  <meta name="lecture" content="Lecture 5" />
+  <meta name="keywords" content="cloud native, kubernetes" />
+
+  <link type="text/css" rel="stylesheet" href="css/meta.css">
+  </link>
+  <link type="text/css" rel="stylesheet" href="css/ctu-fit.css">
+  </link>
+  <link type="text/css" rel="stylesheet" href="humla/lib/core/humla.css">
+  </link>
+
+  <script type="text/javascript" src="humla/lib/humla.js"></script>
+  <title>Cloud Native and Kubernetes</title>
+</head>
+
+<body>
+
+  <footer>
+    <p><b>#META_LECTURE#: #TITLE#</b>,&nbsp;<span class="meta_semester" />,&nbsp;
+      <span class="meta_twitter" />
+    </p>
+    <p><b>&#8210; #SLIDE_NO# &#8210;</b></p>
+  </footer>
+
+  <div class="slide intro">
+    <hgroup>
+      <h1><span class="meta_course" /></h1>
+      <h2>#META_LECTURE#: #TITLE#</h2>
+    </hgroup>
+    <div class="author">
+      <p class="meta_author" />
+      <p><span class="meta_email" /> &bull; <span class="meta_twitter" /> &bull;
+        <span class="meta_web" />
+      </p>
+    </div>
+    <center>
+      <div class="meta_logo"></div>
+    </center>
+    <div class="org">
+      <p class="meta_org" />
+      <p><span class="meta_orgfac" /> &bull; <span class="meta_field" />
+        &bull; <span class="meta_orgweb" /></p>
+    </div>
+    <div class="etc">
+      <div class="text-info">
+        Modified: #LAST_MODIFIED#<br />
+        Humla v#HUMLA_VERSION#
+      </div>
+      <a href="http://creativecommons.org/licenses/by-sa/3.0/">
+        <div class="license"></div>
+      </a>
+      <div class="oppa"></div>
+    </div>
+  </div>
+
+  <div class="slide outline"></div>
+
+  <section>
+    <header>Cloud Native</header>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Overview</h1>
+      </hgroup>
+      <ul class="xx-small">
+        <li>The Cloud Native Computing Foundation (CNCF)</li>
+        <ul>
+          <li>Motto: Building sustainable ecosystems for cloud native software</li>
+          <li>CNCF is part of the nonprofit Linux Foundation</li>
+        </ul>
+        <li>Cloud Native = scalable apps running in modern cloud environments</li>
+        <ul>
+          <li>containers, service mashes, microservices</li>
+          <li>Apps must be usually re-built from scratch or refactored</li>
+          <li>Benefits:</li>
+          <ul>
+            <li>loosely coupled systems that are resilient, manageable, and observable</li>
+            <li>automation allowing for predictable and frequent changes with minimal effort</li>
+          </ul>
+          <li>Trail Map</li>
+          <ul>
+            <li>provides an overview for enterprises starting their cloud native journey<span class="h-ref"
+                id="cnfs-trail-map" /></li>
+          </ul>
+        </ul>
+        <li>Lift and Shift</li>
+        <ul>
+          <li>Cloud transition program in organizations</li>
+          <li>Move app from on-premise to the cloud</li>
+          <li>Benefits</li>
+          <ul>
+            <li>Infrastructure cost cutting (OPEX vs. CAPEX)</li>
+            <li>Improved operations (scaling up/down if possible can be faster)</li>
+          </ul>
+        </ul>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>CNCF Trail Map</h1>
+      </hgroup>
+      <img src="img/cncf-trail-map.png" style="width: 100%" />
+    </div>
+
+  </section>
+
+  <div class="slide outline"></div>
+
+  <section>
+    <header>Kubernetes</header>
+
+    <section>
+      <header>Basic Concepts</header>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Overview</h1>
+        </hgroup>
+        <ul class="x-small">
+          <li>In your architecture...</li>
+          <ul>
+            <li>Containers are atomic pieces of application architecture</li>
+            <li>Containers can be linked (e.g. web server, DB)</li>
+            <li>Containers access shared resources (e.g. disk volumes)</li>
+          </ul>
+          <li>Kubernetes</li>
+          <ul>
+            <li>Automation of deployments, scaling, management of containerized applications across number of nodes</li>
+            <li>Based on Borg, a parent project from Goolge</li>
+          </ul>
+          <img src="img/kubernetes-overview.png" width="400px" style="margin-top: 10px; margin-left: 20px"></img>
+        </ul>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Key Design Principles</h1>
+        </hgroup>
+        <ul class="x-small">
+          <li>Kubernetes abstracts infrastructure complexity from application deployment</li>
+          <li><b>Decoupling</b> of application workloads from the underlying infrastructure</li>
+          <ul>
+            <li><b>Compute:</b> Define <i>what</i> to run without specifying <i>where</i> it runs</li>
+            <li><b>Storage:</b> Applications request storage independent of storage backend</li>
+            <li><b>Networking:</b> Stable access to applications regardless of IPs or location</li>
+          </ul>
+          <li>Benefits</li>
+          <ul>
+            <li>Portability across on-prem and cloud environments</li>
+            <li>Scalability and resilience through dynamic scheduling</li>
+            <li>Consistency and standardization of deployment model</li>
+            <li>Reduced vendor lock-in thanks to open standards</li>
+          </ul>
+        </ul>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Desired State and Reconciliation</h1>
+        </hgroup>
+        <ul class="xx-small">
+          <li>Kubernetes operates on a <b>desired state</b> model</li>
+          <ul>
+            <li>Users define the state they want through object specifications (YAML)</li>
+            <li>Example: “there should be 3 replicas of this application”</li>
+          </ul>
+
+          <li>Actual State vs. Desired State</li>
+          <ul>
+            <li>Kubernetes constantly monitors the cluster</li>
+            <li>If the actual state drifts from the desired state, it takes action to fix it</li>
+          </ul>
+
+          <li>Reconciliation Loop</li>
+          <ul>
+            <li>Controllers continuously compare desired vs. actual state</li>
+            <li>Automatically performs actions such as restarting, rescheduling, or scaling Pods</li>
+          </ul>
+        </ul>
+        <img src="img/kubernetes-state.png" width="400px" style="margin-top: 10px; margin-left: 70px"></img>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Features</h1>
+        </hgroup>
+        <ul class="xx-small">
+          <li>Automatic binpacking</li>
+          <ul>
+            <li>Automatically places containers onto nodes based on their resource requirements and other constraints.
+            </li>
+          </ul>
+          <li>Horizontal scaling</li>
+          <ul>
+            <li>Scales your application up and down with a simple command, with a UI, or automatically based on CPU
+              usage.
+            </li>
+          </ul>
+          <li>Automated rollouts and rollbacks</li>
+          <ul>
+            <li>Progressive rollout out of changes to application/configuration, monitoring application health
+              and rollback when something goes wrong.</li>
+          </ul>
+          <li>Storage orchestration</li>
+          <ul>
+            <li>Automatically mounts the storage system (local or in the cloud)</li>
+          </ul>
+          <li>Self-healing</li>
+          <ul>
+            <li>Restarts containers that fail, replaces and reschedules containers when nodes die, kills containers that
+              don't respond to user-defined health checks.</li>
+          </ul>
+          <li>Service discovery and load balancing</li>
+          <ul>
+            <li>Gives containers their own IP addresses and a single DNS name for a set of containers, and can
+              load-balance across them.</li>
+          </ul>
+        </ul>
+      </div>
+    </section>
+
+    <div class="slide outline"></div>
+
+    <section>
+      <header>Core Concepts and Architecture</header>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Core Building Blocks</h1>
+        </hgroup>
+        <ul class="x-small">
+          <li><b>Cluster</b></li>
+          <ul>
+            <li>A set of worker nodes and a control plane</li>
+            <li>Runs and manages containerized applications</li>
+          </ul>
+
+          <li><b>Node</b></li>
+          <ul>
+            <li>A worker machine in Kubernetes (VM or physical)</li>
+            <li>Runs Pods scheduled by the control plane</li>
+          </ul>
+
+          <li><b>Control Plane</b></li>
+          <ul>
+            <li>Manages the overall state of the cluster</li>
+            <li>Schedules workloads and responds to cluster events</li>
+          </ul>
+
+          <li><b>Pod</b></li>
+          <ul>
+            <li>The smallest deployable unit in Kubernetes</li>
+            <li>One or more tightly-coupled containers</li>
+            <li>Containers share networking and storage within a Pod</li>
+          </ul>
+        </ul>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Architecture</h1>
+        </hgroup>
+        <img src="img/components-of-kubernetes.svg"
+          style="width: 800px; margin-left: 50px; margin-top: 50px; zoom: 0.88"></img>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Control Plane Components (Part 1)</h1>
+        </hgroup>
+        <ul class="x-small">
+          <li>Global decisions about the cluster</li>
+          <ul>
+            <li>Schedulling</li>
+            <li>Detecting and responding to cluster events, starting up new pods</li>
+          </ul>
+          <li>kube-apiserver</li>
+          <ul>
+            <li>exposes the Kubernetes API</li>
+            <li>The API server is the front end for the Kubernetes control plane.</li>
+          </ul>
+          <li>etcd</li>
+          <ul>
+            <li>highly-available key value store used to store all cluster data</li>
+          </ul>
+          <li>kube-scheduler</li>
+          <ul>
+            <li>watches for newly created Pods with no assigned node</li>
+            <li>selects a node for Pods to run on.</li>
+            <li>Decision factors: resource requirements, hardware/software/policy constraints, affinity and
+              anti-affinity
+              specifications</li>
+          </ul>
+        </ul>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Control Plane Components (Part 2)</h1>
+        </hgroup>
+        <ul class="x-small">
+          <li>kube-controller-manager</li>
+          <ul>
+            <li>runs controller to ensure the desired state of cluster objects</li>
+            <li><b>Node controller</b></li>
+            <ul>
+              <li>noticing and responding when nodes go down</li>
+            </ul>
+            <li><b>Job controller</b></li>
+            <ul>
+              <li>creates Pods to run one-off tasks to completion.</li>
+            </ul>
+            <li><b>Endpoints controller</b></li>
+            <ul>
+              <li>Populates the Endpoints object (that is, joins Services, Pods).</li>
+            </ul>
+          </ul>
+          <li>cloud-controller-manager</li>
+          <ul>
+            <li>Integration with cloud services (when the cluster is running in a cloud)</li>
+            <li><b>Node controller</b></li>
+            <ul>
+              <li>checks if a node has been deleted in the cloud after it stops responding</li>
+            </ul>
+            <li><b>Route controller</b></li>
+            <ul>
+              <li>For setting up routes in the underlying cloud infrastructure</li>
+            </ul>
+            <li><b>Service controller</b></li>
+            <ul>
+              <li>For creating, updating and deleting cloud provider load balancers</li>
+            </ul>
+          </ul>
+        </ul>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Node</h1>
+        </hgroup>
+        <ul class="x-small">
+          <li>Kubernetes runtime environment</li>
+          <ul>
+            <li>Run on every node</li>
+            <li>Maintaining running pods</li>
+          </ul>
+          <li>kubelet</li>
+          <ul>
+            <li>An agent that runs on each node in the cluster</li>
+            <li>It makes sure that containers are running in a Pod.</li>
+          </ul>
+          <li>kube-proxy</li>
+          <ul>
+            <li>maintains network rules on nodes</li>
+            <li>network rules allow network communication to Pods from inside or outside of the cluster</li>
+            <li>uses the operating system packet filtering layer or forwards the traffic itself.</li>
+          </ul>
+          <li>Container runtime</li>
+          <ul>
+            <li>Responsible for running containers</li>
+            <li>Kubernetes supports several container runtimes (containerd, CRI-O)</li>
+            <li>Any implementation of the Kubernetes CRI (Container Runtime Interface)</li>
+          </ul>
+        </ul>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Container Stack</h1>
+        </hgroup>
+        <div class="h-drawing" style="padding-top: 21px; padding-left: 21px; width: 600px"
+          id="1H0E2ljSysot6vb-m8T1hyy4XtyDz3QLb07H-Q0lbgqs"></div>
+      </div>
+
+    </section>
+
+    <div class="slide outline"></div>
+
+    <section>
+      <header>Workloads</header>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Namespaces</h1>
+        </hgroup>
+        <ul class="x-small">
+          <li>Logical grouping of cluster resources</li>
+          <ul>
+            <li>Allow you to organize and separate objects within a Kubernetes cluster</li>
+            <li>Useful when multiple teams, environments, or projects share the same cluster</li>
+          </ul>
+
+          <li>Rationale</li>
+          <ul>
+            <li>Provide isolation and boundaries between workloads</li>
+            <li>Prevent name collisions</li>
+            <ul>
+              <li>Objects can have the same name if in different namespaces</li>
+            </ul>
+            <li>Enable resource limits and access control per namespace</li>
+          </ul>
+
+          <li>Usage</li>
+          <ul>
+            <li>Common namespaces: <code>default</code>, <code>kube-system</code>, <code>kube-public</code>,
+              <code>kube-node-lease</code>
+            </li>
+            <li>Create separate namespaces for e.g. <i>dev</i>, <i>test</i>, <i>prod</i></li>
+            <li>Commands run in a namespace unless another is specified</li>
+          </ul>
+        </ul>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Pod</h1>
+        </hgroup>
+        <ul class="x-small">
+          <li>Pod</li>
+          <ul>
+            <li>A group of one or more tightly-coupled containers.</li>
+            <li>Containers share storage and network resources.</li>
+            <li>A Pod runs a single instance of a given application</li>
+            <li>Pod's containers are always co-located and co-scheduled</li>
+            <li>Pod's containers run in a shared context, i.e. in a set of Linux namespaces</li>
+          </ul>
+          <li>Pods are created using workload resources</li>
+          <ul>
+            <li>You do not create them directly</li>
+          </ul>
+          <li>Pods in a Kubernetes cluster are used in two main ways</li>
+          <ul>
+            <li>Run a single container, the most common Kubernetes use case</li>
+            <li>Run multiple containers that need to work together</li>
+          </ul>
+        </ul>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Workloads</h1>
+        </hgroup>
+        <ul class="xx-small">
+          <li>An application running on Kubernetes</li>
+          <li>Workloads run in a set of Pods</li>
+          <li>Pre-defined workload resources to manage lifecylce of Pods</li>
+          <ul>
+            <li><b>Deployment</b> and ReplicaSet</li>
+            <ul>
+              <li>managing a stateless application workload</li>
+              <li>any Pod in the Deployment is interchangeable and can be replaced if needed</li>
+            </ul>
+            <li><b>StatefulSet</b></li>
+            <ul>
+              <li>one or more related Pods that track state</li>
+              <li>For example, if a workload records data persistently, run a StatefulSet that matches each Pod with a
+                persistent volume.</li>
+            </ul>
+            <li>DaemonSet</li>
+            <ul>
+              <li>Ensures that all (or some) Nodes run a copy of a Pod</li>
+              <li>Such as a cluster storage daemon, logs collection, node monitoring running on every node</li>
+            </ul>
+            <li>Job and CronJob</li>
+            <ul>
+              <li>Define tasks that run to completion and then stop.</li>
+              <li>Jobs represent one-off tasks, whereas CronJobs recur according to a schedule.</li>
+            </ul>
+          </ul>
+        </ul>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Deployment Spec Example</h1>
+        </hgroup>
+        <ul class="x-small">
+          <li>Deployment spec</li>
+          <pre class="brush: bash; class-name: ''">
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: nginx-deployment
+          spec:
+            selector:
+              matchLabels:
+                app: nginx          
+            replicas: 3 # tells deployment to run 3 pods matching the template
+            template:
+              metadata:
+                labels:
+                  app: nginx
+              spec:
+                containers:
+                - name: nginx
+                  image: nginx:1.14.2
+                  ports:
+                  - containerPort: 80          
+        </pre>
+          <ul>
+            <li>A desired state of an application running in the cluster</li>
+            <li>Kubernetes reads the Deployment spec and starts three app instances</li>
+            <li>If an instance fails, Kubernetes starts a replacement app instance</li>
+          </ul>
+        </ul>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Service</h1>
+        </hgroup>
+        <ul class="xx-small">
+          <li>Networking</li>
+          <ul>
+            <li>Containers within a Pod use networking to communicate via loopback</li>
+            <li>Cluster networking provides communication between different Pods.</li>
+          </ul>
+          <li>Service resource</li>
+          <ul>
+            <li>An abstract way to expose an application running on a set of Pods</li>
+            <li>Example: a set of Pods with a label <code>app=nginx</code>, each listens on <code>tcp/9376</code></li>
+            <pre class="brush: bash; class-name: ''">
+            apiVersion: v1
+            kind: Service
+            metadata:
+              name: my-service
+            spec:
+              selector:
+                app: nginx
+              ports:
+                - protocol: TCP
+                  port: 80
+                  targetPort: 9376            
+          </pre>
+            <li>This specification creates a new Service object named <code>my-service</code></li>
+            <li>The servive targets <code>tcp/9376</code> on any Pod with the <code>app=nginx</code> label.</li>
+            <li>Kubernetes assigns this Service a cluster IP address, which is used by the Service proxies.</li>
+          </ul>
+        </ul>
+      </div>
+
+    </section>
+
+    <div class="slide outline"></div>
+
+    <section>
+      <header>Beyond the Basics</header>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Advanced Topics</h1>
+        </hgroup>
+        <ul class="xx-small">
+          <li>Custom APIs and Controllers</li>
+          <ul>
+            <li>CRDs, Operators, reconciliation loops</li>
+            <li>Admission webhooks (mutating/validating)</li>
+          </ul>
+
+          <li>Security</li>
+          <ul>
+            <li>RBAC, Namespaces, Pod Security (seccomp, capabilities, rootless)</li>
+            <li>Image signing and supply chain (SBOM, cosign), Secret management (Vault/CSI)</li>
+            <li>Policy engines: OPA Gatekeeper, Kyverno</li>
+          </ul>
+
+          <li>Networking</li>
+          <ul>
+            <li>CNI, eBPF (Cilium), NetworkPolicies, Ingress</li>
+            <li>Gateway API, Service Mesh (mTLS, traffic shaping)</li>
+          </ul>
+
+          <li>Storage</li>
+          <ul>
+            <li>CSI drivers, snapshots, expansion, topology-aware PVs</li>
+            <li>Backup/DR (e.g., Velero), StatefulSet patterns</li>
+          </ul>
+
+          <li>Scaling and Scheduling</li>
+          <ul>
+            <li>HPA/VPA/KEDA (event-driven), Cluster Autoscaler</li>
+            <li>Affinity/anti-affinity, taints/tolerations, topology spread</li>
+          </ul>
+
+          <li>Ops and Delivery</li>
+          <ul>
+            <li>GitOps (Argo CD/Flux), progressive delivery (canary, blue/green)</li>
+            <li>Observability: metrics/logs/traces (Prometheus, OpenTelemetry)</li>
+          </ul>
+
+          <li>Runtimes and Isolation</li>
+          <ul>
+            <li>containerd/CRI-O, shims, sandboxed runtimes (gVisor, Kata)</li>
+            <li>Wasm/WASI experiments</li>
+          </ul>
+
+          <li>Multi-Cluster and Platform</li>
+          <ul>
+            <li>Cluster API, federation, service discovery across clusters</li>
+            <li>Multi-tenancy, quotas, cost allocation</li>
+          </ul>
+        </ul>
+      </div>
+
+    </section>
+  </section>
