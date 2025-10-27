@@ -268,20 +268,37 @@
 
     <div class="slide">
       <hgroup>
-        <h1>Types: user</h1>
+        <h1>Types: User & Cgroup</h1>
       </hgroup>
       <ul class="xx-small">
         <li><code>user</code> namespace</li>
         <ul>
-          <li>Isolates UID/GID number spaces</li>
+          <li>Isolates user and group IDs (UIDs/GIDs) between processes</li>
+          <li>Allows a process to have different privileges inside and outside the namespace</li>
+          <li>Enables <b>rootless containers</b> (process is non-root on host, but appears as root inside)</li>
+          <li>Example</li>
+          <ul>
+            <li>A process runs as UID 0 (root) inside the container,<br />but maps to a regular UID on the host</li>
+          </ul>
+          </li>
         </ul>
+
         <li><code>cgroup</code> namespace</li>
         <ul>
-          <li>Isolate cgroup root directory</li>
+          <li><b>cgroups</b> (control groups)</li>
+          <ul>
+            <li>Kernel feature to limit and measure process resource usage (CPU, memory, I/O)</li>
+          </ul>
+          <li>cgroup namespace</li>
+          <ul>
+            <li>Isolates the view of the cgroup hierarchy for each process</li>
+            <li>Prevents a container from seeing/modifying cgroups of the host/other containers</li>
+            <li>Improves security by restricting what resource controls a container can observe</li>
+            <li><b>Example:</b> A container only sees its own CPU/memory usage limits, not the host’s full cgroup tree
+            </li>
+          </ul>
         </ul>
-      </ul>
     </div>
-
   </section>
 
   <div class="slide outline"></div>
