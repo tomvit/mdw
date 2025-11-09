@@ -516,7 +516,172 @@
         </ul>
       </div>
 
+    </section>
+
+    <div class="slide outline"></div>
+
+    <section>
+      <header>Services</header>
+
       <div class="slide">
+        <hgroup>
+          <h1>What is a Service?</h1>
+        </hgroup>
+        <ul class="x-small">
+          <li>A Kubernetes <b>Service</b> is an abstraction that defines</li>
+          <ul>
+            <li>A logical set of Pods
+            <li>A policy to access them.</li>
+          </ul>
+          <li>Pods are ephemeral &ndash; their IPs change when recreated</li>
+          <li>A Service provides a stable virtual endpoint for a set of Pods</li>
+          <li>Services enable reliable communication between components:</li>
+          <ul>
+            <li>Internal pods communication</li>
+            <li>External access to cluster workloads</li>
+          </ul>
+          <li>Each Service gets</li>
+          <ul>
+            <li>A DNS name and</li>
+            <li>virtual IP (ClusterIP) inside the cluster.</li>
+          </ul>
+          <li>Kubernetes component <code>kube-proxy</code> manage routing to backend Pods.</li>
+        </ul>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Service Types</h1>
+        </hgroup>
+        <ul class="x-small">
+          <li><b>ClusterIP</b></li>
+          <ul>
+            <li>Exposes the Service on an internal IP in the cluster only.</li>
+            <li>Used for internal communication between Pods.</li>
+          </ul>
+          <li><b>NodePort</b></li>
+          <ul>
+            <li>Exposes the Service on each Node’s IP at a static port (e.g. 30080).</li>
+            <li>Accessible externally via <code>NodeIP:NodePort</code>.</li>
+          </ul>
+          <li><b>LoadBalancer</b></li>
+          <ul>
+            <li>Provisions an external load balancer (e.g. in cloud environments).</li>
+            <li>Routes external traffic to the Service.</li>
+          </ul>
+          <li><b>ExternalName</b></li>
+          <ul>
+            <li>Maps the Service to an external DNS name.</li>
+            <li>No proxying — pure DNS CNAME redirection.</li>
+          </ul>
+        </ul>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>How Services Work</h1>
+        </hgroup>
+        <ul class="xx-small">
+          <li><strong>Selector</strong></li>
+          <ul>
+            <li>A Service usually defines a <code>selector</code> — a label query used to find matching Pods.</li>
+            <li>Example: <code>selector: app=nginx</code> matches all Pods with label <code>app=nginx</code>.</li>
+            <li>Kubernetes monitors Pods that match this selector and updates Service backends
+            </li>
+          </ul>
+
+          <li><strong>Endpoints / EndpointSlice</strong></li>
+          <ul>
+            <li>For every Service with a selector, Kubernetes creates an <code>Endpoints</code> (or
+              <code>EndpointSlice</code>) object listing all healthy Pod IPs and ports.
+            </li>
+            <li>This list changes dynamically as Pods are added, removed, or become unhealthy.</li>
+          </ul>
+
+          <li><strong>kube-proxy</strong></li>
+          <ul>
+            <li>Runs on every Node and watches Service and Endpoint objects.</li>
+            <li>Programs <code>iptables</code> or <code>IPVS</code> rules to forward traffic from the Service’s virtual
+              IP (<code>ClusterIP</code>) to one of the backend Pod IPs.</li>
+            <li>Load balancing is done using round-robin or IPVS algorithms.</li>
+          </ul>
+
+          <li><strong>DNS Integration</strong></li>
+          <ul>
+            <li><code>CoreDNS</code> automatically creates a DNS record for each Service:</li>
+            <ul>
+              <li><code>&lt;service&gt;.&lt;namespace&gt;.svc.cluster.local</code></li>
+            </ul>
+            <li>Pods can reach the Service via DNS without knowing Pod IPs</li>
+            <ul>
+              <li><code>curl http://my-service.default.svc.cluster.local</code></li>
+            </ul>
+          </ul>
+        </ul>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Packet Forwarding and Load Balancing</h1>
+        </hgroup>
+        <ul class="xx-small">
+          <li><strong>iptables Mode</strong></li>
+          <ul>
+            <li><code>kube-proxy</code> creates NAT rules in the <code>nat</code> table to redirect Service traffic.
+            </li>
+            <li>Packets sent to the Service’s <code>ClusterIP:Port</code> are sent (via <strong>DNAT</strong>) to a Pod
+              IP.</li>
+            <li>Example</li>
+            <pre class="brush: bash; class-name: ''">
+# Match packets to the Service ClusterIP:Port
+-A KUBE-SERVICES -d 10.96.0.10/32 -p tcp -m tcp --dport 80 \
+  -m comment --comment "default/my-service: cluster IP" \
+  -j KUBE-SVC-XYZ123
+
+# Choose a backend Pod pseudo-randomly (rough round robin)
+-A KUBE-SVC-XYZ123 -m statistic --mode random --probability 0.5 \
+  -j KUBE-SEP-A1B2C3
+-A KUBE-SVC-XYZ123 -j KUBE-SEP-D4E5F6
+
+# DNAT to actual Pod IP and port
+-A KUBE-SEP-A1B2C3 -s 10.42.0.0/16 -j KUBE-MARK-MASQ
+-A KUBE-SEP-A1B2C3 -p tcp -m tcp -j DNAT --to-destination 10.42.0.12:8080
+
+-A KUBE-SEP-D4E5F6 -s 10.42.0.0/16 -j KUBE-MARK-MASQ
+-A KUBE-SEP-D4E5F6 -p tcp -m tcp -j DNAT --to-destination 10.42.1.7:8080</pre>
+          </ul>
+
+        </ul>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Example: ClusterIP Service</h1>
+        </hgroup>
+        <ul class="xx-small">
+          <li>Example configuration exposing an NGINX Deployment internally:</li>
+          <pre class="brush: bash; class-name: ''">
+          apiVersion: v1
+          kind: Service
+          metadata:
+            name: nginx-svc
+          spec:
+            selector:
+              app: nginx
+            ports:
+            - protocol: TCP
+              port: 80
+              targetPort: 8080
+            type: ClusterIP
+              </pre>
+          <li>Pods with <code>app=nginx</code> receive traffic through <code>ClusterIP</code>.</li>
+          <li>DNS name: <code>nginx-svc.default.svc.cluster.local</code></li>
+          <li>Used by other Pods to connect via <code>http://nginx-svc:80</code>.</li>
+        </ul>
+      </div>
+
+
+      <!-- <div class="slide">
         <hgroup>
           <h1>Service</h1>
         </hgroup>
@@ -548,7 +713,7 @@
             <li>Kubernetes assigns this Service a cluster IP address, which is used by the Service proxies.</li>
           </ul>
         </ul>
-      </div>
+      </div> -->
 
     </section>
 
