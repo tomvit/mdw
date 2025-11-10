@@ -84,19 +84,17 @@
         <li>Major protocols</li>
         <ul>
           <li>HTTP &#150; most of the app protocols layered on HTTP</li>
-          <ul>
-            <li>widely spread</li>
-          </ul>
+          <li>HTTP/2 &#150; new binary framing</li>
+          <li>gRPC &#150; modern RPC protocol on top of HTTP/2</li>
+          <li>WebSocket &#150; new protocol part of HTML5</li>
+        </ul>
+        <li>Legacy</li>
+        <ul>
           <li>RMI &#150; Remote Method Invocation</li>
           <ul>
             <li>Java-specific; vendor-interoperability problem</li>
-            <li>may use HTTP underneath (among other things)</li>
           </ul>
           <li>XML-RPC and SOAP &#150; Remote Procedure Call and SOAP</li>
-          <ul>
-            <li>HTTP-based</li>
-          </ul>
-          <li>WebSocket &#150; new protocol part of HTML5</li>
         </ul>
       </ul>
     </div>
@@ -141,7 +139,7 @@
       <hgroup>
         <h1>New Connection Costs</h1>
       </hgroup>
-      <ul class="xx-small">
+      <ul class="x-small">
         <li>Creating a new TCP connection is expensive</li>
         <ul>
           <li>It requires to complete a full roundtrip</li>
@@ -158,42 +156,23 @@
           <li>HTTP Keep-alive</li>
           <li>HTTP pipelining</li>
         </ul>
-        <li>TCP Fast Open (TFO)</li>
-        <ul>
-          <li>TFO allows to speed up the opening of successfive TCP connections</li>
-          <li>TCP cookie stored on the client that was established on initial connection</li>
-          <li>The client sends the TCP cookie with SYN packet</li>
-          <li>The server verifies the TCP cookie and can send the data without final ACK</li>
-          <li>Can reduce network transaction latency by 15%</li>
-          <li>TFO is supported by Linux in 3.7+ kernels</li>
-        </ul>
       </ul>
     </div>
 
     <div class="slide">
       <hgroup>
-        <h1>Addressing in Application Protocol</h1>
+        <h1>TCP Fast Open</h1>
       </hgroup>
-      <div class="h-drawing" style="height: 220px" id="1a6OhSNel7-1HC-NaWmmkRfIOyQqlvaoXGyJws1rAuZU"></div>
       <ul class="xx-small">
-        <li>IP addressing: IP is an address of a machine interface</li>
+        <li>TFO allows to speed up the opening of successfive TCP connections</li>
         <ul>
-          <li>A machine can have multiple interfaces (eth0, eth1, bond0, ...)</li>
-        </ul>
-        <li>TCP addressing: TCP port is an address of an app running on a machine and listening on a machine interface
-        </li>
-        <ul>
-          <li>Multiple applications with different TCP ports may listen on a machine interface</li>
-        </ul>
-        <li>Application addressing</li>
-        <ul>
-          <li>Additional mechanisms to address entities within an application</li>
-          <li>They are out of scope of IP/TCP, they are app specific</li>
-          <ul>
-            <li>for example, Web apps served by a single Web server</li>
-          </ul>
+          <li>TCP cookie stored on the client that was established on initial connection</li>
+          <li>The client sends the TCP cookie with SYN packet</li>
+          <li>The server verifies the TCP cookie and can send the data without final ACK</li>
+          <li>Can reduce network transaction latency by 15%</li>
         </ul>
       </ul>
+      <img src="img/TFO.png" style="height: 350px; margin-left: 100px" />
     </div>
 
     <!-- <div class="slide outline"></div>
@@ -244,7 +223,7 @@
   <div class="slide outline"></div>
 
   <section>
-    <header>Introduction to HTTP</header>
+    <header>Hypertext Transfer Protocol (HTTP)</header>
 
     <div class="slide">
       <hgroup>
@@ -309,180 +288,192 @@
       </ul>
     </div>
 
-    <div class="slide">
-      <hgroup>
-        <h1>Persistent connections</h1>
-      </hgroup>
-      <ul class="x-small">
-        <li>Persistent HTTP connection = HTTP keepalive</li>
-        <ul>
-          <li>TCP established connection used for multiple requests/responses</li>
-          <li>Avoids TCP three-way handshake to be performed on every request</li>
-          <li>Reduces latency</li>
-          <li>FIFO queuing order on the client (request queuing)</li>
-          <ul>
-            <li>dispatch first request, get response, dispatch next request</li>
-          </ul>
-        </ul>
-        <li>Example: <code>GET /html</code>, <code>GET /css</code></li>
-        <ul>
-          <li>server processing time 40ms and 20ms respectivelly</li>
-        </ul>
-        <li>Without HTTP keepalive</li>
-        <ul>
-          <li>three-way handshake 84ms before the data is received on the server</li>
-          <li>Response received at 152ms and 132ms respectivelly</li>
-          <li>The total time is 284ms</li>
-        </ul>
-        <li>HTTP keepalive</li>
-        <ul>
-          <li>One TCP connection for both requests</li>
-          <li>In our example this will save one RTT, i.e. 56ms</li>
-          <li>The total time will be 228ms</li>
-        </ul>
-      </ul>
-    </div>
+    <div class="slide outline"></div>
 
-    <div class="slide">
-      <hgroup>
-        <h1>Persistent connections savings</h1>
-      </hgroup>
-      <ul class="xx-small">
-        <li>Each request needs</li>
-        <ul>
-          <li>Without keepalive, 2 RTT of latency</li>
-          <li>With keepalive, the first request needs 2 RTT, a following request needs 1 RTT</li>
-        </ul>
-        <li>Savings for <code>N</code> requests: <code>(N-1) x RTT</code></li>
-        <li>Average value of <code>N</code> is 90 requests for a Web app</li>
-        <ul>
-          <li>Measured by HTTP Archive (http://httparchive.org) as of 2013</li>
-          <li>Average Web application is composed of 90 requests fetched from 15 hosts</li>
-          <ul>
-            <li>HTML: 10 reuqests</li>
-            <li>Images: 55 requests</li>
-            <li>Javascript: 15 requests</li>
-            <li>CSS: 5 requests</li>
-            <li>Other: 5 requests</li>
-          </ul>
-        </ul>
-      </ul>
-    </div>
+    <section>
+      <header>Performance</header>
 
-    <div class="slide">
-      <hgroup>
-        <h1>HTTP pipelining</h1>
-      </hgroup>
-      <ul class="xx-small">
-        <li>Important optimization &ndash; response queuing</li>
-        <ul>
-          <li>Allows to relecote FIFO queue from the client to the server</li>
-        </ul>
-        <li>Requests are pipelined one after another</li>
-        <ul>
-          <li>This allows the server to process requests immediatelly one after another</li>
-          <li>This saves one request and response propagation latency</li>
-          <li>In our example, the total time will be 172ms</li>
-        </ul>
-        <li>Parallel processing of requests</li>
-        <ul>
-          <li>In our example this saves another 20ms of latency</li>
-          <li><b>Head of line blocking</b></li>
+      <div class="slide">
+        <hgroup>
+          <h1>Persistent connections</h1>
+        </hgroup>
+        <ul class="x-small">
+          <li>Persistent HTTP connection = HTTP keepalive</li>
           <ul>
-            <li>Slower response (css with processing time 20ms) must be buffered until
-              the first response is generated and sent (no interleaving of responses)</li>
+            <li>TCP established connection used for multiple requests/responses</li>
+            <li>Avoids TCP three-way handshake to be performed on every request</li>
+            <li>Reduces latency</li>
+            <li>FIFO queuing order on the client (request queuing)</li>
+            <ul>
+              <li>dispatch first request, get response, dispatch next request</li>
+            </ul>
+          </ul>
+          <li>Example: <code>GET /html</code>, <code>GET /css</code></li>
+          <ul>
+            <li>server processing time 40ms and 20ms respectivelly</li>
+          </ul>
+          <li>Without HTTP keepalive</li>
+          <ul>
+            <li>three-way handshake 84ms before the data is received on the server</li>
+            <li>Response received at 152ms and 132ms respectivelly</li>
+            <li>The total time is 284ms</li>
+          </ul>
+          <li>HTTP keepalive</li>
+          <ul>
+            <li>One TCP connection for both requests</li>
+            <li>In our example this will save one RTT, i.e. 56ms</li>
+            <li>The total time will be 228ms</li>
           </ul>
         </ul>
-        <li>Issues</li>
-        <ul>
-          <li>A single slow response blocks all requests behind it</li>
-          <li>Buffered (large or many) responses may exhaust server resources</li>
-          <li>A failed response may terminate TCP connection</li>
-          <ul>
-            <li>A client must request all sub-sequent resources again (dupplicate processing)
-          </ul>
-          <li>Some intermediaries may not support pipelining and abort connection</li>
-        </ul>
-        <li>HTTP pipelining support today is limited</li>
-      </ul>
-    </div>
+      </div>
 
-    <div class="slide">
-      <hgroup>
-        <h1>Multiple TCP connections</h1>
-      </hgroup>
-      <ul class="xx-small">
-        <li>Using only one TCP connection is slow</li>
-        <ul>
-          <li>Client must queue HTTP requests and process one after another</li>
-        </ul>
-        <li>Multiple TCP connections work in parallel</li>
-        <li><b>There are 6 connections per host</b></li>
-        <ul>
-          <li>The client can dispatch up to 6 requests in parallel</li>
-          <li>The server can process up to 6 requests in parallel</li>
-          <li>This is a trade-off between higher request paralellism and the client and server overhead</li>
-        </ul>
-        <li>The maximum number of connections prevents from DoS attacks</li>
-        <ul>
-          <li>The client could exhaust server resources</li>
-        </ul>
-        <li>Domain sharding</li>
-        <ul>
-          <li>The connection limit as per host (origin)</li>
-          <li>There can be multiple origins used in a page</li>
+      <div class="slide">
+        <hgroup>
+          <h1>Persistent connections savings</h1>
+        </hgroup>
+        <ul class="xx-small">
+          <li>Each request needs</li>
           <ul>
-            <li>Each origin has 6 maximum connection limit</li>
+            <li>Without keepalive, 2 RTT of latency</li>
+            <li>With keepalive, the first request needs 2 RTT, a following request needs 1 RTT</li>
           </ul>
-          <li>A domain can be sharded</li>
+          <li>Savings for <code>N</code> requests: <code>(N-1) x RTT</code></li>
+          <li>Average value of <code>N</code> is 90 requests for a Web app</li>
           <ul>
-            <li><code>www.example.com</code> &rarr; <code>shard1.example.com</code>, <code>shard2.example.com</code>
-            </li>
-            <li>Each shard can resolve to the same IP or different IP, it does not matter</li>
+            <li>Measured by HTTP Archive (http://httparchive.org) as of 2013</li>
+            <li>Average Web application is composed of 90 requests fetched from 15 hosts</li>
+            <ul>
+              <li>HTML: 10 reuqests</li>
+              <li>Images: 55 requests</li>
+              <li>Javascript: 15 requests</li>
+              <li>CSS: 5 requests</li>
+              <li>Other: 5 requests</li>
+            </ul>
           </ul>
-          <li>How many shards?</li>
         </ul>
-      </ul>
-    </div>
+      </div>
 
-    <div class="slide" id="http-request">
-      <hgroup>
-        <h1>Serving HTTP Request</h1>
-      </hgroup>
-      <div class="h-drawing" style="height: 180px" id="1c1oNNZgurIxOEDHbnZuPHKR9I-H1VhoeOpTWa6-vslI"></div>
-      <ul class="xx-small">
-        <li>Serving HTTP request</li>
-        <ol>
-          <li>User enters URL <code>http://shard1.example.com/orders</code> to the browser</li>
-          <li>DNS resolution: browser gets an IP address for <code>shard1.example.com</code></li>
-          <li>Three-way handshake: browser and Web Server creates a socket</li>
-          <li>Browser sends ACK and HTTP request:</li>
-          <pre class="brush: plain; class-name: 'tight'">
+      <div class="slide">
+        <hgroup>
+          <h1>HTTP pipelining</h1>
+        </hgroup>
+        <ul class="xx-small">
+          <li>Important optimization &ndash; response queuing</li>
+          <ul>
+            <li>Allows to relecote FIFO queue from the client to the server</li>
+          </ul>
+          <li>Requests are pipelined one after another</li>
+          <ul>
+            <li>This allows the server to process requests immediatelly one after another</li>
+            <li>This saves one request and response propagation latency</li>
+            <li>In our example, the total time will be 172ms</li>
+          </ul>
+          <li>Parallel processing of requests</li>
+          <ul>
+            <li>In our example this saves another 20ms of latency</li>
+            <li><b>Head of line blocking</b></li>
+            <ul>
+              <li>Slower response (css with processing time 20ms) must be buffered until
+                the first response is generated and sent (no interleaving of responses)</li>
+            </ul>
+          </ul>
+          <li>Issues</li>
+          <ul>
+            <li>A single slow response blocks all requests behind it</li>
+            <li>Buffered (large or many) responses may exhaust server resources</li>
+            <li>A failed response may terminate TCP connection</li>
+            <ul>
+              <li>A client must request all sub-sequent resources again (dupplicate processing)
+            </ul>
+            <li>Some intermediaries may not support pipelining and abort connection</li>
+          </ul>
+          <li>HTTP pipelining support today is limited</li>
+        </ul>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Multiple TCP connections</h1>
+        </hgroup>
+        <ul class="xx-small">
+          <li>Using only one TCP connection is slow</li>
+          <ul>
+            <li>Client must queue HTTP requests and process one after another</li>
+          </ul>
+          <li>Multiple TCP connections work in parallel</li>
+          <li><b>There are 6 connections per host</b></li>
+          <ul>
+            <li>The client can dispatch up to 6 requests in parallel</li>
+            <li>The server can process up to 6 requests in parallel</li>
+            <li>This is a trade-off between higher request paralellism and the client and server overhead</li>
+          </ul>
+          <li>The maximum number of connections prevents from DoS attacks</li>
+          <ul>
+            <li>The client could exhaust server resources</li>
+          </ul>
+          <li>Domain sharding</li>
+          <ul>
+            <li>The connection limit as per host (origin)</li>
+            <li>There can be multiple origins used in a page</li>
+            <ul>
+              <li>Each origin has 6 maximum connection limit</li>
+            </ul>
+            <li>A domain can be sharded</li>
+            <ul>
+              <li><code>www.example.com</code> &rarr; <code>shard1.example.com</code>, <code>shard2.example.com</code>
+              </li>
+              <li>Each shard can resolve to the same IP or different IP, it does not matter</li>
+            </ul>
+            <li>How many shards?</li>
+          </ul>
+        </ul>
+      </div>
+
+    </section>
+
+    <div class="slide outline"></div>
+
+    <section>
+      <header>Configuration</header>
+
+      <div class="slide" id="http-request">
+        <hgroup>
+          <h1>Serving HTTP Request</h1>
+        </hgroup>
+        <div class="h-drawing" style="height: 180px" id="1c1oNNZgurIxOEDHbnZuPHKR9I-H1VhoeOpTWa6-vslI"></div>
+        <ul class="xx-small">
+          <li>Serving HTTP request</li>
+          <ol>
+            <li>User enters URL <code>http://shard1.example.com/orders</code> to the browser</li>
+            <li>DNS resolution: browser gets an IP address for <code>shard1.example.com</code></li>
+            <li>Three-way handshake: browser and Web Server creates a socket</li>
+            <li>Browser sends ACK and HTTP request:</li>
+            <pre class="brush: plain; class-name: 'tight'">
                     GET /orders HTTP/1.1
                     Host: shard1.example.com
                     </pre>
-          <li>Web server passes the request to the web application <code>shard1.example.com</code> which serves
-            <code>GET orders</code> and that writes a response back to the socket.
-          </li>
-        </ol>
-      </ul>
-    </div>
-
-    <div class="slide">
-      <hgroup>
-        <h1>Virtual Host</h1>
-      </hgroup>
-      <ul class="x-small">
-        <li>Virtual host</li>
-        <ul>
-          <li>Configuration of a named virtual host in a Web server</li>
-          <li>Web server uses host request header to distinguish among multiple virtual
-            hosts on a single physical host.</li>
+            <li>Web server passes the request to the web application <code>shard1.example.com</code> which serves
+              <code>GET orders</code> and that writes a response back to the socket.
+            </li>
+          </ol>
         </ul>
-        <li>Apache virtual host configuration</li>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Virtual Host</h1>
+        </hgroup>
         <ul class="x-small">
-          <li>Two virtual hosts in a single Web server</li>
-          <pre class="brush:plain; class-name: 'tight'">
+          <li>Virtual host</li>
+          <ul>
+            <li>Configuration of a named virtual host in a Web server</li>
+            <li>Web server uses host request header to distinguish among multiple virtual
+              hosts on a single physical host.</li>
+          </ul>
+          <li>Apache virtual host configuration</li>
+          <ul class="x-small">
+            <li>Two virtual hosts in a single Web server</li>
+            <pre class="brush:plain; class-name: 'tight'">
           # all IP addresses will be used for named virtual hosts
           NameVirtualHost *:80
 
@@ -498,45 +489,12 @@
                   ServerAdmin admin@firm.cz
                   DocumentRoot /var/www/apache/company.cz
           &lt;/VirtualHost></pre>
+          </ul>
         </ul>
-      </ul>
-    </div>
+      </div>
 
-    <div class="slide" id="curl">
-      <hgroup>
-        <h1>Better Support for HTTP Testing</h1>
-      </hgroup>
-      <ul class="x-small">
-        <li>Use <code>curl</code> to test HTTP protocol</li>
-        <pre class="brush: plain; class-name: 'tight'">
-                    Usage: curl [options...] &lt;url>
+    </section>
 
-                    -X/--request &ltcommand>          Specify request command to use
-                    -H/--header &lt;line>              Custom header to pass to server
-                    -d/--data &lt;data>                HTTP POST data
-                    -b/--cookie &lt;name=string/file>  Cookie string or file to read cookies from
-                    -v/--verbose                    Make the operation more talkative
-                </pre>
-        <li>Example</li>
-        <pre class="brush: plain; class-name: 'tight'">
-                    curl -v -H "Host: company.cz"  127.0.0.1:8080
-
-                    * About to connect() to 127.0.0.1 port 8080
-                    *   Trying 127.0.0.1... connected
-                    * Connected to 127.0.0.1 port 8080
-                    &gt; GET / HTTP/1.1
-                    &gt; User-Agent: curl/7.20.0 (i386-apple-darwin10.3.2) libcurl/7.20.0 OpenSSL/0.9.8n
-                    &gt; Accept: */*
-                    &gt; Host: company.cz
-                    &gt;
-                    &lt; HTTP/1.1 201 OK
-                    &lt; Connection: keep-alive
-                    &lt; Content-Type: plain/text
-                    &lt;
-                    &lt; This is the response...
-                </pre>
-      </ul>
-    </div>
 
     <div class="slide outline"></div>
 
