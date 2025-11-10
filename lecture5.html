@@ -622,41 +622,7 @@
 
       <div class="slide">
         <hgroup>
-          <h1>Packet Forwarding and Load Balancing</h1>
-        </hgroup>
-        <ul class="xx-small">
-          <li><strong>iptables Mode</strong></li>
-          <ul>
-            <li><code>kube-proxy</code> creates NAT rules in the <code>nat</code> table to redirect Service traffic.
-            </li>
-            <li>Packets sent to the Service’s <code>ClusterIP:Port</code> are sent (via <strong>DNAT</strong>) to a Pod
-              IP.</li>
-            <li>Example</li>
-            <pre class="brush: bash; class-name: ''">
-# Match packets to the Service ClusterIP:Port
--A KUBE-SERVICES -d 10.96.0.10/32 -p tcp -m tcp --dport 80 \
-  -m comment --comment "default/my-service: cluster IP" \
-  -j KUBE-SVC-XYZ123
-
-# Choose a backend Pod pseudo-randomly (rough round robin)
--A KUBE-SVC-XYZ123 -m statistic --mode random --probability 0.5 \
-  -j KUBE-SEP-A1B2C3
--A KUBE-SVC-XYZ123 -j KUBE-SEP-D4E5F6
-
-# DNAT to actual Pod IP and port
--A KUBE-SEP-A1B2C3 -s 10.42.0.0/16 -j KUBE-MARK-MASQ
--A KUBE-SEP-A1B2C3 -p tcp -m tcp -j DNAT --to-destination 10.42.0.12:8080
-
--A KUBE-SEP-D4E5F6 -s 10.42.0.0/16 -j KUBE-MARK-MASQ
--A KUBE-SEP-D4E5F6 -p tcp -m tcp -j DNAT --to-destination 10.42.1.7:8080</pre>
-          </ul>
-
-        </ul>
-      </div>
-
-      <div class="slide">
-        <hgroup>
-          <h1>Example: ClusterIP Service</h1>
+          <h1>ClusterIP Service Example</h1>
         </hgroup>
         <ul class="xx-small">
           <li>Example configuration exposing an NGINX Deployment internally:</li>
@@ -680,40 +646,47 @@
         </ul>
       </div>
 
-
-      <!-- <div class="slide">
+      <div class="slide">
         <hgroup>
-          <h1>Service</h1>
+          <h1>Packet Forwarding and Load Balancing</h1>
         </hgroup>
         <ul class="xx-small">
-          <li>Networking</li>
+          <li><strong>iptables mode</strong></li>
           <ul>
-            <li>Containers within a Pod use networking to communicate via loopback</li>
-            <li>Cluster networking provides communication between different Pods.</li>
-          </ul>
-          <li>Service resource</li>
-          <ul>
-            <li>An abstract way to expose an application running on a set of Pods</li>
-            <li>Example: a set of Pods with a label <code>app=nginx</code>, each listens on <code>tcp/9376</code></li>
+            <li><code>kube-proxy</code> creates NAT rules in the <code>nat</code> table to redirect Service traffic.
+            </li>
+            <li>Example traffic comming to <code>NodeIP:NodePort</code> (e.g. <code>192.168.1.11:30080</code>)</li>
             <pre class="brush: bash; class-name: ''">
-            apiVersion: v1
-            kind: Service
-            metadata:
-              name: my-service
-            spec:
-              selector:
-                app: nginx
-              ports:
-                - protocol: TCP
-                  port: 80
-                  targetPort: 9376            
-          </pre>
-            <li>This specification creates a new Service object named <code>my-service</code></li>
-            <li>The servive targets <code>tcp/9376</code> on any Pod with the <code>app=nginx</code> label.</li>
-            <li>Kubernetes assigns this Service a cluster IP address, which is used by the Service proxies.</li>
+# 1. Match NodePort traffic coming from outside
+-A KUBE-NODEPORTS -p tcp --dport 30080 -m addrtype ! --src-type LOCAL \
+  -j KUBE-MARK-MASQ
+    # Mark all external traffic for SNAT (so replies go back via this node)
+
+# 2. NodePort forwards traffic to the Service chain
+-A KUBE-NODEPORTS -p tcp --dport 30080 \
+  -m comment --comment "default/my-service: NodePort" \
+  -j KUBE-SVC-XYZ123
+
+# 3. Service chain chooses one backend Pod 
+-A KUBE-SVC-XYZ123 -m statistic --mode random --probability 0.5 \
+  -j KUBE-SEP-A1B2C3
+-A KUBE-SVC-XYZ123 -j KUBE-SEP-D4E5F6
+
+# 4. Pod DNAT rule to redirect to Pod IP:port
+-A KUBE-SEP-A1B2C3 -p tcp -m tcp -j DNAT --to-destination 10.42.0.12:8080
+-A KUBE-SEP-D4E5F6 -p tcp -m tcp -j DNAT --to-destination 10.42.1.7:8080
+</pre>
           </ul>
-        </ul>
-      </div> -->
+          <ul>
+            <li>The node’s routing table determines how to reach the Pod’s IP:</li>
+            <ul>
+              <li><code>10.42.0.0/24 via 192.168.1.12 dev flannel.1</code></li>
+              <li>packets to Pods in <code>10.42.0.0/24</code> (running on Node 2) are sent through the
+                VXLAN interface <code>flannel.1</code> to Node 2’s IP <code>192.168.1.12</code></li>
+            </ul>
+          </ul>
+      </div>
+
 
     </section>
 
