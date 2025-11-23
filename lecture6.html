@@ -259,6 +259,33 @@
 
     <div class="slide">
       <hgroup>
+        <h1>REST Core Principles</h1>
+      </hgroup>
+      <ul class="small">
+        <li>REST architectural style defines constraints</li>
+        <ul>
+          <li>if you follow them, they help you to achieve a good design,
+            interoperability and scalability.</li>
+        </ul>
+        <li>Constraints</li>
+        <ul>
+          <li>Client/Server</li>
+          <li>Statelessness</li>
+          <li>Cacheability</li>
+          <li>Layered system</li>
+          <li>Uniform interface</li>
+        </ul>
+        <li>Guiding principles</li>
+        <ul>
+          <li>Identification of resources</li>
+          <li>Representations of resources and self-descriptive messages</li>
+          <li>Hypermedia as the engine of application state (HATEOAS)</li>
+        </ul>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
         <h1>HTTP Request and Response</h1>
       </hgroup>
       <ul class="small">
@@ -285,6 +312,77 @@
                     header : value = valid HTTP header and its value
                     data           = resource state representation (hypertext)
                 </pre>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Uniform Interface</h1>
+      </hgroup>
+      <ul class="small">
+        <li>Uniform interface = finite set of operations</li>
+        <ul>
+          <li>Resource manipulation</li>
+          <ul>
+            <li>CRUD &ndash; Create (POST/PUT), Read (GET), Update (PUT/PATCH), Delete (DELETE)</li>
+          </ul>
+          <li>operations are not domain-specific</li>
+          <ul>
+            <li>For example, <code>GET /orders</code> and not <code>getOrders()</code></li>
+            <li>This reduces complexity when solving interoperability</li>
+          </ul>
+        </ul>
+        <li>Integration issues examples</li>
+      </ul>
+      <img src="img/integration-issues.png" style="padding-left: 50px" width="700px" />
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Safe and Unsafe Operations</h1>
+      </hgroup>
+      <ul class="small">
+        <li>Safe operations</li>
+        <ul>
+          <li>Do not change the resource state</li>
+          <li>Usually "read-only" or "lookup" operation</li>
+          <li>Clients can cache the results and refresh the cache freely</li>
+        </ul>
+        <li>Unsafe operations</li>
+        <ul>
+          <li>May change the state of the resource</li>
+          <li>Transactions such as buy a ticket, post a message</li>
+          <li>Unsafe does not mean dangerous!</li>
+        </ul>
+        <li>Unsafe interactions and transaction results</li>
+        <ul>
+          <li><code>POST</code> response may include transaction results</li>
+          <ul>
+            <li>you buy a ticket and submit a purchase data</li>
+            <li>you get transaction results</li>
+            <li>and you cannot bookmark this..., why?</li>
+          </ul>
+          <li>Should be referable with a persistent URI</li>
+        </ul>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Idempotence</h1>
+      </hgroup>
+      <ul>
+        <li>Idempotent operation</li>
+        <ul>
+          <li>Invoking a method on the same resource always has the same effect</li>
+          <li>Operations <code>GET</code>, <code>PUT</code>, <code>DELETE</code></li>
+        </ul>
+        <li>Non-idempotent operation</li>
+        <ul>
+          <li>Invoking a method on the same resource may have different effects</li>
+          <li>Operation <code>POST</code></li>
+        </ul>
+        <li>Effect = a state change</li>
       </ul>
     </div>
 
@@ -495,6 +593,86 @@
 
     </section>
 
+    <!-- <div class="slide outline"></div>
+
+    <section>
+      <header>Uniform Interface</header>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Uniform Interface</h1>
+        </hgroup>
+        <ul class="small">
+          <li>Uniform interface = finite set of operations</li>
+          <ul>
+            <li>Resource manipulation</li>
+            <ul>
+              <li>CRUD &ndash; Create (POST/PUT), Read (GET), Update (PUT/PATCH), Delete (DELETE)</li>
+            </ul>
+            <li>operations are not domain-specific</li>
+            <ul>
+              <li>For example, <code>GET /orders</code> and not <code>getOrders()</code></li>
+              <li>This reduces complexity when solving interoperability</li>
+            </ul>
+          </ul>
+          <li>Integration issues examples</li>
+        </ul>
+        <img src="img/integration-issues.png" style="padding-left: 50px" width="700px" />
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Safe and Unsafe Operations</h1>
+        </hgroup>
+        <ul class="small">
+          <li>Safe operations</li>
+          <ul>
+            <li>Do not change the resource state</li>
+            <li>Usually "read-only" or "lookup" operation</li>
+            <li>Clients can cache the results and refresh the cache freely</li>
+          </ul>
+          <li>Unsafe operations</li>
+          <ul>
+            <li>May change the state of the resource</li>
+            <li>Transactions such as buy a ticket, post a message</li>
+            <li>Unsafe does not mean dangerous!</li>
+          </ul>
+          <li>Unsafe interactions and transaction results</li>
+          <ul>
+            <li><code>POST</code> response may include transaction results</li>
+            <ul>
+              <li>you buy a ticket and submit a purchase data</li>
+              <li>you get transaction results</li>
+              <li>and you cannot bookmark this..., why?</li>
+            </ul>
+            <li>Should be referable with a persistent URI</li>
+          </ul>
+        </ul>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Idempotence</h1>
+        </hgroup>
+        <ul>
+          <li>Idempotent operation</li>
+          <ul>
+            <li>Invoking a method on the same resource always has the same effect</li>
+            <li>Operations <code>GET</code>, <code>PUT</code>, <code>DELETE</code></li>
+          </ul>
+          <li>Non-idempotent operation</li>
+          <ul>
+            <li>Invoking a method on the same resource may have different effects</li>
+            <li>Operation <code>POST</code></li>
+          </ul>
+          <li>Effect = a state change</li>
+          <ul>
+            <li>recall the effect definition in MDW</li>
+          </ul>
+        </ul>
+      </div>
+
+    </section>
 
     <div class="slide outline"></div>
 
@@ -529,6 +707,101 @@
           </ul>
         </ul>
       </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Resource State</h1>
+        </hgroup>
+        <ul class="x-small">
+          <li>State</li>
+          <ul>
+            <li>Resource representation is in fact a <b>representation of a resource state</b></li>
+            <li>Resource may be in different states over time</li>
+          </ul>
+        </ul>
+        <div class="h-drawing" style="height: 250px; margin: 15px 0px 15px 0px;"
+          id="1dhjNo4p6x5rS-IH3E2WcVw3TxwCqmdhtA-9wD0hwbuc"></div>
+        <ul class="small space-before">
+          <li>In REST resource states represent application states</li>
+        </ul>
+      </div>
+
+      <div class="slide" id="resource-state">
+        <hgroup>
+          <h1>Resource State Example</h1>
+        </hgroup>
+        <ul class="x-small">
+          <li>Time <code>t1</code>: client A retrieves a resource <code>/orders</code> (GET)</li>
+          <pre class="brush: xml; class-name: 'tight'">
+                            &lt;orders>
+                                &lt;order id="54467"/>
+                                &lt;order id="65432"/>
+                            &lt;/orders>                                                
+                        </pre>
+          <li>Time <code>t2</code>: client B adds a new order (POST)</li>
+          <pre class="brush: xml; class-name: 'tight'">
+                            &lt;order>
+                                ...
+                            &lt;/order>                                                
+                        </pre>
+          <li>Time <code>t3</code>: client A retrieves a resource <code>/orders</code> (GET)</li>
+          <pre class="brush: xml; class-name: 'tight'">
+                            &lt;orders>
+                                &lt;order id="54467"/>
+                                &lt;order id="65432"/>
+                                &lt;order id="74567"/>
+                            &lt;/orders>                                                
+                        </pre>
+          <li>The resource <code>/orders</code> has different states in <code>t1</code>
+            and <code>t3</code>.
+        </ul>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Link</h1>
+        </hgroup>
+        <ul class="small">
+          <li>Service operation</li>
+          <ul>
+            <li>Applying an access to a link (GET, PUT, POST, DELETE)</li>
+            <li>Link: HTTP method + resource URI + optional link semantics</li>
+          </ul>
+          <li>Example: <code>getOrder</code>, <code>addOrder</code>, and <code>updateItem</code></li>
+        </ul>
+        <div class="h-drawing" id="16vcb0AGdT3N5Jd4FFw9YADqYoF_QQlP46UsYngjfTKs" style="height: 320px"></div>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Atom Links</h1>
+        </hgroup>
+        <ul class="small">
+          <li>Atom Syndication Format</li>
+          <ul>
+            <li>XML-based document format; Atom feeds</li>
+            <li>Atom links becoming popular for RESTful applications</li>
+            <pre class="brush: xml; highlight : [2,3,4,5]">
+                            &lt;order a:xmlns="http://www.w3.org/2005/Atom" xmlns="..."&gt;
+                                &lt;a:link 
+                                    rel="next" 
+                                    href="http://company.com/orders/5543" 
+                                    type="application/xml"/>
+                                &lt;customer&gt;Tomas&lt;/customer>
+                                &lt;items&gt;...&lt;/items>
+                            &lt;/order>
+                            </pre>
+            <li>Link structure</li>
+            <ul class="no-bullet">
+              <li><code>rel</code> &ndash; name of the link<br />
+                ~ semantics of an operation behind the link</li>
+              <li><code>href</code> &ndash; URI to the resource described by the link</li>
+              <li><code>type</code> &ndash; media type of the resource the link points to</li>
+            </ul>
+          </ul>
+        </ul>
+      </div>
+
 
       <div class="slide">
         <hgroup>
@@ -587,7 +860,128 @@
         </ul>
       </div>
 
+    </section> -->
+
+    <div class="slide outline"></div>
+
+    <section>
+      <header>HTTP in Kubernetes</header>
+
+      <div class="slide">
+        <hgroup>
+          <h1>HTTP in Kubernetes</h1>
+        </hgroup>
+        <ul class="x-small">
+          <li>Kubernetes does not provide built-in Layer 7 (HTTP) routing</li>
+          <li>Services expose Pods at TCP/UDP level</li>
+          <ul>
+            <li><code>ClusterIP</code>: internal-only</li>
+            <li><code>NodePort</code>: accessible via <code>NodeIP:NodePort</code></li>
+            <li><code>LoadBalancer</code>: cloud-provider load balancer</li>
+          </ul>
+          <li>For advanced routing (URLs, hostnames, TLS)</li>
+          <ul>
+            <li>Kubernetes uses the Ingress API</li>
+          </ul>
+          <li>Ingress works at the HTTP layer (L7) and provides:</li>
+          <ul>
+            <li>Path-based routing</li>
+            <li>Host-based routing</li>
+            <li>TLS termination</li>
+            <li>Centralized access point</li>
+          </ul>
+        </ul>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Ingress Resource</h1>
+        </hgroup>
+        <ul class="x-small">
+          <li>An Ingress is a set of HTTP routing rules</li>
+          <li>It defines how external HTTP/S traffic reaches cluster Services</li>
+          <li>An Ingress needs an Ingress Controller</li>
+          <ul>
+            <li>NGINX Ingress Controller</li>
+            <li>HAProxy Ingress</li>
+            <li>Traefik</li>
+            <li>Contour</li>
+          </ul>
+          <li>Controller watches Ingress objects and configures</li>
+          <ul>
+            <li>reverse proxy</li>
+            <li>load balancer</li>
+            <li>dynamic routing tables</li>
+          </ul>
+        </ul>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>How Ingress Works</h1>
+        </hgroup>
+        <ul class="x-small">
+          <li>Client sends HTTP request to public IP</li>
+          <ul>
+            <li>LoadBalancer or NodePort</li>
+          </ul>
+          <li>Ingress Controller receives the request</li>
+          <ul>
+            <li>Runs as a Deployment inside the cluster</li>
+            <li>Listens on ports 80/443</li>
+            <li>Uses reverse proxy (NGINX/HAProxy/etc.)</li>
+          </ul>
+          <li>Ingress rules decide where to send the request</li>
+          <ul>
+            <li><code>Host</code> matching → <code>example.com</code></li>
+            <li><code>Path</code> matching → <code>/api</code>, <code>/app</code></li>
+          </ul>
+          <li>The controller forwards the request to the Service</li>
+          <ul>
+            <li>The Service then forwards to Pods</li>
+          </ul>
+          <li>Ingress Controller handles</li>
+          <ul>
+            <li>TLS termination</li>
+            <li>HTTP routing</li>
+            <li>Load balancing across Pods</li>
+          </ul>
+        </ul>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Ingress Example</h1>
+        </hgroup>
+        <ul class="xx-small">
+          <li>Example Ingress routing traffic to the <code>busybox-tcp-service</code></li>
+          <pre class="brush: bash; class-name: ''">
+          apiVersion: networking.k8s.io/v1
+          kind: Ingress
+          metadata:
+            name: example-ingress
+            annotations:
+              nginx.ingress.kubernetes.io/rewrite-target: /
+          spec:
+            rules:
+            - host: busybox.example.com
+              http:
+                paths:
+                - path: /
+                  pathType: Prefix
+                  backend:
+                    service:
+                      name: busybox-tcp-service
+                      port:
+                        number: 8080
+              </pre>
+          <li>Requests to <code>http://busybox.example.com/</code> are routed to the Service</li>
+          <li>Ingress Controller performs HTTP reverse proxying and load balancing across Pods</li>
+        </ul>
+      </div>
+
     </section>
+
   </section>
 
   <div class="slide outline"></div>
@@ -615,82 +1009,6 @@
         </ul>
         <div class="h-drawing" style="height: 190px; margin-top: 30px"
           id="1JhEX5OGpHhQY49mxA4-r7taripW6bkWwLCu94BU9QFI"></div>
-      </ul>
-    </div>
-
-    <div class="slide">
-      <hgroup>
-        <h1>Basic Access Authentication</h1>
-      </hgroup>
-      <div class="h-drawing" style="height: 280px" id="1OYyQduAQYodoiQ48uYTCB1iVn6UHcCcdDocjLOA9b9Y"></div>
-      <ul class="x-small">
-        <li>Realm</li>
-        <ul>
-          <li>an identifier of the space on the server (~ a collection of resources and their sub-resources)</li>
-          <li>A client may associate a valid credentials with realms such that it copies authorization information
-            in requests for which server requires authentication (by <code>WWW-Authenticate</code> header)</li>
-        </ul>
-    </div>
-
-    <div class="slide">
-      <hgroup>
-        <h1>Basic Access Authentication &ndash; Credentials</h1>
-      </hgroup>
-      <ul class="small">
-        <li>Credentials</li>
-        <ul>
-          <li>credentials are base64 encoded</li>
-          <li>the format is: <code>username:password</code></li>
-        </ul>
-        <pre class="brush: bash">
-						# to encode in linux
-						echo "novak:heslo" | base64
-						> bm92YWs6aGVzbG8K
-
-						# and to decode
-						echo "bm92YWs6aGVzbG8K" | base64 -d # use capital "D" in OS X
-						> novak:heslo</pre>
-
-        <li>Comments</li>
-        <ul class="x-small">
-          <li>When TLS is not used, the password can be read</li>
-          <li>An attacker can repeat interactions</li>
-        </ul>
-      </ul>
-
-    </div>
-
-    <div class="slide">
-      <hgroup>
-        <h1>Digest Access Authentication</h1>
-      </hgroup>
-      <ul class="xx-small">
-        <li>RFC 2617 &ndash; Basic and Digest Access Authentication</li>
-        <ul>
-          <li>No password between a client and a server but a hash value</li>
-          <li>Simple and advanced mechanisms (only server-generated nonce value &ndash; replay-attacks or
-            with client-generated nonce value)</li>
-        </ul>
-        <li>Basic Steps</li>
-        <ol>
-          <li>Client accesses a protected area</li>
-          <pre class="brush:bash; class-name: 'tight'">
-							> GET / HTTP/1.1</pre>
-          <li>Server requests authentication with <code>WWW-Authenticate</code></li>
-          <pre class="brush:bash; class-name: 'tight'">
-								&lt; HTTP/1.1 401 Unauthorized
-								&lt; WWW-Authenticate: Digest realm="ProtectedArea",
-								  nonce="BbdQof3DBAA=a293ff3d724989371610f03015f2d23f3cd2c045",
-								  algorithm=MD5, domain="/", qop="auth"</pre>
-          <li>Client calculates a response hash by using the realm, his/her username, the password, and the
-            quality of protection (QoP) and requests the resource with <code>authorization</code> header</li>
-          <pre class="brush:bash; class-name: 'tight'">
-								> GET / HTTP/1.1
-								> Authorization: Digest username="novak", realm="ProtectedArea",
-								  nonce="BbdQof3DBAA=a293ff3d724989371610f03015f2d23f3cd2c045", uri="/",
-								  algorithm=MD5, response="c4ea2293aeb318826d1e533f363efd90", qop=auth,
-								  nc=00000001, cnonce="531ee8ba7f2a8fd1"</pre>
-        </ol>
       </ul>
     </div>
 
@@ -829,7 +1147,6 @@
         </ul>
       </ul>
     </div>
-
 
   </section>
 
