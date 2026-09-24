@@ -8,8 +8,8 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <meta name="course" content="Web 2.0" />
-  <meta name="lecture" content="Lecture 5" />
-  <meta name="keywords" content="cloud native, kubernetes" />
+  <meta name="lecture" content="Lecture 4" />
+  <meta name="keywords" content="SaaS, IaaS, PaaS" />
 
   <link type="text/css" rel="stylesheet" href="css/meta.css">
   </link>
@@ -19,7 +19,7 @@
   </link>
 
   <script type="text/javascript" src="humla/lib/humla.js"></script>
-  <title>Cloud Native and Kubernetes</title>
+  <title>Containers</title>
 </head>
 
 <body>
@@ -65,41 +65,202 @@
   <div class="slide outline"></div>
 
   <section>
-    <header>Cloud Native</header>
+    <header>Overview</header>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Virtual Machines vs. Containers</h1>
+      </hgroup>
+      <div class="h-drawing" style="height:450px; margin-top: 30px" id="13MxlAselSiJfnL7o8NwX87x2SzlPbLdJ56Zi87Ex00w">
+      </div>
+    </div>
 
     <div class="slide">
       <hgroup>
         <h1>Overview</h1>
       </hgroup>
+
+      <ul class="x-small">
+        <li>Linux Containers</li>
+        <ul>
+          <li>Introduced in 2008</li>
+          <li>Allow to run a process tree in a isolated system-level "virtualization"</li>
+          <li>Use much less resources and disk space than traditional virtualization</li>
+        </ul>
+        <li>Implementations</li>
+        <ul>
+          <li>LXC &ndash; default implementation in Linux</li>
+          <li>Docker Containers</li>
+          <ul>
+            <li>Builds on Linux namespaces and union file system (OverlayFS)</li>
+            <li>A way to build, commit and share images</li>
+            <li>Build images using a description file called Dockerfile</li>
+            <li>Large number of available base and re-usable images</li>
+          </ul>
+        </ul>
+        <li>Monolithic design originally</li>
+        <ul>
+          <li>Now several layers</li>
+          <li>container runtime</li>
+          <li>container engine</li>
+        </ul>
+        <div class="h-drawing" id="1XcnPNd8sFL3BztQqVtv6Xf4XUNrpzQHAsDm9Ma6D_S8"
+          style="text-align:left; height: 160px; margin-top: -120px; margin-left: 350px" />
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Containerd</h1>
+      </hgroup>
+
+      <img src="img/container-arch.jpeg" style="height: 240px; margin-top: 20px; margin-left: 20px" />
       <ul class="xx-small">
-        <li>The Cloud Native Computing Foundation (CNCF)</li>
+        <li>Container engine</li>
         <ul>
-          <li>Motto: Building sustainable ecosystems for cloud native software</li>
-          <li>CNCF is part of the nonprofit Linux Foundation</li>
+          <li>Accepts user inputs (via CLI or API), pulling images from registry, preparing metadata to be passed to
+            container runtime</li>
         </ul>
-        <li>Cloud Native = scalable apps running in modern cloud environments</li>
+        <li>Container runtime</li>
         <ul>
-          <li>containers, service mashes, microservices</li>
-          <li>Apps must be usually re-built from scratch or refactored</li>
-          <li>Benefits:</li>
-          <ul>
-            <li>loosely coupled systems that are resilient, manageable, and observable</li>
-            <li>automation allowing for predictable and frequent changes with minimal effort</li>
-          </ul>
-          <li>Trail Map</li>
-          <ul>
-            <li>provides an overview for enterprises starting their cloud native journey<span class="h-ref"
-                id="cnfs-trail-map" /></li>
-          </ul>
+          <li>Abstraction from syscalls or OS specific functionality to run containers on linux, windows, solaris,
+            etc.</li>
+          <li>Uses <code>runc</code> and <code>container-shim</code></li>
+          <li>Communicates with kernel to start containerized processes</li>
         </ul>
-        <li>Lift and Shift</li>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Terminology</h1>
+      </hgroup>
+      <ul class="xx-small">
+        <li>Image</li>
         <ul>
-          <li>Cloud transition program in organizations</li>
-          <li>Move app from on-premise to the cloud</li>
-          <li>Benefits</li>
+          <li>An image contains a union of layered filesystems stacked on top of each other</li>
+          <li>Immutable, it does not have state and it never changes</li>
+        </ul>
+        <li>Container</li>
+        <ul>
+          <li>One or more processes running in one or more isolated namespaces in a filesystem provided by the image
+          </li>
+        </ul>
+        <li>Container Engine/Runtime</li>
+        <ul>
+          <li>The core processes providing container capabilities on a host</li>
+        </ul>
+        <li>Client</li>
+        <ul>
+          <li>An app (e.g. CLI, custom app), communicates with a container engine by its API</li>
+        </ul>
+        <li>Registry</li>
+        <ul>
+          <li>A hosted service containing repository of images</li>
+          <li>A registry provides a registry API to search, pull and push images</li>
+          <li>Docker Hub is the default Docker registry</li>
+        </ul>
+        <li>Swarm</li>
+        <ul>
+          <li>A cluster of one or more docker engines</li>
+        </ul>
+      </ul>
+    </div>
+  </section>
+
+  <div class="slide outline"></div>
+
+  <section>
+
+    <header>Linux Namespaces</header>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Linux Namespaces</h1>
+      </hgroup>
+      <ul class="xx-small">
+        <li>Isolation of Linux processes, there are <b>7 namespaces</b></li>
+        <ul>
+          <li>Mount, UTS, IPC, PID, Network, User, Cgroup</li>
+          <li>By default, every process is a member of a default namespace of each type</li>
+          <li>In case no additional namespace configuration is in place, processes and all their direct children will
+            reside in this exact namespace</li>
+          <li>Run <code>lsns</code> to check namespaces the process is in</li>
+          <pre class="brush: plain; gutter: 'false'">
+              $ lsns
+              NS         TYPE  NPROCS   PID USER   COMMAND
+              4026531836 pid        2 30873 oracle -bash
+              4026531837 user     108  1636 oracle /bin/bash /u01/oracle/scripts/startWebLogicContainer.sh
+              4026531838 uts        2 30873 oracle -bash
+              4026531839 ipc        2 30873 oracle -bash
+              4026531840 mnt        2 30873 oracle -bash
+              4026531956 net      108  1636 oracle /bin/bash /u01/oracle/scripts/startWebLogicContainer.sh
+              4026532185 mnt       13 13542 oracle /bin/bash /u01/oracle/scripts/startNM_ohs.sh
+              4026532192 pid       13  2798 oracle /bin/bash /u01/oracle/scripts/startNM_ohs.sh
+              ...
+            </pre>
+        </ul>
+        <li>Flexible configuration, for example:</li>
+        <ul>
+          <li>You can run two apps that only share the network namespace, e.g. <code>4026531956</code></li>
+          <li>The apps can talk to each other</li>
+          <li>Any other app (not in this namespace) won't be able to talk to the apps</li>
+        </ul>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Types: mnt, uts, ipc and pid</h1>
+      </hgroup>
+      <ul class="xx-small">
+        <li><code>mnt</code> namespace</li>
+        <ul>
+          <li>Isolates filesystem mount points</li>
+          <li>Restricts the view of the global file hierarchy</li>
+          <li>Each namespace has its own set of mount points</li>
+        </ul>
+        <li><code>uts</code> namespace</li>
+        <ul>
+          <li>The value of the hostname is isolated between different UTS namespaces</li>
+        </ul>
+        <li><code>ipc</code> namespace</li>
+        <ul>
+          <li>Isolates interprocess communication resources</li>
+          <li>message queues, semaphore, and shared memory</li>
+        </ul>
+        <li><code>pid</code> namespace</li>
+        <ul>
+          <li>Isolates PID number space</li>
+          <li>A process ID number space gets isolated</li>
           <ul>
-            <li>Infrastructure cost cutting (OPEX vs. CAPEX)</li>
-            <li>Improved operations (scaling up/down if possible can be faster)</li>
+            <li>Processes can have PIDs starting from the value 1</li>
+            <li>Real PIDs outside of the namespace of the same process is a different number</li>
+          </ul>
+          <li>Containers have their own init processes with a PID value of 1</li>
+        </ul>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Types: net</h1>
+      </hgroup>
+      <ul class="xx-small">
+        <li><code>net</code> namespace</li>
+        <ul>
+          <li>Processes have their own private network stack (interfaces, routing tables, sockets)</li>
+          <li>Communication with external network stack is done by a virtual ethernet bridge</li>
+          <img src="img/container-bridge.png" style="height: 200px; margin-top: 10px; margin-bottom: 10px" />
+          <li>On the host there is a <b>userland proxy</b> or <b>NAT</b></li>
+          <ul>
+            <li>NAT is a prefered solution over userland proxy (<code>/usr/bin/docker-proxy</code>)</li>
+            <li>Lack of NAT hairpinning may prevent to use NAT</li>
+          </ul>
+          <li>Use case</li>
+          <ul>
+            <li>Multiple services binding to the same port on a single machine, e.g. <code>tcp/80</code></li>
+            <li>A port in the host is mapped to the port exposed by a process in the NS</li>
           </ul>
         </ul>
       </ul>
@@ -107,649 +268,181 @@
 
     <div class="slide">
       <hgroup>
-        <h1>CNCF Trail Map</h1>
+        <h1>Types: User & Cgroup</h1>
       </hgroup>
-      <img src="img/cncf-trail-map.png" style="width: 100%" />
-    </div>
+      <ul class="xx-small">
+        <li><code>user</code> namespace</li>
+        <ul>
+          <li>Isolates user and group IDs (UIDs/GIDs) between processes</li>
+          <li>Allows a process to have different privileges inside and outside the namespace</li>
+          <li>Enables <b>rootless containers</b> (process is non-root on host, but appears as root inside)</li>
+          <li>Example</li>
+          <ul>
+            <li>A process runs as UID 0 (root) inside the container,<br />but maps to a regular UID on the host</li>
+          </ul>
+          </li>
+        </ul>
 
+        <li><code>cgroup</code> namespace</li>
+        <ul>
+          <li><b>cgroups</b> (control groups)</li>
+          <ul>
+            <li>Kernel feature to limit and measure process resource usage (CPU, memory, I/O)</li>
+          </ul>
+          <li>cgroup namespace</li>
+          <ul>
+            <li>Isolates the view of the cgroup hierarchy for each process</li>
+            <li>Prevents a container from seeing/modifying cgroups of the host/other containers</li>
+            <li>Improves security by restricting what resource controls a container can observe</li>
+            <li><b>Example:</b> A container only sees its own CPU/memory usage limits, not the host’s full cgroup tree
+            </li>
+          </ul>
+        </ul>
+    </div>
   </section>
 
   <div class="slide outline"></div>
 
   <section>
-    <header>Kubernetes</header>
 
-    <section>
-      <header>Basic Concepts</header>
+    <header>Container Image</header>
 
-      <div class="slide">
-        <hgroup>
-          <h1>Overview</h1>
-        </hgroup>
-        <ul class="x-small">
-          <li>In your architecture...</li>
-          <ul>
-            <li>Containers are atomic pieces of application architecture</li>
-            <li>Containers can be linked (e.g. web server, DB)</li>
-            <li>Containers access shared resources (e.g. disk volumes)</li>
-          </ul>
-          <li>Kubernetes</li>
-          <ul>
-            <li>Automation of deployments, scaling, management of containerized applications across number of nodes</li>
-            <li>Based on Borg, a parent project from Goolge</li>
-          </ul>
-          <img src="img/kubernetes-overview.png" width="400px" style="margin-top: 10px; margin-left: 20px"></img>
+    <div class="slide">
+      <hgroup>
+        <h1>Container Images</h1>
+      </hgroup>
+      <img style="margin-left: 50px; margin-top: 15px; margin-bottom: 10px; height: 280px"
+        src="./img/docker-container-stack.png" />
+      <ul class="x-small" style="margin-left: -10px">
+        <ul>
+          <li>Containers are made up of R/O layers via a storage driver<br />(OverlayFS, AUFS, etc.)</li>
+          <li>Containers are designed to support a single application</li>
+          <li>Instances are ephemeral, persistent data is stored in bind
+            mounts or data volume containers.</li>
         </ul>
-      </div>
+      </ul>
+    </div>
 
-      <div class="slide">
-        <hgroup>
-          <h1>Key Design Principles</h1>
-        </hgroup>
-        <ul class="x-small">
-          <li>Kubernetes provides abstractions that separate application deployment from the underlying infrastructure
-            details</li>
-          <li>Application workloads and infrastructure decoupling</li>
-          <ul>
-            <li><b>Compute:</b> Define <i>what</i> to run without specifying <i>where</i> it runs</li>
-            <li><b>Storage:</b> Applications request storage independent of storage backend</li>
-            <li><b>Networking:</b> Stable access to applications regardless of IPs or location</li>
-          </ul>
-          <li>Benefits</li>
-          <ul>
-            <li>Portability across on-prem and cloud environments</li>
-            <li>Scalability and resilience through dynamic scheduling</li>
-            <li>Consistency and standardization of deployment model</li>
-            <li>Reduced vendor lock-in thanks to open standards</li>
-          </ul>
+    <div class="slide">
+      <hgroup>
+        <h1>Image Layering with OverlayFS</h1>
+      </hgroup>
+      <ul class="x-small">
+        <li>OverlayFS</li>
+        <ul>
+          <li>A filesystem service implementing a <b>union mount</b> for other file systems.</li>
+          <li>Docker uses <code>overlay</code> and <code>overlay2</code> storage drivers
+            to build and manage on-disk structures of images and containers.</li>
         </ul>
-      </div>
-
-      <div class="slide">
-        <hgroup>
-          <h1>Desired State and Reconciliation</h1>
-        </hgroup>
-        <ul class="xx-small">
-          <li>Kubernetes operates on a <b>desired state</b> model</li>
-          <ul>
-            <li>Users define the state they want through object specifications (YAML)</li>
-            <li>Example: “there should be 3 replicas of this application”</li>
-          </ul>
-
-          <li>Actual State vs. Desired State</li>
-          <ul>
-            <li>Kubernetes constantly monitors the cluster</li>
-            <li>If the actual state drifts from the desired state, it takes action to fix it</li>
-          </ul>
-
-          <li>Reconciliation Loop</li>
-          <ul>
-            <li>Controllers continuously compare desired vs. actual state</li>
-            <li>Automatically performs actions such as restarting, rescheduling, or scaling Pods</li>
-          </ul>
+        <li>Image Layering</li>
+        <ul>
+          <li>OverlayFS takes two directories on a single Linux host, layers one on top of the other, and provides
+            a single unified view.</li>
+          <li>Only works for two layers, in multi-layered images hard links are used to
+            reference data shared with lower layers.</li>
         </ul>
-        <img src="img/kubernetes-state.png" width="400px" style="margin-top: 10px; margin-left: 70px"></img>
-      </div>
+        <img src="img/overlay_constructs.jpg" style="width: 700px; margin-top: 10px" />
+      </ul>
+    </div>
 
-      <div class="slide">
-        <hgroup>
-          <h1>Features</h1>
-        </hgroup>
-        <ul class="xx-small">
-          <li>Automatic binpacking</li>
-          <ul>
-            <li>Automatically places containers onto nodes based on their resource requirements and other constraints.
-            </li>
-          </ul>
-          <li>Horizontal scaling</li>
-          <ul>
-            <li>Scales your application up and down with a simple command, with a UI, or automatically based on CPU
-              usage.
-            </li>
-          </ul>
-          <li>Automated rollouts and rollbacks</li>
-          <ul>
-            <li>Progressive rollout out of changes to application/configuration, monitoring application health
-              and rollback when something goes wrong.</li>
-          </ul>
-          <li>Storage orchestration</li>
-          <ul>
-            <li>Automatically mounts the storage system (local or in the cloud)</li>
-          </ul>
-          <li>Self-healing</li>
-          <ul>
-            <li>Restarts containers that fail, replaces and reschedules containers when nodes die, kills containers that
-              don't respond to user-defined health checks.</li>
-          </ul>
-          <li>Service discovery and load balancing</li>
-          <ul>
-            <li>Gives containers their own IP addresses and a single DNS name for a set of containers, and can
-              load-balance across them.</li>
-          </ul>
+    <div class="slide">
+      <hgroup>
+        <h1>Image Layers Example</h1>
+      </hgroup>
+      <ul class="xx-small" style="margin-top:20px; zoom:0.9">
+        <li>Pulling out the image from the registry</li>
+        <pre class="brush: plain; gutter: 'false'">
+            $ docker pull ubuntu
+
+            Using default tag: latest
+            latest: Pulling from library/ubuntu
+
+            5ba4f30e5bea: Pull complete
+            9d7d19c9dc56: Pull complete
+            ac6ad7efd0f9: Pull complete
+            e7491a747824: Pull complete
+            a3ed95caeb02: Pull complete
+            Digest: sha256:46fb5d001b88ad904c5c732b086b596b92cfb4a4840a3abd0e35dbb6870585e4
+            Status: Downloaded newer image for ubuntu:latest
+          </pre>
+        <ul>
+          <li>Each image layer has its own directory under <code>/var/lib/docker/overlay/</code>.</li>
+          <li>This is where the contents of each image layer are stored.</li>
         </ul>
-      </div>
-    </section>
+        <li>Directories on the file system</li>
+        <pre class="brush: plain; gutter: 'false'">
+            $ ls -l /var/lib/docker/overlay/
 
-    <div class="slide outline"></div>
-
-    <section>
-      <header>Core Concepts and Architecture</header>
-
-      <div class="slide">
-        <hgroup>
-          <h1>Core Building Blocks</h1>
-        </hgroup>
-        <ul class="x-small">
-          <li><b>Cluster</b></li>
-          <ul>
-            <li>A set of worker nodes and a control plane</li>
-            <li>Runs and manages containerized applications</li>
-          </ul>
-
-          <li><b>Node</b></li>
-          <ul>
-            <li>A worker machine in Kubernetes (VM or physical)</li>
-            <li>Runs Pods scheduled by the control plane</li>
-          </ul>
-
-          <li><b>Control Plane</b></li>
-          <ul>
-            <li>Manages the overall state of the cluster</li>
-            <li>Schedules workloads and responds to cluster events</li>
-          </ul>
-
-          <li><b>Pod</b></li>
-          <ul>
-            <li>The smallest deployable unit in Kubernetes</li>
-            <li>One or more tightly-coupled containers</li>
-            <li>Containers share networking and storage within a Pod</li>
-          </ul>
+            total 20
+            drwx------ 3 root root 4096 Jun 20 16:11 38f3ed2eac129654acef11c32670b534670c3a06e483fce313d72e3e0a15baa8
+            drwx------ 3 root root 4096 Jun 20 16:11 55f1e14c361b90570df46371b20ce6d480c434981cbda5fd68c6ff61aa0a5358
+            drwx------ 3 root root 4096 Jun 20 16:11 824c8a961a4f5e8fe4f4243dab57c5be798e7fd195f6d88ab06aea92ba931654
+            drwx------ 3 root root 4096 Jun 20 16:11 ad0fe55125ebf599da124da175174a4b8c1878afe6907bf7c78570341f308461
+            drwx------ 3 root root 4096 Jun 20 16:11 edab9b5e5bf73f2997524eebeac1de4cf9c8b904fa8ad3ec43b3504196aa3801
+          </pre>
+        <ul>
+          <li>The organization of files allows for efficient use of disk space.</li>
+          <li>There are <b>files unique to every layer</b> and <b>hard links to files</b> shared with lower layers
+          </li>
         </ul>
-      </div>
+      </ul>
+      </ul>
+    </div>
 
-      <div class="slide">
-        <hgroup>
-          <h1>Architecture</h1>
-        </hgroup>
-        <img src="img/components-of-kubernetes.svg"
-          style="width: 800px; margin-left: 50px; margin-top: 50px; zoom: 0.88"></img>
-      </div>
+    <div class="slide">
+      <hgroup>
+        <h1>Dockerfile</h1>
+      </hgroup>
+      <ul class="xx-small" style="zoom: 0.90">
+        <li>Dockerfile is a script that creates a new image</li>
+        <pre class="brush: plain; gutter: 'false'">
+          # This is a comment
+          FROM oraclelinux:7
+          MAINTAINER Tomas Vitvar &lt;tomas@vitvar.com>
+          RUN yum install -q -y httpd
+          EXPOSE 80
+          CMD httpd -X
+          </pre>
 
-      <div class="slide">
-        <hgroup>
-          <h1>Control Plane Components (Part 1)</h1>
-        </hgroup>
-        <ul class="x-small">
-          <li>Global decisions about the cluster</li>
-          <ul>
-            <li>Schedulling</li>
-            <li>Detecting and responding to cluster events, starting up new pods</li>
-          </ul>
-          <li>kube-apiserver</li>
-          <ul>
-            <li>exposes the Kubernetes API</li>
-            <li>The API server is the front end for the Kubernetes control plane.</li>
-          </ul>
-          <li>etcd</li>
-          <ul>
-            <li>highly-available key value store used to store all cluster data</li>
-          </ul>
-          <li>kube-scheduler</li>
-          <ul>
-            <li>watches for newly created Pods with no assigned node</li>
-            <li>selects a node for Pods to run on.</li>
-            <li>Decision factors: resource requirements, hardware/software/policy constraints, affinity and
-              anti-affinity
-              specifications</li>
-          </ul>
+        <li>A line in the Dockerfile will create an intermediary layer</li>
+
+        <pre class="brush: plain; gutter: 'false'">
+          $ docker build -t tomvit/httpd:v1 .
+          Sending build context to Docker daemon 2.048 kB
+          Step 1 : FROM oraclelinux:7
+           ---> 4c357c6e421e
+          Step 2 : MAINTAINER Tomas Vitvar &lt;tomas@vitvar.com>
+           ---> Running in 35feebb2ffab
+           ---> 95b35d5d793e
+          Removing intermediate container 35feebb2ffab
+          Step 3 : RUN yum install -q -y httpd
+           ---> Running in 3b9aee3c3ef1
+           ---> 888c49141af9
+          Removing intermediate container 3b9aee3c3ef1
+          Step 4 : EXPOSE 80
+           ---> Running in 03e1ef9bf875
+           ---> c28545e3580c
+          Removing intermediate container 03e1ef9bf875
+          Step 5 : CMD httpd -X
+           ---> Running in 3c1c0273a1ef
+          </pre>
+
+        <ul class="no-bullet">
+          <li>If processing fails at some step, all preceeding steps will be loaded from the cache on the next run.
+          </li>
         </ul>
-      </div>
-
-      <div class="slide">
-        <hgroup>
-          <h1>Control Plane Components (Part 2)</h1>
-        </hgroup>
-        <ul class="x-small">
-          <li>kube-controller-manager</li>
-          <ul>
-            <li>runs controller to ensure the desired state of cluster objects</li>
-            <li><b>Node controller</b></li>
-            <ul>
-              <li>noticing and responding when nodes go down</li>
-            </ul>
-            <li><b>Job controller</b></li>
-            <ul>
-              <li>creates Pods to run one-off tasks to completion.</li>
-            </ul>
-            <li><b>Endpoints controller</b></li>
-            <ul>
-              <li>Populates the Endpoints object (that is, joins Services, Pods).</li>
-            </ul>
-          </ul>
-          <li>cloud-controller-manager</li>
-          <ul>
-            <li>Integration with cloud services (when the cluster is running in a cloud)</li>
-            <li><b>Node controller</b></li>
-            <ul>
-              <li>checks if a node has been deleted in the cloud after it stops responding</li>
-            </ul>
-            <li><b>Route controller</b></li>
-            <ul>
-              <li>For setting up routes in the underlying cloud infrastructure</li>
-            </ul>
-            <li><b>Service controller</b></li>
-            <ul>
-              <li>For creating, updating and deleting cloud provider load balancers</li>
-            </ul>
-          </ul>
-        </ul>
-      </div>
-
-      <div class="slide">
-        <hgroup>
-          <h1>Node</h1>
-        </hgroup>
-        <ul class="x-small">
-          <li>Kubernetes runtime environment</li>
-          <ul>
-            <li>Run on every node</li>
-            <li>Maintaining running pods</li>
-          </ul>
-          <li>kubelet</li>
-          <ul>
-            <li>An agent that runs on each node in the cluster</li>
-            <li>It makes sure that containers are running in a Pod.</li>
-          </ul>
-          <li>kube-proxy</li>
-          <ul>
-            <li>maintains network rules on nodes</li>
-            <li>network rules allow network communication to Pods from inside or outside of the cluster</li>
-            <li>uses the operating system packet filtering layer or forwards the traffic itself.</li>
-          </ul>
-          <li>Container runtime</li>
-          <ul>
-            <li>Responsible for running containers</li>
-            <li>Kubernetes supports several container runtimes (containerd, CRI-O)</li>
-            <li>Any implementation of the Kubernetes CRI (Container Runtime Interface)</li>
-          </ul>
-        </ul>
-      </div>
-
-      <div class="slide">
-        <hgroup>
-          <h1>Container Stack</h1>
-        </hgroup>
-        <div class="h-drawing" style="padding-top: 21px; padding-left: 21px; width: 600px"
-          id="1H0E2ljSysot6vb-m8T1hyy4XtyDz3QLb07H-Q0lbgqs"></div>
-      </div>
-
-    </section>
-
-    <div class="slide outline"></div>
-
-    <section>
-      <header>Workloads</header>
-
-      <div class="slide">
-        <hgroup>
-          <h1>Namespaces</h1>
-        </hgroup>
-        <ul class="x-small">
-          <li>Logical grouping of cluster resources</li>
-          <ul>
-            <li>Allow you to organize and separate objects within a Kubernetes cluster</li>
-            <li>Useful when multiple teams, environments, or projects share the same cluster</li>
-          </ul>
-
-          <li>Rationale</li>
-          <ul>
-            <li>Provide isolation and boundaries between workloads</li>
-            <li>Prevent name collisions</li>
-            <ul>
-              <li>Objects can have the same name if in different namespaces</li>
-            </ul>
-            <li>Enable resource limits and access control per namespace</li>
-          </ul>
-
-          <li>Usage</li>
-          <ul>
-            <li>Common namespaces: <code>default</code>, <code>kube-system</code>, <code>kube-public</code>,
-              <code>kube-node-lease</code>
-            </li>
-            <li>Create separate namespaces for e.g. <i>dev</i>, <i>test</i>, <i>prod</i></li>
-            <li>Commands run in a namespace unless another is specified</li>
-          </ul>
-        </ul>
-      </div>
-
-      <div class="slide">
-        <hgroup>
-          <h1>Pod</h1>
-        </hgroup>
-        <ul class="x-small">
-          <li>Pod</li>
-          <ul>
-            <li>A group of one or more tightly-coupled containers.</li>
-            <li>Containers share storage and network resources.</li>
-            <li>A Pod runs a single instance of a given application</li>
-            <li>Pod's containers are always co-located and co-scheduled</li>
-            <li>Pod's containers run in a shared context, i.e. in a set of Linux namespaces</li>
-          </ul>
-          <li>Pods are created using workload resources</li>
-          <ul>
-            <li>You do not create them directly</li>
-          </ul>
-          <li>Pods in a Kubernetes cluster are used in two main ways</li>
-          <ul>
-            <li>Run a single container, the most common Kubernetes use case</li>
-            <li>Run multiple containers that need to work together</li>
-          </ul>
-        </ul>
-      </div>
-
-      <div class="slide">
-        <hgroup>
-          <h1>Workloads</h1>
-        </hgroup>
-        <ul class="xx-small">
-          <li>An application running on Kubernetes</li>
-          <li>Workloads run in a set of Pods</li>
-          <li>Pre-defined workload resources to manage lifecylce of Pods</li>
-          <ul>
-            <li><b>Deployment</b> and ReplicaSet</li>
-            <ul>
-              <li>managing a stateless application workload</li>
-              <li>any Pod in the Deployment is interchangeable and can be replaced if needed</li>
-            </ul>
-            <li><b>StatefulSet</b></li>
-            <ul>
-              <li>one or more related Pods that track state</li>
-              <li>For example, if a workload records data persistently, run a StatefulSet that matches each Pod with a
-                persistent volume.</li>
-            </ul>
-            <li>DaemonSet</li>
-            <ul>
-              <li>Ensures that all (or some) Nodes run a copy of a Pod</li>
-              <li>Such as a cluster storage daemon, logs collection, node monitoring running on every node</li>
-            </ul>
-            <li>Job and CronJob</li>
-            <ul>
-              <li>Define tasks that run to completion and then stop.</li>
-              <li>Jobs represent one-off tasks, whereas CronJobs recur according to a schedule.</li>
-            </ul>
-          </ul>
-        </ul>
-      </div>
-
-      <div class="slide">
-        <hgroup>
-          <h1>Deployment Spec Example</h1>
-        </hgroup>
-        <ul class="x-small">
-          <li>Deployment spec</li>
-          <pre class="brush: bash; class-name: ''">
-          apiVersion: apps/v1
-          kind: Deployment
-          metadata:
-            name: nginx-deployment
-          spec:
-            selector:
-              matchLabels:
-                app: nginx          
-            replicas: 3 # tells deployment to run 3 pods matching the template
-            template:
-              metadata:
-                labels:
-                  app: nginx
-              spec:
-                containers:
-                - name: nginx
-                  image: nginx:1.14.2
-                  ports:
-                  - containerPort: 80          
-        </pre>
-          <ul>
-            <li>A desired state of an application running in the cluster</li>
-            <li>Kubernetes reads the Deployment spec and starts three app instances</li>
-            <li>If an instance fails, Kubernetes starts a replacement app instance</li>
-          </ul>
-        </ul>
-      </div>
-
-    </section>
-
-    <div class="slide outline"></div>
-
-    <section>
-      <header>Services</header>
-
-      <div class="slide">
-        <hgroup>
-          <h1>What is a Service?</h1>
-        </hgroup>
-        <ul class="x-small">
-          <li>A Kubernetes <b>Service</b> is an abstraction that defines</li>
-          <ul>
-            <li>A logical set of Pods
-            <li>A policy to access them.</li>
-          </ul>
-          <li>Pods are ephemeral &ndash; their IPs change when recreated</li>
-          <li>A Service provides a stable virtual endpoint for a set of Pods</li>
-          <li>Services enable reliable communication between components:</li>
-          <ul>
-            <li>Internal pods communication</li>
-            <li>External access to cluster workloads</li>
-          </ul>
-          <li>Each Service gets</li>
-          <ul>
-            <li>A DNS name and</li>
-            <li>virtual IP (ClusterIP) inside the cluster.</li>
-          </ul>
-          <li>Kubernetes component <code>kube-proxy</code> manage routing to backend Pods.</li>
-        </ul>
-      </div>
-
-      <div class="slide">
-        <hgroup>
-          <h1>Service Types</h1>
-        </hgroup>
-        <ul class="x-small">
-          <li><b>ClusterIP</b></li>
-          <ul>
-            <li>Exposes the Service on an internal IP in the cluster only.</li>
-            <li>Used for internal communication between Pods.</li>
-          </ul>
-          <li><b>NodePort</b></li>
-          <ul>
-            <li>Exposes the Service on each Node’s IP at a static port (e.g. 30080).</li>
-            <li>Accessible externally via <code>NodeIP:NodePort</code>.</li>
-          </ul>
-          <li><b>LoadBalancer</b></li>
-          <ul>
-            <li>Provisions an external load balancer (e.g. in cloud environments).</li>
-            <li>Routes external traffic to the Service.</li>
-          </ul>
-          <li><b>ExternalName</b></li>
-          <ul>
-            <li>Maps the Service to an external DNS name.</li>
-            <li>No proxying — pure DNS CNAME redirection.</li>
-          </ul>
-        </ul>
-      </div>
-
-      <div class="slide">
-        <hgroup>
-          <h1>How Services Work</h1>
-        </hgroup>
-        <ul class="xx-small">
-          <li><strong>Selector</strong></li>
-          <ul>
-            <li>A Service usually defines a <code>selector</code> — a label query used to find matching Pods.</li>
-            <li>Example: <code>selector: app=nginx</code> matches all Pods with label <code>app=nginx</code>.</li>
-            <li>Kubernetes monitors Pods that match this selector and updates Service backends
-            </li>
-          </ul>
-
-          <li><strong>Endpoints / EndpointSlice</strong></li>
-          <ul>
-            <li>For every Service with a selector, Kubernetes creates an <code>Endpoints</code> (or
-              <code>EndpointSlice</code>) object listing all healthy Pod IPs and ports.
-            </li>
-            <li>This list changes dynamically as Pods are added, removed, or become unhealthy.</li>
-          </ul>
-
-          <li><strong>kube-proxy</strong></li>
-          <ul>
-            <li>Runs on every Node and watches Service and Endpoint objects.</li>
-            <li>Programs <code>iptables</code> or <code>IPVS</code> rules to forward traffic from the Service’s virtual
-              IP (<code>ClusterIP</code>) to one of the backend Pod IPs.</li>
-            <li>Load balancing is done using round-robin or IPVS algorithms.</li>
-          </ul>
-
-          <li><strong>DNS Integration</strong></li>
-          <ul>
-            <li><code>CoreDNS</code> automatically creates a DNS record for each Service:</li>
-            <ul>
-              <li><code>&lt;service&gt;.&lt;namespace&gt;.svc.cluster.local</code></li>
-            </ul>
-            <li>Pods can reach the Service via DNS without knowing Pod IPs</li>
-            <ul>
-              <li><code>curl http://my-service.default.svc.cluster.local</code></li>
-            </ul>
-          </ul>
-        </ul>
-      </div>
-
-      <div class="slide">
-        <hgroup>
-          <h1>ClusterIP Service Example</h1>
-        </hgroup>
-        <ul class="xx-small">
-          <li>Example configuration exposing an NGINX Deployment internally:</li>
-          <pre class="brush: bash; class-name: ''">
-          apiVersion: v1
-          kind: Service
-          metadata:
-            name: nginx-svc
-          spec:
-            selector:
-              app: nginx
-            ports:
-            - protocol: TCP
-              port: 80
-              targetPort: 8080
-            type: ClusterIP
-              </pre>
-          <li>Pods with <code>app=nginx</code> receive traffic through <code>ClusterIP</code>.</li>
-          <li>DNS name: <code>nginx-svc.default.svc.cluster.local</code></li>
-          <li>Used by other Pods to connect via <code>http://nginx-svc:80</code>.</li>
-        </ul>
-      </div>
-
-      <div class="slide">
-        <hgroup>
-          <h1>Packet Forwarding and Load Balancing</h1>
-        </hgroup>
-        <ul class="xx-small">
-          <li><strong>iptables mode</strong></li>
-          <ul>
-            <li><code>kube-proxy</code> creates NAT rules in the <code>nat</code> table to redirect Service traffic.
-            </li>
-            <li>Example traffic comming to <code>NodeIP:NodePort</code> (e.g. <code>192.168.1.11:30080</code>)</li>
-            <pre class="brush: bash; class-name: ''">
-# 1. Match NodePort traffic coming from outside
--A KUBE-NODEPORTS -p tcp --dport 30080 -m addrtype ! --src-type LOCAL \
-  -j KUBE-MARK-MASQ
-    # Mark all external traffic for SNAT (so replies go back via this node)
-
-# 2. NodePort forwards traffic to the Service chain
--A KUBE-NODEPORTS -p tcp --dport 30080 \
-  -m comment --comment "default/my-service: NodePort" \
-  -j KUBE-SVC-XYZ123
-
-# 3. Service chain chooses one backend Pod 
--A KUBE-SVC-XYZ123 -m statistic --mode random --probability 0.5 \
-  -j KUBE-SEP-A1B2C3
--A KUBE-SVC-XYZ123 -j KUBE-SEP-D4E5F6
-
-# 4. Pod DNAT rule to redirect to Pod IP:port
--A KUBE-SEP-A1B2C3 -p tcp -m tcp -j DNAT --to-destination 10.42.0.12:8080
--A KUBE-SEP-D4E5F6 -p tcp -m tcp -j DNAT --to-destination 10.42.1.7:8080
-</pre>
-          </ul>
-          <ul>
-            <li>The node’s routing table determines how to reach the Pod’s IP:</li>
-            <ul>
-              <li><code>10.42.0.0/24 via 192.168.1.12 dev flannel.1</code></li>
-              <li>packets to Pods in <code>10.42.0.0/24</code> (running on Node 2) are sent through the
-                VXLAN interface <code>flannel.1</code> to Node 2’s IP <code>192.168.1.12</code></li>
-            </ul>
-          </ul>
-      </div>
 
 
-    </section>
+      </ul>
+    </div>
 
-    <div class="slide outline"></div>
+    <div class="slide">
+      <hgroup>
+        <h1>Docker Container State Diagram</h1>
+      </hgroup>
 
-    <section>
-      <header>Beyond the Basics</header>
+      <div class="h-drawing" style="width: 780px" id="1JGxpdEWDh9lBbLg3JFVr53LBg1BM520LYXyYkdi-2ws"></div>
+    </div>
 
-      <div class="slide">
-        <hgroup>
-          <h1>Advanced Topics</h1>
-        </hgroup>
-        <ul class="xx-small">
-          <li>Custom APIs and Controllers</li>
-          <ul>
-            <li>CRDs, Operators, reconciliation loops</li>
-            <li>Admission webhooks (mutating/validating)</li>
-          </ul>
 
-          <li>Security</li>
-          <ul>
-            <li>RBAC, Namespaces, Pod Security (seccomp, capabilities, rootless)</li>
-            <li>Image signing and supply chain (SBOM, cosign), Secret management (Vault/CSI)</li>
-            <li>Policy engines: OPA Gatekeeper, Kyverno</li>
-          </ul>
-
-          <li>Networking</li>
-          <ul>
-            <li>CNI, eBPF (Cilium), NetworkPolicies, Ingress</li>
-            <li>Gateway API, Service Mesh (mTLS, traffic shaping)</li>
-          </ul>
-
-          <li>Storage</li>
-          <ul>
-            <li>CSI drivers, snapshots, expansion, topology-aware PVs</li>
-            <li>Backup/DR (e.g., Velero), StatefulSet patterns</li>
-          </ul>
-
-          <li>Scaling and Scheduling</li>
-          <ul>
-            <li>HPA/VPA/KEDA (event-driven), Cluster Autoscaler</li>
-            <li>Affinity/anti-affinity, taints/tolerations, topology spread</li>
-          </ul>
-
-          <li>Ops and Delivery</li>
-          <ul>
-            <li>GitOps (Argo CD/Flux), progressive delivery (canary, blue/green)</li>
-            <li>Observability: metrics/logs/traces (Prometheus, OpenTelemetry)</li>
-          </ul>
-
-          <li>Runtimes and Isolation</li>
-          <ul>
-            <li>containerd/CRI-O, shims, sandboxed runtimes (gVisor, Kata)</li>
-            <li>Wasm/WASI experiments</li>
-          </ul>
-
-          <li>Multi-Cluster and Platform</li>
-          <ul>
-            <li>Cluster API, federation, service discovery across clusters</li>
-            <li>Multi-tenancy, quotas, cost allocation</li>
-          </ul>
-        </ul>
-      </div>
-
-    </section>
   </section>

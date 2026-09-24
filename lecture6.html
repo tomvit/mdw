@@ -1,16 +1,15 @@
 <!DOCTYPE html>
 <!--
-    Middleware and Web Services, CTU course slides
-    (cc) 2010-2023 Tomas Vitvar, http://vitvar.com
-    written for Humla, an open source HTML5 presentation environment
+	Web 2.0, CTU course slides
+	(cc) 2010-2014 Tomas Vitvar, tomas@vitvar.com
 -->
 <html>
 
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-  <meta name="course" content="Middleware Architectures 1" />
-  <meta name="lecture" content="Lecture 6" />
-  <meta name="keywords" content="Integration Patterns" />
+  <meta name="course" content="Web 2.0" />
+  <meta name="lecture" content="Lecture 5" />
+  <meta name="keywords" content="cloud native, kubernetes" />
 
   <link type="text/css" rel="stylesheet" href="css/meta.css">
   </link>
@@ -20,10 +19,11 @@
   </link>
 
   <script type="text/javascript" src="humla/lib/humla.js"></script>
-  <title>Communication Protocols</title>
+  <title>Cloud Native and Kubernetes</title>
 </head>
 
 <body>
+
   <footer>
     <p><b>#META_LECTURE#: #TITLE#</b>,&nbsp;<span class="meta_semester" />,&nbsp;
       <span class="meta_twitter" />
@@ -65,609 +65,453 @@
   <div class="slide outline"></div>
 
   <section>
-    <header>Introduction to Application Protocols</header>
+    <header>Cloud Native</header>
 
     <div class="slide">
       <hgroup>
-        <h1>Application Protocols</h1>
-      </hgroup>
-      <ul class="x-small">
-        <li>Remember this</li>
-      </ul>
-      <div class="h-drawing" id="19zJkisQOr32yxVeMcXEi7B3fHAtSot0c_ppDJeKl4bc" style="height: 120px; margin-top: -10px">
-      </div>
-      <ul class="x-small">
-        <li>App protocols mostly on top of the TCP Layer</li>
-        <ul>
-          <li>use TCP socket for communication</li>
-        </ul>
-        <li>Major protocols</li>
-        <ul>
-          <li>HTTP &#150; most of the app protocols layered on HTTP</li>
-          <li>HTTP/2 &#150; new binary framing</li>
-          <li>gRPC &#150; modern RPC protocol on top of HTTP/2</li>
-          <li>WebSocket &#150; new protocol part of HTML5</li>
-        </ul>
-        <li>Legacy</li>
-        <ul>
-          <li>RMI &#150; Remote Method Invocation</li>
-          <ul>
-            <li>Java-specific; vendor-interoperability problem</li>
-          </ul>
-          <li>XML-RPC and SOAP &#150; Remote Procedure Call and SOAP</li>
-        </ul>
-      </ul>
-    </div>
-
-    <div class="slide">
-      <hgroup>
-        <h1>Anatomy of a Packet</h1>
-      </hgroup>
-      <img src="img/anatomy-of-a-packet.svg" style="width: 800px; padding: 30px 0px 0px 30px"></img>
-    </div>
-
-
-    <div class="slide">
-      <hgroup>
-        <h1>Socket</h1>
-      </hgroup>
-      <div class="h-drawing" style="height: 140px" id="1Z4OmMLdUPPmmfAsENj7zBb_kjDOWVUzku50WucxpePU"></div>
-      <ul class="xx-small">
-        <li>Handshaking (connection establishment)</li>
-        <ul>
-          <li>The server listens at <code>[dst_ip,dsp_port]</code></li>
-          <li>Three-way handshake:</li>
-          <ul>
-            <li>the client sends a connection request with TCP flags (SYN, x=rand)</li>
-            <li>the server respons with its own TCP flags (SYN ACK, x+1 y=rand)</li>
-            <li>the client acknowledges the response, can send data along (ACK, y+1 x+1)</li>
-          </ul>
-          <li>Result is a socket (virtual communication channel) with unique identification:<br />
-            <code>socket=[src_ip,src_port;dst_ip,dst_port]</code>
-          </li>
-        </ul>
-        <li>Data transfer (resource usage)</li>
-        <ul>
-          <li>Client/server writes/reads data to/from the socket</li>
-          <li>TCP features: reliable delivery, correct order of packets, flow control</li>
-        </ul>
-        <li>Connection close</li>
-      </ul>
-    </div>
-
-    <div class="slide">
-      <hgroup>
-        <h1>New Connection Costs</h1>
-      </hgroup>
-      <ul class="x-small">
-        <li>Creating a new TCP connection is expensive</li>
-        <ul>
-          <li>It requires to complete a full roundtrip</li>
-          <li>It is limited by a network latency, not bandwidth</li>
-        </ul>
-        <li>Example</li>
-        <ul>
-          <li>Distance from London to New York is approx. 5500 km</li>
-          <li>Communication over a fibre link will take at least 28ms one way</li>
-          <li>Three-way handskake will take a minimum of 56ms</li>
-        </ul>
-        <li>Connection reuse is critical for any app running over TCP</li>
-        <ul>
-          <li>HTTP Keep-alive</li>
-          <li>HTTP pipelining</li>
-        </ul>
-      </ul>
-    </div>
-
-    <div class="slide">
-      <hgroup>
-        <h1>TCP Fast Open</h1>
+        <h1>Overview</h1>
       </hgroup>
       <ul class="xx-small">
-        <li>TFO allows to speed up the opening of successfive TCP connections</li>
+        <li>The Cloud Native Computing Foundation (CNCF)</li>
         <ul>
-          <li>TCP cookie stored on the client that was established on initial connection</li>
-          <li>The client sends the TCP cookie with SYN packet</li>
-          <li>The server verifies the TCP cookie and can send the data without final ACK</li>
-          <li>Can reduce network transaction latency by 15%</li>
+          <li>Motto: Building sustainable ecosystems for cloud native software</li>
+          <li>CNCF is part of the nonprofit Linux Foundation</li>
+        </ul>
+        <li>Cloud Native = scalable apps running in modern cloud environments</li>
+        <ul>
+          <li>containers, service mashes, microservices</li>
+          <li>Apps must be usually re-built from scratch or refactored</li>
+          <li>Benefits:</li>
+          <ul>
+            <li>loosely coupled systems that are resilient, manageable, and observable</li>
+            <li>automation allowing for predictable and frequent changes with minimal effort</li>
+          </ul>
+          <li>Trail Map</li>
+          <ul>
+            <li>provides an overview for enterprises starting their cloud native journey<span class="h-ref"
+                id="cnfs-trail-map" /></li>
+          </ul>
+        </ul>
+        <li>Lift and Shift</li>
+        <ul>
+          <li>Cloud transition program in organizations</li>
+          <li>Move app from on-premise to the cloud</li>
+          <li>Benefits</li>
+          <ul>
+            <li>Infrastructure cost cutting (OPEX vs. CAPEX)</li>
+            <li>Improved operations (scaling up/down if possible can be faster)</li>
+          </ul>
         </ul>
       </ul>
-      <img src="img/TFO.png" style="height: 350px; margin-left: 100px" />
     </div>
 
-    <!-- <div class="slide outline"></div>
+    <div class="slide">
+      <hgroup>
+        <h1>CNCF Trail Map</h1>
+      </hgroup>
+      <img src="img/cncf-trail-map.png" style="width: 100%" />
+    </div>
 
-      <div class="slide">
-        <hgroup>
-          <h1>Blocking (Synchronous) I/O</h1>
-        </hgroup>
-        <div id="1QP7gZSS1WS3YquzLekSgdZfcmi4BYArm-K9tuWrULQs" class="h-drawing" style="height: 220px"></div>
-        <ul class="x-small">
-          <li>Inbound connection</li>
-          <ul>
-            <li>A server creates a thread for every inbound connection</li>
-            <li>For example, 1K connections = 1K threads, big overhead</li>
-            <li>A thread is reserved for the entire duration of the request processing</li>
-          </ul>
-          <li>Outbound connection</li>
-          <ul>
-            <li>A thread is blocked when outbound connection is made</li>
-            <li>When outbound connection is slow, the scalability is poor</li>
-          </ul>
-        </ul>
-      </div>
-
-      <div class="slide">
-        <hgroup>
-          <h1>Non-Blocking (Asynchrnous) I/O</h1>
-        </hgroup>
-        <div id="1kxkFc3Chl4qFXxH_4f2seuNbpBdENMyZWMRUmxd1p28" class="h-drawing" style="height: 220px"></div>
-        <ul class="x-small">
-          <li>Inbound connections</li>
-          <ul>
-            <li>The connection is maintained by the OS, not the server app</li>
-            <li>The Web app registers events, OS triggers events when they occur</li>
-            <li>The app may create working threads and controls their number</li>
-          </ul>
-          <li>Outound connections</li>
-          <ul>
-            <li>The app registers a callback that is called when the data is available</li>
-            <li>Event loop</li>
-          </ul>
-        </ul>
-      </div>
-
-    </section> -->
   </section>
 
   <div class="slide outline"></div>
 
   <section>
-    <header>Hypertext Transfer Protocol (HTTP)</header>
-
-    <div class="slide">
-      <hgroup>
-        <h1>Hypertext Transfer Protocol &ndash; HTTP</h1>
-      </hgroup>
-      <ul class="small">
-        <li>Application protocol, basis of Web architecture</li>
-        <ul>
-          <li>Part of HTTP, URI, and HTML family</li>
-          <li>Request-response protocol</li>
-        </ul>
-        <li>One socket for single request-response</li>
-        <ul>
-          <li>original specification</li>
-          <li>have changed due to performance issues</li>
-          <ul>
-            <li>many concurrent requests</li>
-            <li>overhead when establishing same connections</li>
-            <li>HTTP 1.1 offers persistent connection and pipelining</li>
-            <li>Domain sharding</li>
-          </ul>
-        </ul>
-        <li>HTTP is stateless</li>
-        <ul>
-          <li>Multiple HTTP requests cannot be normally related at the server</li>
-          <ul>
-            <li>"problems" with state management</li>
-            <li>REST goes back to the original HTTP idea</li>
-          </ul>
-        </ul>
-      </ul>
-    </div>
-
-    <div class="slide">
-      <hgroup>
-        <h1>REST Core Principles</h1>
-      </hgroup>
-      <ul class="small">
-        <li>REST architectural style defines constraints</li>
-        <ul>
-          <li>if you follow them, they help you to achieve a good design,
-            interoperability and scalability.</li>
-        </ul>
-        <li>Constraints</li>
-        <ul>
-          <li>Client/Server</li>
-          <li>Statelessness</li>
-          <li>Cacheability</li>
-          <li>Layered system</li>
-          <li>Uniform interface</li>
-        </ul>
-        <li>Guiding principles</li>
-        <ul>
-          <li>Identification of resources</li>
-          <li>Representations of resources and self-descriptive messages</li>
-          <li>Hypermedia as the engine of application state (HATEOAS)</li>
-        </ul>
-      </ul>
-    </div>
-
-    <div class="slide">
-      <hgroup>
-        <h1>HTTP Request and Response</h1>
-      </hgroup>
-      <ul class="small">
-        <li>Request Syntax</li>
-        <pre class="brush: plain; gutter: false">
-                    method uri http-version &lt;crlf>
-                    (header : value &lt;crlf>)*
-                    &lt;crlf>
-                    [ data ]
-                </pre>
-        <li>Response Syntax</li>
-        <pre class="brush: plain; gutter: false">
-                    http-version response-code [ message ]  &lt;crlf>
-                    (header : value &lt;crlf>)*
-                    &lt;crlf>
-                    [ data ]
-                </pre>
-        <li>Semantics of terms</li>
-        <pre class="brush: plain; gutter: false">
-                    method         = "GET" | "POST" | "DELETE" | "PUT" | "HEAD" | "OPTIONS"
-                    uri            = [ path ] [ ";" params ] [ "?" query ]
-                    http-version   = "HTTP/1.0" | "HTTP/1.1"
-                    response-code  = valid response code
-                    header : value = valid HTTP header and its value
-                    data           = resource state representation (hypertext)
-                </pre>
-      </ul>
-    </div>
-
-    <div class="slide">
-      <hgroup>
-        <h1>Uniform Interface</h1>
-      </hgroup>
-      <ul class="small">
-        <li>Uniform interface = finite set of operations</li>
-        <ul>
-          <li>Resource manipulation</li>
-          <ul>
-            <li>CRUD &ndash; Create (POST/PUT), Read (GET), Update (PUT/PATCH), Delete (DELETE)</li>
-          </ul>
-          <li>operations are not domain-specific</li>
-          <ul>
-            <li>For example, <code>GET /orders</code> and not <code>getOrders()</code></li>
-            <li>This reduces complexity when solving interoperability</li>
-          </ul>
-        </ul>
-        <li>Integration issues examples</li>
-      </ul>
-      <img src="img/integration-issues.png" style="padding-left: 50px" width="700px" />
-    </div>
-
-    <div class="slide">
-      <hgroup>
-        <h1>Safe and Unsafe Operations</h1>
-      </hgroup>
-      <ul class="small">
-        <li>Safe operations</li>
-        <ul>
-          <li>Do not change the resource state</li>
-          <li>Usually "read-only" or "lookup" operation</li>
-          <li>Clients can cache the results and refresh the cache freely</li>
-        </ul>
-        <li>Unsafe operations</li>
-        <ul>
-          <li>May change the state of the resource</li>
-          <li>Transactions such as buy a ticket, post a message</li>
-          <li>Unsafe does not mean dangerous!</li>
-        </ul>
-        <li>Unsafe interactions and transaction results</li>
-        <ul>
-          <li><code>POST</code> response may include transaction results</li>
-          <ul>
-            <li>you buy a ticket and submit a purchase data</li>
-            <li>you get transaction results</li>
-            <li>and you cannot bookmark this..., why?</li>
-          </ul>
-          <li>Should be referable with a persistent URI</li>
-        </ul>
-      </ul>
-    </div>
-
-    <div class="slide">
-      <hgroup>
-        <h1>Idempotence</h1>
-      </hgroup>
-      <ul>
-        <li>Idempotent operation</li>
-        <ul>
-          <li>Invoking a method on the same resource always has the same effect</li>
-          <li>Operations <code>GET</code>, <code>PUT</code>, <code>DELETE</code></li>
-        </ul>
-        <li>Non-idempotent operation</li>
-        <ul>
-          <li>Invoking a method on the same resource may have different effects</li>
-          <li>Operation <code>POST</code></li>
-        </ul>
-        <li>Effect = a state change</li>
-      </ul>
-    </div>
-
-    <div class="slide outline"></div>
+    <header>Kubernetes</header>
 
     <section>
-      <header>Performance</header>
+      <header>Basic Concepts</header>
 
       <div class="slide">
         <hgroup>
-          <h1>Persistent connections</h1>
+          <h1>Overview</h1>
         </hgroup>
         <ul class="x-small">
-          <li>Persistent HTTP connection = HTTP keepalive</li>
+          <li>In your architecture...</li>
           <ul>
-            <li>TCP established connection used for multiple requests/responses</li>
-            <li>Avoids TCP three-way handshake to be performed on every request</li>
-            <li>Reduces latency</li>
-            <li>FIFO queuing order on the client (request queuing)</li>
-            <ul>
-              <li>dispatch first request, get response, dispatch next request</li>
-            </ul>
+            <li>Containers are atomic pieces of application architecture</li>
+            <li>Containers can be linked (e.g. web server, DB)</li>
+            <li>Containers access shared resources (e.g. disk volumes)</li>
           </ul>
-          <li>Example: <code>GET /html</code>, <code>GET /css</code></li>
+          <li>Kubernetes</li>
           <ul>
-            <li>server processing time 40ms and 20ms respectivelly</li>
+            <li>Automation of deployments, scaling, management of containerized applications across number of nodes</li>
+            <li>Based on Borg, a parent project from Goolge</li>
           </ul>
-          <li>Without HTTP keepalive</li>
+          <img src="img/kubernetes-overview.png" width="400px" style="margin-top: 10px; margin-left: 20px"></img>
+        </ul>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Key Design Principles</h1>
+        </hgroup>
+        <ul class="x-small">
+          <li>Kubernetes provides abstractions that separate application deployment from the underlying infrastructure
+            details</li>
+          <li>Application workloads and infrastructure decoupling</li>
           <ul>
-            <li>three-way handshake 84ms before the data is received on the server</li>
-            <li>Response received at 152ms and 132ms respectivelly</li>
-            <li>The total time is 284ms</li>
+            <li><b>Compute:</b> Define <i>what</i> to run without specifying <i>where</i> it runs</li>
+            <li><b>Storage:</b> Applications request storage independent of storage backend</li>
+            <li><b>Networking:</b> Stable access to applications regardless of IPs or location</li>
           </ul>
-          <li>HTTP keepalive</li>
+          <li>Benefits</li>
           <ul>
-            <li>One TCP connection for both requests</li>
-            <li>In our example this will save one RTT, i.e. 56ms</li>
-            <li>The total time will be 228ms</li>
+            <li>Portability across on-prem and cloud environments</li>
+            <li>Scalability and resilience through dynamic scheduling</li>
+            <li>Consistency and standardization of deployment model</li>
+            <li>Reduced vendor lock-in thanks to open standards</li>
           </ul>
         </ul>
       </div>
 
       <div class="slide">
         <hgroup>
-          <h1>Persistent connections savings</h1>
+          <h1>Desired State and Reconciliation</h1>
         </hgroup>
         <ul class="xx-small">
-          <li>Each request needs</li>
+          <li>Kubernetes operates on a <b>desired state</b> model</li>
           <ul>
-            <li>Without keepalive, 2 RTT of latency</li>
-            <li>With keepalive, the first request needs 2 RTT, a following request needs 1 RTT</li>
+            <li>Users define the state they want through object specifications (YAML)</li>
+            <li>Example: “there should be 3 replicas of this application”</li>
           </ul>
-          <li>Savings for <code>N</code> requests: <code>(N-1) x RTT</code></li>
-          <li>Average value of <code>N</code> is 90 requests for a Web app</li>
+
+          <li>Actual State vs. Desired State</li>
           <ul>
-            <li>Measured by HTTP Archive (http://httparchive.org) as of 2013</li>
-            <li>Average Web application is composed of 90 requests fetched from 15 hosts</li>
-            <ul>
-              <li>HTML: 10 reuqests</li>
-              <li>Images: 55 requests</li>
-              <li>Javascript: 15 requests</li>
-              <li>CSS: 5 requests</li>
-              <li>Other: 5 requests</li>
-            </ul>
+            <li>Kubernetes constantly monitors the cluster</li>
+            <li>If the actual state drifts from the desired state, it takes action to fix it</li>
+          </ul>
+
+          <li>Reconciliation Loop</li>
+          <ul>
+            <li>Controllers continuously compare desired vs. actual state</li>
+            <li>Automatically performs actions such as restarting, rescheduling, or scaling Pods</li>
           </ul>
         </ul>
+        <img src="img/kubernetes-state.png" width="400px" style="margin-top: 10px; margin-left: 70px"></img>
       </div>
 
       <div class="slide">
         <hgroup>
-          <h1>HTTP pipelining</h1>
+          <h1>Features</h1>
         </hgroup>
         <ul class="xx-small">
-          <li>Important optimization &ndash; response queuing</li>
+          <li>Automatic binpacking</li>
           <ul>
-            <li>Allows to relecote FIFO queue from the client to the server</li>
-          </ul>
-          <li>Requests are pipelined one after another</li>
-          <ul>
-            <li>This allows the server to process requests immediatelly one after another</li>
-            <li>This saves one request and response propagation latency</li>
-            <li>In our example, the total time will be 172ms</li>
-          </ul>
-          <li>Parallel processing of requests</li>
-          <ul>
-            <li>In our example this saves another 20ms of latency</li>
-            <li><b>Head of line blocking</b></li>
-            <ul>
-              <li>Slower response (css with processing time 20ms) must be buffered until
-                the first response is generated and sent (no interleaving of responses)</li>
-            </ul>
-          </ul>
-          <li>Issues</li>
-          <ul>
-            <li>A single slow response blocks all requests behind it</li>
-            <li>Buffered (large or many) responses may exhaust server resources</li>
-            <li>A failed response may terminate TCP connection</li>
-            <ul>
-              <li>A client must request all sub-sequent resources again (dupplicate processing)
-            </ul>
-            <li>Some intermediaries may not support pipelining and abort connection</li>
-          </ul>
-          <li>HTTP pipelining support today is limited</li>
-        </ul>
-      </div>
-
-      <div class="slide">
-        <hgroup>
-          <h1>Multiple TCP connections</h1>
-        </hgroup>
-        <ul class="xx-small">
-          <li>Using only one TCP connection is slow</li>
-          <ul>
-            <li>Client must queue HTTP requests and process one after another</li>
-          </ul>
-          <li>Multiple TCP connections work in parallel</li>
-          <li><b>There are 6 connections per host</b></li>
-          <ul>
-            <li>The client can dispatch up to 6 requests in parallel</li>
-            <li>The server can process up to 6 requests in parallel</li>
-            <li>This is a trade-off between higher request paralellism and the client and server overhead</li>
-          </ul>
-          <li>The maximum number of connections prevents from DoS attacks</li>
-          <ul>
-            <li>The client could exhaust server resources</li>
-          </ul>
-          <li>Domain sharding</li>
-          <ul>
-            <li>The connection limit as per host (origin)</li>
-            <li>There can be multiple origins used in a page</li>
-            <ul>
-              <li>Each origin has 6 maximum connection limit</li>
-            </ul>
-            <li>A domain can be sharded</li>
-            <ul>
-              <li><code>www.example.com</code> &rarr; <code>shard1.example.com</code>, <code>shard2.example.com</code>
-              </li>
-              <li>Each shard can resolve to the same IP or different IP, it does not matter</li>
-            </ul>
-            <li>How many shards?</li>
-          </ul>
-        </ul>
-      </div>
-
-    </section>
-
-    <div class="slide outline"></div>
-
-    <section>
-      <header>Configuration</header>
-
-      <div class="slide" id="http-request">
-        <hgroup>
-          <h1>Serving HTTP Request</h1>
-        </hgroup>
-        <div class="h-drawing" style="height: 180px" id="1c1oNNZgurIxOEDHbnZuPHKR9I-H1VhoeOpTWa6-vslI"></div>
-        <ul class="xx-small">
-          <li>Serving HTTP request</li>
-          <ol>
-            <li>User enters URL <code>http://shard1.example.com/orders</code> to the browser</li>
-            <li>DNS resolution: browser gets an IP address for <code>shard1.example.com</code></li>
-            <li>Three-way handshake: browser and Web Server creates a socket</li>
-            <li>Browser sends ACK and HTTP request:</li>
-            <pre class="brush: plain; class-name: 'tight'">
-                    GET /orders HTTP/1.1
-                    Host: shard1.example.com
-                    </pre>
-            <li>Web server passes the request to the web application <code>shard1.example.com</code> which serves
-              <code>GET orders</code> and that writes a response back to the socket.
+            <li>Automatically places containers onto nodes based on their resource requirements and other constraints.
             </li>
-          </ol>
+          </ul>
+          <li>Horizontal scaling</li>
+          <ul>
+            <li>Scales your application up and down with a simple command, with a UI, or automatically based on CPU
+              usage.
+            </li>
+          </ul>
+          <li>Automated rollouts and rollbacks</li>
+          <ul>
+            <li>Progressive rollout out of changes to application/configuration, monitoring application health
+              and rollback when something goes wrong.</li>
+          </ul>
+          <li>Storage orchestration</li>
+          <ul>
+            <li>Automatically mounts the storage system (local or in the cloud)</li>
+          </ul>
+          <li>Self-healing</li>
+          <ul>
+            <li>Restarts containers that fail, replaces and reschedules containers when nodes die, kills containers that
+              don't respond to user-defined health checks.</li>
+          </ul>
+          <li>Service discovery and load balancing</li>
+          <ul>
+            <li>Gives containers their own IP addresses and a single DNS name for a set of containers, and can
+              load-balance across them.</li>
+          </ul>
+        </ul>
+      </div>
+    </section>
+
+    <div class="slide outline"></div>
+
+    <section>
+      <header>Core Concepts and Architecture</header>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Core Building Blocks</h1>
+        </hgroup>
+        <ul class="x-small">
+          <li><b>Cluster</b></li>
+          <ul>
+            <li>A set of worker nodes and a control plane</li>
+            <li>Runs and manages containerized applications</li>
+          </ul>
+
+          <li><b>Node</b></li>
+          <ul>
+            <li>A worker machine in Kubernetes (VM or physical)</li>
+            <li>Runs Pods scheduled by the control plane</li>
+          </ul>
+
+          <li><b>Control Plane</b></li>
+          <ul>
+            <li>Manages the overall state of the cluster</li>
+            <li>Schedules workloads and responds to cluster events</li>
+          </ul>
+
+          <li><b>Pod</b></li>
+          <ul>
+            <li>The smallest deployable unit in Kubernetes</li>
+            <li>One or more tightly-coupled containers</li>
+            <li>Containers share networking and storage within a Pod</li>
+          </ul>
         </ul>
       </div>
 
       <div class="slide">
         <hgroup>
-          <h1>Virtual Host</h1>
+          <h1>Architecture</h1>
+        </hgroup>
+        <img src="img/components-of-kubernetes.svg"
+          style="width: 800px; margin-left: 50px; margin-top: 50px; zoom: 0.88"></img>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Control Plane Components (Part 1)</h1>
         </hgroup>
         <ul class="x-small">
-          <li>Virtual host</li>
+          <li>Global decisions about the cluster</li>
           <ul>
-            <li>Configuration of a named virtual host in a Web server</li>
-            <li>Web server uses host request header to distinguish among multiple virtual
-              hosts on a single physical host.</li>
+            <li>Schedulling</li>
+            <li>Detecting and responding to cluster events, starting up new pods</li>
           </ul>
-          <li>Apache virtual host configuration</li>
-          <ul class="x-small">
-            <li>Two virtual hosts in a single Web server</li>
-            <pre class="brush:plain; class-name: 'tight'">
-          # all IP addresses will be used for named virtual hosts
-          NameVirtualHost *:80
-
-          &lt;VirtualHost *:80>
-                  ServerName www.example.com
-                  ServerAlias shard1.example.com shard2.example.com
-                  ServerAdmin admin@example.com
-                  DocumentRoot /var/www/apache/example.com
-          &lt;/VirtualHost>
-
-          &lt;VirtualHost *:80>
-                  ServerName company.cz
-                  ServerAdmin admin@firm.cz
-                  DocumentRoot /var/www/apache/company.cz
-          &lt;/VirtualHost></pre>
+          <li>kube-apiserver</li>
+          <ul>
+            <li>exposes the Kubernetes API</li>
+            <li>The API server is the front end for the Kubernetes control plane.</li>
+          </ul>
+          <li>etcd</li>
+          <ul>
+            <li>highly-available key value store used to store all cluster data</li>
+          </ul>
+          <li>kube-scheduler</li>
+          <ul>
+            <li>watches for newly created Pods with no assigned node</li>
+            <li>selects a node for Pods to run on.</li>
+            <li>Decision factors: resource requirements, hardware/software/policy constraints, affinity and
+              anti-affinity
+              specifications</li>
           </ul>
         </ul>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Control Plane Components (Part 2)</h1>
+        </hgroup>
+        <ul class="x-small">
+          <li>kube-controller-manager</li>
+          <ul>
+            <li>runs controller to ensure the desired state of cluster objects</li>
+            <li><b>Node controller</b></li>
+            <ul>
+              <li>noticing and responding when nodes go down</li>
+            </ul>
+            <li><b>Job controller</b></li>
+            <ul>
+              <li>creates Pods to run one-off tasks to completion.</li>
+            </ul>
+            <li><b>Endpoints controller</b></li>
+            <ul>
+              <li>Populates the Endpoints object (that is, joins Services, Pods).</li>
+            </ul>
+          </ul>
+          <li>cloud-controller-manager</li>
+          <ul>
+            <li>Integration with cloud services (when the cluster is running in a cloud)</li>
+            <li><b>Node controller</b></li>
+            <ul>
+              <li>checks if a node has been deleted in the cloud after it stops responding</li>
+            </ul>
+            <li><b>Route controller</b></li>
+            <ul>
+              <li>For setting up routes in the underlying cloud infrastructure</li>
+            </ul>
+            <li><b>Service controller</b></li>
+            <ul>
+              <li>For creating, updating and deleting cloud provider load balancers</li>
+            </ul>
+          </ul>
+        </ul>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Node</h1>
+        </hgroup>
+        <ul class="x-small">
+          <li>Kubernetes runtime environment</li>
+          <ul>
+            <li>Run on every node</li>
+            <li>Maintaining running pods</li>
+          </ul>
+          <li>kubelet</li>
+          <ul>
+            <li>An agent that runs on each node in the cluster</li>
+            <li>It makes sure that containers are running in a Pod.</li>
+          </ul>
+          <li>kube-proxy</li>
+          <ul>
+            <li>maintains network rules on nodes</li>
+            <li>network rules allow network communication to Pods from inside or outside of the cluster</li>
+            <li>uses the operating system packet filtering layer or forwards the traffic itself.</li>
+          </ul>
+          <li>Container runtime</li>
+          <ul>
+            <li>Responsible for running containers</li>
+            <li>Kubernetes supports several container runtimes (containerd, CRI-O)</li>
+            <li>Any implementation of the Kubernetes CRI (Container Runtime Interface)</li>
+          </ul>
+        </ul>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Container Stack</h1>
+        </hgroup>
+        <div class="h-drawing" style="padding-top: 21px; padding-left: 21px; width: 600px"
+          id="1H0E2ljSysot6vb-m8T1hyy4XtyDz3QLb07H-Q0lbgqs"></div>
       </div>
 
     </section>
 
-    <!-- <div class="slide outline"></div>
+    <div class="slide outline"></div>
 
     <section>
-      <header>Uniform Interface</header>
+      <header>Workloads</header>
 
       <div class="slide">
         <hgroup>
-          <h1>Uniform Interface</h1>
+          <h1>Namespaces</h1>
         </hgroup>
-        <ul class="small">
-          <li>Uniform interface = finite set of operations</li>
+        <ul class="x-small">
+          <li>Logical grouping of cluster resources</li>
           <ul>
-            <li>Resource manipulation</li>
-            <ul>
-              <li>CRUD &ndash; Create (POST/PUT), Read (GET), Update (PUT/PATCH), Delete (DELETE)</li>
-            </ul>
-            <li>operations are not domain-specific</li>
-            <ul>
-              <li>For example, <code>GET /orders</code> and not <code>getOrders()</code></li>
-              <li>This reduces complexity when solving interoperability</li>
-            </ul>
+            <li>Allow you to organize and separate objects within a Kubernetes cluster</li>
+            <li>Useful when multiple teams, environments, or projects share the same cluster</li>
           </ul>
-          <li>Integration issues examples</li>
-        </ul>
-        <img src="img/integration-issues.png" style="padding-left: 50px" width="700px" />
-      </div>
 
-      <div class="slide">
-        <hgroup>
-          <h1>Safe and Unsafe Operations</h1>
-        </hgroup>
-        <ul class="small">
-          <li>Safe operations</li>
+          <li>Rationale</li>
           <ul>
-            <li>Do not change the resource state</li>
-            <li>Usually "read-only" or "lookup" operation</li>
-            <li>Clients can cache the results and refresh the cache freely</li>
-          </ul>
-          <li>Unsafe operations</li>
-          <ul>
-            <li>May change the state of the resource</li>
-            <li>Transactions such as buy a ticket, post a message</li>
-            <li>Unsafe does not mean dangerous!</li>
-          </ul>
-          <li>Unsafe interactions and transaction results</li>
-          <ul>
-            <li><code>POST</code> response may include transaction results</li>
+            <li>Provide isolation and boundaries between workloads</li>
+            <li>Prevent name collisions</li>
             <ul>
-              <li>you buy a ticket and submit a purchase data</li>
-              <li>you get transaction results</li>
-              <li>and you cannot bookmark this..., why?</li>
+              <li>Objects can have the same name if in different namespaces</li>
             </ul>
-            <li>Should be referable with a persistent URI</li>
+            <li>Enable resource limits and access control per namespace</li>
+          </ul>
+
+          <li>Usage</li>
+          <ul>
+            <li>Common namespaces: <code>default</code>, <code>kube-system</code>, <code>kube-public</code>,
+              <code>kube-node-lease</code>
+            </li>
+            <li>Create separate namespaces for e.g. <i>dev</i>, <i>test</i>, <i>prod</i></li>
+            <li>Commands run in a namespace unless another is specified</li>
           </ul>
         </ul>
       </div>
 
       <div class="slide">
         <hgroup>
-          <h1>Idempotence</h1>
+          <h1>Pod</h1>
         </hgroup>
-        <ul>
-          <li>Idempotent operation</li>
+        <ul class="x-small">
+          <li>Pod</li>
           <ul>
-            <li>Invoking a method on the same resource always has the same effect</li>
-            <li>Operations <code>GET</code>, <code>PUT</code>, <code>DELETE</code></li>
+            <li>A group of one or more tightly-coupled containers.</li>
+            <li>Containers share storage and network resources.</li>
+            <li>A Pod runs a single instance of a given application</li>
+            <li>Pod's containers are always co-located and co-scheduled</li>
+            <li>Pod's containers run in a shared context, i.e. in a set of Linux namespaces</li>
           </ul>
-          <li>Non-idempotent operation</li>
+          <li>Pods are created using workload resources</li>
           <ul>
-            <li>Invoking a method on the same resource may have different effects</li>
-            <li>Operation <code>POST</code></li>
+            <li>You do not create them directly</li>
           </ul>
-          <li>Effect = a state change</li>
+          <li>Pods in a Kubernetes cluster are used in two main ways</li>
           <ul>
-            <li>recall the effect definition in MDW</li>
+            <li>Run a single container, the most common Kubernetes use case</li>
+            <li>Run multiple containers that need to work together</li>
+          </ul>
+        </ul>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Workloads</h1>
+        </hgroup>
+        <ul class="xx-small">
+          <li>An application running on Kubernetes</li>
+          <li>Workloads run in a set of Pods</li>
+          <li>Pre-defined workload resources to manage lifecylce of Pods</li>
+          <ul>
+            <li><b>Deployment</b> and ReplicaSet</li>
+            <ul>
+              <li>managing a stateless application workload</li>
+              <li>any Pod in the Deployment is interchangeable and can be replaced if needed</li>
+            </ul>
+            <li><b>StatefulSet</b></li>
+            <ul>
+              <li>one or more related Pods that track state</li>
+              <li>For example, if a workload records data persistently, run a StatefulSet that matches each Pod with a
+                persistent volume.</li>
+            </ul>
+            <li>DaemonSet</li>
+            <ul>
+              <li>Ensures that all (or some) Nodes run a copy of a Pod</li>
+              <li>Such as a cluster storage daemon, logs collection, node monitoring running on every node</li>
+            </ul>
+            <li>Job and CronJob</li>
+            <ul>
+              <li>Define tasks that run to completion and then stop.</li>
+              <li>Jobs represent one-off tasks, whereas CronJobs recur according to a schedule.</li>
+            </ul>
+          </ul>
+        </ul>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Deployment Spec Example</h1>
+        </hgroup>
+        <ul class="x-small">
+          <li>Deployment spec</li>
+          <pre class="brush: bash; class-name: ''">
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: nginx-deployment
+          spec:
+            selector:
+              matchLabels:
+                app: nginx          
+            replicas: 3 # tells deployment to run 3 pods matching the template
+            template:
+              metadata:
+                labels:
+                  app: nginx
+              spec:
+                containers:
+                - name: nginx
+                  image: nginx:1.14.2
+                  ports:
+                  - containerPort: 80          
+        </pre>
+          <ul>
+            <li>A desired state of an application running in the cluster</li>
+            <li>Kubernetes reads the Deployment spec and starts three app instances</li>
+            <li>If an instance fails, Kubernetes starts a replacement app instance</li>
           </ul>
         </ul>
       </div>
@@ -677,365 +521,235 @@
     <div class="slide outline"></div>
 
     <section>
-      <header>State Management</header>
-
-      <div class="slide" id="state-management">
-        <hgroup>
-          <h1>State Management</h1>
-        </hgroup>
-        <ul class="small">
-          <li>HTTP is a stateless protocol &#150; original design</li>
-          <ul>
-            <li>No information to relate multiple interactions at server-side</li>
-            <ul>
-              <li>Except <code>Authorization</code> header is copied in every request</li>
-              <li>IP addresses do not work, one public IP can be shared by multiple clients</li>
-            </ul>
-          </ul>
-          <li>Solutions to check for a valid state at server-side</li>
-          <ul>
-            <li><b>Cookies</b> &ndash; obvious and the most common workaround</li>
-            <ul>
-              <li><span class="h-ref" id="rfc-2109">RFC 2109 &ndash; HTTP State Management Mechanism</span></li>
-              <li>Allow clients and servers to talk in a context called <b>sessions</b></li>
-            </ul>
-            <li><b>Hypertext</b> &ndash; original HTTP design principle</li>
-            <ul>
-              <li>App states represented by resources (hypermedia), links define transitions between states</li>
-              <li>Adopted by the REST principle <b>statelessness</b></li>
-            </ul>
-          </ul>
-        </ul>
-      </div>
+      <header>Services</header>
 
       <div class="slide">
         <hgroup>
-          <h1>Resource State</h1>
+          <h1>What is a Service?</h1>
         </hgroup>
         <ul class="x-small">
-          <li>State</li>
+          <li>A Kubernetes <b>Service</b> is an abstraction that defines</li>
           <ul>
-            <li>Resource representation is in fact a <b>representation of a resource state</b></li>
-            <li>Resource may be in different states over time</li>
+            <li>A logical set of Pods
+            <li>A policy to access them.</li>
           </ul>
-        </ul>
-        <div class="h-drawing" style="height: 250px; margin: 15px 0px 15px 0px;"
-          id="1dhjNo4p6x5rS-IH3E2WcVw3TxwCqmdhtA-9wD0hwbuc"></div>
-        <ul class="small space-before">
-          <li>In REST resource states represent application states</li>
+          <li>Pods are ephemeral &ndash; their IPs change when recreated</li>
+          <li>A Service provides a stable virtual endpoint for a set of Pods</li>
+          <li>Services enable reliable communication between components:</li>
+          <ul>
+            <li>Internal pods communication</li>
+            <li>External access to cluster workloads</li>
+          </ul>
+          <li>Each Service gets</li>
+          <ul>
+            <li>A DNS name and</li>
+            <li>virtual IP (ClusterIP) inside the cluster.</li>
+          </ul>
+          <li>Kubernetes component <code>kube-proxy</code> manage routing to backend Pods.</li>
         </ul>
       </div>
 
-      <div class="slide" id="resource-state">
+      <div class="slide">
         <hgroup>
-          <h1>Resource State Example</h1>
+          <h1>Service Types</h1>
         </hgroup>
         <ul class="x-small">
-          <li>Time <code>t1</code>: client A retrieves a resource <code>/orders</code> (GET)</li>
-          <pre class="brush: xml; class-name: 'tight'">
-                            &lt;orders>
-                                &lt;order id="54467"/>
-                                &lt;order id="65432"/>
-                            &lt;/orders>                                                
-                        </pre>
-          <li>Time <code>t2</code>: client B adds a new order (POST)</li>
-          <pre class="brush: xml; class-name: 'tight'">
-                            &lt;order>
-                                ...
-                            &lt;/order>                                                
-                        </pre>
-          <li>Time <code>t3</code>: client A retrieves a resource <code>/orders</code> (GET)</li>
-          <pre class="brush: xml; class-name: 'tight'">
-                            &lt;orders>
-                                &lt;order id="54467"/>
-                                &lt;order id="65432"/>
-                                &lt;order id="74567"/>
-                            &lt;/orders>                                                
-                        </pre>
-          <li>The resource <code>/orders</code> has different states in <code>t1</code>
-            and <code>t3</code>.
-        </ul>
-      </div>
-
-      <div class="slide">
-        <hgroup>
-          <h1>Link</h1>
-        </hgroup>
-        <ul class="small">
-          <li>Service operation</li>
+          <li><b>ClusterIP</b></li>
           <ul>
-            <li>Applying an access to a link (GET, PUT, POST, DELETE)</li>
-            <li>Link: HTTP method + resource URI + optional link semantics</li>
+            <li>Exposes the Service on an internal IP in the cluster only.</li>
+            <li>Used for internal communication between Pods.</li>
           </ul>
-          <li>Example: <code>getOrder</code>, <code>addOrder</code>, and <code>updateItem</code></li>
-        </ul>
-        <div class="h-drawing" id="16vcb0AGdT3N5Jd4FFw9YADqYoF_QQlP46UsYngjfTKs" style="height: 320px"></div>
-      </div>
-
-      <div class="slide">
-        <hgroup>
-          <h1>Atom Links</h1>
-        </hgroup>
-        <ul class="small">
-          <li>Atom Syndication Format</li>
+          <li><b>NodePort</b></li>
           <ul>
-            <li>XML-based document format; Atom feeds</li>
-            <li>Atom links becoming popular for RESTful applications</li>
-            <pre class="brush: xml; highlight : [2,3,4,5]">
-                            &lt;order a:xmlns="http://www.w3.org/2005/Atom" xmlns="..."&gt;
-                                &lt;a:link 
-                                    rel="next" 
-                                    href="http://company.com/orders/5543" 
-                                    type="application/xml"/>
-                                &lt;customer&gt;Tomas&lt;/customer>
-                                &lt;items&gt;...&lt;/items>
-                            &lt;/order>
-                            </pre>
-            <li>Link structure</li>
-            <ul class="no-bullet">
-              <li><code>rel</code> &ndash; name of the link<br />
-                ~ semantics of an operation behind the link</li>
-              <li><code>href</code> &ndash; URI to the resource described by the link</li>
-              <li><code>type</code> &ndash; media type of the resource the link points to</li>
-            </ul>
+            <li>Exposes the Service on each Node’s IP at a static port (e.g. 30080).</li>
+            <li>Accessible externally via <code>NodeIP:NodePort</code>.</li>
           </ul>
-        </ul>
-      </div>
-
-
-      <div class="slide">
-        <hgroup>
-          <h1>Interaction with Cookies</h1>
-        </hgroup>
-        <ul class="small">
-          <li>Request-response interaction with cookies</li>
+          <li><b>LoadBalancer</b></li>
           <ul>
-            <li>Session is a logical channel maintained by the server</li>
+            <li>Provisions an external load balancer (e.g. in cloud environments).</li>
+            <li>Routes external traffic to the Service.</li>
           </ul>
-          <div class="h-drawing" style="height: 250px" id="1mVCe8EtqVApZVRV_RHYQKtqDNELKdo84qzCqGvAs7iA"></div>
-          <li>Stateful Server</li>
+          <li><b>ExternalName</b></li>
           <ul>
-            <li>Server remembers the session information in a server memory</li>
-            <li>Server memory is a non-persistent storage, when server restarts the memory content is lost!</li>
+            <li>Maps the Service to an external DNS name.</li>
+            <li>No proxying — pure DNS CNAME redirection.</li>
           </ul>
         </ul>
       </div>
 
       <div class="slide">
         <hgroup>
-          <h1>Set-Cookie and Cookie Headers</h1>
+          <h1>How Services Work</h1>
         </hgroup>
         <ul class="xx-small">
-          <li><code>Set-Cookie</code> response header</li>
-          <pre class="brush: plain; ">
-                        set-cookie = "Set-Cookie:" cookie ("," cookie)*
-                          cookie    = NAME "=" VALUE (";" cookie-av)*
-                          cookie-av = "Comment" "=" value
-                                    | "Domain" "=" value
-                                    | "Max-Age" "=" value
-                                    | "Path" "=" value
-                    </pre>
+          <li><strong>Selector</strong></li>
           <ul>
-            <li><code>domain</code> &ndash; a domain for which the cookie is applied</li>
-            <li><code>Max-Age</code> &ndash; number of seconds the cookie is valid</li>
-            <li><code>Path</code> &ndash; URL path for which the cookie is applied</li>
-          </ul>
-          <li><code>Cookie</code> request header. A client sends the cookie in a request if:</li>
-          <ul>
-            <li><code>domain</code> matches the origin server's fully-qualified host name</li>
-            <li><code>path</code> matches a prefix of the request-URI</li>
-            <li><code>Max-Age</code> has not expired</li>
-          </ul>
-          <pre class="brush: plain;">
-                        cookie  = "Cookie:" cookie-value (";" cookie-value)*
-                          cookie-value    = NAME "=" VALUE [";" path] [";" domain]
-                          path            = "$Path" "=" value
-                          domain          = "$Domain" "=" value
-                    </pre>
-          <ul>
-            <li><code>domain</code>, and <code>path</code> are values from corresponding attributes of
-              the <code>Set-Cookie</code> header</li>
+            <li>A Service usually defines a <code>selector</code> — a label query used to find matching Pods.</li>
+            <li>Example: <code>selector: app=nginx</code> matches all Pods with label <code>app=nginx</code>.</li>
+            <li>Kubernetes monitors Pods that match this selector and updates Service backends
+            </li>
           </ul>
 
+          <li><strong>Endpoints / EndpointSlice</strong></li>
+          <ul>
+            <li>For every Service with a selector, Kubernetes creates an <code>Endpoints</code> (or
+              <code>EndpointSlice</code>) object listing all healthy Pod IPs and ports.
+            </li>
+            <li>This list changes dynamically as Pods are added, removed, or become unhealthy.</li>
+          </ul>
+
+          <li><strong>kube-proxy</strong></li>
+          <ul>
+            <li>Runs on every Node and watches Service and Endpoint objects.</li>
+            <li>Programs <code>iptables</code> or <code>IPVS</code> rules to forward traffic from the Service’s virtual
+              IP (<code>ClusterIP</code>) to one of the backend Pod IPs.</li>
+            <li>Load balancing is done using round-robin or IPVS algorithms.</li>
+          </ul>
+
+          <li><strong>DNS Integration</strong></li>
+          <ul>
+            <li><code>CoreDNS</code> automatically creates a DNS record for each Service:</li>
+            <ul>
+              <li><code>&lt;service&gt;.&lt;namespace&gt;.svc.cluster.local</code></li>
+            </ul>
+            <li>Pods can reach the Service via DNS without knowing Pod IPs</li>
+            <ul>
+              <li><code>curl http://my-service.default.svc.cluster.local</code></li>
+            </ul>
+          </ul>
         </ul>
       </div>
 
-    </section> -->
+      <div class="slide">
+        <hgroup>
+          <h1>ClusterIP Service Example</h1>
+        </hgroup>
+        <ul class="xx-small">
+          <li>Example configuration exposing an NGINX Deployment internally:</li>
+          <pre class="brush: bash; class-name: ''">
+          apiVersion: v1
+          kind: Service
+          metadata:
+            name: nginx-svc
+          spec:
+            selector:
+              app: nginx
+            ports:
+            - protocol: TCP
+              port: 80
+              targetPort: 8080
+            type: ClusterIP
+              </pre>
+          <li>Pods with <code>app=nginx</code> receive traffic through <code>ClusterIP</code>.</li>
+          <li>DNS name: <code>nginx-svc.default.svc.cluster.local</code></li>
+          <li>Used by other Pods to connect via <code>http://nginx-svc:80</code>.</li>
+        </ul>
+      </div>
 
+      <div class="slide">
+        <hgroup>
+          <h1>Packet Forwarding and Load Balancing</h1>
+        </hgroup>
+        <ul class="xx-small">
+          <li><strong>iptables mode</strong></li>
+          <ul>
+            <li><code>kube-proxy</code> creates NAT rules in the <code>nat</code> table to redirect Service traffic.
+            </li>
+            <li>Example traffic comming to <code>NodeIP:NodePort</code> (e.g. <code>192.168.1.11:30080</code>)</li>
+            <pre class="brush: bash; class-name: ''">
+# 1. Match NodePort traffic coming from outside
+-A KUBE-NODEPORTS -p tcp --dport 30080 -m addrtype ! --src-type LOCAL \
+  -j KUBE-MARK-MASQ
+    # Mark all external traffic for SNAT (so replies go back via this node)
+
+# 2. NodePort forwards traffic to the Service chain
+-A KUBE-NODEPORTS -p tcp --dport 30080 \
+  -m comment --comment "default/my-service: NodePort" \
+  -j KUBE-SVC-XYZ123
+
+# 3. Service chain chooses one backend Pod 
+-A KUBE-SVC-XYZ123 -m statistic --mode random --probability 0.5 \
+  -j KUBE-SEP-A1B2C3
+-A KUBE-SVC-XYZ123 -j KUBE-SEP-D4E5F6
+
+# 4. Pod DNAT rule to redirect to Pod IP:port
+-A KUBE-SEP-A1B2C3 -p tcp -m tcp -j DNAT --to-destination 10.42.0.12:8080
+-A KUBE-SEP-D4E5F6 -p tcp -m tcp -j DNAT --to-destination 10.42.1.7:8080
+</pre>
+          </ul>
+          <ul>
+            <li>The node’s routing table determines how to reach the Pod’s IP:</li>
+            <ul>
+              <li><code>10.42.0.0/24 via 192.168.1.12 dev flannel.1</code></li>
+              <li>packets to Pods in <code>10.42.0.0/24</code> (running on Node 2) are sent through the
+                VXLAN interface <code>flannel.1</code> to Node 2’s IP <code>192.168.1.12</code></li>
+            </ul>
+          </ul>
+      </div>
+
+
+    </section>
+
+    <div class="slide outline"></div>
+
+    <section>
+      <header>Beyond the Basics</header>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Advanced Topics</h1>
+        </hgroup>
+        <ul class="xx-small">
+          <li>Custom APIs and Controllers</li>
+          <ul>
+            <li>CRDs, Operators, reconciliation loops</li>
+            <li>Admission webhooks (mutating/validating)</li>
+          </ul>
+
+          <li>Security</li>
+          <ul>
+            <li>RBAC, Namespaces, Pod Security (seccomp, capabilities, rootless)</li>
+            <li>Image signing and supply chain (SBOM, cosign), Secret management (Vault/CSI)</li>
+            <li>Policy engines: OPA Gatekeeper, Kyverno</li>
+          </ul>
+
+          <li>Networking</li>
+          <ul>
+            <li>CNI, eBPF (Cilium), NetworkPolicies, Ingress</li>
+            <li>Gateway API, Service Mesh (mTLS, traffic shaping)</li>
+          </ul>
+
+          <li>Storage</li>
+          <ul>
+            <li>CSI drivers, snapshots, expansion, topology-aware PVs</li>
+            <li>Backup/DR (e.g., Velero), StatefulSet patterns</li>
+          </ul>
+
+          <li>Scaling and Scheduling</li>
+          <ul>
+            <li>HPA/VPA/KEDA (event-driven), Cluster Autoscaler</li>
+            <li>Affinity/anti-affinity, taints/tolerations, topology spread</li>
+          </ul>
+
+          <li>Ops and Delivery</li>
+          <ul>
+            <li>GitOps (Argo CD/Flux), progressive delivery (canary, blue/green)</li>
+            <li>Observability: metrics/logs/traces (Prometheus, OpenTelemetry)</li>
+          </ul>
+
+          <li>Runtimes and Isolation</li>
+          <ul>
+            <li>containerd/CRI-O, shims, sandboxed runtimes (gVisor, Kata)</li>
+            <li>Wasm/WASI experiments</li>
+          </ul>
+
+          <li>Multi-Cluster and Platform</li>
+          <ul>
+            <li>Cluster API, federation, service discovery across clusters</li>
+            <li>Multi-tenancy, quotas, cost allocation</li>
+          </ul>
+        </ul>
+      </div>
+
+    </section>
   </section>
-
-  <div class="slide outline"></div>
-
-  <section>
-    <header>Security</header>
-
-    <div class="slide">
-      <hgroup>
-        <h1>Web Service Security Concepts</h1>
-      </hgroup>
-      <ul class="x-small">
-        <li>Securing the client-server communcation</li>
-        <ul>
-          <li>Message-level security</li>
-          <li>Transport-level security</li>
-        </ul>
-        <li>Ensure</li>
-        <ul>
-          <li>Authentication &ndash; verify a client's identity</li>
-          <li>Authorizaton &ndash; rights to access resources</li>
-          <li>Message Confidentiality &ndash; keep message content secret</li>
-          <li>Message Integrity &ndash; message content does not change during transmission</li>
-          <li>Non-repudiation &ndash; proof of integrity and origin of data</li>
-        </ul>
-        <div class="h-drawing" style="height: 190px; margin-top: 30px"
-          id="1JhEX5OGpHhQY49mxA4-r7taripW6bkWwLCu94BU9QFI"></div>
-      </ul>
-    </div>
-
-    <div class="slide">
-      <hgroup>
-        <h1>Transport Level Security</h1>
-      </hgroup>
-      <ul class="x-small">
-        <li>SSL and TLS</li>
-        <ul>
-          <li>SSL and TLS is used interchangeably</li>
-          <li>SSL 3.0 developed by Netscape</li>
-          <li>IETF standardization of SSL 3.0 is TLS 1.0</li>
-          <ul>
-            <li>TLS 1.0 is upgrade of SSL 3.0</li>
-          </ul>
-          <li>Due to security flaws in TLS 1.0, TLS 1.1 and TLS 1.2 were created</li>
-        </ul>
-        <li>TLS layer</li>
-        <img src="img/TLS.png" style="height: 250px" />
-      </ul>
-    </div>
-
-    <div class="slide">
-      <hgroup>
-        <h1>TLS Services</h1>
-      </hgroup>
-      <ul class="xx-small">
-        <li>Encryption</li>
-        <ul>
-          <li>Peers must agree on ciphersuite and keys</li>
-          <li>This is achieved by <b>TLS handshake</b></li>
-        </ul>
-        <li>Authentication</li>
-        <ul>
-          <li>Peers can authenticate their identity</li>
-          <ul>
-            <li>The client can verify that the server is who it is claimed to be</li>
-            <li>Achieved by "Chain of Trust and Certificate Authoritites"</li>
-            <li>The server can also verify the client</li>
-          </ul>
-        </ul>
-        <li>Integrity</li>
-        <ul>
-          <li>TLS provives message framing mechanism</li>
-          <li>Every message is signed with Message Authentication Code (MAC)</li>
-          <ul>
-            <li>MAC hashes data in a message and combines the resulting hash with a key (negotiated during the TLS
-              handshake)</li>
-            <li>The result is a message authentication code sent with the message</li>
-          </ul>
-        </ul>
-      </ul>
-    </div>
-
-    <div class="slide">
-      <hgroup>
-        <h1>TLS Handshake Protocol</h1>
-      </hgroup>
-      <img src="img/tls-handshake.png" style="padding-top: 10px; padding-left: 20px; height: 300px" />
-      <ul class="xx-small">
-        <li>TLS Handshake</li>
-        <ul>
-          <li class="no-bullet">56 ms: ClientHello, TLS protocol version, list of ciphersuites, TLS options</li>
-          <li class="no-bullet">84 ms: ServerHello, TLS protocol version, ciphersuite, certificate</li>
-          <li class="no-bullet">112 ms: RSA or Diffie-Hellman key exchange</li>
-          <li class="no-bullet">140 ms: Message integrity checks, sends encrypted "Finished" message</li>
-          <li class="no-bullet">168 ms: Decrypts the message, app data can be sent</li>
-        </ul>
-      </ul>
-    </div>
-
-    <div class="slide">
-      <hgroup>
-        <h1>Key Exchange</h1>
-      </hgroup>
-      <ul class="xx-small">
-        <li>RSA key exhange(Rivest–Shamir–Adleman)</li>
-        <ul>
-          <li>The client generates a symetric key</li>
-          <li>The client encrypts the key with the server's public key</li>
-          <li>The client sends the encrpyed key to the server</li>
-          <li>The server uses its private key to decrypt the symetric key</li>
-        </ul>
-        <li>RSA critical weekness</li>
-        <ul>
-          <li>The same public-private key pair is used to:</li>
-          <ul>
-            <li>authenticate the server (the server's private key is used to sign and verify the handshake)</li>
-            <li>encrypt the symetric key</li>
-          </ul>
-          <li>When an attacker gets hold of the server private key</li>
-          <ul>
-            <li>It can decrypt the entire session</li>
-          </ul>
-        </ul>
-        <li>Diffie-Hellman key exhange</li>
-        <ul>
-          <li>Client and server can negoriate shared secret without its explicit communication</li>
-          <ul>
-            <li>Attacker cannot get the key</li>
-          </ul>
-          <li>Reduction of risk of compromising of the past communications</li>
-          <ul>
-            <li>New key can be generated as part of every key exchange</li>
-            <li>Old keys can be discarded</li>
-          </ul>
-        </ul>
-      </ul>
-    </div>
-
-    <div class="slide">
-      <hgroup>
-        <h1>TLS and Proxy Servers</h1>
-      </hgroup>
-      <ul class="xx-small">
-        <li>TLS Offloading</li>
-        <ul>
-          <li>Inbound TLS connection, plain outbound connection</li>
-          <li>Proxy can inspect messages</li>
-        </ul>
-        <li>TLS Bridging</li>
-        <ul>
-          <li>Inbound TLS connection, new outbound TLS connection</li>
-          <li>Proxy can inspect messages</li>
-        </ul>
-        <li>End-to-End TLS (TLS pass-through)</li>
-        <ul>
-          <li>TLS connection is passed-through the proxy</li>
-          <li>Proxy cannot inspect messages</li>
-        </ul>
-        <li>Load balancer</li>
-        <ul>
-          <li>Can use TLS offloading or TLS bridging</li>
-          <li>Can use TLS pass-through with help of Server Name Indication (SNI)</li>
-        </ul>
-      </ul>
-    </div>
-
-  </section>
-
-
-
-
-
-
-
-
-
-</body>

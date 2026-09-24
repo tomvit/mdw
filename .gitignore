@@ -10,3 +10,7 @@ backup/*
 pngs/*
 old-materials/*
 
+
+# binaries/fonts pulled from registry.k8shell.io/workspaces/humla:1.0, see tools/README.md
+tools/phantomjs/
+tools/fonts/

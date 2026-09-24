@@ -1,913 +1,1041 @@
 <!DOCTYPE html>
 <!--
-	Web 2.0, CTU course slides
-	(cc) 2010-2023 Tomas Vitvar, tomas@vitvar.com
+    Middleware and Web Services, CTU course slides
+    (cc) 2010-2023 Tomas Vitvar, http://vitvar.com
+    written for Humla, an open source HTML5 presentation environment
 -->
 <html>
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta name="course" content="Middleware Architectures 1" />
-    <meta name="lecture" content="Lecture 4" />
-    <meta name="keywords" content="HTTP/2, HTTP/3" />
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="course" content="Middleware Architectures 1" />
+  <meta name="lecture" content="Lecture 6" />
+  <meta name="keywords" content="Integration Patterns" />
 
-    <link type="text/css" rel="stylesheet" href="css/meta.css">
-    </link>
-    <link type="text/css" rel="stylesheet" href="css/ctu-fit.css">
-    </link>
-    <link type="text/css" rel="stylesheet" href="humla/lib/core/humla.css">
-    </link>
+  <link type="text/css" rel="stylesheet" href="css/meta.css">
+  </link>
+  <link type="text/css" rel="stylesheet" href="css/ctu-fit.css">
+  </link>
+  <link type="text/css" rel="stylesheet" href="humla/lib/core/humla.css">
+  </link>
 
-    <script type="text/javascript" src="humla/lib/humla.js"></script>
-    <title>HTTP/2</title>
+  <script type="text/javascript" src="humla/lib/humla.js"></script>
+  <title>Communication Protocols</title>
 </head>
 
 <body>
+  <footer>
+    <p><b>#META_LECTURE#: #TITLE#</b>,&nbsp;<span class="meta_semester" />,&nbsp;
+      <span class="meta_twitter" />
+    </p>
+    <p><b>&#8210; #SLIDE_NO# &#8210;</b></p>
+  </footer>
 
-    <footer>
-        <p><b>#META_LECTURE#: #TITLE#</b>,&nbsp;<span class="meta_semester" />,&nbsp;
-            <span class="meta_twitter" />
-        </p>
-        <p><b>&#8210; #SLIDE_NO# &#8210;</b></p>
-    </footer>
+  <div class="slide intro">
+    <hgroup>
+      <h1><span class="meta_course" /></h1>
+      <h2>#META_LECTURE#: #TITLE#</h2>
+    </hgroup>
+    <div class="author">
+      <p class="meta_author" />
+      <p><span class="meta_email" /> &bull; <span class="meta_twitter" /> &bull;
+        <span class="meta_web" />
+      </p>
+    </div>
+    <center>
+      <div class="meta_logo"></div>
+    </center>
+    <div class="org">
+      <p class="meta_org" />
+      <p><span class="meta_orgfac" /> &bull; <span class="meta_field" />
+        &bull; <span class="meta_orgweb" /></p>
+    </div>
+    <div class="etc">
+      <div class="text-info">
+        Modified: #LAST_MODIFIED#<br />
+        Humla v#HUMLA_VERSION#
+      </div>
+      <a href="http://creativecommons.org/licenses/by-sa/3.0/">
+        <div class="license"></div>
+      </a>
+      <div class="oppa"></div>
+    </div>
+  </div>
 
-    <div class="slide intro">
+  <div class="slide outline"></div>
+
+  <section>
+    <header>Introduction to Application Protocols</header>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Application Protocols</h1>
+      </hgroup>
+      <ul class="x-small">
+        <li>Remember this</li>
+      </ul>
+      <div class="h-drawing" id="19zJkisQOr32yxVeMcXEi7B3fHAtSot0c_ppDJeKl4bc" style="height: 120px; margin-top: -10px">
+      </div>
+      <ul class="x-small">
+        <li>App protocols mostly on top of the TCP Layer</li>
+        <ul>
+          <li>use TCP socket for communication</li>
+        </ul>
+        <li>Major protocols</li>
+        <ul>
+          <li>HTTP &#150; most of the app protocols layered on HTTP</li>
+          <li>HTTP/2 &#150; new binary framing</li>
+          <li>gRPC &#150; modern RPC protocol on top of HTTP/2</li>
+          <li>WebSocket &#150; new protocol part of HTML5</li>
+        </ul>
+        <li>Legacy</li>
+        <ul>
+          <li>RMI &#150; Remote Method Invocation</li>
+          <ul>
+            <li>Java-specific; vendor-interoperability problem</li>
+          </ul>
+          <li>XML-RPC and SOAP &#150; Remote Procedure Call and SOAP</li>
+        </ul>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Anatomy of a Packet</h1>
+      </hgroup>
+      <img src="img/anatomy-of-a-packet.svg" style="width: 800px; padding: 30px 0px 0px 30px"></img>
+    </div>
+
+
+    <div class="slide">
+      <hgroup>
+        <h1>Socket</h1>
+      </hgroup>
+      <div class="h-drawing" style="height: 140px" id="1Z4OmMLdUPPmmfAsENj7zBb_kjDOWVUzku50WucxpePU"></div>
+      <ul class="xx-small">
+        <li>Handshaking (connection establishment)</li>
+        <ul>
+          <li>The server listens at <code>[dst_ip,dsp_port]</code></li>
+          <li>Three-way handshake:</li>
+          <ul>
+            <li>the client sends a connection request with TCP flags (SYN, x=rand)</li>
+            <li>the server respons with its own TCP flags (SYN ACK, x+1 y=rand)</li>
+            <li>the client acknowledges the response, can send data along (ACK, y+1 x+1)</li>
+          </ul>
+          <li>Result is a socket (virtual communication channel) with unique identification:<br />
+            <code>socket=[src_ip,src_port;dst_ip,dst_port]</code>
+          </li>
+        </ul>
+        <li>Data transfer (resource usage)</li>
+        <ul>
+          <li>Client/server writes/reads data to/from the socket</li>
+          <li>TCP features: reliable delivery, correct order of packets, flow control</li>
+        </ul>
+        <li>Connection close</li>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>New Connection Costs</h1>
+      </hgroup>
+      <ul class="x-small">
+        <li>Creating a new TCP connection is expensive</li>
+        <ul>
+          <li>It requires to complete a full roundtrip</li>
+          <li>It is limited by a network latency, not bandwidth</li>
+        </ul>
+        <li>Example</li>
+        <ul>
+          <li>Distance from London to New York is approx. 5500 km</li>
+          <li>Communication over a fibre link will take at least 28ms one way</li>
+          <li>Three-way handskake will take a minimum of 56ms</li>
+        </ul>
+        <li>Connection reuse is critical for any app running over TCP</li>
+        <ul>
+          <li>HTTP Keep-alive</li>
+          <li>HTTP pipelining</li>
+        </ul>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>TCP Fast Open</h1>
+      </hgroup>
+      <ul class="xx-small">
+        <li>TFO allows to speed up the opening of successfive TCP connections</li>
+        <ul>
+          <li>TCP cookie stored on the client that was established on initial connection</li>
+          <li>The client sends the TCP cookie with SYN packet</li>
+          <li>The server verifies the TCP cookie and can send the data without final ACK</li>
+          <li>Can reduce network transaction latency by 15%</li>
+        </ul>
+      </ul>
+      <img src="img/TFO.png" style="height: 350px; margin-left: 100px" />
+    </div>
+
+    <!-- <div class="slide outline"></div>
+
+      <div class="slide">
         <hgroup>
-            <h1><span class="meta_course" /></h1>
-            <h2>#META_LECTURE#: #TITLE#</h2>
+          <h1>Blocking (Synchronous) I/O</h1>
         </hgroup>
-        <div class="author">
-            <p class="meta_author" />
-            <p><span class="meta_email" /> &bull; <span class="meta_twitter" /> &bull;
-                <span class="meta_web" />
-            </p>
-        </div>
-        <center>
-            <div class="meta_logo"></div>
-        </center>
-        <div class="org">
-            <p class="meta_org" />
-            <p><span class="meta_orgfac" /> &bull; <span class="meta_field" />
-                &bull; <span class="meta_orgweb" /></p>
-        </div>
-        <div class="etc">
-            <div class="text-info">
-                Modified: #LAST_MODIFIED#<br />
-                Humla v#HUMLA_VERSION#
-            </div>
-            <a href="http://creativecommons.org/licenses/by-sa/3.0/">
-                <div class="license"></div>
-            </a>
-            <div class="oppa"></div>
-        </div>
+        <div id="1QP7gZSS1WS3YquzLekSgdZfcmi4BYArm-K9tuWrULQs" class="h-drawing" style="height: 220px"></div>
+        <ul class="x-small">
+          <li>Inbound connection</li>
+          <ul>
+            <li>A server creates a thread for every inbound connection</li>
+            <li>For example, 1K connections = 1K threads, big overhead</li>
+            <li>A thread is reserved for the entire duration of the request processing</li>
+          </ul>
+          <li>Outbound connection</li>
+          <ul>
+            <li>A thread is blocked when outbound connection is made</li>
+            <li>When outbound connection is slow, the scalability is poor</li>
+          </ul>
+        </ul>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Non-Blocking (Asynchrnous) I/O</h1>
+        </hgroup>
+        <div id="1kxkFc3Chl4qFXxH_4f2seuNbpBdENMyZWMRUmxd1p28" class="h-drawing" style="height: 220px"></div>
+        <ul class="x-small">
+          <li>Inbound connections</li>
+          <ul>
+            <li>The connection is maintained by the OS, not the server app</li>
+            <li>The Web app registers events, OS triggers events when they occur</li>
+            <li>The app may create working threads and controls their number</li>
+          </ul>
+          <li>Outound connections</li>
+          <ul>
+            <li>The app registers a callback that is called when the data is available</li>
+            <li>Event loop</li>
+          </ul>
+        </ul>
+      </div>
+
+    </section> -->
+  </section>
+
+  <div class="slide outline"></div>
+
+  <section>
+    <header>Hypertext Transfer Protocol (HTTP)</header>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Hypertext Transfer Protocol &ndash; HTTP</h1>
+      </hgroup>
+      <ul class="small">
+        <li>Application protocol, basis of Web architecture</li>
+        <ul>
+          <li>Part of HTTP, URI, and HTML family</li>
+          <li>Request-response protocol</li>
+        </ul>
+        <li>One socket for single request-response</li>
+        <ul>
+          <li>original specification</li>
+          <li>have changed due to performance issues</li>
+          <ul>
+            <li>many concurrent requests</li>
+            <li>overhead when establishing same connections</li>
+            <li>HTTP 1.1 offers persistent connection and pipelining</li>
+            <li>Domain sharding</li>
+          </ul>
+        </ul>
+        <li>HTTP is stateless</li>
+        <ul>
+          <li>Multiple HTTP requests cannot be normally related at the server</li>
+          <ul>
+            <li>"problems" with state management</li>
+            <li>REST goes back to the original HTTP idea</li>
+          </ul>
+        </ul>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>REST Core Principles</h1>
+      </hgroup>
+      <ul class="small">
+        <li>REST architectural style defines constraints</li>
+        <ul>
+          <li>if you follow them, they help you to achieve a good design,
+            interoperability and scalability.</li>
+        </ul>
+        <li>Constraints</li>
+        <ul>
+          <li>Client/Server</li>
+          <li>Statelessness</li>
+          <li>Cacheability</li>
+          <li>Layered system</li>
+          <li>Uniform interface</li>
+        </ul>
+        <li>Guiding principles</li>
+        <ul>
+          <li>Identification of resources</li>
+          <li>Representations of resources and self-descriptive messages</li>
+          <li>Hypermedia as the engine of application state (HATEOAS)</li>
+        </ul>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>HTTP Request and Response</h1>
+      </hgroup>
+      <ul class="small">
+        <li>Request Syntax</li>
+        <pre class="brush: plain; gutter: false">
+                    method uri http-version &lt;crlf>
+                    (header : value &lt;crlf>)*
+                    &lt;crlf>
+                    [ data ]
+                </pre>
+        <li>Response Syntax</li>
+        <pre class="brush: plain; gutter: false">
+                    http-version response-code [ message ]  &lt;crlf>
+                    (header : value &lt;crlf>)*
+                    &lt;crlf>
+                    [ data ]
+                </pre>
+        <li>Semantics of terms</li>
+        <pre class="brush: plain; gutter: false">
+                    method         = "GET" | "POST" | "DELETE" | "PUT" | "HEAD" | "OPTIONS"
+                    uri            = [ path ] [ ";" params ] [ "?" query ]
+                    http-version   = "HTTP/1.0" | "HTTP/1.1"
+                    response-code  = valid response code
+                    header : value = valid HTTP header and its value
+                    data           = resource state representation (hypertext)
+                </pre>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Uniform Interface</h1>
+      </hgroup>
+      <ul class="small">
+        <li>Uniform interface = finite set of operations</li>
+        <ul>
+          <li>Resource manipulation</li>
+          <ul>
+            <li>CRUD &ndash; Create (POST/PUT), Read (GET), Update (PUT/PATCH), Delete (DELETE)</li>
+          </ul>
+          <li>operations are not domain-specific</li>
+          <ul>
+            <li>For example, <code>GET /orders</code> and not <code>getOrders()</code></li>
+            <li>This reduces complexity when solving interoperability</li>
+          </ul>
+        </ul>
+        <li>Integration issues examples</li>
+      </ul>
+      <img src="img/integration-issues.png" style="padding-left: 50px" width="700px" />
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Safe and Unsafe Operations</h1>
+      </hgroup>
+      <ul class="small">
+        <li>Safe operations</li>
+        <ul>
+          <li>Do not change the resource state</li>
+          <li>Usually "read-only" or "lookup" operation</li>
+          <li>Clients can cache the results and refresh the cache freely</li>
+        </ul>
+        <li>Unsafe operations</li>
+        <ul>
+          <li>May change the state of the resource</li>
+          <li>Transactions such as buy a ticket, post a message</li>
+          <li>Unsafe does not mean dangerous!</li>
+        </ul>
+        <li>Unsafe interactions and transaction results</li>
+        <ul>
+          <li><code>POST</code> response may include transaction results</li>
+          <ul>
+            <li>you buy a ticket and submit a purchase data</li>
+            <li>you get transaction results</li>
+            <li>and you cannot bookmark this..., why?</li>
+          </ul>
+          <li>Should be referable with a persistent URI</li>
+        </ul>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Idempotence</h1>
+      </hgroup>
+      <ul>
+        <li>Idempotent operation</li>
+        <ul>
+          <li>Invoking a method on the same resource always has the same effect</li>
+          <li>Operations <code>GET</code>, <code>PUT</code>, <code>DELETE</code></li>
+        </ul>
+        <li>Non-idempotent operation</li>
+        <ul>
+          <li>Invoking a method on the same resource may have different effects</li>
+          <li>Operation <code>POST</code></li>
+        </ul>
+        <li>Effect = a state change</li>
+      </ul>
     </div>
 
     <div class="slide outline"></div>
 
     <section>
-        <header>Introduction</header>
+      <header>Performance</header>
 
-        <div class="slide">
-            <hgroup>
-                <h1>Overview</h1>
-            </hgroup>
-            <ul class="xx-small">
-                <li>Developed from SPDY (2009) experimental protocol by Google</li>
-                <ul>
-                    <li>May 2015: RFC 7540 (HTTP/2) and RFC 7541 (HPACK)</li>
-                    <li>HTTP/2 standards extend (not replace) the previous HTTP standards</li>
-                </ul>
-                <li>HTTP/1.x limitations</li>
-                <ul>
-                    <li>HTTP/1.x clients need to use multiple connections to achieve concurrency</li>
-                    <li>unnecessary network traffic &ndash; request and response headers not compressed</li>
-                    <li>no effective resource prioritization</li>
-                </ul>
-                <li>Primary goals</li>
-                <ul>
-                    <li>Reduction of latency</li>
-                    <li>enabling full request and response multiplexing</li>
-                    <li>minimize protocol overhead via efficient compression of HTTP header fields</li>
-                    <li>support for request prioritization and server push</li>
-                </ul>
-                <li>HTTP/2 does not modify application semantics of HTTP</li>
-                <ul>
-                    <li>HTTP metods, URIs, header fields are the same</li>
-                    <li>HTTP/2 modifies <b>how data is formatted and transported</b> in communication</li>
-                </ul>
-                <li>Literature and source</li>
-                <ul>
-                    <li>I. Grigorik: <i>High Performance Browser Networking</i>, O'Reilly Media, Inc. 2013. ISBN:
-                        9781449344757&nbsp;
-                        <a class="ext-link ref" target="humla_reference"
-                            href="https://www.oreilly.com/library/view/high-performance-browser/9781449344757/"></a>
-                    </li>
-                </ul>
+      <div class="slide">
+        <hgroup>
+          <h1>Persistent connections</h1>
+        </hgroup>
+        <ul class="x-small">
+          <li>Persistent HTTP connection = HTTP keepalive</li>
+          <ul>
+            <li>TCP established connection used for multiple requests/responses</li>
+            <li>Avoids TCP three-way handshake to be performed on every request</li>
+            <li>Reduces latency</li>
+            <li>FIFO queuing order on the client (request queuing)</li>
+            <ul>
+              <li>dispatch first request, get response, dispatch next request</li>
             </ul>
-        </div>
+          </ul>
+          <li>Example: <code>GET /html</code>, <code>GET /css</code></li>
+          <ul>
+            <li>server processing time 40ms and 20ms respectivelly</li>
+          </ul>
+          <li>Without HTTP keepalive</li>
+          <ul>
+            <li>three-way handshake 84ms before the data is received on the server</li>
+            <li>Response received at 152ms and 132ms respectivelly</li>
+            <li>The total time is 284ms</li>
+          </ul>
+          <li>HTTP keepalive</li>
+          <ul>
+            <li>One TCP connection for both requests</li>
+            <li>In our example this will save one RTT, i.e. 56ms</li>
+            <li>The total time will be 228ms</li>
+          </ul>
+        </ul>
+      </div>
 
-        <div class="slide">
-            <hgroup>
-                <h1>Establishing a HTTP/2 Connection</h1>
-            </hgroup>
-            <ul class="xx-small">
-                <li>Negotiating HTTP/2 via a secure connection with TLS and ALPN</li>
-                <ul>
-                    <li>Client sends a protocol (HTTP/2) in a TLS <code>ClientHello</code> message.
-                </ul>
-                <li>Upgrading a plaintext connection to HTTP/2 without prior knowledge</li>
-                <ul>
-                    <li>Client starts HTTP/1.1 and then sends an upgrade request</li>
-                    <div style="zoom: 0.95; margin-left: -15px">
-                        <pre class="brush: bash; class-name: 'tight'">
-              GET /page HTTP/1.1
-              Host: server.example.com
-              Connection: Upgrade, HTTP2-Settings
-              Upgrade: h2c 
-              HTTP2-Settings: (SETTINGS payload) 
-
-              HTTP/1.1 200 OK 
-              Content-length: 243
-              Content-type: text/html
-
-              (... HTTP/1.1 response ...)
-
-                        (or)
-
-              HTTP/1.1 101 Switching Protocols 
-              Connection: Upgrade
-              Upgrade: h2c
-
-              (... HTTP/2 response ...)
-            </pre>
-                    </div>
-                </ul>
-                <li>Initiating a plaintext HTTP/2 connection with prior knowledge</li>
-                <ul>
-                    <li>Client gets information about server's HTTP/2 via DNS or manual configuration.</li>
-                    <li>Client initiates HTTP/2 and if it does not work, it falls back to HTTP/1.1</li>
-                </ul>
+      <div class="slide">
+        <hgroup>
+          <h1>Persistent connections savings</h1>
+        </hgroup>
+        <ul class="xx-small">
+          <li>Each request needs</li>
+          <ul>
+            <li>Without keepalive, 2 RTT of latency</li>
+            <li>With keepalive, the first request needs 2 RTT, a following request needs 1 RTT</li>
+          </ul>
+          <li>Savings for <code>N</code> requests: <code>(N-1) x RTT</code></li>
+          <li>Average value of <code>N</code> is 90 requests for a Web app</li>
+          <ul>
+            <li>Measured by HTTP Archive (http://httparchive.org) as of 2013</li>
+            <li>Average Web application is composed of 90 requests fetched from 15 hosts</li>
+            <ul>
+              <li>HTML: 10 reuqests</li>
+              <li>Images: 55 requests</li>
+              <li>Javascript: 15 requests</li>
+              <li>CSS: 5 requests</li>
+              <li>Other: 5 requests</li>
             </ul>
-        </div>
+          </ul>
+        </ul>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>HTTP pipelining</h1>
+        </hgroup>
+        <ul class="xx-small">
+          <li>Important optimization &ndash; response queuing</li>
+          <ul>
+            <li>Allows to relecote FIFO queue from the client to the server</li>
+          </ul>
+          <li>Requests are pipelined one after another</li>
+          <ul>
+            <li>This allows the server to process requests immediatelly one after another</li>
+            <li>This saves one request and response propagation latency</li>
+            <li>In our example, the total time will be 172ms</li>
+          </ul>
+          <li>Parallel processing of requests</li>
+          <ul>
+            <li>In our example this saves another 20ms of latency</li>
+            <li><b>Head of line blocking</b></li>
+            <ul>
+              <li>Slower response (css with processing time 20ms) must be buffered until
+                the first response is generated and sent (no interleaving of responses)</li>
+            </ul>
+          </ul>
+          <li>Issues</li>
+          <ul>
+            <li>A single slow response blocks all requests behind it</li>
+            <li>Buffered (large or many) responses may exhaust server resources</li>
+            <li>A failed response may terminate TCP connection</li>
+            <ul>
+              <li>A client must request all sub-sequent resources again (dupplicate processing)
+            </ul>
+            <li>Some intermediaries may not support pipelining and abort connection</li>
+          </ul>
+          <li>HTTP pipelining support today is limited</li>
+        </ul>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Multiple TCP connections</h1>
+        </hgroup>
+        <ul class="xx-small">
+          <li>Using only one TCP connection is slow</li>
+          <ul>
+            <li>Client must queue HTTP requests and process one after another</li>
+          </ul>
+          <li>Multiple TCP connections work in parallel</li>
+          <li><b>There are 6 connections per host</b></li>
+          <ul>
+            <li>The client can dispatch up to 6 requests in parallel</li>
+            <li>The server can process up to 6 requests in parallel</li>
+            <li>This is a trade-off between higher request paralellism and the client and server overhead</li>
+          </ul>
+          <li>The maximum number of connections prevents from DoS attacks</li>
+          <ul>
+            <li>The client could exhaust server resources</li>
+          </ul>
+          <li>Domain sharding</li>
+          <ul>
+            <li>The connection limit as per host (origin)</li>
+            <li>There can be multiple origins used in a page</li>
+            <ul>
+              <li>Each origin has 6 maximum connection limit</li>
+            </ul>
+            <li>A domain can be sharded</li>
+            <ul>
+              <li><code>www.example.com</code> &rarr; <code>shard1.example.com</code>, <code>shard2.example.com</code>
+              </li>
+              <li>Each shard can resolve to the same IP or different IP, it does not matter</li>
+            </ul>
+            <li>How many shards?</li>
+          </ul>
+        </ul>
+      </div>
 
     </section>
 
     <div class="slide outline"></div>
 
     <section>
-        <header>HTTP/2</header>
+      <header>Configuration</header>
 
-        <section>
-            <header>Binary Framing</header>
+      <div class="slide" id="http-request">
+        <hgroup>
+          <h1>Serving HTTP Request</h1>
+        </hgroup>
+        <div class="h-drawing" style="height: 180px" id="1c1oNNZgurIxOEDHbnZuPHKR9I-H1VhoeOpTWa6-vslI"></div>
+        <ul class="xx-small">
+          <li>Serving HTTP request</li>
+          <ol>
+            <li>User enters URL <code>http://shard1.example.com/orders</code> to the browser</li>
+            <li>DNS resolution: browser gets an IP address for <code>shard1.example.com</code></li>
+            <li>Three-way handshake: browser and Web Server creates a socket</li>
+            <li>Browser sends ACK and HTTP request:</li>
+            <pre class="brush: plain; class-name: 'tight'">
+                    GET /orders HTTP/1.1
+                    Host: shard1.example.com
+                    </pre>
+            <li>Web server passes the request to the web application <code>shard1.example.com</code> which serves
+              <code>GET orders</code> and that writes a response back to the socket.
+            </li>
+          </ol>
+        </ul>
+      </div>
 
-            <div class="slide">
-                <hgroup>
-                    <h1>Binary Framing Layer</h1>
-                </hgroup>
-                <ul class="x-small">
-                    <li>Binary framing layer</li>
-                    <ul>
-                        <li>defines how HTTP messages are encapsulated and transferred </li>
-                        <li>communication is split into messages and frames in binary format</li>
-                    </ul>
-                    <img src="img/binary_framing_layer.png" style="width: 700px">
-                </ul>
-            </div>
+      <div class="slide">
+        <hgroup>
+          <h1>Virtual Host</h1>
+        </hgroup>
+        <ul class="x-small">
+          <li>Virtual host</li>
+          <ul>
+            <li>Configuration of a named virtual host in a Web server</li>
+            <li>Web server uses host request header to distinguish among multiple virtual
+              hosts on a single physical host.</li>
+          </ul>
+          <li>Apache virtual host configuration</li>
+          <ul class="x-small">
+            <li>Two virtual hosts in a single Web server</li>
+            <pre class="brush:plain; class-name: 'tight'">
+          # all IP addresses will be used for named virtual hosts
+          NameVirtualHost *:80
 
-            <div class="slide">
-                <hgroup>
-                    <h1>HTTP/2 Communication</h1>
-                </hgroup>
-                <ul class="x-small">
-                    <li>Data exchange between the client and server</li>
-                    <ul>
-                        <li>break down of the communication into frames</li>
-                        <li>frames are mapped to messages that belong to a particular stream</li>
-                        <li>communication is <b>multiplexed within a single TCP connection</b>.</li>
-                    </ul>
-                    <li>Stream</li>
-                    <ul>
-                        <li>bi-directional flow of bytes in a connection</li>
-                        <li>may carry one or more messages</li>
-                        <li>may have a priority</li>
-                    </ul>
-                    <li>Message</li>
-                    <ul>
-                        <li>a sequence of frames</li>
-                        <li>it maps to logical request or response message</li>
-                    </ul>
-                    <li>Frame</li>
-                    <ul>
-                        <li>the smallest unit of communication
-                        <li>each has a frame header which identifies a stream to which it belongs.</li>
-                    </ul>
-                </ul>
-            </div>
+          &lt;VirtualHost *:80>
+                  ServerName www.example.com
+                  ServerAlias shard1.example.com shard2.example.com
+                  ServerAdmin admin@example.com
+                  DocumentRoot /var/www/apache/example.com
+          &lt;/VirtualHost>
 
-            <div class="slide">
-                <hgroup>
-                    <h1>Streams, Messages, and Frames</h1>
-                </hgroup>
-                <ul class="x-small">
-                    <img src="img/streams.png" style="width: 600px; margin-top: 10px">
-                </ul>
-            </div>
+          &lt;VirtualHost *:80>
+                  ServerName company.cz
+                  ServerAdmin admin@firm.cz
+                  DocumentRoot /var/www/apache/company.cz
+          &lt;/VirtualHost></pre>
+          </ul>
+        </ul>
+      </div>
 
-            <div class="slide">
-                <hgroup>
-                    <h1>Request and Response Multiplexing</h1>
-                </hgroup>
-                <ul class="xx-small">
-                    <li>Parallel requests</li>
-                    <ul>
-                        <li>HTTP/1.x can use HTTP pipelining; they open multiple connections</li>
-                        <ul>
-                            <li>browser typically opens up six connections</li>
-                            <li>One response can be delivered at a time (response queuing) per connection</li>
-                            <ul>
-                                <li>Head of line blocking problem</li>
-                            </ul>
-                        </ul>
-                        <li>HTTP/2 allows full request and response multiplexing</li>
-                        <ul>
-                            <li>Allows for parallel in-flight streams</li>
-                            <li>There are 3 parallel streams in the below example:</li>
-                            <img src="img/multiplexing.png" style="width: 550px; margin-top: 0px">
-                        </ul>
-                    </ul>
-                    <li>Performance benefits</li>
-                    <ul>
-                        <li>Interleave requests/responses in parallel without blocking any one.</li>
-                        <li>Deliver lower page load times by eliminating unnecessary latency</li>
-                        <li>Improve utilization of available network capacity</li>
-                    </ul>
-                </ul>
-            </div>
+    </section>
 
-            <div class="slide">
-                <hgroup>
-                    <h1>Binary Framing &ndash; Frame Header</h1>
-                </hgroup>
-                <ul class="xx-small">
-                    <li>9-byte frame header</li>
-                    <img src="img/frame-header.svg" style="width: 600px"></img>
-                    <li>Fields</li>
-                    <ul>
-                        <li><code>length</code> &ndash; 24 bits, allows a frame to carry 2<sup>24</sup> bytes of data.
-                        </li>
-                        <li><code>type</code> &ndash; 8 bits, determines the format and semantics of the frame.</li>
-                        <ul>
-                            <li>Frame types: <code>DATA</code>, <code>HEADERS</code>, <code>PRIORITY</code>,
-                                <code>RST_STREAM</code>, <code>SETTINGS</code>,
-                                <code>PUSH_PROMISE</code>, <code>PING</code>, <code>GOAWAY</code>,
-                                <code>WINDOW_UPDATE</code>, <code>CONTINUATION</code>
-                            </li>
-                        </ul>
-                        <li><code>flags</code> &ndash; 8 bits, defines frame-type specific boolean flags.</li>
-                        <li><code>stream identifier</code> &ndash; 31 bits, uniquely identifies the HTTP/2 stream.</li>
-                    </ul>
-                </ul>
-            </div>
+    <!-- <div class="slide outline"></div>
 
-            <div class="slide">
-                <hgroup>
-                    <h1>Stream Lifecycle</h1>
-                </hgroup>
-                <ul class="xx-small">
-                    <div class="h-drawing" id="1usNUqUh20OXM6EuOzoc8yLhyxt6zQAoaoMg4P1hHAzk" style="width: 480px"></div>
-                    </li>
-                    <li>HTTP/2 doesn’t reuse the same stream IDs</li>
-                    <ul>
-                        <li>A stream's lifecycle corresponds to request/response messages interaction.</li>
-                    </ul>
-                    <li>A new id is assigned until it reaches <code>2<sup>31</sup></code></li>
-                    <ul>
-                        <li>When the last id is used, the browser sends <code>GOAWAY</code> frame to initialize a new
-                            TCP connection, and the stream ID is reset.</li>
-                    </ul>
-                </ul>
-            </div>
+    <section>
+      <header>Uniform Interface</header>
 
-            <div class="slide">
-                <hgroup>
-                    <h1>Initiating a New Stream</h1>
-                </hgroup>
-                <img src="img/initiating-new-stream.png" style="width: 600px; padding: 20px 20px 10px"></img>
-                <ul class="xx-small">
-                    <ul>
-                        <li>New stream created with request metadata</li>
-                        <li>HEADERS and DATA frames sent separately</li>
-                    </ul>
-                </ul>
-            </div>
+      <div class="slide">
+        <hgroup>
+          <h1>Uniform Interface</h1>
+        </hgroup>
+        <ul class="small">
+          <li>Uniform interface = finite set of operations</li>
+          <ul>
+            <li>Resource manipulation</li>
+            <ul>
+              <li>CRUD &ndash; Create (POST/PUT), Read (GET), Update (PUT/PATCH), Delete (DELETE)</li>
+            </ul>
+            <li>operations are not domain-specific</li>
+            <ul>
+              <li>For example, <code>GET /orders</code> and not <code>getOrders()</code></li>
+              <li>This reduces complexity when solving interoperability</li>
+            </ul>
+          </ul>
+          <li>Integration issues examples</li>
+        </ul>
+        <img src="img/integration-issues.png" style="padding-left: 50px" width="700px" />
+      </div>
 
-            <div class="slide">
-                <hgroup>
-                    <h1>Sending Application Data</h1>
-                </hgroup>
-                <img src="img/sending-app-data.png" style="width: 600px; padding: 20px 20px 10px"></img>
-                <ul class="xx-small">
-                    <ul>
-                        <li>App data sent in DATA frame</li>
-                        <li>There are more frames that carry the data (i.e. <code>END_STREAM</code> flag is not set)
-                        </li>
-                        <ul>
-                            <li>The small frame size allows for efficienct multiplexing</li>
-                        </ul>
-                        <li>The app data is loaded by application according to the used encoding mechanism (plain text,
-                            gzip, etc.).</li>
-                    </ul>
-                </ul>
-            </div>
+      <div class="slide">
+        <hgroup>
+          <h1>Safe and Unsafe Operations</h1>
+        </hgroup>
+        <ul class="small">
+          <li>Safe operations</li>
+          <ul>
+            <li>Do not change the resource state</li>
+            <li>Usually "read-only" or "lookup" operation</li>
+            <li>Clients can cache the results and refresh the cache freely</li>
+          </ul>
+          <li>Unsafe operations</li>
+          <ul>
+            <li>May change the state of the resource</li>
+            <li>Transactions such as buy a ticket, post a message</li>
+            <li>Unsafe does not mean dangerous!</li>
+          </ul>
+          <li>Unsafe interactions and transaction results</li>
+          <ul>
+            <li><code>POST</code> response may include transaction results</li>
+            <ul>
+              <li>you buy a ticket and submit a purchase data</li>
+              <li>you get transaction results</li>
+              <li>and you cannot bookmark this..., why?</li>
+            </ul>
+            <li>Should be referable with a persistent URI</li>
+          </ul>
+        </ul>
+      </div>
 
-            <div class="slide">
-                <hgroup>
-                    <h1>Request and Response Multiplexing Benefits</h1>
-                </hgroup>
-                <ul class="x-small">
-                    <li>Interleave multiple requests and responses</li>
-                    <ul>
-                        <li>Requests or responses are not blocked on any other requests or response</li>
-                    </ul>
-                    <li>A single TCP connection</li>
-                    <ul>
-                        <li>Multiple requests and responses can be delivered in parallel</li>
-                    </ul>
-                    <li>Remove HTTP/1.x workarounds</li>
-                    <ul>
-                        <li>Concatenated files</li>
-                        <li>Image sprites</li>
-                        <li>Domain sharding</li>
-                    </ul>
-                    <li>Deliver lower page load times</li>
-                    <ul>
-                        <li>Eliminates unnecessary latency</li>
-                        <li>Improves utilization of available newtork capacity</li>
-                    </ul>
-                </ul>
-            </div>
-
-        </section>
-
-        <div class="slide outline"></div>
-
-        <section>
-            <header>Stream Prioritization</header>
-
-            <div class="slide">
-                <hgroup>
-                    <h1>Browser Request Prioritization</h1>
-                </hgroup>
-                <ul class="xx-small">
-                    <li>Not all resources have equal priority when rendering a page</li>
-                    <ul>
-                        <li>HTTP/2 stream prioritization</li>
-                        <li>Requests are prioritized based on type of asset, location on the page, and learned priority
-                            from previous visits</li>
-                        <ul>
-                            <li>If page loading was blocked on an asset, the asset priority gets increased</li>
-                        </ul>
-                    </ul>
-
-                    <li>DOM, CSSOM and JavaScript</li>
-                    <img src="img/dom-cssom-js.png" style="padding-top: 5px; width: 600px"></img>
-                    <ul>
-                        <li>HTML document is critical to construct DOM</li>
-                        <li>CCS is required to construct CSSOM</li>
-                        <li>Both DOM and CSSOM construction can be blocked on JavaScript resources</li>
-                        <ul>
-                            <li>A script can issue <code>doc.write</code> and block DOM parsing and construction</li>
-                            <li>A script can query for a computed style of an object; the script can block on CSS</li>
-                        </ul>
-                    </ul>
-                </ul>
-            </div>
-
-            <div class="slide">
-                <hgroup>
-                    <h1>Stream Prioritization</h1>
-                </hgroup>
-                <ul class="xx-small">
-                    <li>Purpose</li>
-                    <ul>
-                        <li>Messages split into <b>frames</b> which are delivered in multiplexed <b>streams</b></li>
-                        <li>The order in which frames are delivered is important for a good performance</li>
-                        <li>Client can define stream prioritization</li>
-                        <ul>
-                            <li>optimizations in the browser, change prioritization based on user interaction</li>
-                        </ul>
-                    </ul>
-                    <li>Streams' weights and dependency</li>
-                    <ul>
-                        <li>Each stream can be assigned an integer weight between 1 and 256.</li>
-                        <li>Each stream may be given an explicit dependency on another stream.</li>
-                    </ul>
-                    <img src="img/stream-prioritization.png" style="width: 685px; margin-top: 10px">
-                </ul>
-            </div>
-
-            <div class="slide">
-                <hgroup>
-                    <h1>Stream Prioritization (cont.)</h1>
-                </hgroup>
-                <ul class="xx-small">
-                    <li>Dependency</li>
-                    <ul>
-                        <li>referencing the unique identifier of another stream as its parent</li>
-                        <li>if the identifier is omitted the stream is dependent on the "root stream"</li>
-                        <li>The parent stream should be allocated resources ahead of its dependencies.</li>
-                        <ul>
-                            <li>"Please process and deliver response D before response C"</li>
-                        </ul>
-                    </ul>
-                    <li>Weights</li>
-                    <ul>
-                        <li>Sibling streams have resources allocated as per their weights</li>
-                        <li>Example</li>
-                        <ul>
-                            <li>Sum all the weights: <code>4 + 12 = 16</code></li>
-                            <li>Divide each stream weight by the total weight: <code>A = 12/16</code>,
-                                <code>B = 4/16</code>
-                            </li>
-                            <li>Stream <code>A</code> receives <code>3/4</code> and stream <code>B</code> receives
-                                <code>1/4</code> of available resources;<br />
-                            </li>
-                        </ul>
-                    </ul>
-                </ul>
-            </div>
-
-            <!-- <div class="slide">
-                <hgroup>
-                    <h1>Dependency priorities</h1>
-                </hgroup>
-                <ul class="xx-small">
-                    <li>Grouping streams</li>
-                    <ul>
-                        <li>Streams that are never opened with HEADERS frame</li>
-                        <li>They exist as nodes in the dependency tree that other streams depend on</li>
-                    </ul>
-                    <li>Dependency groups in <a
-                            href="http://bitsup.blogspot.com/2015/01/http2-dependency-priorities-in-firefox.html">Firefox</a>
-                    </li>
-                    <ul>
-                        <li>Five fixed dependency groups</li>
-                        <li>crearted with <code>PRIORITY</code> frame when a session is established.</li>
-                        <li>Every new stream depends on them</li>
-                    </ul>
-                    <li>Example (from a <a
-                            href="https://gitlab.com/wireshark/wireshark/-/blob/master/test/captures/http2_follow_multistream.pcapng">sample
-                            http2 packets</a>)</li>
-                </ul>
-                <div class="h-drawing" style="width: 760px" id="1S2445HeTWEQdKnMWFd76g4NcOm3kH7CFc5ORT4ZiGAQ"></div>
-            </div> -->
-
-
-        </section>
-
-        <div class="slide outline"></div>
-
-        <section>
-            <header>Flow Control</header>
-
-            <div class="slide">
-                <hgroup>
-                    <h1>Flow control</h1>
-                </hgroup>
-                <ul class="xx-small">
-                    <li>Prevent sender from receiving data it doest not want</li>
-                    <ul>
-                        <li>Receiver is busy or under heavy load</li>
-                        <li>Receiver is willing to allocate fixed amount of resources for a stream</li>
-                    </ul>
-                    <li>Examples</li>
-                    <ul>
-                        <li>Client request a video stream; a user pauses the stream</li>
-                        <ul>
-                            <li>the client wants to pause the stream delivery to avoid buffering</li>
-                        </ul>
-                        <li>A proxy server has a fast downstream and slow upstream</li>
-                        <ul>
-                            <li>the proxy server can control how quickly the downstream delivers data to match the speed
-                                of upstream</li>
-                            <li>better control of resource usage</li>
-                        </ul>
-                        <li>Similar problems as in TCP flow control</li>
-                        <ul>
-                            <li>TCP flow control has no app-level API to regulate delivery of streams</li>
-                        </ul>
-                    </ul>
-                    <li>Flow control</li>
-                    <ul>
-                        <li>Sender and receiver both advertise stream flow control window in bytes<br>
-                            = the size of the available buffer space to hold the incoming data</li>
-                        <li>exhanged by special <code>SETTINGS</code> and <code>WINDOW_UPDATE</code> frames</li>
-                        <li>Flow control is hop-by-hop, not end-to-end</li>
-                        <ul>
-                            <li>an intermediary can set its own flow control</li>
-                        </ul>
-                    </ul>
-                </ul>
-            </div>
-
-            <div class="slide">
-                <hgroup>
-                    <h1>Flow Control Example</h1>
-                </hgroup>
-                <div class="h-drawing" id="1sdhCIqKbP3SjjhVGt5zyvU-RKZnEct-eDSQBMKZmOEU"></div>
-                <ul class="xx-small">
-                    <li>Window size</li>
-                    <ul>
-                        <li>The client and server maintains the window size for each stream and a connection.</li>
-                        <li>How much data the client can still send to the server and vise-versa.</li>
-                        <li><code>WINDOW_UPDATE</code> provides an increment of the current window size.</li>
-                        <li>When the window size is zero, no data is sent until the other party changes it.</li>
-                    </ul>
-                </ul>
-            </div>
-
-        </section>
-
-        <div class="slide outline"></div>
-
-        <section>
-            <header>Server Push</header>
-
-            <div class="slide">
-                <hgroup>
-                    <h1>Server push</h1>
-                </hgroup>
-                <ul class="xx-small">
-                    <li>Ability to send multiple responses for a single request</li>
-                    <ul>
-                        <li>A response to the request is sent back</li>
-                        <li>Additonal resources can be pushed without client requesting them</li>
-                        <li>Hypertext &ndash; "server knows what the client will need"</li>
-                    </ul>
-                    <img src="img/server-push.png" style="width: 600px; margin-top: 10px">
-                    <li>Similar to resource inlining</li>
-                    <ul>
-                        <li>A resource is pushed to the client in HTML/CSS resource</li>
-                    </ul>
-                    <li>Performance benefits</li>
-                    <ul>
-                        <li>Cached by the client, reused across pages, multiplexed, declined by the client</li>
-                    </ul>
-                </ul>
-            </div>
-
-            <div class="slide">
-                <hgroup>
-                    <h1>Push promise</h1>
-                </hgroup>
-                <ul class="xx-small">
-                    <li><code>PUSH_PROMISE</code> frames</li>
-                    <ul>
-                        <li>A singnal that the server intents to push resources to the client</li>
-                        <li>The client needs to know which resources the server intends to push to avoid creating
-                            duplicate requests for these resources.</li>
-                    </ul>
-                    <li>After the client receives <code>PUSH_PROMISE</code></li>
-                    <ul>
-                        <li>it may decline the stream (via <code>RST_STREAM</code> frame)</li>
-                        <ul>
-                            <li>For example, when the resource is already in the cache</li>
-                            <li>As for inline resources, this is not possible, the client always receives them</li>
-                        </ul>
-                        <li>it can limit the number of concurrently pushed streams</li>
-                        <li>it can adjust the initial flow control window to control how much data is pushed when the
-                            stream is first opened</li>
-                        <li>it can disable server push entirely</li>
-                    </ul>
-                    <li>pushed resources must obey the same-origin policy</li>
-                </ul>
-            </div>
-
-            <div class="slide">
-                <hgroup>
-                    <h1>Implementation</h1>
-                </hgroup>
-                <ul class="xx-small">
-                    <li>You need to implement Server Push at the app level</li>
-                    <ul>
-                        <li>Your server may provide a library/API to do so</li>
-                        <ul>
-                            <li>Node express middleware: <a
-                                    href="https://www.npmjs.com/package/http2-express-autopush"><code>http2-express-autopush</code></a>
-                            </li>
-                            <li>Nginx: <a href="https://www.nginx.com/blog/nginx-1-13-9-http2-server-push/">http2 server
-                                    push</a></li>
-                        </ul>
-                    </ul>
-                    <pre class="brush: bash; class-name: ''">
-              server {
-                  # Ensure that HTTP/2 is enabled for the server        
-                  listen 443 ssl http2;
-
-                  ssl_certificate ssl/certificate.pem;
-                  ssl_certificate_key ssl/key.pem;
-
-                  root /var/www/html;
-
-                  # whenever a client requests demo.html, also push
-                  # /style.css, /image1.jpg and /image2.jpg
-                  location = /demo.html {
-                      http2_push /style.css;
-                      http2_push /image1.jpg;
-                      http2_push /image2.jpg;
-                  }
-              }            </pre>
-                </ul>
-            </div>
-
-            <div class="slide">
-                <hgroup>
-                    <h1>Rules for server push</h1>
-                </hgroup>
-                <ul class="xx-small">
-                    <li>Performance analysis by Google</li>
-                    <ul>
-                        <li>see <a
-                                href="https://docs.google.com/document/d/1K0NykTXBbbbTlv60t5MyJvXjqKGsCVNYHyLEXIxYMv0/edit#heading=h.ke8t5vjw3jh4">Rules
-                                of Thumb for HTTP/2 Push</a></li>
-                    </ul>
-                    <li>Server push may not always lead to a better performance, such as:</li>
-                    <ul>
-                        <li>Push just enough resources to fill idle network time, and no more.</li>
-                        <div class="h-drawing" id="1Fwq8iUtmoXrISPoJyQ98t3Kx-KGHEMLHNtDn14slHAM"
-                            style="margin-left: -50px; width: 750px"></div>
-                        <li>(A) may be better than (C) when <code>HTML size > BDP</code><br>BDP = Bandwidth-delay
-                            product</li>
-                    </ul>
-                </ul>
-            </div>
-
-        </section>
-
-        <div class="slide outline"></div>
-
-        <section>
-            <header>Header Compression</header>
-
-            <div class="slide">
-                <hgroup>
-                    <h1>Header compression</h1>
-                </hgroup>
-                <ul class="xx-small">
-                    <li>Purpose</li>
-                    <ul>
-                        <li>Each HTTP request/response contains a set of headers (metadata)</li>
-                        <li>HTTP/1.x &ndash; metadata sent as plain text, adds 500-800 bytes per transfer</li>
-                    </ul>
-                    <li>HTTP/2 provides</li>
-                    <ul>
-                        <li>Request and response metadata are compressed using HPACK format</li>
-                        <ul>
-                            <li>header fields encoded via a static Huffman code &ndash; reduces size</li>
-                            <li>client and server maintain an <b>indexed list of previously seen header fields</b> in
-                                static and dynamic tables</li>
-                        </ul>
-                    </ul>
-                    <img src="img/header-compression.png" style="width: 340px; margin-top: 0px">
-                </ul>
-                </ul>
-            </div>
-
-            <div class="slide">
-                <hgroup>
-                    <h1>Static and Dynamic Tables</h1>
-                </hgroup>
-                <ul class="xx-small">
-                    <li>Static table</li>
-                    <ul>
-                        <li>Pre-defined table of <code>61</code> header fiedls and values where each has assigned an
-                            index</li>
-                        <li>Defined in <a href="https://datatracker.ietf.org/doc/html/rfc7541#appendix-A">HPACK: Header
-                                Compression for HTTP/2</a>
-                            <img src="/img/h2-header-static-table.png" style="width: 850px; margin-top: 20px"></img>
-                        <li>Decompressed size is <code>10</code> bytes (<code>name+value</code> length)</li>
-                        <li>The real size is <code>1</code> byte.
-                    </ul>
-                    <li>Dynamic table</li>
-                    <ul>
-                        <li>Dynamically created table of header fields that do not exist in the static table.</li>
-                        <li>It is maintained by the client and the server</li>
-                        <li>There are entries starting with index <code>62</code>
-                    </ul>
-                </ul>
-            </div>
-
-        </section>
-
-        <div class="slide outline"></div>
-
-        <section>
-            <header>HTTP/2 Analysis</header>
-
-            <div class="slide">
-                <hgroup>
-                    <h1>nghttp</h1>
-                </hgroup>
-                <ul class="xx-small">
-                    <li>Command line tool</li>
-                    <ul>
-                        <li><code>nghttp</code> displays frames and a summary information about each frame</li>
-                        <div style="zoom: 0.7; margin-left: -40px; margin-top: 20px">
-                            <pre class="brush: bash; class-name: 'tight'; gutter: 'false'">
-                $ nghttp -vvv -n https://w20.vitvar.com/lecture1.html
-                [  0.071] Connected
-                The negotiated protocol: h2
-                [  0.137] send SETTINGS frame <length=12, flags=0x00, stream_id=0>
-                          (niv=2)
-                          [SETTINGS_MAX_CONCURRENT_STREAMS(0x03):100]
-                          [SETTINGS_INITIAL_WINDOW_SIZE(0x04):65535]
-                [  0.137] send PRIORITY frame <length=5, flags=0x00, stream_id=3>
-                          (dep_stream_id=0, weight=201, exclusive=0)
-                [  0.137] send PRIORITY frame <length=5, flags=0x00, stream_id=5>
-                          (dep_stream_id=0, weight=101, exclusive=0)
-                [  0.137] send PRIORITY frame <length=5, flags=0x00, stream_id=7>
-                          (dep_stream_id=0, weight=1, exclusive=0)
-                [  0.137] send PRIORITY frame <length=5, flags=0x00, stream_id=9>
-                          (dep_stream_id=7, weight=1, exclusive=0)
-                [  0.137] send PRIORITY frame <length=5, flags=0x00, stream_id=11>
-                          (dep_stream_id=3, weight=1, exclusive=0)
-                [  0.137] send HEADERS frame <length=49, flags=0x25, stream_id=13>
-                          ; END_STREAM | END_HEADERS | PRIORITY
-                          (padlen=0, dep_stream_id=11, weight=16, exclusive=0)
-                          ; Open new stream
-                          :method: GET
-                          :path: /lecture1.html
-                          :scheme: https
-                          :authority: w20.vitvar.com
-                          accept: */*
-                          accept-encoding: gzip, deflate
-                          user-agent: nghttp2/1.42.0
-                [  0.180] recv SETTINGS frame <length=6, flags=0x00, stream_id=0>
-                          (niv=1)
-                          [SETTINGS_MAX_CONCURRENT_STREAMS(0x03):100]
-                [  0.180] recv WINDOW_UPDATE frame <length=4, flags=0x00, stream_id=0>
-                          (window_size_increment=16711681)
-                [  0.180] recv SETTINGS frame <length=0, flags=0x01, stream_id=0>
-                          ; ACK
-                          (niv=0)
-                [  0.180] recv (stream_id=13) :status: 200
-                [  0.180] recv (stream_id=13) server: GitHub.com
-                ...
-                
-                
-              </pre>
-                        </div>
-                    </ul>
-                </ul>
-            </div>
-
-            <div class="slide">
-                <hgroup>
-                    <h1>Wireshark and HTTP/2 Traffic</h1>
-                </hgroup>
-                <ul class="xx-small">
-                    <li>HTTP/2 is encrypted</li>
-                    <ul>
-                        <li>You can capture packets in Wireshark/tcpdump but they are encrypted</li>
-                        <li>The browser (FF, Chrome, Opera) can dump keys in <a
-                                href="https://firefox-source-docs.mozilla.org/security/nss/legacy/key_log_format/index.html">NSS
-                                Key Log Format</a></li>
-                        <li>You can use the log to decrypt the communication in Wireshark</li>
-                    </ul>
-                    <li>Demo at <code>https://kde.vitvar.com</code></li>
-                    <ol style="margin-left: -10px">
-                        <li style="margin-top: 20px">Configure an env variable <code>SSLKEYLOGFILE</code> to point to a
-                            file on the filesystem</li>
-                        <li>Start <b>firefox</b> browser; check the keylog file was created.</li>
-                        <li>Start <b>wireshark</b>; configure the keylog file in <i>pre-master secret log filename</i>
-                        </li>
-                        <li>Start packet capture on <code>eth0</code> using the
-                            filter:<br /><code>((dst host 185.199 and src host 192.168) or<br/>(dst host 192.168 and src host 185.199))</code>
-                        </li>
-                        <ul>
-                            <li>This captures the packets in both directions between the client and the server and back
-                            </li>
-                        </ul>
-                        <li>Point <b>firefox</b> to https://vitvar.com</li>
-                        <li>Check captured packets in the <b>wireshark</b></li>
-                        <ul>
-                            <li>There should be decrypted HTTP/2 communication.</li>
-                        </ul>
-                    </ol>
-
-                </ul>
-            </div>
-
-        </section>
-
+      <div class="slide">
+        <hgroup>
+          <h1>Idempotence</h1>
+        </hgroup>
+        <ul>
+          <li>Idempotent operation</li>
+          <ul>
+            <li>Invoking a method on the same resource always has the same effect</li>
+            <li>Operations <code>GET</code>, <code>PUT</code>, <code>DELETE</code></li>
+          </ul>
+          <li>Non-idempotent operation</li>
+          <ul>
+            <li>Invoking a method on the same resource may have different effects</li>
+            <li>Operation <code>POST</code></li>
+          </ul>
+          <li>Effect = a state change</li>
+          <ul>
+            <li>recall the effect definition in MDW</li>
+          </ul>
+        </ul>
+      </div>
 
     </section>
 
     <div class="slide outline"></div>
 
     <section>
-        <header>HTTP/3</header>
+      <header>State Management</header>
 
-        <div class="slide">
-            <hgroup>
-                <h1>HTTP/2 Drawbacks</h1>
-            </hgroup>
-            <ul class="x-small">
-                <li>HTTP/2 is dependant on TCP</li>
-                <li>TCP head-of-line blocking</li>
-                <ul>
-                    <img src="/img/tcp-hol.svg" style="height: 200px"></img>
-                    <li>When TCP segment does not arrive, it needs to be transmitted</li>
-                    <li>This may delay all HTTP/2 streams</li>
-                </ul>
-                <li>There must always be TLS handshake after TCP hanshake</li>
-                <ul>
-                    <li>HTTP/2 can only be used with TLS</li>
-                </ul>
-
+      <div class="slide" id="state-management">
+        <hgroup>
+          <h1>State Management</h1>
+        </hgroup>
+        <ul class="small">
+          <li>HTTP is a stateless protocol &#150; original design</li>
+          <ul>
+            <li>No information to relate multiple interactions at server-side</li>
+            <ul>
+              <li>Except <code>Authorization</code> header is copied in every request</li>
+              <li>IP addresses do not work, one public IP can be shared by multiple clients</li>
             </ul>
-        </div>
-
-        <div class="slide">
-            <hgroup>
-                <h1>HTTP/3</h1>
-            </hgroup>
-            <ul class="x-small">
-                <li>Protocol stack</li>
+          </ul>
+          <li>Solutions to check for a valid state at server-side</li>
+          <ul>
+            <li><b>Cookies</b> &ndash; obvious and the most common workaround</li>
+            <ul>
+              <li><span class="h-ref" id="rfc-2109">RFC 2109 &ndash; HTTP State Management Mechanism</span></li>
+              <li>Allow clients and servers to talk in a context called <b>sessions</b></li>
             </ul>
-            <div class="h-drawing" id="1J5uJmqD-RiXPPZA4Lk3fVqmUxGUffW94SoEw5enu01o" style="width: 700px"></div>
-            <ul class="x-small">
-                <li>HTTP semantic does not change across HTTP versions</li>
-                <li>New transport protocol QUIC</li>
-                <ul>
-                    <li>Based on UDP</li>
-                    <li>Reduced connection establishment time</li>
-                    <li>Multiplexing without head of line blocking</li>
-                    <li>Connection migration</li>
-                </ul>
+            <li><b>Hypertext</b> &ndash; original HTTP design principle</li>
+            <ul>
+              <li>App states represented by resources (hypermedia), links define transitions between states</li>
+              <li>Adopted by the REST principle <b>statelessness</b></li>
             </ul>
-        </div>
+          </ul>
+        </ul>
+      </div>
 
-        <div class="slide">
-            <hgroup>
-                <h1>Connection Establishment</h1>
-            </hgroup>
-            <div class="h-drawing" id="1JRN5CCKtHFQtpXhMmDht3SMiyLOoXkrm0amvrrEaPF4" style="width: 600px"></div>
-            <ul class="x-small">
-                <li>Reduces overhead during connection setup</li>
-                <ul>
-                    <li>H2 requires TLS, thus requires 3 RTT before data is sent</li>
-                    <li>QUIC requires 1 RTT before data is sent</li>
-                </ul>
+      <div class="slide">
+        <hgroup>
+          <h1>Resource State</h1>
+        </hgroup>
+        <ul class="x-small">
+          <li>State</li>
+          <ul>
+            <li>Resource representation is in fact a <b>representation of a resource state</b></li>
+            <li>Resource may be in different states over time</li>
+          </ul>
+        </ul>
+        <div class="h-drawing" style="height: 250px; margin: 15px 0px 15px 0px;"
+          id="1dhjNo4p6x5rS-IH3E2WcVw3TxwCqmdhtA-9wD0hwbuc"></div>
+        <ul class="small space-before">
+          <li>In REST resource states represent application states</li>
+        </ul>
+      </div>
+
+      <div class="slide" id="resource-state">
+        <hgroup>
+          <h1>Resource State Example</h1>
+        </hgroup>
+        <ul class="x-small">
+          <li>Time <code>t1</code>: client A retrieves a resource <code>/orders</code> (GET)</li>
+          <pre class="brush: xml; class-name: 'tight'">
+                            &lt;orders>
+                                &lt;order id="54467"/>
+                                &lt;order id="65432"/>
+                            &lt;/orders>                                                
+                        </pre>
+          <li>Time <code>t2</code>: client B adds a new order (POST)</li>
+          <pre class="brush: xml; class-name: 'tight'">
+                            &lt;order>
+                                ...
+                            &lt;/order>                                                
+                        </pre>
+          <li>Time <code>t3</code>: client A retrieves a resource <code>/orders</code> (GET)</li>
+          <pre class="brush: xml; class-name: 'tight'">
+                            &lt;orders>
+                                &lt;order id="54467"/>
+                                &lt;order id="65432"/>
+                                &lt;order id="74567"/>
+                            &lt;/orders>                                                
+                        </pre>
+          <li>The resource <code>/orders</code> has different states in <code>t1</code>
+            and <code>t3</code>.
+        </ul>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Link</h1>
+        </hgroup>
+        <ul class="small">
+          <li>Service operation</li>
+          <ul>
+            <li>Applying an access to a link (GET, PUT, POST, DELETE)</li>
+            <li>Link: HTTP method + resource URI + optional link semantics</li>
+          </ul>
+          <li>Example: <code>getOrder</code>, <code>addOrder</code>, and <code>updateItem</code></li>
+        </ul>
+        <div class="h-drawing" id="16vcb0AGdT3N5Jd4FFw9YADqYoF_QQlP46UsYngjfTKs" style="height: 320px"></div>
+      </div>
+
+      <div class="slide">
+        <hgroup>
+          <h1>Atom Links</h1>
+        </hgroup>
+        <ul class="small">
+          <li>Atom Syndication Format</li>
+          <ul>
+            <li>XML-based document format; Atom feeds</li>
+            <li>Atom links becoming popular for RESTful applications</li>
+            <pre class="brush: xml; highlight : [2,3,4,5]">
+                            &lt;order a:xmlns="http://www.w3.org/2005/Atom" xmlns="..."&gt;
+                                &lt;a:link 
+                                    rel="next" 
+                                    href="http://company.com/orders/5543" 
+                                    type="application/xml"/>
+                                &lt;customer&gt;Tomas&lt;/customer>
+                                &lt;items&gt;...&lt;/items>
+                            &lt;/order>
+                            </pre>
+            <li>Link structure</li>
+            <ul class="no-bullet">
+              <li><code>rel</code> &ndash; name of the link<br />
+                ~ semantics of an operation behind the link</li>
+              <li><code>href</code> &ndash; URI to the resource described by the link</li>
+              <li><code>type</code> &ndash; media type of the resource the link points to</li>
             </ul>
-        </div>
+          </ul>
+        </ul>
+      </div>
 
-        <div class="slide">
-            <hgroup>
-                <h1>Recovery</h1>
-            </hgroup>
-            <ul class="x-small">
-                <li>TCP</li>
-                <ul>
-                    <li>TCP performs loss recovery (retransmition)</li>
-                    <li>Multiple frames in a single TCP segment, when TCP segment is lost, the whole segment (with all
-                        frames) need to be
-                        retransmitted.</li>
-                </ul>
-                <li>QUIC</li>
-                <ul>
-                    <li>QUIC implements recovery at the stream level</li>
-                    <li>Lost or corrupted data within a specific stream can be recovered independently without
-                        affecting other streams.</li>
-                    <li>Forward Error Correction (FEC): redundant data to allow the receiver
-                        to recover lost packets without the need for retransmission.</li>
-                </ul>
-        </div>
 
-        <div class="slide">
-            <hgroup>
-                <h1>Networks Switching</h1>
-            </hgroup>
-            <ul class="x-small">
-                <li>A user moves from one network to another.</li>
-                <li>TCP</li>
-                <ul>
-                    <li>Connections timeout; they are re-established</li>
-                    <li>This is a lengthy process</li>
-                </ul>
-                <li>QUIC</li>
-                <ul>
-                    <li>QUIC includes unique connection ID with the server</li>
-                    <li>Connection ID is independent of the source</li>
-                    <li>Pakcets are re-send with the same IDs</li>
-                    <ul>
-                        <li>they are still valid when the source changes</li>
-                    </ul>
-                </ul>
-        </div>
+      <div class="slide">
+        <hgroup>
+          <h1>Interaction with Cookies</h1>
+        </hgroup>
+        <ul class="small">
+          <li>Request-response interaction with cookies</li>
+          <ul>
+            <li>Session is a logical channel maintained by the server</li>
+          </ul>
+          <div class="h-drawing" style="height: 250px" id="1mVCe8EtqVApZVRV_RHYQKtqDNELKdo84qzCqGvAs7iA"></div>
+          <li>Stateful Server</li>
+          <ul>
+            <li>Server remembers the session information in a server memory</li>
+            <li>Server memory is a non-persistent storage, when server restarts the memory content is lost!</li>
+          </ul>
+        </ul>
+      </div>
 
-    </section>
+      <div class="slide">
+        <hgroup>
+          <h1>Set-Cookie and Cookie Headers</h1>
+        </hgroup>
+        <ul class="xx-small">
+          <li><code>Set-Cookie</code> response header</li>
+          <pre class="brush: plain; ">
+                        set-cookie = "Set-Cookie:" cookie ("," cookie)*
+                          cookie    = NAME "=" VALUE (";" cookie-av)*
+                          cookie-av = "Comment" "=" value
+                                    | "Domain" "=" value
+                                    | "Max-Age" "=" value
+                                    | "Path" "=" value
+                    </pre>
+          <ul>
+            <li><code>domain</code> &ndash; a domain for which the cookie is applied</li>
+            <li><code>Max-Age</code> &ndash; number of seconds the cookie is valid</li>
+            <li><code>Path</code> &ndash; URL path for which the cookie is applied</li>
+          </ul>
+          <li><code>Cookie</code> request header. A client sends the cookie in a request if:</li>
+          <ul>
+            <li><code>domain</code> matches the origin server's fully-qualified host name</li>
+            <li><code>path</code> matches a prefix of the request-URI</li>
+            <li><code>Max-Age</code> has not expired</li>
+          </ul>
+          <pre class="brush: plain;">
+                        cookie  = "Cookie:" cookie-value (";" cookie-value)*
+                          cookie-value    = NAME "=" VALUE [";" path] [";" domain]
+                          path            = "$Path" "=" value
+                          domain          = "$Domain" "=" value
+                    </pre>
+          <ul>
+            <li><code>domain</code>, and <code>path</code> are values from corresponding attributes of
+              the <code>Set-Cookie</code> header</li>
+          </ul>
+
+        </ul>
+      </div>
+
+    </section> -->
+
+  </section>
+
+  <div class="slide outline"></div>
+
+  <section>
+    <header>Security</header>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Web Service Security Concepts</h1>
+      </hgroup>
+      <ul class="x-small">
+        <li>Securing the client-server communcation</li>
+        <ul>
+          <li>Message-level security</li>
+          <li>Transport-level security</li>
+        </ul>
+        <li>Ensure</li>
+        <ul>
+          <li>Authentication &ndash; verify a client's identity</li>
+          <li>Authorizaton &ndash; rights to access resources</li>
+          <li>Message Confidentiality &ndash; keep message content secret</li>
+          <li>Message Integrity &ndash; message content does not change during transmission</li>
+          <li>Non-repudiation &ndash; proof of integrity and origin of data</li>
+        </ul>
+        <div class="h-drawing" style="height: 190px; margin-top: 30px"
+          id="1JhEX5OGpHhQY49mxA4-r7taripW6bkWwLCu94BU9QFI"></div>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Transport Level Security</h1>
+      </hgroup>
+      <ul class="x-small">
+        <li>SSL and TLS</li>
+        <ul>
+          <li>SSL and TLS is used interchangeably</li>
+          <li>SSL 3.0 developed by Netscape</li>
+          <li>IETF standardization of SSL 3.0 is TLS 1.0</li>
+          <ul>
+            <li>TLS 1.0 is upgrade of SSL 3.0</li>
+          </ul>
+          <li>Due to security flaws in TLS 1.0, TLS 1.1 and TLS 1.2 were created</li>
+        </ul>
+        <li>TLS layer</li>
+        <img src="img/TLS.png" style="height: 250px" />
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>TLS Services</h1>
+      </hgroup>
+      <ul class="xx-small">
+        <li>Encryption</li>
+        <ul>
+          <li>Peers must agree on ciphersuite and keys</li>
+          <li>This is achieved by <b>TLS handshake</b></li>
+        </ul>
+        <li>Authentication</li>
+        <ul>
+          <li>Peers can authenticate their identity</li>
+          <ul>
+            <li>The client can verify that the server is who it is claimed to be</li>
+            <li>Achieved by "Chain of Trust and Certificate Authoritites"</li>
+            <li>The server can also verify the client</li>
+          </ul>
+        </ul>
+        <li>Integrity</li>
+        <ul>
+          <li>TLS provives message framing mechanism</li>
+          <li>Every message is signed with Message Authentication Code (MAC)</li>
+          <ul>
+            <li>MAC hashes data in a message and combines the resulting hash with a key (negotiated during the TLS
+              handshake)</li>
+            <li>The result is a message authentication code sent with the message</li>
+          </ul>
+        </ul>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>TLS Handshake Protocol</h1>
+      </hgroup>
+      <img src="img/tls-handshake.png" style="padding-top: 10px; padding-left: 20px; height: 300px" />
+      <ul class="xx-small">
+        <li>TLS Handshake</li>
+        <ul>
+          <li class="no-bullet">56 ms: ClientHello, TLS protocol version, list of ciphersuites, TLS options</li>
+          <li class="no-bullet">84 ms: ServerHello, TLS protocol version, ciphersuite, certificate</li>
+          <li class="no-bullet">112 ms: RSA or Diffie-Hellman key exchange</li>
+          <li class="no-bullet">140 ms: Message integrity checks, sends encrypted "Finished" message</li>
+          <li class="no-bullet">168 ms: Decrypts the message, app data can be sent</li>
+        </ul>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>Key Exchange</h1>
+      </hgroup>
+      <ul class="xx-small">
+        <li>RSA key exhange(Rivest–Shamir–Adleman)</li>
+        <ul>
+          <li>The client generates a symetric key</li>
+          <li>The client encrypts the key with the server's public key</li>
+          <li>The client sends the encrpyed key to the server</li>
+          <li>The server uses its private key to decrypt the symetric key</li>
+        </ul>
+        <li>RSA critical weekness</li>
+        <ul>
+          <li>The same public-private key pair is used to:</li>
+          <ul>
+            <li>authenticate the server (the server's private key is used to sign and verify the handshake)</li>
+            <li>encrypt the symetric key</li>
+          </ul>
+          <li>When an attacker gets hold of the server private key</li>
+          <ul>
+            <li>It can decrypt the entire session</li>
+          </ul>
+        </ul>
+        <li>Diffie-Hellman key exhange</li>
+        <ul>
+          <li>Client and server can negoriate shared secret without its explicit communication</li>
+          <ul>
+            <li>Attacker cannot get the key</li>
+          </ul>
+          <li>Reduction of risk of compromising of the past communications</li>
+          <ul>
+            <li>New key can be generated as part of every key exchange</li>
+            <li>Old keys can be discarded</li>
+          </ul>
+        </ul>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <hgroup>
+        <h1>TLS and Proxy Servers</h1>
+      </hgroup>
+      <ul class="xx-small">
+        <li>TLS Offloading</li>
+        <ul>
+          <li>Inbound TLS connection, plain outbound connection</li>
+          <li>Proxy can inspect messages</li>
+        </ul>
+        <li>TLS Bridging</li>
+        <ul>
+          <li>Inbound TLS connection, new outbound TLS connection</li>
+          <li>Proxy can inspect messages</li>
+        </ul>
+        <li>End-to-End TLS (TLS pass-through)</li>
+        <ul>
+          <li>TLS connection is passed-through the proxy</li>
+          <li>Proxy cannot inspect messages</li>
+        </ul>
+        <li>Load balancer</li>
+        <ul>
+          <li>Can use TLS offloading or TLS bridging</li>
+          <li>Can use TLS pass-through with help of Server Name Indication (SNI)</li>
+        </ul>
+      </ul>
+    </div>
+
+  </section>
+
+
+
+
+
+
+
+
 
 </body>
-
-</html>

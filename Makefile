@@ -1,5 +1,11 @@
 # Makefile for humla lectures
 
+# phantomjs pulled from registry.k8shell.io/workspaces/humla:1.0 (see tools/README.md);
+# TODO: replace with an up to date rendering tool, phantomjs is no longer maintained.
+export PHANTOMJS := $(CURDIR)/tools/phantomjs/bin/phantomjs
+# system openssl.cnf (OpenSSL 3, "providers" module) breaks this old phantomjs build
+export OPENSSL_CONF := /dev/null
+
 .PHONY: pdf
 
 help:
@@ -13,6 +19,7 @@ help:
 	@echo ""
 
 http:
+	@echo "Serving at http://localhost:9000"
 	humla/bin/http-server.sh
 
 gcache:

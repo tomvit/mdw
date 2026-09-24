@@ -1,0 +1,10 @@
+{
+  "remote.autoForwardPorts": true,
+  "remote.autoForwardPortsSource": "hybrid",
+  "remote.portsAttributes": {
+    "9000": {
+      "label": "humla http",
+      "onAutoForward": "notify"
+    }
+  }
+}
