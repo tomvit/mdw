@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--
-    Middleware and Web Services, CTU course slides
+    Cloud Technologies 1, CTU course slides
     (cc) 2010-2023 Tomas Vitvar, http://vitvar.com
     written for Humla, an open source HTML5 presentation environment
 -->
@@ -8,7 +8,7 @@
 
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<meta name="course" content="Middleware Architectures 1" />
+	<meta name="course" content="Cloud Technologies 1" />
 	<meta name="lecture" content="Lecture 1" />
 	<meta name="keywords" content="enterprise architecture, system integration, roles, software architecture" />
 
@@ -244,6 +244,170 @@
 				</ul>
 			</ul>
 		</div>
+
+	</section>
+
+	<div class="slide outline">
+	</div>
+
+	<section>
+		<header>Data, Functions and Processes</header>
+
+		<div class="slide">
+			<hgroup>
+				<h1>Process Classification Framework</h1>
+			</hgroup>
+			<div class="h-drawing" id="1ou4lOAvwaFP2MJo1RQbJOTF-DavfYjcUF6MELE6cWws"></div>
+		</div>
+
+		<div class="slide">
+			<hgroup>
+				<h1>Order Process Example in Telco</h1>
+			</hgroup>
+			<ul class="small">
+				<li>Order to Cash Process (O2C)</li>
+				<ul>
+					<li>end-to-end (E2E) order process</li>
+				</ul>
+				<div class="h-drawing" style="height: 100px; width: 700px"
+					id="1yX-8bZn0P2UwA06KeVJOgk4jaZ0EuMkWaIUa-RdMEno"></div>
+				<li style="margin-top: 15px;">Involved applications</li>
+				<ul>
+					<li>integrated applications</li>
+				</ul>
+				<div class="h-drawing" style="height: 200px; width: 700px"
+					id="1JRgVTqa43jbpGM6PYgGQQFk3mBFHqwWu_SGZHbd0fsY"></div>
+			</ul>
+		</div>
+
+		<div class="slide">
+			<hgroup>
+				<h1>Syntax and Domain Semantics</h1>
+			</hgroup>
+			<ul class="small">
+				<li>Syntax</li>
+				<ul>
+					<li>Data format, representation, serialization</li>
+					<li>Various languages at various architectural levels:<br />
+						XML, JSON, Class/object models in a specific programming language, SQL, DB native structures,
+						...</li>
+					<li>They have formal grammars, can be checked for the correct syntax</li>
+				</ul>
+				<li>Domain semantics</li>
+				<ul>
+					<li>Meaning of terms in a domain they are being used</li>
+					<li>We understand meaning of terms:</li>
+					<ul>
+						<li>Through syntax by using the natural language</li>
+						<li>Through some <b>agreement</b> among users of the terms</li>
+					</ul>
+					<li>Every applications can use different semantics</li>
+					<ul>
+						<li>Need to mediate data from one application to another</li>
+					</ul>
+				</ul>
+			</ul>
+		</div>
+
+		<div class="slide">
+			<hgroup>
+				<h1>Simplified Order Type Example</h1>
+			</hgroup>
+			<div class="h-drawing" style="height: 450px; margin-top: 10px"
+				id="1o2nyoAPa9s78sXjWuRUNXYoh5uulvGiE7yrHpfsgrTw" format="png"></div>
+		</div>
+
+		<div class="slide outline">
+		</div>
+
+		<section>
+			<header>Integration</header>
+
+			<div class="slide">
+				<hgroup>
+					<h1>Integrating Applications</h1>
+				</hgroup>
+				<ul class="x-small">
+					<li>Intra-Enterprise Integration</li>
+					<ul>
+						<li>Applications exist in a specific area</li>
+						<li>Functions and data often overlap across areas</li>
+						<li>There is a need to integrate applications within enterprise:</li>
+						<ul>
+							<li>Applications need to share the same data that are often in different formats.</li>
+							<li>Applications need to communicate &#150; a result of one process may trigger another one.
+							</li>
+						</ul>
+					</ul>
+					<li>Inter-Enterprise Integration</li>
+					<ul>
+						<li>Also called Business-to-Business Integration (B2B)</li>
+						<li>Automation support for communication and collaboration among enterprises</li>
+						<li>For example, B2B automates customers' orders processing, tracking orders, etc.</li>
+					</ul>
+				</ul>
+			</div>
+
+			<!-- <div class="slide">
+                    <hgroup>
+                        <h1>Integration Example &ndash; O2C</h1>
+                    </hgroup>
+                    <div class="h-drawing" style="height: 350px; margin-top: 60px"
+                    id="1kSE87erCPlL8_3bKu9a7ufeIH71fU1RROcfB6b2yxA4" format="png"></div>
+                </div> -->
+
+			<div class="slide">
+				<hgroup>
+					<h1>Integration Example &ndash; O2C</h1>
+				</hgroup>
+				<img src="/img/order-management-process.png" style="width: 800px"></img>
+			</div>
+
+
+			<!--  <div class="slide">
+                    <hgroup>
+                        <h1>Example Oracle O2C Technical Flows</h1>
+                    </hgroup>
+                    <div class="h-drawing" style="height: 490px; margin-top: 10px"
+                    id="1zgNezT0FKt69C2Ngqjeuwp1LNv_vKeDeKInxnULN6z8" format="png"></div>
+                </div> -->
+
+			<div class="slide">
+				<hgroup>
+					<h1>Integration Issues</h1>
+				</hgroup>
+				<ul class="x-small">
+					<li>Key to integration = <b>interface</b></li>
+					<ul>
+						<li>standards &#150; data, functions, processes, technical aspects</li>
+						<ul>
+							<li>enterprise standards, committee standards</li>
+							<li>unified environment from a single vendor</li>
+						</ul>
+						<li>mediators</li>
+						<ul>
+							<li>where standard do not work out</li>
+						</ul>
+					</ul>
+					<li>Data</li>
+					<ul>
+						<li>Message exchange formats, data representation</li>
+						<ul>
+							<li>often standardized</li>
+						</ul>
+						<li>Semantics of data</li>
+						<ul>
+							<li>also standardized, more difficult</li>
+						</ul>
+					</ul>
+					<li>Functions and processes</li>
+					<ul>
+						<li>how apps' functionalities should be consumed and orchestrated, protocols, naming issues</li>
+						<li>A service concept</li>
+					</ul>
+				</ul>
+			</div>
+		</section>
 
 	</section>
 

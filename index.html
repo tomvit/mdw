@@ -3,105 +3,297 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="css/main.css" type="text/css" media="screen, print"></link>
+    <title>Cloud Technologies 1</title>
 
-    <title>MDW Course</title>
-    
-  </head>
-  <body>
-    <script>
-	var lecdata = {};
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Chivo:bold|Open+Sans:300i,400">
 
-        function drawTable() {
-                var html = "";
-                html += "<table class=\"\">" +
-                                "<tbody>";
-                                
-                var formatTitle = function(s) {
-                        return "<a class='toc' target=\"w20win\" href='" + s["slide-url"] + "'>" + s.title + "</a>";            
-                }               
-                                
-                for (var i = 0; i < lecdata.lectures.length; i++) {
-                        html += "<tr>";
-
-                        html += "<td style='vertical-align: top'><b>" + (i + 1) + ".</b></td><td><b>" + lecdata.lectures[i].title + 
-                        "</b>&nbsp;<span style='font-size: 11px;'>[" +
-                        "<a target=\"w20win\" href=\"" + lecdata.lectures[i]["slide-url"] + "\">HTML</a>,&nbsp;<a target=\"w20win\" href=\"" +          
-                                "pdf/" + lecdata.lectures[i]["slide-url"].replace(/.html.*$/, "-2p.pdf") + "\">PDF-2</a>,&nbsp;<a target=\"w20win\" href=\"" +          
-                                "pdf/" + lecdata.lectures[i]["slide-url"].replace(/.html.*$/, "-1p.pdf") + "\">PDF-1</a>]<br/><span class='toc'>";
-
-                        var sections1 = lecdata.lectures[i].sections; 
-                        for (var j = 0; j < sections1.length; j++) {
-                                html += formatTitle(sections1[j]) + (sections1[j].sections.length > 0 ? "" : (j == sections1.length - 1 ? "" : ", "));
-                                
-                                var sections2 = sections1[j].sections;
-                                
-                                if (sections2.length > 0) {
-                                        html += " (";
-                                        for (var k = 0; k < sections2.length; k++) {
-                                                html += formatTitle(sections2[k]) + (k == sections2.length - 1 ? "" : ", ");
-                                        }
-                                        html += ")" + (j == sections1.length - 1 ? "" : ", ");
-                                }
-                        }
-                        
-                        html += "</span></td>";
-                        html += "</tr>";
-                }
-                
-                html += "</tbody>";
-                html += "</table>"
-                
-                var e = document.getElementById("course-toc");
-                e.innerHTML = html;
-
-	}
-
-	function setLastModified() {
-        	var mind = 0;
-		for (i = 0; i < lecdata.lectures.length; i++) {
-			var d = new Date(lecdata.lectures[i].lastModified);
-			if (d > mind)
-				mind = d;
-		}
-		var e = document.getElementById("lastModified");
-                e.innerHTML = "last modified:&nbsp;" + mind;
-	}
-
-        var handler = function() {
-                if (this.readyState == 4 && this.status == 200) {
-                        lecdata = JSON.parse(this.responseText);
-                        drawTable(lecdata);
-			setLastModified(lecdata)
-                }
-        };
-
-        var xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = handler; 
-        xhr.open("GET", "toc.json");
-        xhr.send();
-    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
 
     <style>
-	.center {
-    		margin: auto;
-    		width: 800px;
-    		padding: 10px;
-	}
+      /* base page styles matched to https://vitvar.com/lectures/ (its body/h1 rules
+         apply directly to <body>, there is no separate content wrapper) */
+      body {
+        margin: 0 auto;
+        max-width: 62em;
+        line-height: 1.5;
+        padding: 32px 1em 0;
+        color: #555;
+        background-color: #f9fbff;
+        font-family: "Open Sans", sans-serif;
+        font-size: 100%;
+      }
 
-	#lastModified {
-		margin-top: 11px;
-    		font-size: 12px;
-    		color: #444444;
-	}
-	
+      h1,
+      h2 {
+        font-family: Chivo, sans-serif;
+        font-weight: 700;
+        color: #333;
+        margin: 9px 0 8px;
+      }
+
+      h1 {
+        font-size: 20px;
+      }
+
+      h2 {
+        font-size: 17px;
+        margin-top: 28px;
+      }
+
+      p {
+        margin: 0 0 14px;
+      }
+
+      #lastModified {
+        margin-top: 4px;
+        margin-bottom: 20px;
+        font-size: 14px;
+        color: #767676;
+      }
+
+      /* humla-table styles, matching https://vitvar.com/lectures/ */
+      .humla-table {
+        border-bottom: 1px solid #ddd !important;
+      }
+      .humla-table tbody tr td.dataTables_empty {
+        text-align: left;
+      }
+      .humla-table th {
+        background-color: #dcdcdc;
+        border-bottom: 1px solid silver !important;
+        color: #404040;
+      }
+      .humla-table tbody tr td,
+      .humla-table thead tr th {
+        text-align: left;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        padding: 6px 0 6px 12px !important;
+        font-size: 15px;
+      }
+      .humla-table tbody tr.child-row td {
+        cursor: initial;
+      }
+      .humla-table tbody tr.child-row td:hover {
+        background-color: #fff;
+      }
+      .humla-table .sorting_asc,
+      .humla-table .sorting_desc {
+        background-image: none !important;
+      }
+      .humla-table tbody tr td span {
+        padding: 3px 6px;
+        font-size: 13px;
+        background-color: #e8e8e8;
+        border-radius: 5px;
+        color: #8a8a8a;
+        margin: 0 4px 0 0;
+        cursor: pointer;
+      }
+      .humla-table tbody tr td span:hover {
+        background-color: silver;
+      }
+      .humla-table tbody tr td span.toc {
+        margin: 0 0 0 4px;
+      }
+      .humla-table tbody tr td span.toc.selected {
+        background-color: silver;
+      }
+      .humla-table tbody tr td .toc-text {
+        white-space: normal;
+        font-size: 14px;
+        color: #656464;
+        padding-left: 44px;
+        padding-right: 12px;
+      }
+      .humla-table tbody tr.child-row,
+      .humla-table tbody tr.child-row a {
+        color: #848484;
+        text-decoration: none;
+      }
+      .humla-table tbody tr.child-row a:hover {
+        text-decoration: underline;
+      }
+      .humla-table tbody tr td span.html {
+        color: #8080a2;
+      }
+      .humla-table tbody tr td span.pdf-1,
+      .humla-table tbody tr td span.pdf-2 {
+        color: #b17676;
+      }
     </style>
+  </head>
+  <body>
+    <h1>Cloud Technologies 1</h1>
 
-    <div class="container center">
-      <h1 id="web-20-course-slides">Middleware Architectures 1</h1>
-    
-      <div id="course-toc"></div>
-      <div id="lastModified"></div>
-    </div>
+    <p>The Cloud Technologies 1 is a post-graduate university course which provides underlying
+      architectural and theoretical concepts about enterprise and software architecture, service-oriented
+      and microservice architectures, cloud architectures and cloud-native technologies. The course covers
+      cloud infrastructure and service models, containers, Kubernetes, communication protocols such as
+      HTTP/2, and techniques for achieving high availability and performance. In my lectures, I share
+      example problems from large-scale integration and cloud infrastructure domains and point out
+      technological and architectural limitations with possibilities to control and overcome them.</p>
+
+    <h2>Lectures</h2>
+    <div id="lastModified"></div>
+    <table id="dt-lectures" class="display humla-table" style="width:100%"></table>
+
+    <h2>Labs</h2>
+    <p>TODO, will work on it later.</p>
+
+    <script>
+      // Course dashboard, adapted from the HumlaClient used at https://vitvar.com/lectures/
+      // (see /js/humla.js there). This is a single-course, same-origin version: it reads
+      // ./toc.json directly instead of fetching "https://<site>/toc.json" for each course,
+      // and all links (slides, PDFs) are relative to this page instead of being qualified
+      // with a per-course base URL.
+
+      var pad0 = function (v) {
+        return v < 10 ? "0" + v : "" + v;
+      };
+
+      var uniqId = (function () {
+        var i = 0;
+        return function () {
+          return "gen" + i++;
+        };
+      })();
+
+      // renders a clickable pill; if url is given it opens in a shared tab on click
+      var link = function (label, url) {
+        var id = uniqId();
+        if (url) {
+          window.setTimeout(function () {
+            $("#" + id).click(function () {
+              window.open(url, "humla-tab");
+            });
+          }, 200);
+        }
+        return "<span id='" + id + "' class='" + label + "'>" + label + "</span>";
+      };
+
+      var formatTitle = function (value) {
+        return value + link("toc");
+      };
+
+      var formatDate = function (value) {
+        var date = new Date(Date.parse(value));
+        return pad0(date.getDate()) + "/" + pad0(date.getMonth() + 1) + "/" + date.getFullYear();
+      };
+
+      // pdf/lecture{N}-{1,2}p.pdf files are named after the lecture number, which lines
+      // up with the row index because toc.json is generated in lecture number order
+      var formatContent = function (value, row, type, val, meta) {
+        return (
+          link("pdf-2", "pdf/lecture" + meta.row + "-2p.pdf") +
+          link("pdf-1", "pdf/lecture" + meta.row + "-1p.pdf") +
+          link("html", row["slide-url"])
+        );
+      };
+
+      var formatTOC = function (row) {
+        var formatLink = function (s) {
+          return "<a href='" + s["slide-url"] + "' target='humla-tab'>" + s.title + "</a>";
+        };
+
+        var toc = "";
+        var sections1 = row.data().sections;
+        for (var j = 0; j < sections1.length; j++) {
+          toc += formatLink(sections1[j]) + (sections1[j].sections.length > 0 ? "" : j == sections1.length - 1 ? "" : ", ");
+          var sections2 = sections1[j].sections;
+          if (sections2.length > 0) {
+            toc += " (";
+            for (var k = 0; k < sections2.length; k++) {
+              toc += formatLink(sections2[k]) + (k == sections2.length - 1 ? "" : ", ");
+            }
+            toc += ")" + (j == sections1.length - 1 ? "" : ", ");
+          }
+        }
+        return "<div class='toc-text'>" + toc + "</div>";
+      };
+
+      var COLUMNS = [
+        { title: "NO.", width: "8px", data: "_no", format: (value, row, type, val, meta) => meta.row + 1 },
+        { title: "LECTURE", width: "600px", data: "title", format: (value) => formatTitle(value) },
+        { title: "SLIDES", width: "15px", data: "slidesCount" },
+        { title: "CONTENT", width: "15px", data: "_content", format: (value, row, type, val, meta) => formatContent(value, row, type, val, meta) },
+        { title: "UPDATED", width: "30px", data: "lastModified", format: (value) => formatDate(value) }
+      ];
+
+      function def(col) {
+        if (!col.data_orig) col.data_orig = col.data;
+        var d = col.data;
+        return (row, type, val, meta) => {
+          var fv = "-";
+          try {
+            if (d != null) fv = d.split(".").reduce((obj, prop) => obj[prop], row);
+            if (type === "display" && col.format) {
+              if (!row.__fv) row.__fv = {};
+              if (!row.__fv[col.data_orig]) row.__fv[col.data_orig] = col.format(fv, row, type, val, meta);
+              fv = row.__fv[col.data_orig];
+            }
+            if (fv == null) fv = "-";
+          } catch (e) {
+            fv = "-";
+          }
+          return fv;
+        };
+      }
+
+      for (var c in COLUMNS) COLUMNS[c].data = def(COLUMNS[c]);
+
+      $.fn.dataTable.ext.errMode = "none";
+
+      var table = $("#dt-lectures").DataTable({
+        paging: false,
+        bFilter: false,
+        bInfo: false,
+        ordering: false,
+        ajax: {
+          url: "toc.json",
+          dataSrc: function (json) {
+            var mostRecent = 0;
+            (json.lectures || []).forEach(function (l) {
+              var d = Date.parse(l.lastModified);
+              if (d > mostRecent) mostRecent = d;
+            });
+            $("#lastModified").text(mostRecent ? "last modified: " + formatDate(new Date(mostRecent)) : "");
+            return json.lectures;
+          }
+        },
+        columns: COLUMNS
+      });
+
+      table.collapse = function () {
+        this.rows()
+          .eq(0)
+          .each((idx) => {
+            var r = this.row(idx);
+            if (r.child.isShown()) r.child.hide();
+          });
+        $("#dt-lectures span.selected").removeClass("selected");
+      };
+
+      $("#dt-lectures tbody").on("click", "tr td", (e) => {
+        var index = table.cell(e.currentTarget).index();
+        if (!index) return;
+
+        var prop = COLUMNS[index.column].data_orig;
+        var td = $(e.currentTarget);
+        var tr = td.closest("tr");
+        var row = table.row(tr);
+
+        var shown = row.child.isShown();
+        table.collapse();
+
+        if (prop === "title" && !shown) {
+          row.child(formatTOC(row), "child-row").show();
+          td.children("span").addClass("selected");
+        }
+      });
+    </script>
   </body>
 </html>
