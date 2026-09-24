@@ -6,16 +6,18 @@ export PHANTOMJS := $(CURDIR)/tools/phantomjs/bin/phantomjs
 # system openssl.cnf (OpenSSL 3, "providers" module) breaks this old phantomjs build
 export OPENSSL_CONF := /dev/null
 
-.PHONY: pdf
+.PHONY: pdf labs dev
 
 help:
 	@echo "make <target>"
 	@echo "http	starts the http server listening on tcp/9000."
 	@echo "clean	cleans all temporary directories."
 	@echo "pdf	creates a pdf document for every lecture file."
-	@echo "toc	creates a table of contents in JSON for all lecture files." 
+	@echo "toc	creates a table of contents in JSON for all lecture files."
 	@echo "gcache	fetches all google drawings from all lectures and stores them in the cache."
-	@echo "all	cleans everything and creates all pdf files and toc." 
+	@echo "labs	regenerates labs/k8shell.html from labs/src/."
+	@echo "dev	rebuilds toc + pdf + labs, then starts the http server."
+	@echo "all	cleans everything and creates all pdf files and toc."
 	@echo ""
 
 http:
@@ -24,6 +26,11 @@ http:
 
 gcache:
 	humla/bin/fetchall-drawings.sh
+
+labs:
+	node bin/generate-labs.js
+
+dev:	toc pdf labs http
 
 clean:
 	rm -fr cache

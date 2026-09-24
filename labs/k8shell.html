@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>k8shell Workspace Platform</title>
+
+  <!--
+    GENERATED FILE — do not edit by hand, edit labs/src/ instead.
+    Regenerate with: make labs   (or: node bin/generate-labs.js)
+    Source: labs/src/description.md + labs/src/instructions.md
+    Generated at: 2026-09-24T12:25:48.059Z
+  -->
+
+  <style>
+    body {
+      margin: 0 auto;
+      max-width: 52em;
+      line-height: 1.5;
+      padding: 24px 1em 64px;
+      color: #555;
+      background-color: #f9fbff;
+      font-family: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      font-size: 100%;
+    }
+
+    a { color: #3b5bdb; }
+
+    .back-link {
+      display: inline-block;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+
+    h1, h2, h3 {
+      font-family: Chivo, sans-serif;
+      font-weight: 700;
+      color: #333;
+      margin: 28px 0 8px;
+    }
+
+    h1 { font-size: 26px; margin-top: 9px; }
+    h2 { font-size: 20px; }
+    h3 { font-size: 16px; }
+
+    p, li { margin: 0 0 12px; }
+
+    ul, ol { padding-left: 22px; }
+
+    .note { color: #888; }
+
+    code {
+      font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 13px;
+      background-color: #eef1f8;
+      border-radius: 3px;
+      padding: 1px 5px;
+    }
+
+    pre {
+      position: relative;
+      background-color: #2b2d33;
+      color: #e8e8e8;
+      border-radius: 6px;
+      padding: 12px 16px;
+      overflow-x: auto;
+    }
+
+    pre code {
+      background-color: transparent;
+      padding: 0;
+      color: inherit;
+    }
+
+    .copy-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 6px;
+      font-family: inherit;
+      font-size: 11px;
+      line-height: 1;
+      color: #c7c9d1;
+      background-color: #3a3d46;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.15s, background-color 0.15s;
+    }
+
+    pre:hover .copy-btn {
+      opacity: 1;
+    }
+
+    .copy-btn:hover {
+      background-color: #4a4e5a;
+    }
+
+    .copy-btn svg {
+      width: 13px;
+      height: 13px;
+      flex: none;
+    }
+
+    .copy-btn.copied {
+      color: #8ee0a1;
+    }
+
+    img { max-width: 100%; border: 1px solid #ddd; border-radius: 4px; }
+
+    hr {
+      border: none;
+      border-top: 1px solid #ddd;
+      margin: 40px 0;
+    }
+  </style>
+</head>
+<body>
+  <a class="back-link" href="../index.html">&larr; Back to course</a>
+
+  <h1>k8shell Workspace Platform</h1>
+  <p>This is the platform used for the course labs.</p>
+
+  <section id="description">
+    <p>k8shell is built on top of a Kubernetes cluster that dynamically provisions user workspaces based on specific requirements, including:</p>
+<ul>
+<li>Pre-installed software in the workspace provided as a container image</li>
+<li>Size specifications (CPU, memory)</li>
+<li>Persistent volume needs for local data storage</li>
+<li>Security such as sudo access</li>
+</ul>
+<p>Find out more about k8shell:</p>
+<ul>
+<li><a href="#usage-guide">Usage guide</a></li>
+<li>Website: <a href="https://k8shell.io">https://k8shell.io</a></li>
+<li>Documentation: <a href="https://docs.k8shell.io">https://docs.k8shell.io</a></li>
+<li>Feedback: <a href="https://github.com/k8shell-io/k8shell/issues/new/choose">https://github.com/k8shell-io/k8shell/issues/new/choose</a></li>
+<li>Source code (GitHub org): <a href="https://github.com/k8shell-io">https://github.com/k8shell-io</a></li>
+</ul>
+<p>Should you have any questions regarding k8shell, its use or have any issues, please talk to your instructor.</p>
+
+  </section>
+
+  <hr>
+
+  <section id="usage-guide">
+    <h1>Usage Guide</h1>
+    <h2 id="prerequisites">Prerequisites</h2>
+<p>k8shell allows you to sign in using your existing GitHub account.</p>
+<ul>
+<li><strong>Course access</strong> - you get access to workspace blueprints according to the courses you are subscribed to. Your account is automatically enabled once you attend a course that uses k8shell in its labs.</li>
+<li><strong>SSH key</strong> - k8shell authenticates SSH and VS Code connections using SSH keys. Make sure you have an SSH key uploaded to GitHub <em>before</em> your first sign-in, so it can be automatically transferred to your k8shell account. If you have not done this yet, follow the <a href="https://docs.github.com/en/authentication/connecting-to-github-with-ssh">GitHub instructions</a> to generate and upload your SSH key.</li>
+</ul>
+<h2 id="sign-in">Sign-in</h2>
+<p>To access your workspace, open the k8shell sign-in page at <a href="https://app.k8shell.dev">https://app.k8shell.dev</a>. You will see the following screen:</p>
+<p><img src="images/signin.png" alt="k8shell sign-in page"></p>
+<p>Sign in using the <strong>Continue with GitHub</strong> button, which authenticates you via your GitHub account. The username/password form is currently not available and should not be used.</p>
+<p>After signing in, you will be redirected to the GitHub login page (if you are not already logged in) and then back to k8shell. The first time you sign in, GitHub will ask you to approve the k8shell application&#39;s access to your GitHub resources - you need to authorize this for the sign-in to complete.</p>
+<h2 id="create-a-workspace">Create a workspace</h2>
+<p>You get access to workspace blueprints according to the courses you are subscribed to. For example, if you are subscribed to a course with a workspace blueprint called <code>arc</code>, you will have access to it.</p>
+<p>To provision a workspace from a blueprint:</p>
+<ol>
+<li>Go to <strong>Workspaces</strong>.</li>
+<li>Press the <strong>Create workspace</strong> button.</li>
+<li>Select <strong>From blueprint</strong>.</li>
+<li>Choose your course&#39;s blueprint (e.g. <code>arc</code>).</li>
+<li>Press <strong>Create</strong>.</li>
+</ol>
+<p>The workspace will be created within a few seconds, and its progress will be shown in the table.</p>
+<p>Once the workspace status is <strong>Running</strong>, open the workspace dashboard. From there you can:</p>
+<ul>
+<li>Use the <strong>Terminal</strong> tab to access the workspace directly in your browser, or</li>
+<li>Copy the SSH or VS Code connection commands to connect to the workspace from your own computer, as described in the <a href="#connecting-to-your-workspace">Connecting to your workspace</a> section below.</li>
+</ul>
+<p>To connect to a workspace from your computer, you need a public key registered in k8shell. If you signed in via GitHub and already had an SSH key uploaded there, that key is automatically transferred to k8shell for you to use, so you can connect right away provided you have the corresponding private key on your computer (in your <code>.ssh</code> directory).</p>
+<h2 id="connecting-to-your-workspace">Connecting to your workspace</h2>
+<p>Once your workspace is <strong>Running</strong>, you can connect to it using any SSH client, Visual Studio Code (with the Remote - SSH extension), or any SFTP client to copy files to and from your workspace, in addition to the browser-based Terminal tab in the workspace dashboard.</p>
+<p>When connecting, you identify the workspace using <code>&lt;username&gt;~&lt;workspace&gt;</code> as the SSH username, where <code>&lt;username&gt;</code> is your username and <code>&lt;workspace&gt;</code> is the name of the workspace you created from a blueprint (by default the same as the blueprint name, e.g. <code>arc</code>).</p>
+<p>When you are logged in to the workspace, you operate under your own username with your own UID and GID numbers. By default, you do not have privileged access in the workspace, however, depending on your course settings, you may have <code>sudo</code> privileges too. Using <code>sudo</code> you can install additional software, manage packages, and perform administrative tasks inside your workspace.</p>
+<h3 id="ssh-access">SSH access</h3>
+<p>The SSH command to access your workspace is as follows:</p>
+<pre><code class="language-bash">ssh -i &lt;/path/to/key&gt; &lt;username&gt;~&lt;workspace&gt;@app.k8shell.dev
+</code></pre>
+<p>where <code>&lt;/path/to/key&gt;</code> is the path to your SSH private key stored on your computer (usually <code>~/.ssh/id_rsa</code>), <code>&lt;username&gt;</code> is your username, and <code>&lt;workspace&gt;</code> is the name of the workspace you want to access.</p>
+<p>For example, to access the workspace <code>arc</code> with the username <code>john</code>, and the private key <code>~/.ssh/id_rsa</code>:</p>
+<pre><code class="language-bash">ssh -i ~/.ssh/id_rsa john~arc@app.k8shell.dev
+k8shell v26.9.4
+Last login: Mon Sep 16 14:43:30 2024 from 10.126.2.67
+
+john@arc:~$
+</code></pre>
+<p>After you run the command, you will be logged in to the workspace. The prompt will show you the username and workspace you are currently using. You can now start using the workspace by running commands in the terminal. Note that you can use almost any ssh option with the ssh command, such as <code>-L</code> or <code>-D</code> for port forwarding, <code>-A</code> for agent forwarding etc.</p>
+<h3 id="ssh-configuration">SSH configuration</h3>
+<p>You can also configure your SSH client to access your workspace without specifying the key and username each time. Add the following configuration to your <code>~/.ssh/config</code> file:</p>
+<pre><code class="language-bash">Host k8shell
+    HostName app.k8shell.dev
+    PreferredAuthentications publickey
+    User &lt;username&gt;~&lt;workspace&gt;
+    Port 22
+    IdentityFile /path/to/key
+    ForwardAgent yes # if you want to forward your SSH agent
+</code></pre>
+<p>After adding the configuration, you can access the workspace using the following command:</p>
+<pre><code class="language-bash">ssh k8shell
+</code></pre>
+<p>You can also use this configuration to access another workspace by overriding the workspace name in the command:</p>
+<pre><code class="language-bash">ssh john~arc@k8shell
+</code></pre>
+<h3 id="ssh-port-forwarding">SSH Port Forwarding</h3>
+<p>You can also use SSH port forwarding to access services running on the workspace from your local machine. For example, if you have a Web server running on the workspace listening on port <code>tcp/80</code>, you can forward the port to your local machine using the following command:</p>
+<pre><code class="language-bash">ssh -L 8080::80 john~arc@k8shell
+</code></pre>
+<p>After running the command, you can access the Web server running on the workspace by opening <code>http://localhost:8080</code> in your browser.</p>
+<h3 id="ssh-agent-forwarding">SSH Agent Forwarding</h3>
+<p>If you need to access other services that require SSH authentication, you can use SSH agent forwarding. To enable SSH agent forwarding, you need to add the <code>-A</code> option to the SSH command:</p>
+<pre><code class="language-bash">ssh -A john~arc@k8shell
+</code></pre>
+<p>Note that this option can also be enabled in the SSH configuration by using <code>ForwardAgent yes</code> as described in the previous section. SSH agent forwarding allows you to use your local SSH keys to authenticate to other services from the workspace. The remote workspace does not store your SSH keys, but it forwards the authentication requests to your local machine.</p>
+<h3 id="vscode">VSCode</h3>
+<p>You can also access the workspace using Visual Studio Code (VSCode). To do this, you can follow the <a href="https://code.visualstudio.com/docs/remote/ssh">official documentation</a> on how to connect to a remote SSH server.</p>
+<p>Below are simple steps to connect to your workspace:</p>
+<ol>
+<li>Install the <a href="https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh">Remote - SSH extension</a> in VSCode.</li>
+<li>Open the Command Palette (<code>Ctrl+Shift+P</code>) and run the <code>Remote-SSH: Connect to Host...</code> command.</li>
+<li>Select <code>k8shell</code> from the list of hosts (assuming you have the SSH configuration from the previous section).</li>
+<li>You will be connected to the workspace.</li>
+</ol>
+<p>Note that if you do not specify <code>User</code> in the SSH configuration, you will need to provide the username and workspace name in the <code>User</code> field in the VSCode connection dialog.</p>
+<p>If you have the VSCode <code>code</code> CLI installed on your computer, you can also open VSCode directly from the terminal by running the following command:</p>
+<pre><code class="language-bash">code -n --folder-uri=vscode-remote://ssh-remote+john~arc@k8shell/home/john/workspace
+</code></pre>
+<p>When you connect to the workspace using VSCode, it will first install the VSCode server on the workspace, and then it will connect to the server using the SSH protocol&#39;s port forwarding. You use VSCode like you would use it on your local machine. When you develop an application in VSCode and run it in debug mode, the application will run on the workspace, but you can debug it from your local machine. VSCode will automatically forward the port your application is listening on to your local machine so you can access it from your browser.</p>
+<h2 id="git-access">Git access</h2>
+<p>For development of your projects, you can use Git to manage your source code. Access to Git repositories is over HTTPS, using a token provisioned for you automatically.</p>
+<p>Once you have onboarded via GitHub, your workspace is preconfigured with a Git credential helper that authenticates against GitHub using this provisioned token, so you can clone, push, and pull repositories without entering any credentials:</p>
+<pre><code class="language-bash">git clone https://github.com/&lt;repo&gt;.git
+</code></pre>
+<p>The token itself is not stored in your workspace - it is kept in the k8shell backend, and the credential helper retrieves it on demand whenever Git needs to authenticate.</p>
+<h3 id="managing-your-git-access">Managing your Git access</h3>
+<p>You can manage the provisioned token from the console by opening <strong>Credentials</strong> in the user menu in the sidebar. From there you can:</p>
+<ul>
+<li>Delete the token</li>
+<li>Disable access to it</li>
+<li>Add a new token, if required</li>
+</ul>
+<h2 id="workspace-usage">Workspace Usage</h2>
+<p>The workspace will be available for you to use until the end of the semester. Every workspace has two persistent volumes attached to it: your home directory mounted at <code>/home/&lt;username&gt;</code> and a shared directory mounted at <code>/opt/shared</code>. There is a symbolic link created in your home directory to the shared folder. You have read/write access to your home directory where you can store all files. The size of your home directory volume is set to 10GB by default and can be dynamically adjusted should you have a requirement to store more data. Please contact your lab tutor to ask for more space. Note that your home directory is also used to store various configuration files of software you use as well as is the place where vscode and intellij remote servers store their binaries. The shared folder is used by your tutor to distribute files to students and students do not have write permissions in it.      </p>
+<p>The workspace is ephemeral which means that when the workspace is stopped or terminated, any data stored in the workspace outside of the persistent volumes will be lost (such as when you install a new package or software) - see <a href="#workspace-management">Workspace Management</a> below for the difference between the two. Although the workspace should not be stopped during the semester, it is recommended to create an installation script in case you are installing any software so that you can repeat the installation process if the workspace is recreated.</p>
+<h3 id="cpu-and-memory">CPU and Memory</h3>
+<p>Each workspace has a limited amount of CPU and memory available. This limit is defined by your course and it should be sufficient to complete your course tasks. If you think that you need more resources, please contact your lab tutor.</p>
+<h2 id="workspace-management">Workspace Management</h2>
+<p>Once created from a blueprint, the workspace will be running for the whole semester, and you can access it anytime you need using the workspace dashboard, SSH, or VSCode as described above.</p>
+<p>You can stop or terminate your workspace either from the console or from the terminal:</p>
+<ul>
+<li>To <strong>stop</strong> the workspace, run <code>shutdown</code> in the terminal, or press the corresponding button in the workspace dashboard. Your home directory is preserved and will be re-attached the next time you start the workspace. Any software or changes made outside your home directory, however, will be lost.</li>
+<li>To <strong>terminate</strong> the workspace, run <code>shutdown --delete</code> in the terminal, or press the corresponding button in the workspace dashboard. This also deletes your home directory, so make sure to push or back up any work you want to keep before terminating.</li>
+</ul>
+<p>When you access a stopped workspace again (via the dashboard, SSH, or VSCode), it will be automatically started for you.</p>
+
+  </section>
+
+  <script>
+    (function () {
+      var COPY_ICON =
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>';
+      var CHECK_ICON =
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+
+      document.querySelectorAll("pre > code").forEach(function (code) {
+        var pre = code.parentElement;
+        var btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "copy-btn";
+        btn.innerHTML = COPY_ICON + "<span>Copy</span>";
+        btn.addEventListener("click", function () {
+          navigator.clipboard.writeText(code.textContent).then(function () {
+            btn.innerHTML = CHECK_ICON + "<span>Copied</span>";
+            btn.classList.add("copied");
+            setTimeout(function () {
+              btn.innerHTML = COPY_ICON + "<span>Copy</span>";
+              btn.classList.remove("copied");
+            }, 1500);
+          });
+        });
+        pre.appendChild(btn);
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+{
+  "name": "mdw",
+  "private": true,
+  "description": "Cloud Technologies 1 course slides and site tooling.",
+  "scripts": {
+    "generate-labs": "node bin/generate-labs.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tomvit/mdw.git"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "marked": "18.0.14"
+  }
+}

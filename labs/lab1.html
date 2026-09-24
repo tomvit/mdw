@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lab 1</title>
+
+  <!--
+    GENERATED FILE — do not edit by hand, edit labs/src/ instead.
+    Regenerate with: make labs   (or: node bin/generate-labs.js)
+    Source: labs/src/lab1.md
+    Generated at: 2026-09-24T12:25:48.064Z
+  -->
+
+  <style>
+    body {
+      margin: 0 auto;
+      max-width: 52em;
+      line-height: 1.5;
+      padding: 24px 1em 64px;
+      color: #555;
+      background-color: #f9fbff;
+      font-family: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      font-size: 100%;
+    }
+
+    a { color: #3b5bdb; }
+
+    .back-link {
+      display: inline-block;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+
+    h1, h2, h3 {
+      font-family: Chivo, sans-serif;
+      font-weight: 700;
+      color: #333;
+      margin: 28px 0 8px;
+    }
+
+    h1 { font-size: 26px; margin-top: 9px; }
+    h2 { font-size: 20px; }
+    h3 { font-size: 16px; }
+
+    p, li { margin: 0 0 12px; }
+
+    ul, ol { padding-left: 22px; }
+
+    .note { color: #888; }
+
+    code {
+      font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 13px;
+      background-color: #eef1f8;
+      border-radius: 3px;
+      padding: 1px 5px;
+    }
+
+    pre {
+      position: relative;
+      background-color: #2b2d33;
+      color: #e8e8e8;
+      border-radius: 6px;
+      padding: 12px 16px;
+      overflow-x: auto;
+    }
+
+    pre code {
+      background-color: transparent;
+      padding: 0;
+      color: inherit;
+    }
+
+    .copy-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 6px;
+      font-family: inherit;
+      font-size: 11px;
+      line-height: 1;
+      color: #c7c9d1;
+      background-color: #3a3d46;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.15s, background-color 0.15s;
+    }
+
+    pre:hover .copy-btn {
+      opacity: 1;
+    }
+
+    .copy-btn:hover {
+      background-color: #4a4e5a;
+    }
+
+    .copy-btn svg {
+      width: 13px;
+      height: 13px;
+      flex: none;
+    }
+
+    .copy-btn.copied {
+      color: #8ee0a1;
+    }
+
+    img { max-width: 100%; border: 1px solid #ddd; border-radius: 4px; }
+
+    hr {
+      border: none;
+      border-top: 1px solid #ddd;
+      margin: 40px 0;
+    }
+  </style>
+</head>
+<body>
+  <a class="back-link" href="../index.html">&larr; Back to course</a>
+
+<h1 id="lab-1">Lab 1</h1>
+<p>This is the introductory lab.</p>
+<h2 id="tasks">Tasks</h2>
+<ul>
+<li><a href="#1-setup-access-to-k8shell">1. Setup access to k8shell</a></li>
+<li><a href="#2-create-a-k8shell-workspace-for-the-course">2. Create a k8shell workspace for the course</a></li>
+<li><a href="#3-test-ssh-and-vs-code-access">3. Test SSH and VS Code access</a></li>
+<li><a href="#4-test-port-forwarding-and-copying-files-using-ssh-and-vs-code">4. Test port forwarding and copying files using SSH and VS Code</a></li>
+<li><a href="#5-design-your-app">5. Design your app</a></li>
+</ul>
+<h3 id="1-setup-access-to-k8shell">1. Setup access to k8shell</h3>
+<p>Sign in at <a href="https://app.k8shell.dev">https://app.k8shell.dev</a> using the <strong>Continue with GitHub</strong> button. Make sure you have an SSH key uploaded to your GitHub account first, so it is automatically transferred to your k8shell account. See the <a href="k8shell.html">k8shell Workspace Platform</a> guide for details.</p>
+<h3 id="2-create-a-k8shell-workspace-for-the-course">2. Create a k8shell workspace for the course</h3>
+<p>From the k8shell dashboard, go to <strong>Workspaces</strong>, press <strong>Create workspace</strong>, select <strong>From blueprint</strong>, choose the course blueprint (<code>ct1</code>), and press <strong>Create</strong>. Wait until the workspace status is <strong>Running</strong>.</p>
+<h3 id="3-test-ssh-and-vs-code-access">3. Test SSH and VS Code access</h3>
+<p>Connect to your workspace using SSH, for example:</p>
+<pre><code class="language-bash">ssh &lt;username&gt;~ct1@app.k8shell.dev
+</code></pre>
+<p>Then connect using Visual Studio Code with the Remote - SSH extension, using the same <code>&lt;username&gt;~ct1</code> host.</p>
+<h3 id="4-test-port-forwarding-and-copying-files-using-ssh-and-vs-code">4. Test port forwarding and copying files using SSH and VS Code</h3>
+<p>In your workspace, start a small dummy server to test against, for example a <code>server.js</code> using Node.js, listening on a port above 1024:</p>
+<pre><code class="language-js">// server.js
+const http = require(&quot;http&quot;);
+const port = 8080;
+
+http
+  .createServer((req, res) =&gt; res.end(&quot;hello from the workspace\n&quot;))
+  .listen(port, () =&gt; console.log(`listening on ${port}`));
+</code></pre>
+<pre><code class="language-bash">node server.js
+</code></pre>
+<p>Then, from your local machine, forward that port from your workspace, for example:</p>
+<pre><code class="language-bash">ssh -L 8080:localhost:8080 &lt;username&gt;~ct1@app.k8shell.dev
+</code></pre>
+<p>With the tunnel open, visit <code>http://localhost:8080</code> in your local browser and confirm you get a response from the server running in the workspace.</p>
+<p>Also try copying a file to or from your workspace, for example with <code>scp</code> or an SFTP client, and by copying files through VS Code&#39;s file explorer once connected via Remote - SSH.</p>
+<h3 id="5-design-your-app">5. Design your app</h3>
+<p>You will work in teams of 2-3 people. Define your teams.</p>
+<p>Over the course we will iteratively design and build an application made up of a number of services. In the first iteration, the application will be monolithic: a single deployable unit with a frontend, a number of services, and persistence backed by a database. We will use PostgreSQL for the database.</p>
+<p>The database will run in a dedicated workspace, separate from the workspace used to develop the application. The <code>ct1</code> workspace is the primary workspace for developing the application, and it will connect to the database running in the dedicated database workspace.</p>
+<p>You can choose the technology you use to build the application, for example Python, JavaScript, or Go. Go is preferable, but you do not need to use it. If you already have an application you built in another course, you can reuse it here.</p>
+<p>For this task:</p>
+<ul>
+<li><p><strong>Give your app / team a name.</strong></p>
+<p><span class="note">You get a repo at <code>https://github.com/fit-students/tulfm-&lt;team-name&gt;</code>. This will be set up by the tutor once you give the team name and the GitHub accounts of the students in the team.</span></p>
+</li>
+<li><p><strong>Describe what the app will be doing.</strong></p>
+<p><span class="note">The app does not need to be complicated - think of something rather simple. The main goal of the app is to use various design and integration patterns, and to understand how difficult it is to change its functions, deploy them, fix issues, and have it work under load.</span></p>
+</li>
+<li><p><strong>Setup docs.</strong></p>
+<p><span class="note">Add a top-level <code>docs</code> folder to your repo, with markdown files defining the docs sections. For now this just means setting up the structure - one markdown file per section is enough, content can be filled in as you go.</span></p>
+<p>Structure it as:</p>
+<pre><code>docs/
+  src/                 # markdown source, one file per section
+    &lt;section&gt;.md       # e.g. architecture.md, services.md, api.md, data-model.md
+    images/            # images referenced by the docs, if any
+  &lt;section&gt;.html        # generated HTML, one page per source file
+  index.html            # generated landing page linking to each section
+</code></pre>
+<p><span class="note">This is the same source/generated split used for this course&#39;s own materials (<code>labs/src/*.md</code> -&gt; <code>labs/*.html</code>), and you can reuse the same markdown-to-HTML approach to generate your docs from <code>docs/src/</code>.</span></p>
+<p><span class="note">Add the following to your repo&#39;s <code>.gitignore</code>, so the generated docs output doesn&#39;t get committed - only the markdown source under <code>docs/src/</code> should be:</span></p>
+<pre><code>docs/*.html
+docs/images/
+</code></pre>
+</li>
+<li><p><strong>Design the base architecture - client / server / DB.</strong></p>
+<p><span class="note">Use <a href="https://mermaid.js.org/">Mermaid</a> to describe any diagrams for the app, e.g. architecture or sequence diagrams. Mermaid diagrams can be embedded directly in markdown as fenced <code>```mermaid</code> code blocks.</span></p>
+</li>
+<li><p><strong>Design the base services of the app. Describe each service briefly.</strong></p>
+</li>
+<li><p><strong>Design the data model for the app, schema.</strong></p>
+</li>
+<li><p><strong>Code the app services.</strong></p>
+</li>
+</ul>
+
+
+  <script>
+    (function () {
+      var COPY_ICON =
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>';
+      var CHECK_ICON =
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+
+      document.querySelectorAll("pre > code").forEach(function (code) {
+        var pre = code.parentElement;
+        var btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "copy-btn";
+        btn.innerHTML = COPY_ICON + "<span>Copy</span>";
+        btn.addEventListener("click", function () {
+          navigator.clipboard.writeText(code.textContent).then(function () {
+            btn.innerHTML = CHECK_ICON + "<span>Copied</span>";
+            btn.classList.add("copied");
+            setTimeout(function () {
+              btn.innerHTML = COPY_ICON + "<span>Copy</span>";
+              btn.classList.remove("copied");
+            }, 1500);
+          });
+        });
+        pre.appendChild(btn);
+      });
+    })();
+  </script>
+</body>
+</html>

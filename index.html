@@ -18,7 +18,7 @@
         margin: 0 auto;
         max-width: 62em;
         line-height: 1.5;
-        padding: 32px 1em 0;
+        padding: 16px 1em 0;
         color: #555;
         background-color: #f9fbff;
         font-family: "Open Sans", sans-serif;
@@ -26,7 +26,8 @@
       }
 
       h1,
-      h2 {
+      h2,
+      h3 {
         font-family: Chivo, sans-serif;
         font-weight: 700;
         color: #333;
@@ -34,12 +35,17 @@
       }
 
       h1 {
-        font-size: 20px;
+        font-size: 26px;
       }
 
       h2 {
-        font-size: 17px;
+        font-size: 21px;
         margin-top: 28px;
+      }
+
+      h3 {
+        font-size: 16px;
+        margin-top: 20px;
       }
 
       p {
@@ -71,7 +77,7 @@
         text-overflow: ellipsis;
         overflow: hidden;
         white-space: nowrap;
-        padding: 6px 0 6px 12px !important;
+        padding: 8px 0 8px 12px !important;
         font-size: 15px;
       }
       .humla-table tbody tr.child-row td {
@@ -129,20 +135,25 @@
   <body>
     <h1>Cloud Technologies 1</h1>
 
-    <p>The Cloud Technologies 1 is a post-graduate university course which provides underlying
+    <p>The Cloud Technologies 1 is a master course which provides underlying
       architectural and theoretical concepts about enterprise and software architecture, service-oriented
       and microservice architectures, cloud architectures and cloud-native technologies. The course covers
       cloud infrastructure and service models, containers, Kubernetes, communication protocols such as
-      HTTP/2, and techniques for achieving high availability and performance. In my lectures, I share
-      example problems from large-scale integration and cloud infrastructure domains and point out
-      technological and architectural limitations with possibilities to control and overcome them.</p>
+      HTTP/2, and techniques for achieving high availability and performance.</p>
 
     <h2>Lectures</h2>
     <div id="lastModified"></div>
     <table id="dt-lectures" class="display humla-table" style="width:100%"></table>
 
     <h2>Labs</h2>
-    <p>TODO, will work on it later.</p>
+    <ul>
+      <li><a href="labs/lab1.html">Lab 1 (24/09/2026)</a></li>
+    </ul>
+
+    <h3>Supplementary Materials</h3>
+    <ul>
+      <li><a href="labs/k8shell.html">k8shell Workspace Platform</a> &ndash; description and usage guide for the platform used for the course labs</li>
+    </ul>
 
     <script>
       // Course dashboard, adapted from the HumlaClient used at https://vitvar.com/lectures/
@@ -282,6 +293,8 @@
         if (!index) return;
 
         var prop = COLUMNS[index.column].data_orig;
+        if (prop === "title" && !$(e.target).hasClass("toc")) return;
+
         var td = $(e.currentTarget);
         var tr = td.closest("tr");
         var row = table.row(tr);
