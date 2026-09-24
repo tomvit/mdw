@@ -195,12 +195,14 @@
         return pad0(date.getDate()) + "/" + pad0(date.getMonth() + 1) + "/" + date.getFullYear();
       };
 
-      // pdf/lecture{N}-{1,2}p.pdf files are named after the lecture number, which lines
-      // up with the row index because toc.json is generated in lecture number order
+      // pdf/lecture{N}-{1,2}p.pdf files are named after the lecture number taken
+      // from the lecture's own slide-url (lectureN.html), not the table row index:
+      // lecture numbering starts at 1, so row index and lecture number don't match.
       var formatContent = function (value, row, type, val, meta) {
+        var num = row["slide-url"].match(/lecture(\d+)\.html/)[1];
         return (
-          link("pdf-2", "pdf/lecture" + meta.row + "-2p.pdf") +
-          link("pdf-1", "pdf/lecture" + meta.row + "-1p.pdf") +
+          link("pdf-2", "pdf/lecture" + num + "-2p.pdf") +
+          link("pdf-1", "pdf/lecture" + num + "-1p.pdf") +
           link("html", row["slide-url"])
         );
       };
