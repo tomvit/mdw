@@ -9,7 +9,7 @@
     GENERATED FILE — do not edit by hand, edit labs/src/ instead.
     Regenerate with: make labs   (or: node bin/generate-labs.js)
     Source: labs/src/lab1.md
-    Generated at: 2026-09-24T12:25:48.064Z
+    Generated at: 2026-09-25T15:21:23.573Z
   -->
 
   <style>
@@ -130,7 +130,8 @@
 <li><a href="#2-create-a-k8shell-workspace-for-the-course">2. Create a k8shell workspace for the course</a></li>
 <li><a href="#3-test-ssh-and-vs-code-access">3. Test SSH and VS Code access</a></li>
 <li><a href="#4-test-port-forwarding-and-copying-files-using-ssh-and-vs-code">4. Test port forwarding and copying files using SSH and VS Code</a></li>
-<li><a href="#5-design-your-app">5. Design your app</a></li>
+<li><a href="#5-set-up-a-postgresql-database-with-docker">5. Set up a PostgreSQL database with Docker</a></li>
+<li><a href="#6-design-your-app">6. Design your app</a></li>
 </ul>
 <h3 id="1-setup-access-to-k8shell">1. Setup access to k8shell</h3>
 <p>Sign in at <a href="https://app.k8shell.dev">https://app.k8shell.dev</a> using the <strong>Continue with GitHub</strong> button. Make sure you have an SSH key uploaded to your GitHub account first, so it is automatically transferred to your k8shell account. See the <a href="k8shell.html">k8shell Workspace Platform</a> guide for details.</p>
@@ -158,10 +159,22 @@ http
 </code></pre>
 <p>With the tunnel open, visit <code>http://localhost:8080</code> in your local browser and confirm you get a response from the server running in the workspace.</p>
 <p>Also try copying a file to or from your workspace, for example with <code>scp</code> or an SFTP client, and by copying files through VS Code&#39;s file explorer once connected via Remote - SSH.</p>
-<h3 id="5-design-your-app">5. Design your app</h3>
+<h3 id="5-set-up-a-postgresql-database-with-docker">5. Set up a PostgreSQL database with Docker</h3>
+<p>Create a second k8shell workspace, from the same <code>ct1</code> blueprint, to act as the dedicated database workspace, separate from the workspace used to develop the application.</p>
+<p><span class="note">The <code>ct1</code> blueprint includes Docker, running directly in the workspace. The Docker capability is served by the Podman engine.</span></p>
+<p>Use it to run PostgreSQL in the database workspace:</p>
+<pre><code class="language-bash">docker run -d \
+  --name postgres \
+  -e POSTGRES_PASSWORD=secret \
+  -p 5432:5432 \
+  -v pgdata:/var/lib/postgresql/data \
+  postgres:17
+</code></pre>
+<p><span class="note">For security reasons, containers created in the workspace cannot run in a separate network namespace. This means PostgreSQL running inside the container will be listening directly on the workspace&#39;s network interface, not behind Docker&#39;s usual container network / port mapping.</span></p>
+<h3 id="6-design-your-app">6. Design your app</h3>
 <p>You will work in teams of 2-3 people. Define your teams.</p>
 <p>Over the course we will iteratively design and build an application made up of a number of services. In the first iteration, the application will be monolithic: a single deployable unit with a frontend, a number of services, and persistence backed by a database. We will use PostgreSQL for the database.</p>
-<p>The database will run in a dedicated workspace, separate from the workspace used to develop the application. The <code>ct1</code> workspace is the primary workspace for developing the application, and it will connect to the database running in the dedicated database workspace.</p>
+<p>The <code>ct1</code> workspace is the primary workspace for developing the application, and it will connect to the database running in the dedicated database workspace set up in the previous step.</p>
 <p>You can choose the technology you use to build the application, for example Python, JavaScript, or Go. Go is preferable, but you do not need to use it. If you already have an application you built in another course, you can reuse it here.</p>
 <p>For this task:</p>
 <ul>

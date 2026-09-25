@@ -8,7 +8,8 @@ This is the introductory lab.
 - [2. Create a k8shell workspace for the course](#2-create-a-k8shell-workspace-for-the-course)
 - [3. Test SSH and VS Code access](#3-test-ssh-and-vs-code-access)
 - [4. Test port forwarding and copying files using SSH and VS Code](#4-test-port-forwarding-and-copying-files-using-ssh-and-vs-code)
-- [5. Design your app](#5-design-your-app)
+- [5. Set up a PostgreSQL database with Docker](#5-set-up-a-postgresql-database-with-docker)
+- [6. Design your app](#6-design-your-app)
 
 ### 1. Setup access to k8shell
 
@@ -56,13 +57,32 @@ With the tunnel open, visit `http://localhost:8080` in your local browser and co
 
 Also try copying a file to or from your workspace, for example with `scp` or an SFTP client, and by copying files through VS Code's file explorer once connected via Remote - SSH.
 
-### 5. Design your app
+### 5. Set up a PostgreSQL database with Docker
+
+Create a second k8shell workspace, from the same `ct1` blueprint, to act as the dedicated database workspace, separate from the workspace used to develop the application.
+
+<span class="note">The `ct1` blueprint includes Docker, running directly in the workspace. The Docker capability is served by the Podman engine.</span>
+
+Use it to run PostgreSQL in the database workspace:
+
+```bash
+docker run -d \
+  --name postgres \
+  -e POSTGRES_PASSWORD=secret \
+  -p 5432:5432 \
+  -v pgdata:/var/lib/postgresql/data \
+  postgres:17
+```
+
+<span class="note">For security reasons, containers created in the workspace cannot run in a separate network namespace. This means PostgreSQL running inside the container will be listening directly on the workspace's network interface, not behind Docker's usual container network / port mapping.</span>
+
+### 6. Design your app
 
 You will work in teams of 2-3 people. Define your teams.
 
 Over the course we will iteratively design and build an application made up of a number of services. In the first iteration, the application will be monolithic: a single deployable unit with a frontend, a number of services, and persistence backed by a database. We will use PostgreSQL for the database.
 
-The database will run in a dedicated workspace, separate from the workspace used to develop the application. The `ct1` workspace is the primary workspace for developing the application, and it will connect to the database running in the dedicated database workspace.
+The `ct1` workspace is the primary workspace for developing the application, and it will connect to the database running in the dedicated database workspace set up in the previous step.
 
 You can choose the technology you use to build the application, for example Python, JavaScript, or Go. Go is preferable, but you do not need to use it. If you already have an application you built in another course, you can reuse it here.
 
