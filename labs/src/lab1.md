@@ -1,8 +1,6 @@
 # Lab 1
 
-This is the introductory lab.
-
-## Tasks
+This is the introductory lab. Perform the below tasks.
 
 - [1. Setup access to k8shell](#1-setup-access-to-k8shell)
 - [2. Create a k8shell workspace for the course](#2-create-a-k8shell-workspace-for-the-course)
@@ -11,15 +9,15 @@ This is the introductory lab.
 - [5. Set up a PostgreSQL database with Docker](#5-set-up-a-postgresql-database-with-docker)
 - [6. Design your app](#6-design-your-app)
 
-### 1. Setup access to k8shell
+## 1. Setup access to k8shell
 
 Sign in at https://app.k8shell.dev using the **Continue with GitHub** button. Make sure you have an SSH key uploaded to your GitHub account first, so it is automatically transferred to your k8shell account. See the [k8shell Workspace Platform](k8shell.html) guide for details.
 
-### 2. Create a k8shell workspace for the course
+## 2. Create a k8shell workspace for the course
 
 From the k8shell dashboard, go to **Workspaces**, press **Create workspace**, select **From blueprint**, choose the course blueprint (`ct1`), and press **Create**. Wait until the workspace status is **Running**.
 
-### 3. Test SSH and VS Code access
+## 3. Test SSH and VS Code access
 
 Connect to your workspace using SSH, for example:
 
@@ -29,7 +27,7 @@ ssh <username>~ct1@app.k8shell.dev
 
 Then connect using Visual Studio Code with the Remote - SSH extension, using the same `<username>~ct1` host.
 
-### 4. Test port forwarding and copying files using SSH and VS Code
+## 4. Test port forwarding and copying files using SSH and VS Code
 
 In your workspace, start a small dummy server to test against, for example a `server.js` using Node.js, listening on a port above 1024:
 
@@ -57,7 +55,7 @@ With the tunnel open, visit `http://localhost:8080` in your local browser and co
 
 Also try copying a file to or from your workspace, for example with `scp` or an SFTP client, and by copying files through VS Code's file explorer once connected via Remote - SSH.
 
-### 5. Set up a PostgreSQL database with Docker
+## 5. Set up a PostgreSQL database with Docker
 
 Create a second k8shell workspace, from the same `ct1` blueprint, to act as the dedicated database workspace, separate from the workspace used to develop the application.
 
@@ -76,7 +74,7 @@ docker run -d \
 
 <span class="note">For security reasons, containers created in the workspace cannot run in a separate network namespace. This means PostgreSQL running inside the container will be listening directly on the workspace's network interface, not behind Docker's usual container network / port mapping.</span>
 
-### 6. Design your app
+## 6. Design your app
 
 You will work in teams of 2-3 people. Define your teams.
 

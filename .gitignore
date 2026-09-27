@@ -17,3 +17,6 @@ tools/fonts/
 node_modules
 docs-engine
 fit-workspaces.wiki/
+
+labs/*.html
+labs/images/

@@ -5,43 +5,92 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>k8shell Workspace Platform</title>
 
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Chivo:bold|Open+Sans:300i,400">
+
   <!--
     GENERATED FILE — do not edit by hand, edit labs/src/ instead.
     Regenerate with: make labs   (or: node bin/generate-labs.js)
     Source: labs/src/description.md + labs/src/instructions.md
-    Generated at: 2026-09-25T15:21:23.565Z
+    Generated at: 2026-09-25T22:38:56.158Z
   -->
 
   <style>
     body {
       margin: 0 auto;
-      max-width: 52em;
+      max-width: 62em;
       line-height: 1.5;
-      padding: 24px 1em 64px;
+      padding: 108px 1em 64px;
       color: #555;
       background-color: #f9fbff;
-      font-family: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      font-family: "Open Sans", sans-serif;
       font-size: 100%;
+      box-sizing: border-box;
     }
 
     a { color: #3b5bdb; }
 
-    .back-link {
-      display: inline-block;
-      margin-bottom: 20px;
-      font-size: 14px;
+    .site-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background-color: #f9fbff;
+      border-bottom: 1px solid #ddd;
+      z-index: 100;
+      box-sizing: border-box;
+    }
+
+    .site-header-inner {
+      max-width: 62em;
+      margin: 0 auto;
+      padding: 16px 1em;
+      box-sizing: border-box;
+    }
+
+    .site-header h1 {
+      margin: 0;
+      font-size: 28px;
+    }
+
+    .site-header h1 a {
+      color: #333;
+      text-decoration: none;
+    }
+
+    .site-header h1 a:hover {
+      text-decoration: underline;
+    }
+
+    .breadcrumbs {
+      margin-top: 4px;
+      font-size: 13px;
+      color: #767676;
+    }
+
+    .breadcrumbs a {
+      color: #767676;
+      text-decoration: none;
+    }
+
+    .breadcrumbs a:hover {
+      text-decoration: underline;
+    }
+
+    .breadcrumbs .sep {
+      margin: 0 6px;
+      color: #bbb;
     }
 
     h1, h2, h3 {
       font-family: Chivo, sans-serif;
       font-weight: 700;
       color: #333;
-      margin: 28px 0 8px;
+      margin: 9px 0 8px;
     }
 
-    h1 { font-size: 26px; margin-top: 9px; }
-    h2 { font-size: 20px; }
-    h3 { font-size: 16px; }
+    h1 { font-size: 24px; }
+    h2 { font-size: 18px; margin-top: 28px; }
+    h3 { font-size: 16px; margin-top: 20px; }
 
     p, li { margin: 0 0 12px; }
 
@@ -112,6 +161,50 @@
 
     img { max-width: 100%; border: 1px solid #ddd; border-radius: 4px; }
 
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 0 0 20px;
+      border: 1px solid #e3e6ec;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    thead th {
+      background-color: #eef0f4;
+      text-align: left;
+      padding: 14px 20px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: #333;
+      border-bottom: 1px solid #e3e6ec;
+    }
+
+    thead th:first-child {
+      border-right: 1px solid #e3e6ec;
+    }
+
+    tbody td {
+      padding: 14px 20px;
+      vertical-align: top;
+      border-bottom: 1px solid #eef0f4;
+    }
+
+    tbody td:first-child {
+      border-right: 1px solid #eef0f4;
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    tbody tr:nth-child(even) {
+      background-color: #f8f9fb;
+    }
+
     hr {
       border: none;
       border-top: 1px solid #ddd;
@@ -120,7 +213,14 @@
   </style>
 </head>
 <body>
-  <a class="back-link" href="../index.html">&larr; Back to course</a>
+  <header class="site-header">
+    <div class="site-header-inner">
+      <h1><a href="../index.html">Cloud Technologies 1</a></h1>
+      <nav class="breadcrumbs" aria-label="Breadcrumb">
+        <a href="../index.html">Home</a><span class="sep">/</span><span>k8shell Workspace Platform</span>
+      </nav>
+    </div>
+  </header>
 
   <h1>k8shell Workspace Platform</h1>
   <p>This is the platform used for the course labs.</p>

@@ -18,11 +18,68 @@
         margin: 0 auto;
         max-width: 62em;
         line-height: 1.5;
-        padding: 16px 1em 0;
+        padding: 128px 1em 0;
         color: #555;
         background-color: #f9fbff;
         font-family: "Open Sans", sans-serif;
         font-size: 100%;
+        box-sizing: border-box;
+      }
+
+      .site-header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background-color: #f9fbff;
+        border-bottom: 1px solid #ddd;
+        z-index: 100;
+        box-sizing: border-box;
+      }
+
+      .site-header-inner {
+        max-width: 62em;
+        margin: 0 auto;
+        padding: 16px 1em;
+        box-sizing: border-box;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      .site-header h1 {
+        margin: 0;
+        font-size: 28px;
+      }
+
+      .site-header h1 a {
+        color: #333;
+        text-decoration: none;
+      }
+
+      .site-header h1 a:hover {
+        text-decoration: underline;
+      }
+
+      .breadcrumbs {
+        margin-top: 4px;
+        font-size: 13px;
+        color: #767676;
+      }
+
+      .breadcrumbs a {
+        color: #767676;
+        text-decoration: none;
+      }
+
+      .breadcrumbs a:hover {
+        text-decoration: underline;
+      }
+
+      .breadcrumbs .sep {
+        margin: 0 6px;
+        color: #bbb;
       }
 
       h1,
@@ -35,11 +92,11 @@
       }
 
       h1 {
-        font-size: 26px;
+        font-size: 24px;
       }
 
       h2 {
-        font-size: 21px;
+        font-size: 18px;
         margin-top: 28px;
       }
 
@@ -53,15 +110,30 @@
       }
 
       #lastModified {
-        margin-top: 4px;
-        margin-bottom: 20px;
-        font-size: 14px;
+        flex: none;
+        margin-top: 2px;
+        padding: 4px 12px;
+        font-size: 13px;
         color: #767676;
+        background-color: #eef1f8;
+        border-radius: 999px;
+        white-space: nowrap;
+      }
+
+      #lastModified:empty {
+        display: none;
+      }
+
+      .table-card {
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        overflow: hidden;
       }
 
       /* humla-table styles, matching https://vitvar.com/lectures/ */
       .humla-table {
-        border-bottom: 1px solid #ddd !important;
+        border-collapse: separate !important;
+        border-spacing: 0;
       }
       .humla-table tbody tr td.dataTables_empty {
         text-align: left;
@@ -133,7 +205,17 @@
     </style>
   </head>
   <body>
-    <h1>Cloud Technologies 1</h1>
+    <header class="site-header">
+      <div class="site-header-inner">
+        <div>
+          <h1><a href="index.html">Cloud Technologies 1</a></h1>
+          <nav class="breadcrumbs" aria-label="Breadcrumb">
+            <span>Home</span>
+          </nav>
+        </div>
+        <div id="lastModified"></div>
+      </div>
+    </header>
 
     <p>The Cloud Technologies 1 is a master course which provides underlying
       architectural and theoretical concepts about enterprise and software architecture, service-oriented
@@ -142,8 +224,9 @@
       HTTP/2, and techniques for achieving high availability and performance.</p>
 
     <h2>Lectures</h2>
-    <div id="lastModified"></div>
-    <table id="dt-lectures" class="display humla-table" style="width:100%"></table>
+    <div class="table-card">
+      <table id="dt-lectures" class="display humla-table" style="width:100%"></table>
+    </div>
 
     <h2>Labs</h2>
     <ul>
